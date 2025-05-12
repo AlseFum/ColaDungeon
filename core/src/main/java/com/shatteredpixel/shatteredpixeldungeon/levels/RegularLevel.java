@@ -112,8 +112,9 @@ public abstract class RegularLevel extends Level {
 			rooms = builder.build((ArrayList<Room>)initRooms.clone());
 		} while (rooms == null);
 		
+		//#+ RegularLevel_closed_entrance_exit
+		//#- RegularLevel_closed_entrance_exit
 		return painter().paint(this, rooms);
-		
 	}
 	
 	protected ArrayList<Room> initRooms() {

@@ -48,7 +48,8 @@ public class Waterskin extends Item {
 
 	{
 		image = ItemSpriteSheet.WATERSKIN;
-
+		//@Alsefum;
+		image = 114514;
 		defaultAction = AC_DRINK;
 
 		unique = true;

@@ -14,4 +14,10 @@
 宏的教程还没写（咕咕咕
 
 ## 进度
-出了些问题，得全面重开
+宏操作基本完成，游戏本体完全没改
+
+## 笔记
+
+ItemSprite继承自Image，通过texture和frame来控制显示
+texture是整张图片，frame控制图片范围
+texture的设置是Image的。frame用int来操作
