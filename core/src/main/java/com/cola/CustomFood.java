@@ -10,14 +10,14 @@ public class CustomFood extends Food {
     @Override
     protected void satisfy(Hero hero) {
         super.satisfy(hero);
-        hero.HP = Math.min(hero.HP + 5, hero.HT);
         if(onEat != null){
             onEat.accept(hero);
         }
     }
 
-    public Consumer<Hero> onEat;
+    
     public String label="Custom Food";
+    public Consumer<Hero> onEat=h->{};
     public Function<Integer,Integer> price=(useless)->10*quantity;
     @Override
     public String name(){
@@ -28,38 +28,45 @@ public class CustomFood extends Food {
         return price.apply(quantity);
     }
 
-    public static CustomFoodFactory order(){
-        return new CustomFoodFactory();
+    public static Factory order(){
+        return new Factory();
     }
     protected CustomFood clone(){
         CustomFood clone = new CustomFood();
         clone.energy = energy;
         clone.onEat = onEat;
         clone.label = label;
+        clone.price = price;
         return clone;
     }   
-    public static class CustomFoodFactory  {
+    public static class Factory  {
         private CustomFood baking = new CustomFood();
 
-        public CustomFoodFactory setHunger(float hunger){
-            baking.energy = hunger;
+        public Factory setHunger(float Energy){
+            baking.energy = Energy;
             return this;
         }
 
-        public CustomFoodFactory setOnEat(Consumer<Hero> onEat){
+        public Factory setOnEat(Consumer<Hero> onEat){
             baking.onEat = onEat;
             return this;
         }
 
-        
-
-        public CustomFoodFactory setLabel(String label){
+        public Factory setLabel(String label){
             baking.label = label;
             return this;
         }
 
+        public Factory setImage(int image){
+            baking.image = image;
+            return this;
+        }
 
-        public CustomFoodFactory setPrice(Function<Integer,Integer> price){
+        public Factory setPrice(int price){
+            baking.price = (useless)->price;
+            return this;
+        }
+        public Factory setPrice(Function<Integer,Integer> price){
             baking.price = (useless)->114514;
             return this;
         }
