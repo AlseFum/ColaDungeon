@@ -1,4 +1,4 @@
-package com.cola;
+package com.cola.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;

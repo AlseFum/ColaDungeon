@@ -82,7 +82,6 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.DeviceCompat;
 
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 //#+ Minecraft_GoldenApple
 import com.shatteredpixel.shatteredpixeldungeon.items.food.GoldenApple;
 //#- Minecraft_GoldenApple
@@ -152,19 +151,8 @@ public enum HeroClass {
 		// #+ Minecraft_GoldenApple_gain
 		new GoldenApple().quantity(14).collect();
 		// #- Minecraft_GoldenApple_gain
+		new CustomFood("p").quantity(1).collect();
 
-		CustomFood.order("Herofood")
-				.setHunger(100)
-				.setLabel("Hero's Food")
-				.setOnEat(_hero -> {
-					_hero.HP = Math.min(_hero.HP + 5, _hero.HT);
-					GLog.n("man!");
-				})
-				.make().quantity(14).collect();
-		CustomFood.order("Burger")
-			.setHunger(50)
-			.setLabel("Bur")
-			.make().quantity(13).collect();
 		if (SPDSettings.quickslotWaterskin()) {
 			for (int s = 0; s < QuickSlot.SIZE; s++) {
 				if (Dungeon.quickslot.getItem(s) == null) {

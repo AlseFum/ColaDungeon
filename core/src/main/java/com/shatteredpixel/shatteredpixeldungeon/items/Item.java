@@ -364,7 +364,7 @@ public class Item implements Bundlable {
 	}
 	
 	public boolean isSimilar( Item item ) {
-		if(this instanceof CustomFood && item instanceof CustomFood){
+		if (this instanceof CustomFood && item instanceof CustomFood) {
 			return ((CustomFood)this).id.equals(((CustomFood)item).id);
 		}
 		return getClass() == item.getClass();
