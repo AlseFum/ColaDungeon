@@ -87,6 +87,7 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.GoldenApple;
 //#- Minecraft_GoldenApple
 import com.cola.CustomFood;
+
 public enum HeroClass {
 
 	WARRIOR(HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR),
@@ -152,7 +153,7 @@ public enum HeroClass {
 		new GoldenApple().quantity(14).collect();
 		// #- Minecraft_GoldenApple_gain
 
-		CustomFood.order()
+		CustomFood.order("Herofood")
 				.setHunger(100)
 				.setLabel("Hero's Food")
 				.setOnEat(_hero -> {
@@ -160,7 +161,10 @@ public enum HeroClass {
 					GLog.n("man!");
 				})
 				.make().quantity(14).collect();
-		
+		CustomFood.order("Burger")
+			.setHunger(50)
+			.setLabel("Bur")
+			.make().quantity(13).collect();
 		if (SPDSettings.quickslotWaterskin()) {
 			for (int s = 0; s < QuickSlot.SIZE; s++) {
 				if (Dungeon.quickslot.getItem(s) == null) {

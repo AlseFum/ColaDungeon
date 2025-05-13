@@ -2,19 +2,12 @@ package com.cola;
 
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CavesBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CavesLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CityBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.DeadEndLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.HallsBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.HallsLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.LastLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.MiningLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.PrisonLevel;
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 
-import com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.DeadEndLevel;
+
+import com.shatteredpixel.shatteredpixeldungeon.levels.LastLevel;
+
 
 import com.watabou.utils.RectF;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -27,83 +20,33 @@ import java.util.Map;
 public class Helper {
     public static Level newLevel(int depth) {
         Level level;
-        switch (depth) {
-            case 1:
-                level = createLevelFromTemplate("arena");
-                break;
-            case 2:
-            case 3:
-            case 4:
-                level = new DebugLevel();
-                break;
-            case 5:
-                level = new SewerBossLevel();
-                break;
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-                level = new PrisonLevel();
-                break;
-            case 10:
-                level = new PrisonBossLevel();
-                break;
-            case 11:
-            case 12:
-            case 13:
-            case 14:
-                level = new CavesLevel();
-                break;
-            case 15:
-                level = new CavesBossLevel();
-                break;
-            case 16:
-            case 17:
-            case 18:
-            case 19:
-                level = new CityLevel();
-                break;
-            case 20:
-                level = new CityBossLevel();
-                break;
-            case 21:
-            case 22:
-            case 23:
-            case 24:
-                level = new HallsLevel();
-                break;
-            case 25:
-                level = new HallsBossLevel();
-                break;
-            case 26:
-                level = new LastLevel();
-                break;
-            default:
+        ThemePack theme = ThemePack.getTheme(depth);
+        if (theme == null) {
+            level = new DeadEndLevel();
+        } else {
+            try {
+
+                if (Dungeon.bossLevel()) {
+                    level = theme.BossLevel.getDeclaredConstructor().newInstance();
+                } else {
+                    level = theme.normalLevel.getDeclaredConstructor().newInstance();
+                }
+            } catch (Exception e) {
                 level = new DeadEndLevel();
+            }
         }
 
         return level;
     }
 
     public static Level newLevel(int depth, int branch) {
-        Level level;
-        if (branch == 0) {
-            level = newLevel(depth);
-        } else if (branch == 1) {
-            switch (depth) {
-                case 11:
-                case 12:
-                case 13:
-                case 14:
-                    level = new MiningLevel();
-                    break;
-                default:
-                    level = new DeadEndLevel();
-            }
-        } else {
-            level = new DeadEndLevel();
-        }
-        return level;
+        if (depth >= 26 && depth <= 30)
+            return new LastLevel();
+        else if (depth >= 0)
+            return newLevel(depth);
+        else
+            return new DeadEndLevel();
+
     }
 
     public static class DirectImageMap {
@@ -127,7 +70,7 @@ public class Helper {
         } else if (image == 114515) {
             return new DirectImageMap("minecraft/bread.png", new RectF(0.25f, 0, 0.75f, 1), 16);
         } else {
-            //rectF是按百分比代表texture的位置
+            // rectF是按百分比代表texture的位置
             return new DirectImageMap("minecraft/golden_apple.png", new RectF(0.25f, 0, 0.75f, 1), 16);
         }
     };

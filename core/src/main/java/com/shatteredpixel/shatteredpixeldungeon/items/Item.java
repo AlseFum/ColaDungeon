@@ -57,6 +57,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import com.cola.CustomFood;
+
 public class Item implements Bundlable {
 
 	protected static final String TXT_TO_STRING_LVL		= "%s %+d";
@@ -362,6 +364,9 @@ public class Item implements Bundlable {
 	}
 	
 	public boolean isSimilar( Item item ) {
+		if(this instanceof CustomFood && item instanceof CustomFood){
+			return ((CustomFood)this).id.equals(((CustomFood)item).id);
+		}
 		return getClass() == item.getClass();
 	}
 
