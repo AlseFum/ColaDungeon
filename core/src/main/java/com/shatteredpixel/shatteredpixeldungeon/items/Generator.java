@@ -224,6 +224,7 @@ public class Generator {
 		WEP_T3	( 0, 0, MeleeWeapon.class),
 		WEP_T4	( 0, 0, MeleeWeapon.class),
 		WEP_T5	( 0, 0, MeleeWeapon.class),
+		WEP_EXTRA( 0, 0, MeleeWeapon.class),
 		
 		ARMOR	( 2, 1, Armor.class ),
 		
@@ -233,6 +234,7 @@ public class Generator {
 		MIS_T3  ( 0, 0, MissileWeapon.class ),
 		MIS_T4  ( 0, 0, MissileWeapon.class ),
 		MIS_T5  ( 0, 0, MissileWeapon.class ),
+		MIS_EXTRA( 0, 0, MissileWeapon.class ),
 		
 		WAND	( 1, 1, Wand.class ),
 		RING	( 1, 0, Ring.class ),
@@ -469,7 +471,12 @@ public class Generator {
 			};
 			WEP_T5.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2, 2 };
 			WEP_T5.probs = WEP_T5.defaultProbs.clone();
+
+			WEP_EXTRA.classes = new Class<?>[]{};
+			WEP_EXTRA.defaultProbs = new float[]{};
+			WEP_EXTRA.probs = WEP_EXTRA.defaultProbs.clone();
 			
+						
 			//see Generator.randomArmor
 			ARMOR.classes = new Class<?>[]{
 					ClothArmor.class,
@@ -530,6 +537,12 @@ public class Generator {
 			};
 			MIS_T5.defaultProbs = new float[]{ 3, 3, 3 };
 			MIS_T5.probs = MIS_T5.defaultProbs.clone();
+
+			//#+ ExtraTier
+			MIS_EXTRA.classes = new Class<?>[]{};
+			MIS_EXTRA.defaultProbs = new float[]{};
+			MIS_EXTRA.probs = MIS_EXTRA.defaultProbs.clone();
+			//#- ExtraTier
 			
 			FOOD.classes = new Class<?>[]{
 					Food.class,

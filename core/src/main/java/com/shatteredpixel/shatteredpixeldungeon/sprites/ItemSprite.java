@@ -48,7 +48,6 @@ import com.watabou.utils.Random;
 
 import java.nio.Buffer;
 //@Alsefum
-import com.watabou.utils.RectF;
 import com.cola.Helper;
 
 public class ItemSprite extends MovieClip {

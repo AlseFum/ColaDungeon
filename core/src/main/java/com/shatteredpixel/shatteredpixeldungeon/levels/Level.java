@@ -835,8 +835,10 @@ public abstract class Level implements Bundlable {
 			pit[i]			= (flags & Terrain.PIT) != 0;
 		}
 
-		for (Blob b : blobs.values()){
-			b.onBuildFlagMaps(this);
+		if(blobs!=null&&blobs.values() != null){
+			for (Blob b : blobs.values()){
+				b.onBuildFlagMaps(this);
+			}
 		}
 		
 		int lastRow = length() - width();

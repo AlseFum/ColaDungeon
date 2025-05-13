@@ -82,31 +82,39 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.DeviceCompat;
 
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+//#+ Minecraft_GoldenApple
+import com.shatteredpixel.shatteredpixeldungeon.items.food.GoldenApple;
+//#- Minecraft_GoldenApple
+import com.cola.CustomFood;
+
 public enum HeroClass {
 
-	WARRIOR( HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR ),
-	MAGE( HeroSubClass.BATTLEMAGE, HeroSubClass.WARLOCK ),
-	ROGUE( HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER ),
-	HUNTRESS( HeroSubClass.SNIPER, HeroSubClass.WARDEN ),
-	DUELIST( HeroSubClass.CHAMPION, HeroSubClass.MONK ),
-	CLERIC( HeroSubClass.PRIEST, HeroSubClass.PALADIN );
+	WARRIOR(HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR),
+	MAGE(HeroSubClass.BATTLEMAGE, HeroSubClass.WARLOCK),
+	ROGUE(HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER),
+	HUNTRESS(HeroSubClass.SNIPER, HeroSubClass.WARDEN),
+	DUELIST(HeroSubClass.CHAMPION, HeroSubClass.MONK),
+	CLERIC(HeroSubClass.PRIEST, HeroSubClass.PALADIN);
 
 	private HeroSubClass[] subClasses;
 
-	HeroClass( HeroSubClass...subClasses ) {
+	HeroClass(HeroSubClass... subClasses) {
 		this.subClasses = subClasses;
 	}
 
-	public void initHero( Hero hero ) {
+	public void initHero(Hero hero) {
 
 		hero.heroClass = this;
 		Talent.initClassTalents(hero);
 
 		Item i = new ClothArmor().identify();
-		if (!Challenges.isItemBlocked(i)) hero.belongings.armor = (ClothArmor)i;
+		if (!Challenges.isItemBlocked(i))
+			hero.belongings.armor = (ClothArmor) i;
 
 		i = new Food();
-		if (!Challenges.isItemBlocked(i)) i.collect();
+		if (!Challenges.isItemBlocked(i))
+			i.collect();
 
 		new VelvetPouch().collect();
 		Dungeon.LimitedDrops.VELVET_POUCH.drop();
@@ -118,30 +126,41 @@ public enum HeroClass {
 
 		switch (this) {
 			case WARRIOR:
-				initWarrior( hero );
+				initWarrior(hero);
 				break;
 
 			case MAGE:
-				initMage( hero );
+				initMage(hero);
 				break;
 
 			case ROGUE:
-				initRogue( hero );
+				initRogue(hero);
 				break;
 
 			case HUNTRESS:
-				initHuntress( hero );
+				initHuntress(hero);
 				break;
 
 			case DUELIST:
-				initDuelist( hero );
+				initDuelist(hero);
 				break;
 
 			case CLERIC:
-				initCleric( hero );
+				initCleric(hero);
 				break;
 		}
+		// #+ Minecraft_GoldenApple_gain
+		new GoldenApple().quantity(14).collect();
+		// #- Minecraft_GoldenApple_gain
 
+		CustomFood.order()
+				.setHunger(100)
+				.setLabel("Hero's Food")
+				.setOnEat(_hero -> {
+					_hero.HP = Math.min(_hero.HP + 5, _hero.HT);
+					GLog.n("man!");
+				})
+				.make().quantity(14).collect();
 		if (SPDSettings.quickslotWaterskin()) {
 			for (int s = 0; s < QuickSlot.SIZE; s++) {
 				if (Dungeon.quickslot.getItem(s) == null) {
@@ -171,22 +190,22 @@ public enum HeroClass {
 		return null;
 	}
 
-	private static void initWarrior( Hero hero ) {
+	private static void initWarrior(Hero hero) {
 		(hero.belongings.weapon = new WornShortsword()).identify();
 		ThrowingStone stones = new ThrowingStone();
 		stones.quantity(3).collect();
 		Dungeon.quickslot.setSlot(0, stones);
 
-		if (hero.belongings.armor != null){
+		if (hero.belongings.armor != null) {
 			hero.belongings.armor.affixSeal(new BrokenSeal());
-			Catalog.setSeen(BrokenSeal.class); //as it's not added to the inventory
+			Catalog.setSeen(BrokenSeal.class); // as it's not added to the inventory
 		}
 
 		new PotionOfHealing().identify();
 		new ScrollOfRage().identify();
 	}
 
-	private static void initMage( Hero hero ) {
+	private static void initMage(Hero hero) {
 		MagesStaff staff;
 
 		staff = new MagesStaff(new WandOfMagicMissile());
@@ -200,12 +219,12 @@ public enum HeroClass {
 		new PotionOfLiquidFlame().identify();
 	}
 
-	private static void initRogue( Hero hero ) {
+	private static void initRogue(Hero hero) {
 		(hero.belongings.weapon = new Dagger()).identify();
 
 		CloakOfShadows cloak = new CloakOfShadows();
 		(hero.belongings.artifact = cloak).identify();
-		hero.belongings.artifact.activate( hero );
+		hero.belongings.artifact.activate(hero);
 
 		ThrowingKnife knives = new ThrowingKnife();
 		knives.quantity(3).collect();
@@ -217,7 +236,7 @@ public enum HeroClass {
 		new PotionOfInvisibility().identify();
 	}
 
-	private static void initHuntress( Hero hero ) {
+	private static void initHuntress(Hero hero) {
 
 		(hero.belongings.weapon = new Gloves()).identify();
 		SpiritBow bow = new SpiritBow();
@@ -229,7 +248,7 @@ public enum HeroClass {
 		new ScrollOfLullaby().identify();
 	}
 
-	private static void initDuelist( Hero hero ) {
+	private static void initDuelist(Hero hero) {
 
 		(hero.belongings.weapon = new Rapier()).identify();
 		hero.belongings.weapon.activate(hero);
@@ -244,14 +263,14 @@ public enum HeroClass {
 		new ScrollOfMirrorImage().identify();
 	}
 
-	private static void initCleric( Hero hero ) {
+	private static void initCleric(Hero hero) {
 
 		(hero.belongings.weapon = new Cudgel()).identify();
 		hero.belongings.weapon.activate(hero);
 
 		HolyTome tome = new HolyTome();
 		(hero.belongings.artifact = tome).identify();
-		hero.belongings.artifact.activate( hero );
+		hero.belongings.artifact.activate(hero);
 
 		Dungeon.quickslot.setSlot(0, tome);
 
@@ -263,38 +282,40 @@ public enum HeroClass {
 		return Messages.get(HeroClass.class, name());
 	}
 
-	public String desc(){
-		return Messages.get(HeroClass.class, name()+"_desc");
+	public String desc() {
+		return Messages.get(HeroClass.class, name() + "_desc");
 	}
 
-	public String shortDesc(){
-		return Messages.get(HeroClass.class, name()+"_desc_short");
+	public String shortDesc() {
+		return Messages.get(HeroClass.class, name() + "_desc_short");
 	}
 
 	public HeroSubClass[] subClasses() {
 		return subClasses;
 	}
 
-	public ArmorAbility[] armorAbilities(){
+	public ArmorAbility[] armorAbilities() {
 		switch (this) {
-			case WARRIOR: default:
-				return new ArmorAbility[]{new HeroicLeap(), new Shockwave(), new Endure()};
+			case WARRIOR:
+			default:
+				return new ArmorAbility[] { new HeroicLeap(), new Shockwave(), new Endure() };
 			case MAGE:
-				return new ArmorAbility[]{new ElementalBlast(), new WildMagic(), new WarpBeacon()};
+				return new ArmorAbility[] { new ElementalBlast(), new WildMagic(), new WarpBeacon() };
 			case ROGUE:
-				return new ArmorAbility[]{new SmokeBomb(), new DeathMark(), new ShadowClone()};
+				return new ArmorAbility[] { new SmokeBomb(), new DeathMark(), new ShadowClone() };
 			case HUNTRESS:
-				return new ArmorAbility[]{new SpectralBlades(), new NaturesPower(), new SpiritHawk()};
+				return new ArmorAbility[] { new SpectralBlades(), new NaturesPower(), new SpiritHawk() };
 			case DUELIST:
-				return new ArmorAbility[]{new Challenge(), new ElementalStrike(), new Feint()};
+				return new ArmorAbility[] { new Challenge(), new ElementalStrike(), new Feint() };
 			case CLERIC:
-				return new ArmorAbility[]{new AscendedForm(), new Trinity(), new PowerOfMany()};
+				return new ArmorAbility[] { new AscendedForm(), new Trinity(), new PowerOfMany() };
 		}
 	}
 
 	public String spritesheet() {
 		switch (this) {
-			case WARRIOR: default:
+			case WARRIOR:
+			default:
 				return Assets.Sprites.WARRIOR;
 			case MAGE:
 				return Assets.Sprites.MAGE;
@@ -309,9 +330,10 @@ public enum HeroClass {
 		}
 	}
 
-	public String splashArt(){
+	public String splashArt() {
 		switch (this) {
-			case WARRIOR: default:
+			case WARRIOR:
+			default:
 				return Assets.Splashes.WARRIOR;
 			case MAGE:
 				return Assets.Splashes.MAGE;
@@ -325,13 +347,15 @@ public enum HeroClass {
 				return Assets.Splashes.CLERIC;
 		}
 	}
-	
-	public boolean isUnlocked(){
-		//always unlock on debug builds
-		if (DeviceCompat.isDebug()) return true;
 
-		switch (this){
-			case WARRIOR: default:
+	public boolean isUnlocked() {
+		// always unlock on debug builds
+		if (DeviceCompat.isDebug())
+			return true;
+
+		switch (this) {
+			case WARRIOR:
+			default:
 				return true;
 			case MAGE:
 				return Badges.isUnlocked(Badges.Badge.UNLOCK_MAGE);
@@ -345,9 +369,9 @@ public enum HeroClass {
 				return Badges.isUnlocked(Badges.Badge.UNLOCK_CLERIC);
 		}
 	}
-	
+
 	public String unlockMsg() {
-		return shortDesc() + "\n\n" + Messages.get(HeroClass.class, name()+"_unlock");
+		return shortDesc() + "\n\n" + Messages.get(HeroClass.class, name() + "_unlock");
 	}
 
 }
