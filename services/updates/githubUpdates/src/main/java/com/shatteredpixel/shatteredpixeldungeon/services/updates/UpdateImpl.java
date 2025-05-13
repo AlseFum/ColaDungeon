@@ -23,14 +23,56 @@ package com.shatteredpixel.shatteredpixeldungeon.services.updates;
 
 public class UpdateImpl {
 
-	private static UpdateService updateChecker = new GitHubUpdates();
+	// Disabled GitHub updates by using a no-op service
+	private static UpdateService updateChecker = new NoOpUpdateService();
 
 	public static UpdateService getUpdateService(){
 		return updateChecker;
 	}
 
 	public static boolean supportsUpdates(){
-		return true;
+		return false;  // Changed to false to indicate updates are not supported
 	}
 
+	// No-op update service that does nothing for all update operations
+	private static class NoOpUpdateService extends UpdateService {
+		@Override
+		public boolean supportsUpdatePrompts() {
+			return false;
+		}
+
+		@Override
+		public boolean supportsBetaChannel() {
+			return false;
+		}
+
+		@Override
+		public void checkForUpdate(boolean useMetered, boolean includeBetas, UpdateResultCallback callback) {
+			if (callback != null) {
+				callback.onNoUpdateFound();
+			}
+		}
+
+		@Override
+		public void initializeUpdate(AvailableUpdateData update) {
+			// Do nothing
+		}
+
+		@Override
+		public boolean supportsReviews() {
+			return false;
+		}
+
+		@Override
+		public void initializeReview(ReviewResultCallback callback) {
+			if (callback != null) {
+				callback.onComplete();
+			}
+		}
+
+		@Override
+		public void openReviewURI() {
+			// Do nothing
+		}
+	}
 }

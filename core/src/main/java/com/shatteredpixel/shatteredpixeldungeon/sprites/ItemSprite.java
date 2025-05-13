@@ -255,30 +255,15 @@ public class ItemSprite extends MovieClip {
 		if (map.path != Assets.Sprites.ITEMS) {
 			texture = TextureCache.get(map.path);
 		} else {
-			texture = TextureCache.get(Assets.Sprites.ITEMS);
+			//default to use ITEMS,so here don't do more
+			//texture = TextureCache.get(Assets.Sprites.ITEMS);
 		}
 		frame(map.rect);
 		float height = map.height;
 		if (height < 8f) {
 			perspectiveRaise = (5 + 8 - height) / 16f;
 		}
-		// if (image >= 160) {
 
-		// // very hustle. frame uses uvRect, the size that divided by tile size.
-		// // so here the rectF is to be set as 0,0,16/16,16/16
-		// // and about the image, we need more change
-		// // not only here is about image:int
-		// frame(new RectF(0, 0, 1, 1));
-		// float height = ItemSpriteSheet.film.height(1);
-		// // adds extra raise to very short items, so they are visible
-		// if (height < 8f) {
-		// perspectiveRaise = (5 + 8 - height) / 16f;
-		// }
-		// } else {
-
-		// // adds extra raise to very short items, so they are visible
-
-		// }
 
 	}
 

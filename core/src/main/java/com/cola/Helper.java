@@ -125,9 +125,10 @@ public class Helper {
                     ItemSpriteSheet.film.get(image),
                     ItemSpriteSheet.film.height(image));
         } else if (image == 114515) {
-            return new DirectImageMap("minecraft/bread.png", new RectF(0, 0, 1, 1), 16);
+            return new DirectImageMap("minecraft/bread.png", new RectF(0.25f, 0, 0.75f, 1), 16);
         } else {
-            return new DirectImageMap("minecraft/golden_apple.png", new RectF(0, 0, 1, 1), 16);
+            //rectF是按百分比代表texture的位置
+            return new DirectImageMap("minecraft/golden_apple.png", new RectF(0.25f, 0, 0.75f, 1), 16);
         }
     };
 
