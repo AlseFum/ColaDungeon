@@ -10,7 +10,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.LastLevel;
 
 
 import com.watabou.utils.RectF;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.cola.ItemSpriteManager;
 
 
 //this file is to help make the dungeon code more soft.
@@ -46,29 +46,7 @@ public class Helper {
 
     }
 
-    public static class DirectImageMap {
-        public String path;
-        public RectF rect;
-        public float height;
-
-        public DirectImageMap(String path, RectF rect, float height) {
-            this.path = path;
-            this.rect = rect;
-            this.height = height;
-        }
+    public static ItemSpriteManager.ImageMapping map_image(int image) {
+        return ItemSpriteManager.mapImage(image);
     }
-
-    public static DirectImageMap map_image(int image) {
-        if (image < 114514) {
-            return new DirectImageMap(
-                    Assets.Sprites.ITEMS,
-                    ItemSpriteSheet.film.get(image),
-                    ItemSpriteSheet.film.height(image));
-        } else if (image == 114515) {
-            return new DirectImageMap("minecraft/bread.png", new RectF(0.25f, 0, 0.75f, 1), 16);
-        } else {
-            // rectF是按百分比代表texture的位置
-            return new DirectImageMap("minecraft/golden_apple.png", new RectF(0.25f, 0, 0.75f, 1), 16);
-        }
-    };
 }

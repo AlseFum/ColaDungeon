@@ -48,6 +48,7 @@ import com.watabou.utils.Random;
 
 import java.nio.Buffer;
 //@Alsefum
+import com.cola.ItemSpriteManager.ImageMapping;
 import com.cola.Helper;
 
 public class ItemSprite extends MovieClip {
@@ -251,7 +252,7 @@ public class ItemSprite extends MovieClip {
 
 	public void frame(int image) {
 		// @Alsefum
-		Helper.DirectImageMap map = Helper.map_image(image);
+		ImageMapping map = Helper.map_image(image);
 		if (map.path != Assets.Sprites.ITEMS) {
 			texture = TextureCache.get(map.path);
 		} else {
