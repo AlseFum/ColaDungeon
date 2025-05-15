@@ -33,7 +33,7 @@ public class Helper {
             }
         }
 
-        return level;
+        return new DebugLevel();
     }
 
     public static Level newLevel(int depth, int branch) {

@@ -87,7 +87,7 @@ public class CustomFood extends Food {
         public String key = "Cola";
         public String label = "Cola";
         public float energy = 10.0f;
-        public int image = ItemSpriteManager.ByName("diamond");
+        public int image = ItemSpriteManager.ByName("skel");
         public Consumer<Hero> onEat = h -> {
         };
         public Function<Integer, Integer> price = i -> 10;

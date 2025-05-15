@@ -102,7 +102,7 @@ public class ItemSpriteManager {
 
     static {
         registerTexture("minecraft/misc.png", 32)
-            .span(8).label("diamond");
+            .span(144).label("skel");
         registerTexture("minecraft/bread.png", 16)
             .label("bread");
         registerTexture("minecraft/golden_apple.png", 16)

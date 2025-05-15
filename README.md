@@ -14,10 +14,7 @@
 宏的教程还没写（咕咕咕
 
 ## 进度
-宏操作基本完成，游戏本体完全没改
+宏操作基本完成
+可以使用ItemSpriteManager新增材质资源。具体用法见ItemSpriteManager.java的static块。注意有个ByName函数。
 
-## 笔记
-
-ItemSprite继承自Image，通过texture和frame来控制显示
-texture是整张图片，frame控制图片范围
-texture的设置是Image的。frame用int来操作
+现在的主要目标：由于已经解决ItemSprite单例造成的不便，接下来将尝试翻新Gradle，提高java版本
