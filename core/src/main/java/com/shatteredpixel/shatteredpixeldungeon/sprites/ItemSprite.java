@@ -44,6 +44,7 @@ import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.PointF;
+import com.watabou.utils.RectF;
 import com.watabou.utils.Random;
 
 import java.nio.Buffer;
@@ -252,20 +253,25 @@ public class ItemSprite extends MovieClip {
 
 	public void frame(int image) {
 		// @Alsefum
-		ImageMapping map = Helper.map_image(image);
-		if (map.path != Assets.Sprites.ITEMS) {
-			texture = TextureCache.get(map.path);
-		} else {
-			//default to use ITEMS,so here don't do more
-			//texture = TextureCache.get(Assets.Sprites.ITEMS);
+		if (image >= 114514) {
+			ImageMapping map = Helper.map_image(image);
+			if (map != null) {
+				texture = map.texture;
+				frame(map.rect);
+				float height = map.height;
+				if (height < 8f) {
+					perspectiveRaise = (5 + 8 - height) / 16f;
+				}
+				return;
+			}
 		}
-		frame(map.rect);
-		float height = map.height;
+		RectF original_map = ItemSpriteSheet.film.get(image);
+		frame(original_map);
+		float height = ItemSpriteSheet.film.height(image);
 		if (height < 8f) {
 			perspectiveRaise = (5 + 8 - height) / 16f;
 		}
-
-
+		return;
 	}
 
 	public synchronized void glow(Glowing glowing) {

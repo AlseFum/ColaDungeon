@@ -4,75 +4,144 @@ import com.watabou.gltextures.TextureCache;
 import com.watabou.gltextures.SmartTexture;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import com.watabou.utils.RectF;
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+
+import com.watabou.noosa.TextureFilm;
 
 public class ItemSpriteManager {
-    private static final Map<String, Segment> textureMap = new HashMap<>();
+    private static ArrayList<Segment> segments = new ArrayList<>();
+    public static HashMap<String, Integer> texture_id_map = new HashMap<>();
     private static int latestLocation = 120000;
-    private static final ArrayList<String> imageList = new ArrayList<>();
 
-    public static void registerTexture(String texture, int size) {
-        if (!textureMap.containsKey(texture)) {
-            Segment segment = new Segment(texture, latestLocation, size);
-            latestLocation += size;
-            textureMap.put(texture, segment);
-            imageList.add(texture);
+    public static Segment getSegment(int id) {
+        for (Segment s : segments) {
+            if (s.id_start <= id && id <= s.id_start + s.id_size) {
+                return s;
+            }
         }
+        return null;
     }
 
-    public static int getImage(String imagename) {
-        Segment segment = textureMap.get(imagename);
-        return segment != null ? segment.id_start : -1;
+    public static int ByName(String name) {
+        return texture_id_map.get(name);
     }
 
-    public static int getImageIndex(String imagename) {
-        return imageList.indexOf(imagename);
+    public static Segment registerTexture(String texture, int size) {
+        Segment s = new Segment(texture, latestLocation, size);
+        segments.add(s);
+        latestLocation += 1000;
+        return s;
     }
 
-    public static int registerAndGetIndex(String texture, int size) {
-        registerTexture(texture, size);
-        return getImageIndex(texture);
+    public static Segment registerTexture(String texture) {
+        return registerTexture(texture, 16);
+    }
+
+    public static ImageMapping getImageMapping(int id) {
+        return getSegment(id).get(id);
+    }
+
+    public static ImageMapping getImageMapping(String label) {
+        return getSegment(texture_id_map.get(label)).get(label);
     }
 
     public static class Segment {
-        String texture;
         SmartTexture cache;
         int id_start;
         int id_size;
+        int size;
+        int cols;
 
-        public Segment(String texture, int id_start, int id_size) {
-            this.texture = texture;
+        TextureFilm film;
+
+        public Segment(String texture, int id_start, int size) {
             this.cache = TextureCache.get(texture);
+            this.film = new TextureFilm(cache, size, size);
             this.id_start = id_start;
-            this.id_size = id_size;
+            this.id_size = 0;
+            this.size = size;
+            this.cols = (int) (cache.width / size);
         }
+
+        private Segment settle(int id) {
+            // only local index
+            int x = id % cols;
+            int y = id / cols;
+            film.add(id, x * size, y * size, (x + 1) * size, (y + 1) * size);
+            return this;
+        }
+
+        public ImageMapping get(int id) {
+            int where = id >= id_start ? id - id_start : id;
+            if (film.get(id) == null) {
+                settle(where);
+            }
+            return new ImageMapping(cache, film.get(where), film.height(where));
+        }
+
+        public Segment label(String label) {
+            texture_id_map.put(label, id_start + id_size);
+            settle(id_size);
+            id_size++;
+            return this;
+        }
+
+        public Segment span(int size) {
+            // warn: it's not a good idea to use this method
+            // only use if you know what you are doing
+            // now it's for dev only
+            this.id_size += size;
+            return this;
+        }
+
+        public ImageMapping get(String label) {
+            return get(texture_id_map.get(label));
+        }
+
+    }
+
+    static {
+        registerTexture("minecraft/misc.png", 32)
+            .span(8).label("diamond");
+        registerTexture("minecraft/bread.png", 16)
+            .label("bread");
+        registerTexture("minecraft/golden_apple.png", 16)
+            .label("golden_apple");
+
     }
 
     public static class ImageMapping {
-        public String path;
+        public SmartTexture texture;
         public RectF rect;
         public float height;
 
-        public ImageMapping(String path, RectF rect, float height) {
-            this.path = path;
+        public ImageMapping(SmartTexture texture, RectF rect, float height) {
             this.rect = rect;
             this.height = height;
+            this.texture = texture;
         }
     }
 
     public static ImageMapping mapImage(int image) {
         if (image < 114514) {
-            return new ImageMapping(
-                    Assets.Sprites.ITEMS,
-                    ItemSpriteSheet.film.get(image),
-                    ItemSpriteSheet.film.height(image));
-        } else if (image == 114515) {
-            return new ImageMapping("minecraft/bread.png", new RectF(0.25f, 0, 0.75f, 1), 16);
+            System.out.println("mapImage should not receive image:int<114514");
+            return null;
+            // return new ImageMapping(
+            // TextureCache.get(Assets.Sprites.ITEMS),
+            // ItemSpriteSheet.film.get(image),
+            // ItemSpriteSheet.film.height(image));
         } else {
-            return new ImageMapping("minecraft/golden_apple.png", new RectF(0.25f, 0, 0.75f, 1), 16);
+            if (getSegment(image) != null) {
+                return getSegment(image).get(image);
+            } else {
+                System.out.println("Invalid image segment for " + image);
+            }
+            if (image == 114515) {
+                return new ImageMapping(TextureCache.get("minecraft/bread.png"), new RectF(0f, 0, 1f, 1), 16);
+            } else {
+                return new ImageMapping(TextureCache.get("minecraft/golden_apple.png"), new RectF(0.25f, 0, 0.75f, 1),
+                        16);
+            }
         }
     }
 }
