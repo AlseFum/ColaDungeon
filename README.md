@@ -17,4 +17,3 @@
 宏操作基本完成
 可以使用ItemSpriteManager新增材质资源。具体用法见ItemSpriteManager.java的static块。注意有个ByName函数。
 
-现在的主要目标：由于已经解决ItemSprite单例造成的不便，接下来将尝试翻新Gradle，提高java版本
