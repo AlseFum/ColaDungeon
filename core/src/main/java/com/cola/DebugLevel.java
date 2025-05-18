@@ -1,16 +1,15 @@
 package com.cola;
 
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Bones;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.levels.features.LevelTransition;
+import com.coladungeon.levels.Level;
+import com.coladungeon.levels.Terrain;
+import com.coladungeon.Assets;
+import com.coladungeon.Bones;
+import com.coladungeon.actors.Actor;
+import com.coladungeon.actors.Char;
+import com.coladungeon.actors.mobs.Mob;
+import com.coladungeon.items.Heap;
+import com.coladungeon.items.Item;
+import com.coladungeon.levels.features.LevelTransition;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;

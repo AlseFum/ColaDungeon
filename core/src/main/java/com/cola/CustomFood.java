@@ -1,10 +1,10 @@
 package com.cola;
 
-import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
+import com.coladungeon.items.food.Food;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.coladungeon.actors.hero.Hero;
 import java.util.HashMap;
 import com.watabou.utils.Bundle;
 

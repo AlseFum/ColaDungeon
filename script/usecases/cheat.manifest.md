@@ -17,7 +17,7 @@
 ```
 
 ```ItemSprite_import
-import com.shatteredpixel.shatteredpixeldungeon.items.food.SupplyRation;
+import food.items.com.coladungeon.SupplyRation;
 ```
 ```ItemSprite_link
 		if ( heap.peek() instanceof SupplyRation ) {

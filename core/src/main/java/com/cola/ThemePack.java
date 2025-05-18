@@ -1,17 +1,17 @@
 package com.cola;
 
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.levels.SewerLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CavesBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CavesLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CityBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.CityLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.HallsBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.HallsLevel;
+import com.coladungeon.levels.Level;
+import com.coladungeon.levels.SewerLevel;
+import com.coladungeon.levels.SewerBossLevel;
+import com.coladungeon.levels.CavesBossLevel;
+import com.coladungeon.levels.CavesLevel;
+import com.coladungeon.levels.CityBossLevel;
+import com.coladungeon.levels.CityLevel;
+import com.coladungeon.levels.HallsBossLevel;
+import com.coladungeon.levels.HallsLevel;
 
-import com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel;
-import com.shatteredpixel.shatteredpixeldungeon.levels.PrisonLevel;
+import com.coladungeon.levels.PrisonBossLevel;
+import com.coladungeon.levels.PrisonLevel;
 
 public class ThemePack {
     // emmm, try to make things more separated

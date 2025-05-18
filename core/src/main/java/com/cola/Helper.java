@@ -1,16 +1,11 @@
 package com.cola;
 
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.coladungeon.levels.Level;
+import com.coladungeon.Dungeon;
 
-import com.shatteredpixel.shatteredpixeldungeon.levels.DeadEndLevel;
+import com.coladungeon.levels.DeadEndLevel;
 
-import com.shatteredpixel.shatteredpixeldungeon.levels.LastLevel;
-
-
-import com.watabou.utils.RectF;
-import com.cola.ItemSpriteManager;
+import com.coladungeon.levels.LastLevel;
 
 
 //this file is to help make the dungeon code more soft.

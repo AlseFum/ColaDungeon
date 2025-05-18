@@ -1,7 +1,7 @@
 package com.cola;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.coladungeon.items.weapon.missiles.MissileWeapon;
+import com.coladungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.Assets;
 import java.util.HashMap;
 
 public class CustomMissileWeapon extends MissileWeapon {

@@ -7,7 +7,7 @@ java{
     sourceCompatibility = targetCompatibility = appJavaCompatibility
 }
 
-ext.appMainClass = "com.shatteredpixel.shatteredpixeldungeon.desktop.DesktopLauncher"
+ext.appMainClass = "com.coladungeon.desktop.DesktopLauncher"
 processResources {
     from new File(project(':core').projectDir, "/src/main/assets")
     from new File(project(':desktop').projectDir,"/src/main/assets")

@@ -1,9 +1,9 @@
 package com.cola;
 
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.items.bags.Bag;
+import com.coladungeon.items.Item;
+import com.coladungeon.items.trinkets.Trinket;
+import com.coladungeon.sprites.ItemSpriteSheet;
 public class TrinketBag extends Bag {
     {
         image = ItemSpriteSheet.HOLSTER;
