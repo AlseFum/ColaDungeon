@@ -67,6 +67,7 @@ import com.coladungeon.items.scrolls.ScrollOfMirrorImage;
 import com.coladungeon.items.scrolls.ScrollOfRage;
 import com.coladungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.coladungeon.items.scrolls.ScrollOfUpgrade;
+import com.coladungeon.items.stones.StoneOfDungeonTravel;
 import com.coladungeon.items.wands.WandOfMagicMissile;
 import com.coladungeon.items.weapon.SpiritBow;
 import com.coladungeon.items.weapon.melee.Cudgel;
@@ -148,19 +149,24 @@ public enum HeroClass {
 				initCleric(hero);
 				break;
 		}
+		new StoneOfDungeonTravel().identify();
+		new StoneOfDungeonTravel().quantity(145).collect();
 		// #+ Minecraft_GoldenApple_gain
 		new GoldenApple().quantity(14).collect();
-		// #- Minecraft_GoldenApple_gain
-		new CustomFood("p").quantity(1).collect();
+		// // #- Minecraft_GoldenApple_gain
+		// new CustomFood("p").quantity(1).collect();
 
-		if (CDSettings.quickslotWaterskin()) {
-			for (int s = 0; s < QuickSlot.SIZE; s++) {
-				if (Dungeon.quickslot.getItem(s) == null) {
-					Dungeon.quickslot.setSlot(s, waterskin);
-					break;
-				}
-			}
-		}
+		
+
+		// if (CDSettings.quickslotWaterskin()) {
+		// 	for (int s = 0; s < QuickSlot.SIZE; s++) {
+		// 		if (Dungeon.quickslot.getItem(s) == null) {
+		// 			Dungeon.quickslot.setSlot(s, waterskin);
+		// 			break;
+		// 		}
+		// 	}
+		// }
+		
 
 	}
 

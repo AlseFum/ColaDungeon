@@ -22,6 +22,8 @@
 package com.coladungeon.items;
 
 import com.coladungeon.Dungeon;
+import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.actors.mobs.npcs.Shopkeeper;
 import com.coladungeon.items.armor.Armor;
 import com.coladungeon.items.armor.ClericArmor;
 import com.coladungeon.items.armor.ClothArmor;
@@ -104,6 +106,7 @@ import com.coladungeon.items.stones.StoneOfBlink;
 import com.coladungeon.items.stones.StoneOfClairvoyance;
 import com.coladungeon.items.stones.StoneOfDeepSleep;
 import com.coladungeon.items.stones.StoneOfDetectMagic;
+import com.coladungeon.items.stones.StoneOfDungeonTravel;
 import com.coladungeon.items.stones.StoneOfEnchantment;
 import com.coladungeon.items.stones.StoneOfFear;
 import com.coladungeon.items.stones.StoneOfFlock;
@@ -388,9 +391,10 @@ public class Generator {
 					StoneOfAggression.class,
 					StoneOfBlast.class,
 					StoneOfFear.class,
-					StoneOfAugmentation.class  //1 is sold in each shop
+					StoneOfAugmentation.class,  //1 is sold in each shop
+					StoneOfDungeonTravel.class   //new travel stone
 			};
-			STONE.defaultProbs = new float[]{ 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0 };
+			STONE.defaultProbs = new float[]{ 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 1 };
 			STONE.probs = STONE.defaultProbs.clone();
 
 			WAND.classes = new Class<?>[]{
