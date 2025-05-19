@@ -1,124 +1,141 @@
-/*
- * Pixel Dungeon
- * Copyright (C) 2012-2015 Oleg Dolya
- *
- * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
-
 package com.coladungeon.levels.themes;
 
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
- * ThemeSheet contains the visual and gameplay configuration data for a theme.
- * This includes information about textures, colors, sound effects, and other theme-specific elements.
+ * ThemeSheet is a singleton that stores all available ThemePack objects.
+ * It provides centralized access to themes for the ThemeManager to use.
  */
 public class ThemeSheet implements Bundlable {
     
+    // Singleton instance
+    private static ThemeSheet instance = null;
+    
     // Keys for storing in bundle
-    private static final String THEME_NAME = "theme_name";
-    private static final String PROPERTIES_KEYS = "properties_keys";
-    private static final String PROPERTIES_VALUES = "properties_values";
+    private static final String THEME_PACKS = "theme_packs";
+    private static final String THEME_NAMES = "theme_names";
     
-    private String themeName;
-    private Map<String, String> properties = new HashMap<>();
+    // Map of theme name to ThemePack
+    private Map<String, ThemePack> themePacks = new HashMap<>();
     
-    public ThemeSheet(String name) {
-        this.themeName = name;
+    // Private constructor to enforce singleton pattern
+    private ThemeSheet() {
+        // Initialize with default themes
+        registerDefaultThemes();
     }
     
     /**
-     * Sets a visual or gameplay property for this theme
-     * @param key The property name
-     * @param value The property value
-     * @return This ThemeSheet for method chaining
+     * Get the singleton instance
+     * @return The ThemeSheet instance
      */
-    public ThemeSheet setProperty(String key, String value) {
-        properties.put(key, value);
-        return this;
+    public static ThemeSheet getInstance() {
+        if (instance == null) {
+            instance = new ThemeSheet();
+        }
+        return instance;
     }
     
     /**
-     * Gets a property value by its key
-     * @param key The property key
-     * @return The property value, or null if not found
+     * Register built-in default themes
      */
-    public String getProperty(String key) {
-        return properties.get(key);
+    private void registerDefaultThemes() {
+        // Default themes are registered here
+        // These correspond to the static themes in ThemePack
+        registerThemePack("sewer", ThemePack.getTheme(1));
+        registerThemePack("prison", ThemePack.getTheme(6));
+        registerThemePack("caves", ThemePack.getTheme(11));
+        registerThemePack("city", ThemePack.getTheme(16));
+        registerThemePack("halls", ThemePack.getTheme(21));
     }
     
     /**
-     * Gets a property value with a default fallback if not found
-     * @param key The property key
-     * @param defaultValue The default value to return if the property is not found
-     * @return The property value, or the default value if not found
+     * Register a new theme pack
+     * @param name The name of the theme
+     * @param themePack The ThemePack object
      */
-    public String getProperty(String key, String defaultValue) {
-        return properties.getOrDefault(key, defaultValue);
+    public void registerThemePack(String name, ThemePack themePack) {
+        themePacks.put(name, themePack);
     }
     
     /**
-     * Checks if a property exists
-     * @param key The property key
-     * @return true if the property exists, false otherwise
+     * Get a theme pack by name
+     * @param name The name of the theme
+     * @return The ThemePack, or null if not found
      */
-    public boolean hasProperty(String key) {
-        return properties.containsKey(key);
+    public ThemePack getThemePack(String name) {
+        return themePacks.get(name);
     }
     
     /**
-     * Gets the name of this theme
-     * @return The theme name
+     * Get all available theme names
+     * @return List of theme names
      */
-    public String getThemeName() {
-        return themeName;
+    public List<String> getThemeNames() {
+        return new ArrayList<>(themePacks.keySet());
+    }
+    
+    /**
+     * Get all available theme packs
+     * @return Map of theme names to theme packs
+     */
+    public Map<String, ThemePack> getAllThemePacks() {
+        return new HashMap<>(themePacks);
+    }
+    
+    /**
+     * Check if a theme exists
+     * @param name The name of the theme
+     * @return true if the theme exists, false otherwise
+     */
+    public boolean hasTheme(String name) {
+        return themePacks.containsKey(name);
     }
     
     @Override
     public void storeInBundle(Bundle bundle) {
-        bundle.put(THEME_NAME, themeName);
+        String[] names = themePacks.keySet().toArray(new String[0]);
+        bundle.put(THEME_NAMES, names);
         
-        String[] keys = properties.keySet().toArray(new String[0]);
-        String[] values = new String[keys.length];
-        
-        for (int i = 0; i < keys.length; i++) {
-            values[i] = properties.get(keys[i]);
+        // Store theme packs as a collection of Bundlable objects
+        ArrayList<Bundlable> packs = new ArrayList<>();
+        for (String name : names) {
+            packs.add(themePacks.get(name));
         }
-        
-        bundle.put(PROPERTIES_KEYS, keys);
-        bundle.put(PROPERTIES_VALUES, values);
+        bundle.put(THEME_PACKS, packs);
     }
     
     @Override
     public void restoreFromBundle(Bundle bundle) {
-        themeName = bundle.getString(THEME_NAME);
+        themePacks.clear();
         
-        String[] keys = bundle.getStringArray(PROPERTIES_KEYS);
-        String[] values = bundle.getStringArray(PROPERTIES_VALUES);
+        String[] names = bundle.getStringArray(THEME_NAMES);
+        Collection<Bundlable> packs = bundle.getCollection(THEME_PACKS);
         
-        properties.clear();
-        if (keys != null && values != null && keys.length == values.length) {
-            for (int i = 0; i < keys.length; i++) {
-                properties.put(keys[i], values[i]);
+        if (names != null && packs != null && names.length == packs.size()) {
+            int i = 0;
+            for (Bundlable pack : packs) {
+                if (pack instanceof ThemePack && i < names.length) {
+                    themePacks.put(names[i], (ThemePack)pack);
+                    i++;
+                }
             }
+        } else {
+            // If loading fails, reinitialize with defaults
+            registerDefaultThemes();
         }
+    }
+    
+    /**
+     * Reset the singleton instance (for testing or resets)
+     */
+    public static void reset() {
+        instance = null;
     }
 } 

@@ -60,13 +60,16 @@ public class ThemePack implements Bundlable {
         if (depth >= 1 && depth <= 5) {
             return SewerTheme;
         } else if (depth >= 6 && depth <= 10) {
-            return CavesTheme;
-        } else if (depth >= 11 && depth <= 15) {
-            return CityTheme;
-        } else if (depth >= 16 && depth <= 20) {
-            return HallsTheme;
-        } else if (depth >= 21 && depth <= 25) {
             return PrisonTheme;
+            
+        } else if (depth >= 11 && depth <= 15) {
+            return CavesTheme;
+            
+        } else if (depth >= 16 && depth <= 20) {
+            return CityTheme;
+            
+        } else if (depth >= 21 && depth <= 25) {
+            return HallsTheme;
         } else {
             return null;
         }
@@ -132,12 +135,14 @@ public class ThemePack implements Bundlable {
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public void restoreFromBundle(Bundle bundle) {
         try {
             String normalLevelName = bundle.getString(NORMAL_LEVEL);
             String bossLevelName = bundle.getString(BOSS_LEVEL);
             
             normalLevel = (Class<? extends Level>) Class.forName(normalLevelName);
+            
             BossLevel = (Class<? extends Level>) Class.forName(bossLevelName);
             
             if (bundle.contains(THEME_SHEET)) {
