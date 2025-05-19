@@ -56,51 +56,6 @@ public class ColaDungeon extends Game {
 	
 	public ColaDungeon(PlatformSupport platform ) {
 		super( sceneClass == null ? WelcomeScene.class : sceneClass, platform );
-
-		//pre-v2.5.3
-		com.watabou.utils.Bundle.addAlias(
-				StoneOfDetectMagic.class,
-				"com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfDisarming" );
-
-		//pre-v2.5.2
-		com.watabou.utils.Bundle.addAlias(
-				FlashBangBomb.class,
-				"com.shatteredpixel.shatteredpixeldungeon.items.bombs.ShockBomb" );
-		com.watabou.utils.Bundle.addAlias(
-				SmokeBomb.class,
-				"com.shatteredpixel.shatteredpixeldungeon.items.bombs.Flashbang" );
-
-		//pre-v2.5.0
-		com.watabou.utils.Bundle.addAlias(
-				MobSpawner.class,
-				"com.shatteredpixel.shatteredpixeldungeon.levels.Level$Respawner" );
-		com.watabou.utils.Bundle.addAlias(
-				Invulnerability.class,
-				"com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AnkhInvulnerability" );
-
-		//pre-v2.4.0
-		com.watabou.utils.Bundle.addAlias(
-				UnstableBrew.class,
-				"com.shatteredpixel.shatteredpixeldungeon.items.potions.AlchemicalCatalyst" );
-		com.watabou.utils.Bundle.addAlias(
-				UnstableSpell.class,
-				"com.shatteredpixel.shatteredpixeldungeon.items.spells.ArcaneCatalyst" );
-		com.watabou.utils.Bundle.addAlias(
-				ElixirOfFeatherFall.class,
-				"com.shatteredpixel.shatteredpixeldungeon.items.spells.FeatherFall" );
-		com.watabou.utils.Bundle.addAlias(
-				ElixirOfFeatherFall.FeatherBuff.class,
-				"com.shatteredpixel.shatteredpixeldungeon.items.spells.FeatherFall$FeatherBuff" );
-		com.watabou.utils.Bundle.addAlias(
-				AquaBrew.class,
-				"com.shatteredpixel.shatteredpixeldungeon.items.spells.AquaBlast" );
-
-		com.watabou.utils.Bundle.addAlias(
-				EntranceRoom.class,
-				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.EntranceRoom" );
-		com.watabou.utils.Bundle.addAlias(
-				ExitRoom.class,
-				"com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.ExitRoom" );
 	}
 	
 	@Override
