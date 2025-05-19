@@ -147,32 +147,49 @@ public class ChangesScene extends PixelScene {
 		
 		switch (changesSelected){
 			case 0: default:
+				// Commented out version changes loading
+				/*
 				v3_X_Changes.addAllChanges(changeInfos);
+				*/
 				break;
 			case 1:
+				/*
 				v2_X_Changes.addAllChanges(changeInfos);
+				*/
 				break;
 			case 2:
+				/*
 				v1_X_Changes.addAllChanges(changeInfos);
+				*/
 				break;
 			case 3:
+				/*
 				v0_9_X_Changes.addAllChanges(changeInfos);
+				*/
 				break;
 			case 4:
+				/*
 				v0_8_X_Changes.addAllChanges(changeInfos);
+				*/
 				break;
 			case 5:
+				/*
 				v0_7_X_Changes.addAllChanges(changeInfos);
+				*/
 				break;
 			case 6:
+				/*
 				v0_6_X_Changes.addAllChanges(changeInfos);
+				*/
 				break;
 			case 7:
+				/*
 				v0_5_X_Changes.addAllChanges(changeInfos);
 				v0_4_X_Changes.addAllChanges(changeInfos);
 				v0_3_X_Changes.addAllChanges(changeInfos);
 				v0_2_X_Changes.addAllChanges(changeInfos);
 				v0_1_X_Changes.addAllChanges(changeInfos);
+				*/
 				break;
 		}
 
@@ -228,6 +245,8 @@ public class ChangesScene extends PixelScene {
 				panel.innerHeight() + 2);
 		list.scrollTo(0, 0);
 
+		// Commented out all version tab buttons
+		/*
 		StyledButton btn3_X = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "3.X", 8){
 			@Override
 			protected void onClick() {
@@ -339,6 +358,18 @@ public class ChangesScene extends PixelScene {
 		if (changesSelected != 7) btnOld.textColor( 0xBBBBBB );
 		btnOld.setRect(btn0_6.right()-2, btn0_8.top(), 22, changesSelected == 7 ? 19 : 15);
 		addToBack(btnOld);
+		*/
+
+		// Add a single placeholder button
+		StyledButton placeholderBtn = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "Changes", 8){
+			@Override
+			protected void onClick() {
+				super.onClick();
+				// No action needed for placeholder
+			}
+		};
+		placeholderBtn.setRect(list.left()-4f, list.bottom(), 100, 19);
+		addToBack(placeholderBtn);
 
 		Archs archs = new Archs();
 		archs.setSize( Camera.main.width, Camera.main.height );
@@ -348,23 +379,25 @@ public class ChangesScene extends PixelScene {
 	}
 
 	private void updateChangesText(Image icon, String title, String... messages){
-		if (changeTitle != null){
+		// Commented out changes text update functionality
+		/*
+		if (changeTitle != null) {
 			changeTitle.icon(icon);
 			changeTitle.label(title);
-			changeTitle.setPos(changeTitle.left(), changeTitle.top());
-
-			String message = "";
-			for (int i = 0; i < messages.length; i++){
-				message += messages[i];
-				if (i != messages.length-1){
-					message += "\n\n";
-				}
+			changeTitle.setPos(0, 1);
+			
+			String message;
+			if (messages.length == 1) {
+				message = messages[0];
+			} else {
+				message = messages[0];
 			}
+			
 			changeBody.text(message);
+			
 			rightScroll.content().setSize(rightScroll.width(), changeBody.bottom()+2);
 			rightScroll.setSize(rightScroll.width(), rightScroll.height());
 			rightScroll.scrollTo(0, 0);
-
 		} else {
 			if (messages.length == 1) {
 				addToFront(new WndChanges(icon, title, messages[0]));
@@ -372,19 +405,23 @@ public class ChangesScene extends PixelScene {
 				addToFront(new WndChangesTabbed(icon, title, messages));
 			}
 		}
+		*/
 	}
 
 	public static void showChangeInfo(Image icon, String title, String... messages){
 		Scene s = ColaDungeon.scene();
+		// Commented out change info showing functionality
+		/*
 		if (s instanceof ChangesScene){
 			((ChangesScene) s).updateChangesText(icon, title, messages);
-			return;
-		}
-		if (messages.length == 1) {
-			s.addToFront(new WndChanges(icon, title, messages[0]));
 		} else {
-			s.addToFront(new WndChangesTabbed(icon, title, messages));
+			if (messages.length == 1) {
+				s.addToFront(new WndChanges(icon, title, messages[0]));
+			} else {
+				s.addToFront(new WndChangesTabbed(icon, title, messages));
+			}
 		}
+		*/
 	}
 	
 	@Override

@@ -288,7 +288,10 @@ public class TitleScene extends PixelScene {
 
 		public ChangesButton( Chrome.Type type, String label ){
 			super(type, label);
+			// Commented out version changes functionality
+			/*
 			if (CDSettings.updates()) Updates.checkForUpdate();
+			*/
 		}
 
 		boolean updateShown = false;
@@ -297,6 +300,8 @@ public class TitleScene extends PixelScene {
 		public void update() {
 			super.update();
 
+			// Commented out version changes functionality
+			/*
 			if (!updateShown && Updates.updateAvailable()){
 				updateShown = true;
 				text(Messages.get(TitleScene.class, "update"));
@@ -305,10 +310,13 @@ public class TitleScene extends PixelScene {
 			if (updateShown){
 				textColor(ColorMath.interpolate( 0xFFFFFF, Window.SHPX_COLOR, 0.5f + (float)Math.sin(Game.timeTotal*5)/2f));
 			}
+			*/
 		}
 
 		@Override
 		protected void onClick() {
+			// Commented out version changes functionality
+			/*
 			if (Updates.updateAvailable()){
 				AvailableUpdateData update = Updates.updateData();
 
@@ -334,8 +342,11 @@ public class TitleScene extends PixelScene {
 				ChangesScene.changesSelected = 0;
 				ColaDungeon.switchNoFade( ChangesScene.class );
 			}
+			*/
+			// Simple message informing that version changes are disabled
+			ChangesScene.changesSelected = 0;
+				ColaDungeon.switchNoFade( ChangesScene.class );
 		}
-
 	}
 
 	private static class SettingsButton extends StyledButton {

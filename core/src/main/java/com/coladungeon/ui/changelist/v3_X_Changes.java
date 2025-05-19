@@ -42,12 +42,16 @@ import java.util.ArrayList;
 public class v3_X_Changes {
 
 	public static void addAllChanges( ArrayList<ChangeInfo> changeInfos ){
+		// Commented out version change functionality
+		/*
 		add_Coming_Soon(changeInfos);
 		add_v3_0_Changes(changeInfos);
+		*/
 	}
 
 	public static void add_Coming_Soon( ArrayList<ChangeInfo> changeInfos ) {
-
+		// Commented out version change functionality
+		/*
 		ChangeInfo changes = new ChangeInfo("Coming Soon", true, "");
 		changes.hardlight(0xCCCCCC);
 		changeInfos.add(changes);
@@ -76,11 +80,12 @@ public class v3_X_Changes {
 				"**Android 4.0-4.4:** Due to updates to Shattered's game library (libGDX) and Google Play's billing library, I will sadly have to drop support for these older Android versions toward the end of 2025. These Android versions should still get v3.1 and v3.2 though.\n" +
 				"\n" +
 				"**Java 8-10:** This only affects users who play the old desktop JAR distribution, which requires a separate Java install. Support for the Java 8, 9, and 10 targets has been depreciated, at some point in the future Shattered will require Java 11 instead. I'll likely make this change at the same time as the Android change."));
-
+		*/
 	}
 
 	public static void add_v3_0_Changes( ArrayList<ChangeInfo> changeInfos ) {
-
+		// Commented out version change functionality
+		/*
 		ChangeInfo changes = new ChangeInfo("v3.0", true, "");
 		changes.hardlight(Window.TITLE_COLOR);
 		changeInfos.add(changes);
@@ -308,7 +313,7 @@ public class v3_X_Changes {
 				"Thrown weapons aren't an especially popular category of item to upgrade, and I would like to make more extensive changes to them in the future, but for the moment I'm making a targeted adjustment to the Shared Upgrades talent. The bonus damage it provided wasn't tied to the tier of thrown weapon used, which made T2 thrown weapons disproportionally powerful for the Sniper.\n" +
 				"\n" +
 				"**- Shared Upgrades** now grants 2.5%/5%/7.5% bonus damage per upgrade per tier, instead of a flat 10%/20%/30% bonus damage per upgrade. Functionally, this means -50% bonus dmg for T2 thrown weapons, -25% for T3, no changes for T4, and +25% for T5."));
-
+		*/
 	}
 
 }

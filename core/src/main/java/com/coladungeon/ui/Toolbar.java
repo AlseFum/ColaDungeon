@@ -842,7 +842,12 @@ public class Toolbar extends Component {
 
 		public void updateVisuals(){
 			if (icons[0] == null){
+				// Commented out version changes icon
+				/*
 				icons[0] = Icons.get(Icons.CHANGES);
+				*/
+				// Using a different icon instead
+				icons[0] = Icons.get(Icons.PREFS);
 				icons[0].scale.set(PixelScene.align(0.45f));
 				add(icons[0]);
 			}
