@@ -1,7 +1,5 @@
-package com.cola;
+package com.coladungeon.levels;
 
-import com.coladungeon.levels.Level;
-import com.coladungeon.levels.Terrain;
 import com.coladungeon.Assets;
 import com.coladungeon.Bones;
 import com.coladungeon.actors.Actor;

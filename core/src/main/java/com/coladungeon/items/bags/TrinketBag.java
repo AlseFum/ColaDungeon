@@ -1,6 +1,5 @@
-package com.cola;
+package com.coladungeon.items.bags;
 
-import com.coladungeon.items.bags.Bag;
 import com.coladungeon.items.Item;
 import com.coladungeon.items.trinkets.Trinket;
 import com.coladungeon.sprites.ItemSpriteSheet;

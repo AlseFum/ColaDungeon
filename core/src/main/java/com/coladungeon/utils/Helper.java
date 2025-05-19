@@ -1,12 +1,13 @@
-package com.cola;
+package com.coladungeon.utils;
 
 import com.coladungeon.levels.Level;
 import com.coladungeon.Dungeon;
 
 import com.coladungeon.levels.DeadEndLevel;
-
+import com.coladungeon.levels.DebugLevel;
 import com.coladungeon.levels.LastLevel;
-
+import com.coladungeon.levels.themes.ThemePack;
+import com.coladungeon.sprites.ItemSpriteManager;
 
 //this file is to help make the dungeon code more soft.
 public class Helper {

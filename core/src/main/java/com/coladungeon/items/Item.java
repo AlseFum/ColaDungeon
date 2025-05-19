@@ -34,6 +34,7 @@ import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.actors.hero.Talent;
 import com.coladungeon.effects.Speck;
 import com.coladungeon.items.bags.Bag;
+import com.coladungeon.items.food.CustomFood;
 import com.coladungeon.items.weapon.missiles.MissileWeapon;
 import com.coladungeon.items.weapon.missiles.darts.Dart;
 import com.coladungeon.items.weapon.missiles.darts.TippedDart;
@@ -56,8 +57,6 @@ import com.watabou.utils.Reflection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
-import com.cola.CustomFood;
 
 public class Item implements Bundlable {
 

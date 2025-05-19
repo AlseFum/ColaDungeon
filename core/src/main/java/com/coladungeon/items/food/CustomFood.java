@@ -1,12 +1,12 @@
-package com.cola;
+package com.coladungeon.items.food;
 
-import com.coladungeon.items.food.Food;
+import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.sprites.ItemSpriteManager;
+import com.watabou.utils.Bundle;
 
+import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import com.coladungeon.actors.hero.Hero;
-import java.util.HashMap;
-import com.watabou.utils.Bundle;
 
 public class CustomFood extends Food {
 

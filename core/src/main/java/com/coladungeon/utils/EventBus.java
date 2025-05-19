@@ -1,4 +1,4 @@
-package com.cola.util;
+package com.coladungeon.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

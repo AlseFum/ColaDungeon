@@ -49,8 +49,8 @@ import com.watabou.utils.Random;
 
 import java.nio.Buffer;
 //@Alsefum
-import com.cola.ItemSpriteManager.ImageMapping;
-import com.cola.Helper;
+import com.coladungeon.sprites.ItemSpriteManager.ImageMapping;
+import com.coladungeon.utils.Helper;
 
 public class ItemSprite extends MovieClip {
 

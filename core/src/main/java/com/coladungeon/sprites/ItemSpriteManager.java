@@ -1,4 +1,4 @@
-package com.cola;
+package com.coladungeon.sprites;
 
 import com.watabou.gltextures.TextureCache;
 import com.watabou.gltextures.SmartTexture;

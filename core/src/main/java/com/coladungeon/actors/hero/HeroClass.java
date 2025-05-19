@@ -81,11 +81,11 @@ import com.coladungeon.items.weapon.missiles.ThrowingStone;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.messages.Messages;
 import com.watabou.utils.DeviceCompat;
-
+import com.coladungeon.items.food.CustomFood;
 //#+ Minecraft_GoldenApple
 import com.coladungeon.items.food.GoldenApple;
 //#- Minecraft_GoldenApple
-import com.cola.CustomFood;
+
 
 public enum HeroClass {
 

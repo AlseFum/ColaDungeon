@@ -1,4 +1,4 @@
-package com.cola.util;
+package com.coladungeon.utils;
 
 public class Tuple2<A, B> {
     private final A first;

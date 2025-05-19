@@ -1,4 +1,4 @@
-package com.cola;
+package com.coladungeon.levels.themes;
 
 import com.coladungeon.levels.Level;
 import com.coladungeon.levels.SewerLevel;
@@ -15,8 +15,8 @@ import com.coladungeon.levels.PrisonLevel;
 
 public class ThemePack {
     // emmm, try to make things more separated
-    Class<? extends Level> normalLevel;
-    Class<? extends Level> BossLevel;
+    public Class<? extends Level> normalLevel;
+    public Class<? extends Level> BossLevel;
     static ThemePack SewerTheme = new ThemePack();
     static ThemePack CavesTheme = new ThemePack();
     static ThemePack CityTheme = new ThemePack();

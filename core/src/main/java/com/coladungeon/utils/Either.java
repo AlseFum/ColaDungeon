@@ -1,4 +1,4 @@
-package com.cola.util;
+package com.coladungeon.utils;
 
 import java.util.function.Function;
 
