@@ -637,7 +637,6 @@ public class GameScene extends PixelScene {
 				gameOver();
 			}
 		}
-
 	}
 	
 	public void destroy() {
@@ -728,7 +727,7 @@ public class GameScene extends PixelScene {
 		}
 
 		super.update();
-
+		
 		if (notifyDelay > 0) notifyDelay -= Game.elapsed;
 
 		if (!Emitter.freezeEmitters) {
@@ -736,7 +735,7 @@ public class GameScene extends PixelScene {
 			water.offsetTo( 0, waterOfs );
 			waterOfs = water.offsetY(); //re-assign to account for auto adjust
 		}
-
+		
 		if (!Actor.processing() && Dungeon.hero.isAlive()) {
 			if (actorThread == null || !actorThread.isAlive()) {
 				
@@ -744,7 +743,7 @@ public class GameScene extends PixelScene {
 					@Override
 					public void run() {
 						Actor.process();
-					}
+		}
 				};
 				
 				//if cpu cores are limited, game should prefer drawing the current frame
@@ -761,8 +760,8 @@ public class GameScene extends PixelScene {
 					actorThread.notify();
 				}
 			}
-		}
-
+			}
+			
 		if (Dungeon.hero.ready && Dungeon.hero.paralysed == 0) {
 			log.newLine();
 		}
@@ -806,7 +805,7 @@ public class GameScene extends PixelScene {
 			toDestroy.clear();
 		}
 	}
-
+	
 	private static Point lastOffset = null;
 
 	@Override

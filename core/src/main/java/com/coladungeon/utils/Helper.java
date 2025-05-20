@@ -25,12 +25,12 @@ import com.coladungeon.levels.Level;
 import com.coladungeon.Dungeon;
 
 import com.coladungeon.levels.DeadEndLevel;
+import com.coladungeon.levels.DebugLevel;
 import com.coladungeon.levels.LastLevel;
 import com.coladungeon.levels.LastShopLevel;
 import com.coladungeon.levels.MiningLevel;
 import com.coladungeon.levels.themes.ThemePack;
 import com.coladungeon.sprites.ItemSpriteManager;
-import com.watabou.utils.Random;
 
 //this file is to help make the dungeon code more soft.
 public class Helper {
@@ -53,6 +53,7 @@ public class Helper {
     public static Level newLevel(int depth, int branch) {
         
         Level level;
+
         
         switch (branch) {
             case 0:

@@ -12,6 +12,7 @@ import com.coladungeon.levels.HallsLevel;
 import com.coladungeon.levels.PrisonBossLevel;
 import com.coladungeon.levels.PrisonLevel;
 import com.coladungeon.levels.DeadEndLevel;
+import com.coladungeon.levels.DebugLevel;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 
@@ -29,6 +30,7 @@ public class ThemePack implements Bundlable {
     private static ThemePack CityTheme = new ThemePack();
     private static ThemePack HallsTheme = new ThemePack();
     private static ThemePack PrisonTheme = new ThemePack();
+    private static ThemePack DebugTheme = new ThemePack();
     
     static {
         SewerTheme.normalLevel = SewerLevel.class;
@@ -41,6 +43,8 @@ public class ThemePack implements Bundlable {
         HallsTheme.BossLevel = HallsBossLevel.class;
         PrisonTheme.normalLevel = PrisonLevel.class;
         PrisonTheme.BossLevel = PrisonBossLevel.class;
+        DebugTheme.normalLevel= DebugLevel.class;
+        DebugTheme.BossLevel= DebugLevel.class;
     }
 
     // Default constructor
@@ -58,7 +62,7 @@ public class ThemePack implements Bundlable {
      */
     public static ThemePack getTheme(int depth) {
         if (depth >= 1 && depth <= 5) {
-            return SewerTheme;
+            return DebugTheme;//||SewerTheme;
         } else if (depth >= 6 && depth <= 10) {
             return PrisonTheme;
             
