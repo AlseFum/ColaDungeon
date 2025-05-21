@@ -37,10 +37,10 @@ public class DebugNews extends NewsService {
 		}
 
 		//turn on to test connection failure
-		if (false){
-			callback.onConnectionFailed();
-			return;
-		}
+		// if (false){
+		// 	callback.onConnectionFailed();
+		// 	return;
+		// }
 
 		boolean testUnread = false;
 		//start placing articles either at the current time (if testing unread count)
