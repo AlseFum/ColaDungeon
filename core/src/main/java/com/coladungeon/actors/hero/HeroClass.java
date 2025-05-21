@@ -47,6 +47,7 @@ import com.coladungeon.actors.hero.abilities.warrior.Endure;
 import com.coladungeon.actors.hero.abilities.warrior.HeroicLeap;
 import com.coladungeon.actors.hero.abilities.warrior.Shockwave;
 import com.coladungeon.items.BrokenSeal;
+import com.coladungeon.items.CustomItem;
 import com.coladungeon.items.Item;
 import com.coladungeon.items.Waterskin;
 import com.coladungeon.items.armor.ClothArmor;
@@ -54,6 +55,10 @@ import com.coladungeon.items.artifacts.CloakOfShadows;
 import com.coladungeon.items.artifacts.HolyTome;
 import com.coladungeon.items.bags.VelvetPouch;
 import com.coladungeon.items.food.Food;
+import com.coladungeon.items.food.CustomFood;
+//#+ Minecraft_GoldenApple
+import com.coladungeon.items.food.GoldenApple;
+//#- Minecraft_GoldenApple
 import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfInvisibility;
 import com.coladungeon.items.potions.PotionOfLiquidFlame;
@@ -82,11 +87,6 @@ import com.coladungeon.items.weapon.missiles.ThrowingStone;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.messages.Messages;
 import com.watabou.utils.DeviceCompat;
-import com.coladungeon.items.food.CustomFood;
-//#+ Minecraft_GoldenApple
-import com.coladungeon.items.food.GoldenApple;
-//#- Minecraft_GoldenApple
-
 
 public enum HeroClass {
 
@@ -123,6 +123,19 @@ public enum HeroClass {
 		waterskin.collect();
 
 		new ScrollOfIdentify().identify();
+		
+		// 给玩家添加自定义物品
+		try {
+			// 两瓶治疗药水
+			new CustomItem("healing_potion").quantity(2).collect();
+			
+			// 根据职业添加额外物品
+			if (this == WARRIOR || this == MAGE) {
+				new CustomItem("magic_amulet").collect();
+			}
+		} catch (Exception e) {
+			// 如果自定义物品不可用，忽略错误
+		}
 
 		switch (this) {
 			case WARRIOR:
@@ -155,19 +168,6 @@ public enum HeroClass {
 		new GoldenApple().quantity(14).collect();
 		// // #- Minecraft_GoldenApple_gain
 		// new CustomFood("p").quantity(1).collect();
-
-		
-
-		// if (CDSettings.quickslotWaterskin()) {
-		// 	for (int s = 0; s < QuickSlot.SIZE; s++) {
-		// 		if (Dungeon.quickslot.getItem(s) == null) {
-		// 			Dungeon.quickslot.setSlot(s, waterskin);
-		// 			break;
-		// 		}
-		// 	}
-		// }
-		
-
 	}
 
 	public Badges.Badge masteryBadge() {
