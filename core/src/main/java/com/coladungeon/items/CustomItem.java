@@ -189,6 +189,12 @@ public class CustomItem extends Item {
         
         public Factory register() {
             item_records.put(building.key, building);
+            
+            // 同时注册到生成器系统中
+            if (!Generator.categoryContainsType(Generator.Category.CUSTOM_ITEM, CustomItem.class)) {
+                Generator.registerItem(Generator.Category.CUSTOM_ITEM, CustomItem.class, 1f);
+            }
+            
             return this;
         }
         

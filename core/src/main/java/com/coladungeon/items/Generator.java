@@ -244,12 +244,15 @@ public class Generator {
 		ARTIFACT( 0, 1, Artifact.class),
 		
 		FOOD	( 0, 0, Food.class ),
+		CUSTOM_FOOD ( 0, 0, com.coladungeon.items.food.CustomFood.class ),
 		
 		POTION	( 8, 8, Potion.class ),
 		SEED	( 1, 1, Plant.Seed.class ),
 		
 		SCROLL	( 8, 8, Scroll.class ),
 		STONE   ( 1, 1, Runestone.class),
+		
+		CUSTOM_ITEM ( 0, 0, CustomItem.class ),
 		
 		GOLD	( 10, 10,   Gold.class );
 		
@@ -285,6 +288,9 @@ public class Generator {
 			this.firstProb = firstProb;
 			this.secondProb = secondProb;
 			this.superClass = superClass;
+			// Initialize empty arrays that will be populated by registerItem
+			this.classes = new Class<?>[0];
+			this.probs = new float[0];
 		}
 
 		//some generator categories can have ordering within that category as well
@@ -322,303 +328,6 @@ public class Generator {
 			//items without a category-defined order are sorted based on the spritesheet
 			return Short.MAX_VALUE+item.image();
 		}
-
-		static {
-			GOLD.classes = new Class<?>[]{
-					Gold.class };
-			GOLD.probs = new float[]{ 1 };
-			
-			POTION.classes = new Class<?>[]{
-					PotionOfStrength.class, //2 drop every chapter, see Dungeon.posNeeded()
-					PotionOfHealing.class,
-					PotionOfMindVision.class,
-					PotionOfFrost.class,
-					PotionOfLiquidFlame.class,
-					PotionOfToxicGas.class,
-					PotionOfHaste.class,
-					PotionOfInvisibility.class,
-					PotionOfLevitation.class,
-					PotionOfParalyticGas.class,
-					PotionOfPurity.class,
-					PotionOfExperience.class};
-			POTION.defaultProbs  = new float[]{ 0, 3, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1 };
-			POTION.defaultProbs2 = new float[]{ 0, 3, 2, 2, 1, 2, 1, 1, 1, 1, 1, 0 };
-			POTION.probs = POTION.defaultProbs.clone();
-			
-			SEED.classes = new Class<?>[]{
-					Rotberry.Seed.class, //quest item
-					Sungrass.Seed.class,
-					Fadeleaf.Seed.class,
-					Icecap.Seed.class,
-					Firebloom.Seed.class,
-					Sorrowmoss.Seed.class,
-					Swiftthistle.Seed.class,
-					Blindweed.Seed.class,
-					Stormvine.Seed.class,
-					Earthroot.Seed.class,
-					Mageroyal.Seed.class,
-					Starflower.Seed.class};
-			SEED.defaultProbs = new float[]{ 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1 };
-			SEED.probs = SEED.defaultProbs.clone();
-			
-			SCROLL.classes = new Class<?>[]{
-					ScrollOfUpgrade.class, //3 drop every chapter, see Dungeon.souNeeded()
-					ScrollOfIdentify.class,
-					ScrollOfRemoveCurse.class,
-					ScrollOfMirrorImage.class,
-					ScrollOfRecharging.class,
-					ScrollOfTeleportation.class,
-					ScrollOfLullaby.class,
-					ScrollOfMagicMapping.class,
-					ScrollOfRage.class,
-					ScrollOfRetribution.class,
-					ScrollOfTerror.class,
-					ScrollOfTransmutation.class
-			};
-			SCROLL.defaultProbs  = new float[]{ 0, 3, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1 };
-			SCROLL.defaultProbs2 = new float[]{ 0, 3, 2, 2, 1, 2, 1, 1, 1, 1, 1, 0 };
-			SCROLL.probs = SCROLL.defaultProbs.clone();
-			
-			STONE.classes = new Class<?>[]{
-					StoneOfEnchantment.class,   //1 is guaranteed to drop on floors 6-19
-					StoneOfIntuition.class,     //1 additional stone is also dropped on floors 1-3
-					StoneOfDetectMagic.class,
-					StoneOfFlock.class,
-					StoneOfShock.class,
-					StoneOfBlink.class,
-					StoneOfDeepSleep.class,
-					StoneOfClairvoyance.class,
-					StoneOfAggression.class,
-					StoneOfBlast.class,
-					StoneOfFear.class,
-					StoneOfAugmentation.class,  //1 is sold in each shop
-					StoneOfDungeonTravel.class   //new travel stone
-			};
-			STONE.defaultProbs = new float[]{ 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 1 };
-			STONE.probs = STONE.defaultProbs.clone();
-
-			WAND.classes = new Class<?>[]{
-					WandOfMagicMissile.class,
-					WandOfLightning.class,
-					WandOfDisintegration.class,
-					WandOfFireblast.class,
-					WandOfCorrosion.class,
-					WandOfBlastWave.class,
-					WandOfLivingEarth.class,
-					WandOfFrost.class,
-					WandOfPrismaticLight.class,
-					WandOfWarding.class,
-					WandOfTransfusion.class,
-					WandOfCorruption.class,
-					WandOfRegrowth.class };
-			WAND.defaultProbs = new float[]{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
-			WAND.probs = WAND.defaultProbs.clone();
-			
-			//see generator.randomWeapon
-			WEAPON.classes = new Class<?>[]{};
-			WEAPON.probs = new float[]{};
-			
-			WEP_T1.classes = new Class<?>[]{
-					WornShortsword.class,
-					MagesStaff.class,
-					Dagger.class,
-					Gloves.class,
-					Rapier.class,
-					Cudgel.class,
-			};
-			WEP_T1.defaultProbs = new float[]{ 2, 0, 2, 2, 2, 2 };
-			WEP_T1.probs = WEP_T1.defaultProbs.clone();
-			
-			WEP_T2.classes = new Class<?>[]{
-					Shortsword.class,
-					HandAxe.class,
-					Spear.class,
-					Quarterstaff.class,
-					Dirk.class,
-					Sickle.class,
-					Pickaxe.class
-			};
-			WEP_T2.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2, 0 };
-			WEP_T2.probs = WEP_T2.defaultProbs.clone();
-			
-			WEP_T3.classes = new Class<?>[]{
-					Sword.class,
-					Mace.class,
-					Scimitar.class,
-					RoundShield.class,
-					Sai.class,
-					Whip.class
-			};
-			WEP_T3.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2 };
-			WEP_T3.probs = WEP_T1.defaultProbs.clone();
-			
-			WEP_T4.classes = new Class<?>[]{
-					Longsword.class,
-					BattleAxe.class,
-					Flail.class,
-					RunicBlade.class,
-					AssassinsBlade.class,
-					Crossbow.class,
-					Katana.class
-			};
-			WEP_T4.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2, 2 };
-			WEP_T4.probs = WEP_T4.defaultProbs.clone();
-			
-			WEP_T5.classes = new Class<?>[]{
-					Greatsword.class,
-					WarHammer.class,
-					Glaive.class,
-					Greataxe.class,
-					Greatshield.class,
-					Gauntlet.class,
-					WarScythe.class
-			};
-			WEP_T5.defaultProbs = new float[]{ 2, 2, 2, 2, 2, 2, 2 };
-			WEP_T5.probs = WEP_T5.defaultProbs.clone();
-
-			WEP_EXTRA.classes = new Class<?>[]{};
-			WEP_EXTRA.defaultProbs = new float[]{};
-			WEP_EXTRA.probs = WEP_EXTRA.defaultProbs.clone();
-			
-						
-			//see Generator.randomArmor
-			ARMOR.classes = new Class<?>[]{
-					ClothArmor.class,
-					LeatherArmor.class,
-					MailArmor.class,
-					ScaleArmor.class,
-					PlateArmor.class,
-					WarriorArmor.class,
-					MageArmor.class,
-					RogueArmor.class,
-					HuntressArmor.class,
-					DuelistArmor.class,
-					ClericArmor.class
-			};
-			ARMOR.probs = new float[]{ 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 };
-			
-			//see Generator.randomMissile
-			MISSILE.classes = new Class<?>[]{};
-			MISSILE.probs = new float[]{};
-			
-			MIS_T1.classes = new Class<?>[]{
-					ThrowingStone.class,
-					ThrowingKnife.class,
-					ThrowingSpike.class,
-					Dart.class
-			};
-			MIS_T1.defaultProbs = new float[]{ 3, 3, 3, 0 };
-			MIS_T1.probs = MIS_T1.defaultProbs.clone();
-			
-			MIS_T2.classes = new Class<?>[]{
-					FishingSpear.class,
-					ThrowingClub.class,
-					Shuriken.class
-			};
-			MIS_T2.defaultProbs = new float[]{ 3, 3, 3 };
-			MIS_T2.probs = MIS_T2.defaultProbs.clone();
-			
-			MIS_T3.classes = new Class<?>[]{
-					ThrowingSpear.class,
-					Kunai.class,
-					Bolas.class
-			};
-			MIS_T3.defaultProbs = new float[]{ 3, 3, 3 };
-			MIS_T3.probs = MIS_T3.defaultProbs.clone();
-			
-			MIS_T4.classes = new Class<?>[]{
-					Javelin.class,
-					Tomahawk.class,
-					HeavyBoomerang.class
-			};
-			MIS_T4.defaultProbs = new float[]{ 3, 3, 3 };
-			MIS_T4.probs = MIS_T4.defaultProbs.clone();
-			
-			MIS_T5.classes = new Class<?>[]{
-					Trident.class,
-					ThrowingHammer.class,
-					ForceCube.class
-			};
-			MIS_T5.defaultProbs = new float[]{ 3, 3, 3 };
-			MIS_T5.probs = MIS_T5.defaultProbs.clone();
-
-			//#+ ExtraTier
-			MIS_EXTRA.classes = new Class<?>[]{};
-			MIS_EXTRA.defaultProbs = new float[]{};
-			MIS_EXTRA.probs = MIS_EXTRA.defaultProbs.clone();
-			//#- ExtraTier
-			
-			FOOD.classes = new Class<?>[]{
-					Food.class,
-					Pasty.class,
-					MysteryMeat.class };
-			FOOD.defaultProbs = new float[]{ 4, 1, 0 };
-			FOOD.probs = FOOD.defaultProbs.clone();
-			
-			RING.classes = new Class<?>[]{
-					RingOfAccuracy.class,
-					RingOfArcana.class,
-					RingOfElements.class,
-					RingOfEnergy.class,
-					RingOfEvasion.class,
-					RingOfForce.class,
-					RingOfFuror.class,
-					RingOfHaste.class,
-					RingOfMight.class,
-					RingOfSharpshooting.class,
-					RingOfTenacity.class,
-					RingOfWealth.class};
-			RING.defaultProbs = new float[]{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 };
-			RING.probs = RING.defaultProbs.clone();
-			
-			ARTIFACT.classes = new Class<?>[]{
-					AlchemistsToolkit.class,
-					ChaliceOfBlood.class,
-					CloakOfShadows.class,
-					DriedRose.class,
-					EtherealChains.class,
-					HolyTome.class,
-					HornOfPlenty.class,
-					MasterThievesArmband.class,
-					SandalsOfNature.class,
-					TalismanOfForesight.class,
-					TimekeepersHourglass.class,
-					UnstableSpellbook.class
-			};
-			ARTIFACT.defaultProbs = new float[]{ 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1 };
-			ARTIFACT.probs = ARTIFACT.defaultProbs.clone();
-
-			//Trinkets are unique like artifacts, but unlike them you can only have one at once
-			//So we don't need the same enforcement of uniqueness
-			TRINKET.classes = new Class<?>[]{
-					RatSkull.class,
-					ParchmentScrap.class,
-					PetrifiedSeed.class,
-					ExoticCrystals.class,
-					MossyClump.class,
-					DimensionalSundial.class,
-					ThirteenLeafClover.class,
-					TrapMechanism.class,
-					MimicTooth.class,
-					WondrousResin.class,
-					EyeOfNewt.class,
-					SaltCube.class,
-					VialOfBlood.class,
-					ShardOfOblivion.class,
-					ChaoticCenser.class
-			};
-			TRINKET.defaultProbs = new float[]{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-			TRINKET.probs = TRINKET.defaultProbs.clone();
-
-			for (Category cat : Category.values()){
-				if (cat.defaultProbs2 != null){
-					cat.defaultProbsTotal = new float[cat.defaultProbs.length];
-					for (int i = 0; i < cat.defaultProbs.length; i++){
-						cat.defaultProbsTotal[i] = cat.defaultProbs[i] + cat.defaultProbs2[i];
-					}
-				}
-			}
-		}
 	}
 
 	private static final float[][] floorSetTierProbs = new float[][] {
@@ -632,10 +341,344 @@ public class Generator {
 	private static boolean usingFirstDeck = false;
 	private static HashMap<Category,Float> defaultCatProbs = new LinkedHashMap<>();
 	private static HashMap<Category,Float> categoryProbs = new LinkedHashMap<>();
+	
+	/**
+	 * 游戏启动时调用此方法初始化所有物品
+	 */
+	public static void initializeItems() {
+		// 初始化金币
+		registerItem(Category.GOLD, Gold.class, 1f);
+		
+		// 初始化药水（先使用单一概率注册所有药水）
+		registerItem(Category.POTION, PotionOfStrength.class, 0f);
+		registerItem(Category.POTION, PotionOfHealing.class, 3f);
+		registerItem(Category.POTION, PotionOfMindVision.class, 2f);
+		registerItem(Category.POTION, PotionOfFrost.class, 1f);
+		registerItem(Category.POTION, PotionOfLiquidFlame.class, 2f);
+		registerItem(Category.POTION, PotionOfToxicGas.class, 1f);
+		registerItem(Category.POTION, PotionOfHaste.class, 1f);
+		registerItem(Category.POTION, PotionOfInvisibility.class, 1f);
+		registerItem(Category.POTION, PotionOfLevitation.class, 1f);
+		registerItem(Category.POTION, PotionOfParalyticGas.class, 1f);
+		registerItem(Category.POTION, PotionOfPurity.class, 1f);
+		registerItem(Category.POTION, PotionOfExperience.class, 1f);
+		
+		// 再使用双概率更新药水
+		registerItemWithDualProbabilities(Category.POTION, PotionOfStrength.class, 0f, 0f);
+		registerItemWithDualProbabilities(Category.POTION, PotionOfHealing.class, 3f, 3f);
+		registerItemWithDualProbabilities(Category.POTION, PotionOfMindVision.class, 2f, 2f);
+		registerItemWithDualProbabilities(Category.POTION, PotionOfFrost.class, 1f, 2f);
+		registerItemWithDualProbabilities(Category.POTION, PotionOfLiquidFlame.class, 2f, 1f);
+		registerItemWithDualProbabilities(Category.POTION, PotionOfToxicGas.class, 1f, 2f);
+		registerItemWithDualProbabilities(Category.POTION, PotionOfHaste.class, 1f, 1f);
+		registerItemWithDualProbabilities(Category.POTION, PotionOfInvisibility.class, 1f, 1f);
+		registerItemWithDualProbabilities(Category.POTION, PotionOfLevitation.class, 1f, 1f);
+		registerItemWithDualProbabilities(Category.POTION, PotionOfParalyticGas.class, 1f, 1f);
+		registerItemWithDualProbabilities(Category.POTION, PotionOfPurity.class, 1f, 1f);
+		registerItemWithDualProbabilities(Category.POTION, PotionOfExperience.class, 1f, 0f);
+		
+		// 初始化种子
+		registerItem(Category.SEED, Rotberry.Seed.class, 0f);
+		registerItem(Category.SEED, Sungrass.Seed.class, 2f);
+		registerItem(Category.SEED, Fadeleaf.Seed.class, 2f);
+		registerItem(Category.SEED, Icecap.Seed.class, 2f);
+		registerItem(Category.SEED, Firebloom.Seed.class, 2f);
+		registerItem(Category.SEED, Sorrowmoss.Seed.class, 2f);
+		registerItem(Category.SEED, Swiftthistle.Seed.class, 2f);
+		registerItem(Category.SEED, Blindweed.Seed.class, 2f);
+		registerItem(Category.SEED, Stormvine.Seed.class, 2f);
+		registerItem(Category.SEED, Earthroot.Seed.class, 2f);
+		registerItem(Category.SEED, Mageroyal.Seed.class, 2f);
+		registerItem(Category.SEED, Starflower.Seed.class, 1f);
+		
+		// 初始化卷轴（先使用单一概率注册所有卷轴）
+		registerItem(Category.SCROLL, ScrollOfUpgrade.class, 0f);
+		registerItem(Category.SCROLL, ScrollOfIdentify.class, 3f);
+		registerItem(Category.SCROLL, ScrollOfRemoveCurse.class, 2f);
+		registerItem(Category.SCROLL, ScrollOfMirrorImage.class, 1f);
+		registerItem(Category.SCROLL, ScrollOfRecharging.class, 2f);
+		registerItem(Category.SCROLL, ScrollOfTeleportation.class, 1f);
+		registerItem(Category.SCROLL, ScrollOfLullaby.class, 1f);
+		registerItem(Category.SCROLL, ScrollOfMagicMapping.class, 1f);
+		registerItem(Category.SCROLL, ScrollOfRage.class, 1f);
+		registerItem(Category.SCROLL, ScrollOfRetribution.class, 1f);
+		registerItem(Category.SCROLL, ScrollOfTerror.class, 1f);
+		registerItem(Category.SCROLL, ScrollOfTransmutation.class, 1f);
+		
+		// 再使用双概率更新卷轴
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfUpgrade.class, 0f, 0f);
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfIdentify.class, 3f, 3f);
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfRemoveCurse.class, 2f, 2f);
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfMirrorImage.class, 1f, 2f);
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfRecharging.class, 2f, 1f);
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfTeleportation.class, 1f, 2f);
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfLullaby.class, 1f, 1f);
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfMagicMapping.class, 1f, 1f);
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfRage.class, 1f, 1f);
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfRetribution.class, 1f, 1f);
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfTerror.class, 1f, 1f);
+		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfTransmutation.class, 1f, 0f);
+		
+		// 初始化石头
+		registerItem(Category.STONE, StoneOfEnchantment.class, 0f);
+		registerItem(Category.STONE, StoneOfIntuition.class, 2f);
+		registerItem(Category.STONE, StoneOfDetectMagic.class, 2f);
+		registerItem(Category.STONE, StoneOfFlock.class, 2f);
+		registerItem(Category.STONE, StoneOfShock.class, 2f);
+		registerItem(Category.STONE, StoneOfBlink.class, 2f);
+		registerItem(Category.STONE, StoneOfDeepSleep.class, 2f);
+		registerItem(Category.STONE, StoneOfClairvoyance.class, 2f);
+		registerItem(Category.STONE, StoneOfAggression.class, 2f);
+		registerItem(Category.STONE, StoneOfBlast.class, 2f);
+		registerItem(Category.STONE, StoneOfFear.class, 2f);
+		registerItem(Category.STONE, StoneOfAugmentation.class, 0f);
+		registerItem(Category.STONE, StoneOfDungeonTravel.class, 1f);
+		
+		// 初始化法杖
+		registerItem(Category.WAND, WandOfMagicMissile.class, 3f);
+		registerItem(Category.WAND, WandOfLightning.class, 3f);
+		registerItem(Category.WAND, WandOfDisintegration.class, 3f);
+		registerItem(Category.WAND, WandOfFireblast.class, 3f);
+		registerItem(Category.WAND, WandOfCorrosion.class, 3f);
+		registerItem(Category.WAND, WandOfBlastWave.class, 3f);
+		registerItem(Category.WAND, WandOfLivingEarth.class, 3f);
+		registerItem(Category.WAND, WandOfFrost.class, 3f);
+		registerItem(Category.WAND, WandOfPrismaticLight.class, 3f);
+		registerItem(Category.WAND, WandOfWarding.class, 3f);
+		registerItem(Category.WAND, WandOfTransfusion.class, 3f);
+		registerItem(Category.WAND, WandOfCorruption.class, 3f);
+		registerItem(Category.WAND, WandOfRegrowth.class, 3f);
+
+		// 初始化T1武器
+		registerTieredItem(Category.WEP_T1, WornShortsword.class, 2f);
+		registerTieredItem(Category.WEP_T1, MagesStaff.class, 0f);
+		registerTieredItem(Category.WEP_T1, Dagger.class, 2f);
+		registerTieredItem(Category.WEP_T1, Gloves.class, 2f);
+		registerTieredItem(Category.WEP_T1, Rapier.class, 2f);
+		registerTieredItem(Category.WEP_T1, Cudgel.class, 2f);
+		
+		// 初始化T2武器
+		registerTieredItem(Category.WEP_T2, Shortsword.class, 2f);
+		registerTieredItem(Category.WEP_T2, HandAxe.class, 2f);
+		registerTieredItem(Category.WEP_T2, Spear.class, 2f);
+		registerTieredItem(Category.WEP_T2, Quarterstaff.class, 2f);
+		registerTieredItem(Category.WEP_T2, Dirk.class, 2f);
+		registerTieredItem(Category.WEP_T2, Sickle.class, 2f);
+		registerTieredItem(Category.WEP_T2, Pickaxe.class, 0f);
+		
+		// 初始化T3武器
+		registerTieredItem(Category.WEP_T3, Sword.class, 2f);
+		registerTieredItem(Category.WEP_T3, Mace.class, 2f);
+		registerTieredItem(Category.WEP_T3, Scimitar.class, 2f);
+		registerTieredItem(Category.WEP_T3, RoundShield.class, 2f);
+		registerTieredItem(Category.WEP_T3, Sai.class, 2f);
+		registerTieredItem(Category.WEP_T3, Whip.class, 2f);
+		
+		// 初始化T4武器
+		registerTieredItem(Category.WEP_T4, Longsword.class, 2f);
+		registerTieredItem(Category.WEP_T4, BattleAxe.class, 2f);
+		registerTieredItem(Category.WEP_T4, Flail.class, 2f);
+		registerTieredItem(Category.WEP_T4, RunicBlade.class, 2f);
+		registerTieredItem(Category.WEP_T4, AssassinsBlade.class, 2f);
+		registerTieredItem(Category.WEP_T4, Crossbow.class, 2f);
+		registerTieredItem(Category.WEP_T4, Katana.class, 2f);
+		
+		// 初始化T5武器
+		registerTieredItem(Category.WEP_T5, Greatsword.class, 2f);
+		registerTieredItem(Category.WEP_T5, WarHammer.class, 2f);
+		registerTieredItem(Category.WEP_T5, Glaive.class, 2f);
+		registerTieredItem(Category.WEP_T5, Greataxe.class, 2f);
+		registerTieredItem(Category.WEP_T5, Greatshield.class, 2f);
+		registerTieredItem(Category.WEP_T5, Gauntlet.class, 2f);
+		registerTieredItem(Category.WEP_T5, WarScythe.class, 2f);
+		
+		// 初始化防具
+		registerItem(Category.ARMOR, ClothArmor.class, 1f);
+		registerItem(Category.ARMOR, LeatherArmor.class, 1f);
+		registerItem(Category.ARMOR, MailArmor.class, 1f);
+		registerItem(Category.ARMOR, ScaleArmor.class, 1f);
+		registerItem(Category.ARMOR, PlateArmor.class, 1f);
+		registerItem(Category.ARMOR, WarriorArmor.class, 0f);
+		registerItem(Category.ARMOR, MageArmor.class, 0f);
+		registerItem(Category.ARMOR, RogueArmor.class, 0f);
+		registerItem(Category.ARMOR, HuntressArmor.class, 0f);
+		registerItem(Category.ARMOR, DuelistArmor.class, 0f);
+		registerItem(Category.ARMOR, ClericArmor.class, 0f);
+		
+		// 初始化T1远程武器
+		registerTieredItem(Category.MIS_T1, ThrowingStone.class, 3f);
+		registerTieredItem(Category.MIS_T1, ThrowingKnife.class, 3f);
+		registerTieredItem(Category.MIS_T1, ThrowingSpike.class, 3f);
+		registerTieredItem(Category.MIS_T1, Dart.class, 0f);
+		
+		// 初始化T2远程武器
+		registerTieredItem(Category.MIS_T2, FishingSpear.class, 3f);
+		registerTieredItem(Category.MIS_T2, ThrowingClub.class, 3f);
+		registerTieredItem(Category.MIS_T2, Shuriken.class, 3f);
+		
+		// 初始化T3远程武器
+		registerTieredItem(Category.MIS_T3, ThrowingSpear.class, 3f);
+		registerTieredItem(Category.MIS_T3, Kunai.class, 3f);
+		registerTieredItem(Category.MIS_T3, Bolas.class, 3f);
+		
+		// 初始化T4远程武器
+		registerTieredItem(Category.MIS_T4, Javelin.class, 3f);
+		registerTieredItem(Category.MIS_T4, Tomahawk.class, 3f);
+		registerTieredItem(Category.MIS_T4, HeavyBoomerang.class, 3f);
+		
+		// 初始化T5远程武器
+		registerTieredItem(Category.MIS_T5, Trident.class, 3f);
+		registerTieredItem(Category.MIS_T5, ThrowingHammer.class, 3f);
+		registerTieredItem(Category.MIS_T5, ForceCube.class, 3f);
+		
+		// 初始化食物
+		registerItem(Category.FOOD, Food.class, 4f);
+		registerItem(Category.FOOD, Pasty.class, 1f);
+		registerItem(Category.FOOD, MysteryMeat.class, 0f);
+		
+		// 初始化戒指
+		registerItem(Category.RING, RingOfAccuracy.class, 3f);
+		registerItem(Category.RING, RingOfArcana.class, 3f);
+		registerItem(Category.RING, RingOfElements.class, 3f);
+		registerItem(Category.RING, RingOfEnergy.class, 3f);
+		registerItem(Category.RING, RingOfEvasion.class, 3f);
+		registerItem(Category.RING, RingOfForce.class, 3f);
+		registerItem(Category.RING, RingOfFuror.class, 3f);
+		registerItem(Category.RING, RingOfHaste.class, 3f);
+		registerItem(Category.RING, RingOfMight.class, 3f);
+		registerItem(Category.RING, RingOfSharpshooting.class, 3f);
+		registerItem(Category.RING, RingOfTenacity.class, 3f);
+		registerItem(Category.RING, RingOfWealth.class, 3f);
+		
+		// 初始化神器
+		registerItem(Category.ARTIFACT, AlchemistsToolkit.class, 1f);
+		registerItem(Category.ARTIFACT, ChaliceOfBlood.class, 1f);
+		registerItem(Category.ARTIFACT, CloakOfShadows.class, 0f);
+		registerItem(Category.ARTIFACT, DriedRose.class, 1f);
+		registerItem(Category.ARTIFACT, EtherealChains.class, 1f);
+		registerItem(Category.ARTIFACT, HolyTome.class, 0f);
+		registerItem(Category.ARTIFACT, HornOfPlenty.class, 1f);
+		registerItem(Category.ARTIFACT, MasterThievesArmband.class, 1f);
+		registerItem(Category.ARTIFACT, SandalsOfNature.class, 1f);
+		registerItem(Category.ARTIFACT, TalismanOfForesight.class, 1f);
+		registerItem(Category.ARTIFACT, TimekeepersHourglass.class, 1f);
+		registerItem(Category.ARTIFACT, UnstableSpellbook.class, 1f);
+		
+		// 初始化饰品
+		registerItem(Category.TRINKET, RatSkull.class, 1f);
+		registerItem(Category.TRINKET, ParchmentScrap.class, 1f);
+		registerItem(Category.TRINKET, PetrifiedSeed.class, 1f);
+		registerItem(Category.TRINKET, ExoticCrystals.class, 1f);
+		registerItem(Category.TRINKET, MossyClump.class, 1f);
+		registerItem(Category.TRINKET, DimensionalSundial.class, 1f);
+		registerItem(Category.TRINKET, ThirteenLeafClover.class, 1f);
+		registerItem(Category.TRINKET, TrapMechanism.class, 1f);
+		registerItem(Category.TRINKET, MimicTooth.class, 1f);
+		registerItem(Category.TRINKET, WondrousResin.class, 1f);
+		registerItem(Category.TRINKET, EyeOfNewt.class, 1f);
+		registerItem(Category.TRINKET, SaltCube.class, 1f);
+		registerItem(Category.TRINKET, VialOfBlood.class, 1f);
+		registerItem(Category.TRINKET, ShardOfOblivion.class, 1f);
+		registerItem(Category.TRINKET, ChaoticCenser.class, 1f);
+		
+		// 初始化自定义物品类别
+		// 注意：自定义物品已经在 CustomItem 类的静态初始化块中注册了
+		// 这里我们只需要将它们添加到生成器系统中
+		for (String key : CustomItem.item_records.keySet()) {
+			// 创建一个虚拟类来代表每个自定义物品
+			// 实际上我们不使用这个类，只是为了保持一致性
+			registerItem(Category.CUSTOM_ITEM, CustomItem.class, 1f);
+		}
+		
+		// 初始化自定义食物类别
+		// 注意：自定义食物已经在 CustomFood 类的静态初始化块中注册了
+		for (String key : com.coladungeon.items.food.CustomFood.food_records.keySet()) {
+			// 创建一个虚拟类来代表每个自定义食物
+			registerItem(Category.CUSTOM_FOOD, com.coladungeon.items.food.CustomFood.class, 1f);
+		}
+		
+		// 更新有两套概率的类别的总概率
+		updateCategoryTotalProbs();
+	}
+	
+	/**
+	 * 更新所有有两套概率的类别的总概率
+	 */
+	private static void updateCategoryTotalProbs() {
+		for (Category cat : Category.values()){
+			if (cat.defaultProbs2 != null && cat.defaultProbs != null){
+				cat.defaultProbsTotal = new float[cat.defaultProbs.length];
+				for (int i = 0; i < cat.defaultProbs.length; i++){
+					cat.defaultProbsTotal[i] = cat.defaultProbs[i] + cat.defaultProbs2[i];
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 注册带有双概率的物品（有些物品有两种概率分布）
+	 */
+	public static boolean registerItemWithDualProbabilities(Category category, Class<? extends Item> itemClass, float probability1, float probability2) {
+		if (category == null || itemClass == null || probability1 < 0 || probability2 < 0) {
+			return false;
+		}
+		
+		// 先用第一个概率注册，这将确保 defaultProbs 被初始化
+		boolean result = registerItem(category, itemClass, probability1);
+		
+		// 如果已成功注册，查找物品的索引
+		if (result && category.defaultProbs != null) { // 确保 defaultProbs 不为空
+			int index = -1;
+			for (int i = 0; i < category.classes.length; i++) {
+				if (category.classes[i].equals(itemClass)) {
+					index = i;
+					break;
+				}
+			}
+			
+			if (index >= 0) {
+				// 如果类别没有第二组概率，需要创建
+				if (category.defaultProbs2 == null) {
+					category.defaultProbs2 = new float[category.defaultProbs.length];
+					// 复制第一组概率作为初始值
+					System.arraycopy(category.defaultProbs, 0, category.defaultProbs2, 0, category.defaultProbs.length);
+				} else if (category.defaultProbs2.length <= index) {
+					// 如果第二组概率数组长度不够，需要扩展
+					float[] newDefaultProbs2 = new float[category.defaultProbs.length];
+					System.arraycopy(category.defaultProbs2, 0, newDefaultProbs2, 0, category.defaultProbs2.length);
+					// 用第一组概率填充新增的部分
+					for (int i = category.defaultProbs2.length; i < category.defaultProbs.length; i++) {
+						newDefaultProbs2[i] = category.defaultProbs[i];
+					}
+					category.defaultProbs2 = newDefaultProbs2;
+				}
+				
+				// 更新特定物品的第二组概率
+				category.defaultProbs2[index] = probability2;
+				
+				// 更新总概率
+				if (category.defaultProbsTotal == null) {
+					category.defaultProbsTotal = new float[category.defaultProbs.length];
+				} else if (category.defaultProbsTotal.length <= index) {
+					float[] newTotalProbs = new float[category.defaultProbs.length];
+					System.arraycopy(category.defaultProbsTotal, 0, newTotalProbs, 0, category.defaultProbsTotal.length);
+					category.defaultProbsTotal = newTotalProbs;
+				}
+				
+				category.defaultProbsTotal[index] = category.defaultProbs[index] + category.defaultProbs2[index];
+			}
+		}
+		
+		return result;
+	}
 
 	public static void fullReset() {
 		usingFirstDeck = Random.Int(2) == 0;
 		generalReset();
+		
+		// 清空并初始化所有物品类别
+		initializeItems();
+		
 		for (Category cat : Category.values()) {
 			cat.using2ndProbs =  cat.defaultProbs2 != null && Random.Int(2) == 0;
 			reset(cat);
@@ -718,6 +761,10 @@ public class Generator {
 				Item item = randomArtifact();
 				//if we're out of artifacts, return a ring instead.
 				return item != null ? item : random(Category.RING);
+			case CUSTOM_ITEM:
+				return randomCustomItem();
+			case CUSTOM_FOOD:
+				return randomCustomFood();
 			default:
 				if (cat.defaultProbs != null && cat.seed != null){
 					Random.pushGenerator(cat.seed);
@@ -938,6 +985,26 @@ public class Generator {
 
 		usingFirstDeck = bundle.getBoolean(FIRST_DECK);
 
+		//restore category probs
+		for (Category cat : Category.values()){
+			if (bundle.contains(cat.name().toLowerCase() + CATEGORY_PROBS)){
+				cat.probs = bundle.getFloatArray(cat.name().toLowerCase() + CATEGORY_PROBS);
+			}
+			
+			if (bundle.contains(cat.name().toLowerCase() + CATEGORY_USING_PROBS2)){
+				cat.using2ndProbs = bundle.getBoolean(cat.name().toLowerCase() + CATEGORY_USING_PROBS2);
+			}
+			
+			if (bundle.contains(cat.name().toLowerCase() + CATEGORY_SEED)){
+				cat.seed = bundle.getLong(cat.name().toLowerCase() + CATEGORY_SEED);
+			}
+			
+			if (bundle.contains(cat.name().toLowerCase() + CATEGORY_DROPPED)){
+				cat.dropped = bundle.getInt(cat.name().toLowerCase() + CATEGORY_DROPPED);
+			}
+		}
+		
+		//restore general category probs
 		if (bundle.contains(GENERAL_PROBS)){
 			float[] probs = bundle.getFloatArray(GENERAL_PROBS);
 			if (probs.length == Category.values().length) {
@@ -946,40 +1013,168 @@ public class Generator {
 				}
 			}
 		}
-
-		for (Category cat : Category.values()){
-			if (bundle.contains(cat.name().toLowerCase() + CATEGORY_PROBS)){
-				float[] probs = bundle.getFloatArray(cat.name().toLowerCase() + CATEGORY_PROBS);
-				if (cat.defaultProbs != null && probs.length == cat.defaultProbs.length){
-					cat.probs = probs;
+	}
+	
+	/**
+	 * Registers a new item to a specific category at runtime.
+	 * This allows for adding custom items to the generator system.
+	 * 
+	 * @param category the category to add the item to
+	 * @param itemClass the class of the item to add
+	 * @param probability the probability of the item appearing (relative to other items in the category)
+	 * @return true if the item was successfully registered, false otherwise
+	 */
+	public static boolean registerItem(Category category, Class<? extends Item> itemClass, float probability) {
+		if (category == null || itemClass == null || probability < 0) {
+			return false;
+		}
+		
+		// 检查物品是否已经存在
+		for (int i = 0; i < category.classes.length; i++) {
+			if (category.classes[i].equals(itemClass)) {
+				// 更新概率
+				category.probs[i] = probability;
+				if (category.defaultProbs != null) {
+					category.defaultProbs[i] = probability;
 				}
-				if (bundle.contains(cat.name().toLowerCase() + CATEGORY_USING_PROBS2)){
-					cat.using2ndProbs = bundle.getBoolean(cat.name().toLowerCase() + CATEGORY_USING_PROBS2);
-				} else {
-					cat.using2ndProbs = false;
-				}
-				if (bundle.contains(cat.name().toLowerCase() + CATEGORY_SEED)){
-					cat.seed = bundle.getLong(cat.name().toLowerCase() + CATEGORY_SEED);
-					cat.dropped = bundle.getInt(cat.name().toLowerCase() + CATEGORY_DROPPED);
-				}
-
-				//pre-v3.0.0 conversion for artifacts specifically
-				if (cat == Category.ARTIFACT && probs.length != cat.defaultProbs.length){
-					int tomeIDX = 5;
-					int j = 0;
-					for (int i = 0; i < probs.length; i++){
-						if (i == tomeIDX){
-							cat.probs[j] = 0;
-							j++;
-						}
-						cat.probs[j] = probs[i];
-						j++;
-					}
-
-				}
-
+				return true;
 			}
 		}
 		
+		// 创建新数组，增加一个位置
+		Class<?>[] newClasses = new Class<?>[category.classes.length + 1];
+		float[] newProbs = new float[category.probs.length + 1];
+		
+		// 复制现有元素
+		System.arraycopy(category.classes, 0, newClasses, 0, category.classes.length);
+		System.arraycopy(category.probs, 0, newProbs, 0, category.probs.length);
+		
+		// 添加新项目
+		newClasses[newClasses.length - 1] = itemClass;
+		newProbs[newProbs.length - 1] = probability;
+		
+		// 更新类别
+		category.classes = newClasses;
+		category.probs = newProbs;
+		
+		// 当添加第一个物品时初始化defaultProbs
+		if (category.defaultProbs == null) {
+			category.defaultProbs = new float[newProbs.length];
+			System.arraycopy(newProbs, 0, category.defaultProbs, 0, newProbs.length);
+		} else {
+			// 更新默认概率（如果存在）
+			float[] newDefaultProbs = new float[category.defaultProbs.length + 1];
+			System.arraycopy(category.defaultProbs, 0, newDefaultProbs, 0, category.defaultProbs.length);
+			newDefaultProbs[newDefaultProbs.length - 1] = probability;
+			category.defaultProbs = newDefaultProbs;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Registers a new item to a specific tier category for weapons or missiles.
+	 * 
+	 * @param tierCategory the tier category to add to (e.g., WEP_T1, MIS_T3)
+	 * @param itemClass the class of the item to add
+	 * @param probability the probability of the item appearing
+	 * @return true if registered successfully, false otherwise
+	 */
+	public static boolean registerTieredItem(Category tierCategory, Class<? extends Item> itemClass, float probability) {
+		// 验证这是一个层级类别
+		boolean isWeaponTier = Arrays.asList(wepTiers).contains(tierCategory);
+		boolean isMissileTier = Arrays.asList(misTiers).contains(tierCategory);
+		
+		if (!isWeaponTier && !isMissileTier) {
+			return false;
+		}
+		
+		return registerItem(tierCategory, itemClass, probability);
+	}
+
+	/**
+	 * 生成一个随机的自定义物品
+	 * @return 随机的自定义物品
+	 */
+	public static CustomItem randomCustomItem() {
+		// 从已注册的自定义物品中随机选择
+		if (CustomItem.item_records.isEmpty()) {
+			return null;
+		}
+		
+		// 获取所有物品键
+		String[] keys = CustomItem.item_records.keySet().toArray(new String[0]);
+		if (keys.length == 0) {
+			return null;
+		}
+		
+		// 随机选择一个
+		String key = keys[Random.Int(keys.length)];
+		return new CustomItem(key);
+	}
+	
+	/**
+	 * 根据指定的ID生成一个自定义物品
+	 * @param id 物品ID
+	 * @return 指定ID的自定义物品
+	 */
+	public static CustomItem customItem(String id) {
+		if (CustomItem.item_records.containsKey(id)) {
+			return new CustomItem(id);
+		}
+		return null;
+	}
+	
+	/**
+	 * 生成一个随机的自定义食物
+	 * @return 随机的自定义食物
+	 */
+	public static com.coladungeon.items.food.CustomFood randomCustomFood() {
+		// 从已注册的自定义食物中随机选择
+		if (com.coladungeon.items.food.CustomFood.food_records.isEmpty()) {
+			return null;
+		}
+		
+		// 获取所有食物键
+		String[] keys = com.coladungeon.items.food.CustomFood.food_records.keySet().toArray(new String[0]);
+		if (keys.length == 0) {
+			return null;
+		}
+		
+		// 随机选择一个
+		String key = keys[Random.Int(keys.length)];
+		return new com.coladungeon.items.food.CustomFood(key);
+	}
+	
+	/**
+	 * 根据指定的ID生成一个自定义食物
+	 * @param id 食物ID
+	 * @return 指定ID的自定义食物
+	 */
+	public static com.coladungeon.items.food.CustomFood customFood(String id) {
+		if (com.coladungeon.items.food.CustomFood.food_records.containsKey(id)) {
+			return new com.coladungeon.items.food.CustomFood(id);
+		}
+		return null;
+	}
+
+	/**
+	 * 检查指定的类别是否包含指定的类型
+	 * @param category 要检查的类别
+	 * @param type 要检查的类型
+	 * @return 如果类别包含该类型，则返回 true
+	 */
+	public static boolean categoryContainsType(Category category, Class<?> type) {
+		if (category == null || type == null || category.classes == null) {
+			return false;
+		}
+		
+		for (Class<?> cls : category.classes) {
+			if (cls.equals(type)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

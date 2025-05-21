@@ -129,6 +129,16 @@ public class CustomFood extends Food {
 
         public Factory register() {
             food_records.put(baking.key, baking);
+            
+            // 同时注册到生成器系统中
+            if (!com.coladungeon.items.Generator.categoryContainsType(
+                    com.coladungeon.items.Generator.Category.CUSTOM_FOOD,
+                    com.coladungeon.items.food.CustomFood.class)) {
+                com.coladungeon.items.Generator.registerItem(
+                    com.coladungeon.items.Generator.Category.CUSTOM_FOOD,
+                    com.coladungeon.items.food.CustomFood.class, 1f);
+            }
+            
             return this;
         }
 
