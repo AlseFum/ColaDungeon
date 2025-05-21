@@ -180,6 +180,7 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
+import com.coladungeon.utils.EventBus;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -200,6 +201,12 @@ public class Hero extends Char {
 	private static final float TIME_TO_REST		    = 1f;
 	private static final float TIME_TO_SEARCH	    = 2f;
 	private static final float HUNGER_FOR_SEARCH	= 6f;
+	
+	// EventBus event IDs for hero-related events
+	public static final String EVENT_HERO_DAMAGE = "hero:damage";
+	public static final String EVENT_HERO_MOVE = "hero:move";
+	public static final String EVENT_HERO_LEVEL_UP = "hero:level_up";
+	public static final String EVENT_HERO_ATTACKED = "hero:attacked";
 	
 	public HeroClass heroClass = HeroClass.ROGUE;
 	public HeroSubClass subClass = HeroSubClass.NONE;
@@ -1602,6 +1609,16 @@ public class Hero extends Char {
 		int postHP = HP + shielding();
 		if (src instanceof Hunger) postHP -= shielding();
 		int effectiveDamage = preHP - postHP;
+		
+		// 使用更简洁的方式发布伤害事件
+		if (effectiveDamage > 0) {
+			EventBus.fire(EVENT_HERO_DAMAGE, Hero.class,
+				"hero", this,
+				"damage", effectiveDamage,
+				"source", src,
+				"previousHealth", preHP,
+				"currentHealth", postHP);
+		}
 
 		if (effectiveDamage <= 0) return;
 
@@ -2008,10 +2025,15 @@ public class Hero extends Char {
 		}
 		
 		if (levelUp) {
+			// 使用更简洁的方式发布升级事件
+			EventBus.fire(EVENT_HERO_LEVEL_UP, Hero.class,
+				"hero", this,
+				"level", lvl);
 			
 			if (sprite != null) {
 				GLog.newLine();
 				GLog.p( Messages.get(this, "new_level") );
+				
 				sprite.showStatus( CharSprite.POSITIVE, Messages.get(Hero.class, "level_up") );
 				Sample.INSTANCE.play( Assets.Sounds.LEVELUP );
 				if (lvl < Talent.tierLevelThresholds[Talent.MAX_TALENT_TIERS+1]){
@@ -2237,8 +2259,16 @@ public class Hero extends Char {
 	@Override
 	public void move(int step, boolean travelling) {
 		boolean wasHighGrass = Dungeon.level.map[step] == Terrain.HIGH_GRASS;
-
+		int oldPos = pos;
+		
 		super.move( step, travelling);
+		
+		// 使用更简洁的方式发布移动事件
+		EventBus.fire(EVENT_HERO_MOVE, Hero.class,
+			"hero", this,
+			"fromPosition", oldPos,
+			"toPosition", step,
+			"travelling", travelling);
 		
 		if (!flying && travelling) {
 			if (Dungeon.level.water[pos]) {
@@ -2273,6 +2303,13 @@ public class Hero extends Char {
 				|| (enemy instanceof Mimic && enemy.alignment == Alignment.NEUTRAL);
 
 		boolean hit = attack( enemy );
+		
+		// 使用更简洁的方式发布攻击事件
+		EventBus.fire(EVENT_HERO_ATTACKED, Hero.class,
+			"hero", this,
+			"target", enemy,
+			"hit", hit,
+			"wasEnemy", wasEnemy);
 		
 		Invisibility.dispel();
 		spend( attackDelay() );

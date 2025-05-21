@@ -62,7 +62,7 @@ public class ThemePack implements Bundlable {
      */
     public static ThemePack getTheme(int depth) {
         if (depth >= 1 && depth <= 5) {
-            return DebugTheme;//||SewerTheme;
+            return SewerTheme;
         } else if (depth >= 6 && depth <= 10) {
             return PrisonTheme;
             

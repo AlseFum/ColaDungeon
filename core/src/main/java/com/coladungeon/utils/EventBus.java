@@ -1,26 +1,136 @@
 package com.coladungeon.utils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class EventBus {
-    public static HashMap<String, ArrayList<Function<Object, Object>>> eventBus = new HashMap<>();
+    // 处理器包装类，存储处理函数及其优先级
+    private static class PriorityHandler {
+        final Function<Object, Object> handler;
+        final int priority;
+        
+        PriorityHandler(Function<Object, Object> handler, int priority) {
+            this.handler = handler;
+            this.priority = priority;
+        }
+    }
+    
+    // 事件总线 - 存储事件ID到处理器的映射
+    public static HashMap<String, ArrayList<PriorityHandler>> eventBus = new HashMap<>();
 
-    public static void register(
-            String event_id, Function<Object, Object> fn) {
-        eventBus.computeIfAbsent(event_id, k -> new ArrayList<>()).add(fn);
+    // 默认优先级值
+    public static final int DEFAULT_PRIORITY = 0;
+    
+    // 使用默认优先级注册处理器
+    public static void register(String event_id, Function<Object, Object> fn) {
+        register(event_id, fn, DEFAULT_PRIORITY);
+    }
+    
+    // 使用指定优先级注册处理器
+    public static void register(String event_id, Function<Object, Object> fn, int priority) {
+        ArrayList<PriorityHandler> handlers = eventBus.computeIfAbsent(event_id, k -> new ArrayList<>());
+        handlers.add(new PriorityHandler(fn, priority));
+        
+        // 按优先级排序（降序）
+        handlers.sort(Comparator.comparing((PriorityHandler h) -> h.priority).reversed());
     }
 
-    public static void unregister(
-            String event_id, Function<Object, Object> fn) {
-        eventBus.get(event_id).remove(fn);
+    // 注销处理器
+    public static void unregister(String event_id, Function<Object, Object> fn) {
+        if (!eventBus.containsKey(event_id)) return;
+        
+        List<PriorityHandler> handlers = eventBus.get(event_id);
+        handlers.removeIf(ph -> ph.handler.equals(fn));
     }
-    public static ArrayList<Object> collect(String event_id,Object args) {
+    
+    // 触发事件并收集处理结果
+    public static ArrayList<Object> collect(String event_id, Object args) {
         ArrayList<Object> result = new ArrayList<>();
-        for (Function<Object, Object> fn : eventBus.get(event_id)) {
-            result.add(fn.apply(args));
+        if (!eventBus.containsKey(event_id)) return result;
+        
+        for (PriorityHandler ph : eventBus.get(event_id)) {
+            try {
+                result.add(ph.handler.apply(args));
+            } catch (Exception e) {
+                // 基本错误处理
+                System.err.println("Error in event handler: " + e.getMessage());
+            }
         }
         return result;
+    }
+    
+    // 简单的事件数据类 - 使用Map存储属性，避免创建专门的类
+    public static class EventData {
+        private final Map<String, Object> data = new HashMap<>();
+        private final Class<?> type;
+        
+        public EventData(Class<?> type) {
+            this.type = type;
+        }
+        
+        public EventData put(String key, Object value) {
+            data.put(key, value);
+            return this;
+        }
+        
+        @SuppressWarnings("unchecked")
+        public <T> T get(String key) {
+            return (T) data.get(key);
+        }
+        
+        /**
+         * 获取指定键的值，如果不存在则返回默认值
+         * @param key 键名
+         * @param defaultValue 默认值
+         * @return 键对应的值，如果键不存在则返回默认值
+         */
+        @SuppressWarnings("unchecked")
+        public <T> T getOr(String key, T defaultValue) {
+            Object value = data.get(key);
+            return value != null ? (T) value : defaultValue;
+        }
+        
+        /**
+         * 检查是否包含指定键
+         * @param key 键名
+         * @return 是否包含该键
+         */
+        public boolean has(String key) {
+            return data.containsKey(key);
+        }
+        
+        public Class<?> getType() {
+            return type;
+        }
+        
+        public boolean isType(Class<?> cls) {
+            return type == cls || cls.isAssignableFrom(type);
+        }
+    }
+    
+    // 使用事件数据触发事件
+    public static ArrayList<Object> fire(String event_id, EventData eventData) {
+        return collect(event_id, eventData);
+    }
+    
+    // 便捷方法：创建事件数据并触发事件
+    public static ArrayList<Object> fire(String event_id, Class<?> type, Object... keyValues) {
+        if (keyValues.length % 2 != 0) {
+            throw new IllegalArgumentException("Must provide key-value pairs");
+        }
+        
+        EventData data = new EventData(type);
+        for (int i = 0; i < keyValues.length; i += 2) {
+            if (!(keyValues[i] instanceof String)) {
+                throw new IllegalArgumentException("Keys must be strings");
+            }
+            data.put((String) keyValues[i], keyValues[i+1]);
+        }
+        
+        return fire(event_id, data);
     }
 }

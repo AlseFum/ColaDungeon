@@ -86,6 +86,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import com.coladungeon.utils.Helper;
+import com.coladungeon.utils.HeroEventListener;
 
 public class Dungeon {
 
@@ -274,6 +275,9 @@ public class Dungeon {
 		Badges.reset();
 		
 		GamesInProgress.selectedClass.initHero( hero );
+		
+		// Register hero event listener
+		HeroEventListener.register();
 	}
 
 	public static boolean isChallenged( int mask ) {
