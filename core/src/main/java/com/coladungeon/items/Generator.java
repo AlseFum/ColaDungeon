@@ -605,15 +605,15 @@ public class Generator {
 	 * 更新所有有两套概率的类别的总概率
 	 */
 	private static void updateCategoryTotalProbs() {
-		for (Category cat : Category.values()){
+			for (Category cat : Category.values()){
 			if (cat.defaultProbs2 != null && cat.defaultProbs != null){
-				cat.defaultProbsTotal = new float[cat.defaultProbs.length];
-				for (int i = 0; i < cat.defaultProbs.length; i++){
-					cat.defaultProbsTotal[i] = cat.defaultProbs[i] + cat.defaultProbs2[i];
+					cat.defaultProbsTotal = new float[cat.defaultProbs.length];
+					for (int i = 0; i < cat.defaultProbs.length; i++){
+						cat.defaultProbsTotal[i] = cat.defaultProbs[i] + cat.defaultProbs2[i];
+					}
 				}
 			}
 		}
-	}
 	
 	/**
 	 * 注册带有双概率的物品（有些物品有两种概率分布）
@@ -1061,7 +1061,7 @@ public class Generator {
 		if (category.defaultProbs == null) {
 			category.defaultProbs = new float[newProbs.length];
 			System.arraycopy(newProbs, 0, category.defaultProbs, 0, newProbs.length);
-		} else {
+				} else {
 			// 更新默认概率（如果存在）
 			float[] newDefaultProbs = new float[category.defaultProbs.length + 1];
 			System.arraycopy(category.defaultProbs, 0, newDefaultProbs, 0, category.defaultProbs.length);

@@ -22,20 +22,78 @@
 package com.coladungeon.windows;
 
 import com.coladungeon.actors.mobs.Mob;
+import com.coladungeon.actors.traits.Trait;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.PixelScene;
 import com.coladungeon.sprites.CharSprite;
 import com.coladungeon.ui.BuffIndicator;
 import com.coladungeon.ui.HealthBar;
 import com.coladungeon.ui.RenderedTextBlock;
+import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.ui.Component;
+
+import java.util.ArrayList;
 
 public class WndInfoMob extends WndTitledMessage {
 	
 	public WndInfoMob( Mob mob ) {
-
 		super( new MobTitle( mob ), mob.info() );
 		
+		// 检查这个怪物是否有特质
+		ArrayList<Trait> traits = mob.traits().getTraits();
+		
+		// 再次测试强制添加特质
+		if (traits == null || traits.isEmpty()) {
+			Mob.testAddTraits(mob);
+			// 重新获取特质
+			traits = mob.traits().getTraits();
+		}
+		
+		// Add traits section if the mob has any traits
+		if (traits != null && !traits.isEmpty()) {
+			addTraitsSection(mob);
+		}
+	}
+	
+	private void addTraitsSection(Mob mob) {
+		float yPos = height + 2;
+		
+		// 添加标题
+		RenderedTextBlock traitsHeader = PixelScene.renderTextBlock(mob.name() + "的特质", 9);
+		traitsHeader.hardlight(TITLE_COLOR);
+		add(traitsHeader);
+		traitsHeader.setPos((width - traitsHeader.width())/2, yPos);
+		yPos = traitsHeader.bottom() + 2;
+		
+		// 添加分隔线
+		ColorBlock separator = new ColorBlock(width, 1, 0xFF222222);
+		add(separator);
+		separator.y = yPos;
+		yPos += 2;
+		
+		// 添加特质列表
+		ArrayList<Trait> traits = mob.traits().getTraits();
+		
+		for (Trait trait : traits) {
+			float traitValue = mob.getTraitValue(trait);
+			
+			String traitText = trait.name();
+			if (traitValue != 1.0f) {
+				traitText += " (" + traitValue + ")";
+			}
+			
+			RenderedTextBlock text = PixelScene.renderTextBlock(traitText, 6);
+			text.hardlight(0xCCCCCC);
+			add(text);
+			text.setPos(2, yPos);
+			yPos = text.bottom() + 2;
+		}
+		
+		// 调整窗口大小以适应特质部分，确保至少增加一些空间
+		yPos += 2; // 额外的底部间距
+		int newHeight = (int)yPos;
+		
+		resize(width, newHeight);
 	}
 	
 	private static class MobTitle extends Component {

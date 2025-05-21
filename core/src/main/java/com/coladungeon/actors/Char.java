@@ -190,6 +190,127 @@ public abstract class Char extends Actor {
 	
 	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
 	
+	// 特质系统
+	private com.coladungeon.actors.traits.TraitSet traits;
+	
+	/**
+	 * 获取角色的特质集合
+	 * @return 特质集合
+	 */
+	public com.coladungeon.actors.traits.TraitSet traits() {
+		if (traits == null) {
+			traits = new com.coladungeon.actors.traits.TraitSet(this);
+		}
+		return traits;
+	}
+	
+	/**
+	 * 添加一个特质到角色
+	 * @param trait 要添加的特质
+	 */
+	public void addTrait(com.coladungeon.actors.traits.Trait trait) {
+		traits().add(trait);
+	}
+	
+	/**
+	 * 添加一个特质到角色，指定强度值
+	 * @param trait 要添加的特质
+	 * @param value 特质的强度值
+	 */
+	public void addTrait(com.coladungeon.actors.traits.Trait trait, float value) {
+		traits().add(trait, value);
+	}
+	
+	/**
+	 * 添加一个特质到角色，通过ID
+	 * @param traitId 特质ID
+	 */
+	public void addTrait(String traitId) {
+		traits().add(traitId);
+	}
+	
+	/**
+	 * 添加一个特质到角色，通过ID并指定强度值
+	 * @param traitId 特质ID
+	 * @param value 特质的强度值
+	 */
+	public void addTrait(String traitId, float value) {
+		traits().add(traitId, value);
+	}
+	
+	/**
+	 * 移除一个特质
+	 * @param trait 要移除的特质
+	 */
+	public void removeTrait(com.coladungeon.actors.traits.Trait trait) {
+		traits().remove(trait);
+	}
+	
+	/**
+	 * 移除一个特质，通过ID
+	 * @param traitId 特质ID
+	 */
+	public void removeTrait(String traitId) {
+		traits().remove(traitId);
+	}
+	
+	/**
+	 * 检查是否具有某个特质
+	 * @param trait 要检查的特质
+	 * @return 是否拥有特质
+	 */
+	public boolean hasTrait(com.coladungeon.actors.traits.Trait trait) {
+		return traits() != null && traits().has(trait);
+	}
+	
+	/**
+	 * 检查是否具有某个特质，通过ID
+	 * @param traitId 特质ID
+	 * @return 是否拥有特质
+	 */
+	public boolean hasTrait(String traitId) {
+		return traits().has(traitId);
+	}
+	
+	/**
+	 * 获取特质的强度值
+	 * @param trait 特质
+	 * @return 强度值
+	 */
+	public float getTraitValue(com.coladungeon.actors.traits.Trait trait) {
+		if (traits() != null) {
+			return traits().getValue(trait);
+		}
+		return 1.0f; // 默认值
+	}
+	
+	/**
+	 * 获取特质的强度值，通过ID
+	 * @param traitId 特质ID
+	 * @return 强度值
+	 */
+	public float getTraitValue(String traitId) {
+		return traits().getValue(traitId);
+	}
+	
+	/**
+	 * 设置特质的强度值
+	 * @param trait 特质
+	 * @param value 强度值
+	 */
+	public void setTraitValue(com.coladungeon.actors.traits.Trait trait, float value) {
+		traits().setValue(trait, value);
+	}
+	
+	/**
+	 * 设置特质的强度值，通过ID
+	 * @param traitId 特质ID
+	 * @param value 强度值
+	 */
+	public void setTraitValue(String traitId, float value) {
+		traits().setValue(traitId, value);
+	}
+
 	@Override
 	protected boolean act() {
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
@@ -330,6 +451,7 @@ public abstract class Char extends Actor {
 	protected static final String TAG_HT    = "HT";
 	protected static final String TAG_SHLD  = "SHLD";
 	protected static final String BUFFS	    = "buffs";
+	protected static final String TRAITS    = "traits";
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -339,7 +461,24 @@ public abstract class Char extends Actor {
 		bundle.put( POS, pos );
 		bundle.put( TAG_HP, HP );
 		bundle.put( TAG_HT, HT );
-		bundle.put( BUFFS, buffs );
+		bundle.put( TAG_SHLD, cachedShield );
+		
+		Bundle buffsBundle = new Bundle();
+		
+		for (Buff b : buffs) {
+			Bundle buffBundle = new Bundle();
+			b.storeInBundle( buffBundle );
+			buffsBundle.put( b.getClass().getName(), buffBundle );
+		}
+		
+		bundle.put( BUFFS, buffsBundle );
+		
+		// 保存特质到bundle
+		Bundle traitsBundle = new Bundle();
+		if (traits != null) {
+			traits.storeInBundle(traitsBundle);
+		}
+		bundle.put(TRAITS, traitsBundle);
 	}
 	
 	@Override
@@ -350,11 +489,19 @@ public abstract class Char extends Actor {
 		pos = bundle.getInt( POS );
 		HP = bundle.getInt( TAG_HP );
 		HT = bundle.getInt( TAG_HT );
+		cachedShield = bundle.getInt( TAG_SHLD );
 		
 		for (Bundlable b : bundle.getCollection( BUFFS )) {
 			if (b != null) {
-				((Buff)b).attachTo( this );
+				((Buff)b).attachTo(this);
 			}
+		}
+		
+		// 恢复特质数据
+		Bundle traitsBundle = bundle.getBundle(TRAITS);
+		if (traitsBundle != null) {
+			traits = new com.coladungeon.actors.traits.TraitSet(this);
+			traits.restoreFromBundle(traitsBundle);
 		}
 	}
 
@@ -690,43 +837,11 @@ public abstract class Char extends Actor {
 	// atm attack is always post-armor and defence is already pre-armor
 	
 	public int attackProc( Char enemy, int damage ) {
-		for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
-			buff.onAttackProc( enemy );
-		}
+		// 移除特质对攻击的影响
 		return damage;
 	}
 	
 	public int defenseProc( Char enemy, int damage ) {
-
-		Earthroot.Armor armor = buff( Earthroot.Armor.class );
-		if (armor != null) {
-			damage = armor.absorb( damage );
-		}
-
-		ShieldOfLight.ShieldOfLightTracker shield = buff( ShieldOfLight.ShieldOfLightTracker.class);
-		if (shield != null && shield.object == enemy.id()){
-			int min = 1 + Dungeon.hero.pointsInTalent(Talent.SHIELD_OF_LIGHT);
-			damage -= Random.NormalIntRange(min, 2*min);
-			damage = Math.max(damage, 0);
-		} else if (this == Dungeon.hero
-				&& Dungeon.hero.heroClass != HeroClass.CLERIC
-				&& Dungeon.hero.hasTalent(Talent.SHIELD_OF_LIGHT)
-				&& TargetHealthIndicator.instance.target() == enemy){
-			//33/50%
-			if (Random.Int(6) < 1+Dungeon.hero.pointsInTalent(Talent.SHIELD_OF_LIGHT)){
-				damage -= 1;
-			}
-		}
-
-		// hero and pris images skip this as they already benefit from hero's armor glyph proc
-		if (!(this instanceof Hero || this instanceof PrismaticImage)) {
-			if (Dungeon.hero.alignment == alignment && Dungeon.hero.belongings.armor() != null
-					&& Dungeon.hero.buff(AuraOfProtection.AuraBuff.class) != null
-					&& (Dungeon.level.distance(pos, Dungeon.hero.pos) <= 2 || buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)) {
-				damage = Dungeon.hero.belongings.armor().proc( enemy, this, damage );
-			}
-		}
-
 		return damage;
 	}
 
@@ -745,16 +860,26 @@ public abstract class Char extends Actor {
 	
 	public float speed() {
 		float speed = baseSpeed;
-		if ( buff( Cripple.class ) != null ) speed /= 2f;
-		if ( buff( Stamina.class ) != null) speed *= 1.5f;
-		if ( buff( Adrenaline.class ) != null) speed *= 2f;
-		if ( buff( Haste.class ) != null) speed *= 3f;
-		if ( buff( Dread.class ) != null) speed *= 2f;
-
-		speed *= Swiftness.speedBoost(this, glyphLevel(Swiftness.class));
-		speed *= Flow.speedBoost(this, glyphLevel(Flow.class));
-		speed *= Bulk.speedBoost(this, glyphLevel(Bulk.class));
-
+		
+		// 移除特质对速度的影响
+		
+		for (Buff buff : buffs()){
+			if (buff instanceof AllyBuff && buff.target == this && buff instanceof Swiftthistle.TimeBubble){
+				//do nothing, we don't want allies to get double speed from time bubble
+			} else {
+				Class<?extends Buff> buffClass = buff.getClass();
+				if (buffClass == Haste.class || buffClass == Stamina.class){
+					speed *= 1.5f;
+				} else if (buffClass == Chill.class || buffClass == Daze.class){
+					speed *= 0.5f;
+				} else if (buffClass == Adrenaline.class){
+					speed *= 2f;
+				} else if (buffClass == Slow.class || buffClass == Hex.class || buffClass == Vulnerable.class){
+					speed *= 0.667f;
+				}
+			}
+		}
+		
 		return speed;
 	}
 

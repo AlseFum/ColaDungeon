@@ -261,6 +261,13 @@ public abstract class RegularLevel extends Level {
 			if (tries >= 0) {
 				mobsToSpawn--;
 				mobs.add(mob);
+				
+				// 确保正确初始化
+				Actor.ensureActorAdded(mob);
+				
+				// 测试：强制给怪物添加特质
+				Mob.testAddTraits(mob);
+				
 				mob = null;
 
 				//chance to add a second mob to this room, except on floor 1
@@ -283,6 +290,13 @@ public abstract class RegularLevel extends Level {
 					if (tries >= 0) {
 						mobsToSpawn--;
 						mobs.add(mob);
+						
+						// 确保正确初始化
+						Actor.ensureActorAdded(mob);
+						
+						// 测试：强制给第二个怪物添加特质
+						Mob.testAddTraits(mob);
+						
 						mob = null;
 					}
 				}

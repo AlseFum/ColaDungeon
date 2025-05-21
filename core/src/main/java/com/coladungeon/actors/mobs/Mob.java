@@ -94,6 +94,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
+import com.coladungeon.actors.traits.MobTraitGenerator;
+import com.coladungeon.actors.traits.Trait;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -131,13 +133,20 @@ public abstract class Mob extends Char {
 
 	protected static final float TIME_TO_WAKE_UP = 1f;
 
-	protected boolean firstAdded = true;
+	public boolean firstAdded = true;
 	protected void onAdd(){
 		if (firstAdded) {
 			//modify health for ascension challenge if applicable, only on first add
 			float percent = HP / (float) HT;
 			HT = Math.round(HT * AscensionChallenge.statModifier(this));
 			HP = Math.round(HT * percent);
+			
+			// 为怪物添加随机特质
+			MobTraitGenerator.assignTraits(this);
+			
+			// 测试强制添加特质
+			testAddTraits(this);
+			
 			firstAdded = false;
 		}
 	}
@@ -1448,6 +1457,21 @@ public abstract class Mob extends Char {
 	
 	public static void clearHeldAllies(){
 		heldAllies.clear();
+	}
+
+	public static void testAddTraits(Mob mob) {
+		// 清空现有特质
+		if (mob.traits() != null && !mob.traits().getTraits().isEmpty()) {
+			ArrayList<Trait> existingTraits = new ArrayList<>(mob.traits().getTraits());
+			for (Trait t : existingTraits) {
+				mob.removeTrait(t);
+			}
+		}
+		
+		// 强制给怪物添加几个特质
+		mob.addTrait("strong", 1.5f);
+		mob.addTrait("fiery", 1.2f);
+		mob.addTrait("aggressive", 1.0f);
 	}
 }
 

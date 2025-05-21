@@ -340,6 +340,15 @@ public abstract class Actor implements Bundlable {
 
 		all.add( actor );
 		actor.time += time;
+		
+		// 如果是Mob且已经有特质，标记为非首次添加
+		if (actor instanceof Mob) {
+			Mob mob = (Mob)actor;
+			if (mob.traits() != null && !mob.traits().getTraits().isEmpty()) {
+				mob.firstAdded = false;
+			}
+		}
+		
 		actor.onAdd();
 		
 		if (actor instanceof Char) {
@@ -390,4 +399,22 @@ public abstract class Actor implements Bundlable {
 	}
 
 	public static synchronized HashSet<Char> chars() { return new HashSet<>(chars); }
+	
+	/**
+	 * Ensures that an actor has been properly added with onAdd() called.
+	 * This is useful for fixing cases where actors are added to collections
+	 * but not properly initialized through the Actor.add() method.
+	 * 
+	 * @param actor The actor to ensure is properly added
+	 * @return true if onAdd was called, false if it was already added
+	 */
+	public static boolean ensureActorAdded(Actor actor) {
+		if (actor != null && all.contains(actor)) {
+			if (actor instanceof Mob && ((Mob)actor).firstAdded) {
+				actor.onAdd();
+				return true;
+			}
+		}
+		return false;
+	}
 }
