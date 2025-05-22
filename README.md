@@ -11,3 +11,11 @@
 ## 内容
 此改版主要作为明日方舟同人作，相应内容形式为Mod包。
 目前只是设想，后续会进行补充。
+
+## 重构
+1.把Generator改为Consumer+probability
+2.使用Id+record+template来做物品
+3.重写texture判定
+4.重审楼层
+5.事件总线
+6.职业选择改为开局选择

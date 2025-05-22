@@ -110,6 +110,7 @@ import com.coladungeon.items.stones.StoneOfDungeonTravel;
 import com.coladungeon.items.stones.StoneOfEnchantment;
 import com.coladungeon.items.stones.StoneOfFear;
 import com.coladungeon.items.stones.StoneOfFlock;
+import com.coladungeon.items.stones.StoneOfGeneration;
 import com.coladungeon.items.stones.StoneOfIntuition;
 import com.coladungeon.items.stones.StoneOfShock;
 import com.coladungeon.items.trinkets.ChaoticCenser;
@@ -215,46 +216,47 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.function.Supplier;
 
 public class Generator {
-
+	
 	public enum Category {
-		TRINKET ( 0, 0, Trinket.class),
+		TRINKET ( 0, 0, Trinket.class, null),
 
-		WEAPON	( 2, 2, MeleeWeapon.class),
-		WEP_T1	( 0, 0, MeleeWeapon.class),
-		WEP_T2	( 0, 0, MeleeWeapon.class),
-		WEP_T3	( 0, 0, MeleeWeapon.class),
-		WEP_T4	( 0, 0, MeleeWeapon.class),
-		WEP_T5	( 0, 0, MeleeWeapon.class),
-		WEP_EXTRA( 0, 0, MeleeWeapon.class),
+		WEAPON	( 2, 2, MeleeWeapon.class, null),
+		WEP_T1	( 0, 0, MeleeWeapon.class, null),
+		WEP_T2	( 0, 0, MeleeWeapon.class, null),
+		WEP_T3	( 0, 0, MeleeWeapon.class, null),
+		WEP_T4	( 0, 0, MeleeWeapon.class, null),
+		WEP_T5	( 0, 0, MeleeWeapon.class, null),
+		WEP_EXTRA( 0, 0, MeleeWeapon.class, null),
 		
-		ARMOR	( 2, 1, Armor.class ),
+		ARMOR	( 2, 1, Armor.class, null),
 		
-		MISSILE ( 1, 2, MissileWeapon.class ),
-		MIS_T1  ( 0, 0, MissileWeapon.class ),
-		MIS_T2  ( 0, 0, MissileWeapon.class ),
-		MIS_T3  ( 0, 0, MissileWeapon.class ),
-		MIS_T4  ( 0, 0, MissileWeapon.class ),
-		MIS_T5  ( 0, 0, MissileWeapon.class ),
-		MIS_EXTRA( 0, 0, MissileWeapon.class ),
+		MISSILE ( 1, 2, MissileWeapon.class, null),
+		MIS_T1  ( 0, 0, MissileWeapon.class, null),
+		MIS_T2  ( 0, 0, MissileWeapon.class, null),
+		MIS_T3  ( 0, 0, MissileWeapon.class, null),
+		MIS_T4  ( 0, 0, MissileWeapon.class, null),
+		MIS_T5  ( 0, 0, MissileWeapon.class, null),
+		MIS_EXTRA( 0, 0, MissileWeapon.class, null),
 		
-		WAND	( 1, 1, Wand.class ),
-		RING	( 1, 0, Ring.class ),
-		ARTIFACT( 0, 1, Artifact.class),
+		WAND	( 1, 1, Wand.class, null),
+		RING	( 1, 0, Ring.class, null),
+		ARTIFACT( 0, 1, Artifact.class, null),
 		
-		FOOD	( 0, 0, Food.class ),
-		CUSTOM_FOOD ( 0, 0, com.coladungeon.items.food.CustomFood.class ),
+		FOOD	( 0, 0, Food.class, null),
+		CUSTOM_FOOD ( 0, 0, com.coladungeon.items.food.CustomFood.class, null),
 		
-		POTION	( 8, 8, Potion.class ),
-		SEED	( 1, 1, Plant.Seed.class ),
+		POTION	( 8, 8, Potion.class, null),
+		SEED	( 1, 1, Plant.Seed.class, null),
 		
-		SCROLL	( 8, 8, Scroll.class ),
-		STONE   ( 1, 1, Runestone.class),
+		SCROLL	( 8, 8, Scroll.class, null),
+		STONE   ( 1, 1, Runestone.class, null),
 		
-		CUSTOM_ITEM ( 0, 0, CustomItem.class ),
+		CUSTOM_ITEM ( 0, 0, CustomItem.class, null),
 		
-		GOLD	( 10, 10,   Gold.class );
+		GOLD	( 10, 10, Gold.class, ()->new Gold());
 		
 		public Class<?>[] classes;
 
@@ -283,11 +285,13 @@ public class Generator {
 		public float firstProb;
 		public float secondProb;
 		public Class<? extends Item> superClass;
+		public Supplier<Item> make; // 新增：物品生成函数
 		
-		private Category( float firstProb, float secondProb, Class<? extends Item> superClass ) {
+		private Category(float firstProb, float secondProb, Class<? extends Item> superClass, Supplier<Item> make) {
 			this.firstProb = firstProb;
 			this.secondProb = secondProb;
 			this.superClass = superClass;
+			this.make = make;
 			// Initialize empty arrays that will be populated by registerItem
 			this.classes = new Class<?>[0];
 			this.probs = new float[0];
@@ -349,33 +353,19 @@ public class Generator {
 		// 初始化金币
 		registerItem(Category.GOLD, Gold.class, 1f);
 		
-		// 初始化药水（先使用单一概率注册所有药水）
-		registerItem(Category.POTION, PotionOfStrength.class, 0f);
-		registerItem(Category.POTION, PotionOfHealing.class, 3f);
-		registerItem(Category.POTION, PotionOfMindVision.class, 2f);
-		registerItem(Category.POTION, PotionOfFrost.class, 1f);
-		registerItem(Category.POTION, PotionOfLiquidFlame.class, 2f);
-		registerItem(Category.POTION, PotionOfToxicGas.class, 1f);
-		registerItem(Category.POTION, PotionOfHaste.class, 1f);
-		registerItem(Category.POTION, PotionOfInvisibility.class, 1f);
-		registerItem(Category.POTION, PotionOfLevitation.class, 1f);
-		registerItem(Category.POTION, PotionOfParalyticGas.class, 1f);
-		registerItem(Category.POTION, PotionOfPurity.class, 1f);
-		registerItem(Category.POTION, PotionOfExperience.class, 1f);
-		
-		// 再使用双概率更新药水
-		registerItemWithDualProbabilities(Category.POTION, PotionOfStrength.class, 0f, 0f);
-		registerItemWithDualProbabilities(Category.POTION, PotionOfHealing.class, 3f, 3f);
-		registerItemWithDualProbabilities(Category.POTION, PotionOfMindVision.class, 2f, 2f);
-		registerItemWithDualProbabilities(Category.POTION, PotionOfFrost.class, 1f, 2f);
-		registerItemWithDualProbabilities(Category.POTION, PotionOfLiquidFlame.class, 2f, 1f);
-		registerItemWithDualProbabilities(Category.POTION, PotionOfToxicGas.class, 1f, 2f);
-		registerItemWithDualProbabilities(Category.POTION, PotionOfHaste.class, 1f, 1f);
-		registerItemWithDualProbabilities(Category.POTION, PotionOfInvisibility.class, 1f, 1f);
-		registerItemWithDualProbabilities(Category.POTION, PotionOfLevitation.class, 1f, 1f);
-		registerItemWithDualProbabilities(Category.POTION, PotionOfParalyticGas.class, 1f, 1f);
-		registerItemWithDualProbabilities(Category.POTION, PotionOfPurity.class, 1f, 1f);
-		registerItemWithDualProbabilities(Category.POTION, PotionOfExperience.class, 1f, 0f);
+		// 初始化药水（使用双概率一次性注册）
+		registerItem(Category.POTION, PotionOfStrength.class, 0f, 0f);
+		registerItem(Category.POTION, PotionOfHealing.class, 3f, 3f);
+		registerItem(Category.POTION, PotionOfMindVision.class, 2f, 2f);
+		registerItem(Category.POTION, PotionOfFrost.class, 1f, 2f);
+		registerItem(Category.POTION, PotionOfLiquidFlame.class, 2f, 1f);
+		registerItem(Category.POTION, PotionOfToxicGas.class, 1f, 2f);
+		registerItem(Category.POTION, PotionOfHaste.class, 1f, 1f);
+		registerItem(Category.POTION, PotionOfInvisibility.class, 1f, 1f);
+		registerItem(Category.POTION, PotionOfLevitation.class, 1f, 1f);
+		registerItem(Category.POTION, PotionOfParalyticGas.class, 1f, 1f);
+		registerItem(Category.POTION, PotionOfPurity.class, 1f, 1f);
+		registerItem(Category.POTION, PotionOfExperience.class, 1f, 0f);
 		
 		// 初始化种子
 		registerItem(Category.SEED, Rotberry.Seed.class, 0f);
@@ -391,33 +381,19 @@ public class Generator {
 		registerItem(Category.SEED, Mageroyal.Seed.class, 2f);
 		registerItem(Category.SEED, Starflower.Seed.class, 1f);
 		
-		// 初始化卷轴（先使用单一概率注册所有卷轴）
-		registerItem(Category.SCROLL, ScrollOfUpgrade.class, 0f);
-		registerItem(Category.SCROLL, ScrollOfIdentify.class, 3f);
-		registerItem(Category.SCROLL, ScrollOfRemoveCurse.class, 2f);
-		registerItem(Category.SCROLL, ScrollOfMirrorImage.class, 1f);
-		registerItem(Category.SCROLL, ScrollOfRecharging.class, 2f);
-		registerItem(Category.SCROLL, ScrollOfTeleportation.class, 1f);
-		registerItem(Category.SCROLL, ScrollOfLullaby.class, 1f);
-		registerItem(Category.SCROLL, ScrollOfMagicMapping.class, 1f);
-		registerItem(Category.SCROLL, ScrollOfRage.class, 1f);
-		registerItem(Category.SCROLL, ScrollOfRetribution.class, 1f);
-		registerItem(Category.SCROLL, ScrollOfTerror.class, 1f);
-		registerItem(Category.SCROLL, ScrollOfTransmutation.class, 1f);
-		
-		// 再使用双概率更新卷轴
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfUpgrade.class, 0f, 0f);
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfIdentify.class, 3f, 3f);
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfRemoveCurse.class, 2f, 2f);
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfMirrorImage.class, 1f, 2f);
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfRecharging.class, 2f, 1f);
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfTeleportation.class, 1f, 2f);
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfLullaby.class, 1f, 1f);
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfMagicMapping.class, 1f, 1f);
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfRage.class, 1f, 1f);
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfRetribution.class, 1f, 1f);
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfTerror.class, 1f, 1f);
-		registerItemWithDualProbabilities(Category.SCROLL, ScrollOfTransmutation.class, 1f, 0f);
+		// 初始化卷轴（使用双概率一次性注册）
+		registerItem(Category.SCROLL, ScrollOfUpgrade.class, 0f, 0f);
+		registerItem(Category.SCROLL, ScrollOfIdentify.class, 3f, 3f);
+		registerItem(Category.SCROLL, ScrollOfRemoveCurse.class, 2f, 2f);
+		registerItem(Category.SCROLL, ScrollOfMirrorImage.class, 1f, 2f);
+		registerItem(Category.SCROLL, ScrollOfRecharging.class, 2f, 1f);
+		registerItem(Category.SCROLL, ScrollOfTeleportation.class, 1f, 2f);
+		registerItem(Category.SCROLL, ScrollOfLullaby.class, 1f, 1f);
+		registerItem(Category.SCROLL, ScrollOfMagicMapping.class, 1f, 1f);
+		registerItem(Category.SCROLL, ScrollOfRage.class, 1f, 1f);
+		registerItem(Category.SCROLL, ScrollOfRetribution.class, 1f, 1f);
+		registerItem(Category.SCROLL, ScrollOfTerror.class, 1f, 1f);
+		registerItem(Category.SCROLL, ScrollOfTransmutation.class, 1f, 0f);
 		
 		// 初始化石头
 		registerItem(Category.STONE, StoneOfEnchantment.class, 0f);
@@ -433,6 +409,7 @@ public class Generator {
 		registerItem(Category.STONE, StoneOfFear.class, 2f);
 		registerItem(Category.STONE, StoneOfAugmentation.class, 0f);
 		registerItem(Category.STONE, StoneOfDungeonTravel.class, 1f);
+		registerItem(Category.STONE, StoneOfGeneration.class, 2f);
 		
 		// 初始化法杖
 		registerItem(Category.WAND, WandOfMagicMissile.class, 3f);
@@ -583,18 +560,23 @@ public class Generator {
 		
 		// 初始化自定义物品类别
 		// 注意：自定义物品已经在 CustomItem 类的静态初始化块中注册了
-		// 这里我们只需要将它们添加到生成器系统中
-		for (String key : CustomItem.item_records.keySet()) {
-			// 创建一个虚拟类来代表每个自定义物品
-			// 实际上我们不使用这个类，只是为了保持一致性
-			registerItem(Category.CUSTOM_ITEM, CustomItem.class, 1f);
+		// 这里我们需要将每个自定义物品单独添加到生成器系统中
+		String[] customItemKeys = CustomItem.item_records.keySet().toArray(new String[0]);
+		for (String key : customItemKeys) {
+			final String itemKey = key; // Create final copy for lambda
+			registerItem(Category.CUSTOM_ITEM, CustomItem.class, 1f, 0f, () -> {
+				return new CustomItem(itemKey);
+			});
 		}
 		
 		// 初始化自定义食物类别
 		// 注意：自定义食物已经在 CustomFood 类的静态初始化块中注册了
-		for (String key : com.coladungeon.items.food.CustomFood.food_records.keySet()) {
-			// 创建一个虚拟类来代表每个自定义食物
-			registerItem(Category.CUSTOM_FOOD, com.coladungeon.items.food.CustomFood.class, 1f);
+		String[] customFoodKeys = com.coladungeon.items.food.CustomFood.food_records.keySet().toArray(new String[0]);
+		for (String key : customFoodKeys) {
+			final String foodKey = key; // Create final copy for lambda
+			registerItem(Category.CUSTOM_FOOD, com.coladungeon.items.food.CustomFood.class, 1f, 0f, () -> {
+				return new com.coladungeon.items.food.CustomFood(foodKey);
+			});
 		}
 		
 		// 更新有两套概率的类别的总概率
@@ -619,57 +601,7 @@ public class Generator {
 	 * 注册带有双概率的物品（有些物品有两种概率分布）
 	 */
 	public static boolean registerItemWithDualProbabilities(Category category, Class<? extends Item> itemClass, float probability1, float probability2) {
-		if (category == null || itemClass == null || probability1 < 0 || probability2 < 0) {
-			return false;
-		}
-		
-		// 先用第一个概率注册，这将确保 defaultProbs 被初始化
-		boolean result = registerItem(category, itemClass, probability1);
-		
-		// 如果已成功注册，查找物品的索引
-		if (result && category.defaultProbs != null) { // 确保 defaultProbs 不为空
-			int index = -1;
-			for (int i = 0; i < category.classes.length; i++) {
-				if (category.classes[i].equals(itemClass)) {
-					index = i;
-					break;
-				}
-			}
-			
-			if (index >= 0) {
-				// 如果类别没有第二组概率，需要创建
-				if (category.defaultProbs2 == null) {
-					category.defaultProbs2 = new float[category.defaultProbs.length];
-					// 复制第一组概率作为初始值
-					System.arraycopy(category.defaultProbs, 0, category.defaultProbs2, 0, category.defaultProbs.length);
-				} else if (category.defaultProbs2.length <= index) {
-					// 如果第二组概率数组长度不够，需要扩展
-					float[] newDefaultProbs2 = new float[category.defaultProbs.length];
-					System.arraycopy(category.defaultProbs2, 0, newDefaultProbs2, 0, category.defaultProbs2.length);
-					// 用第一组概率填充新增的部分
-					for (int i = category.defaultProbs2.length; i < category.defaultProbs.length; i++) {
-						newDefaultProbs2[i] = category.defaultProbs[i];
-					}
-					category.defaultProbs2 = newDefaultProbs2;
-				}
-				
-				// 更新特定物品的第二组概率
-				category.defaultProbs2[index] = probability2;
-				
-				// 更新总概率
-				if (category.defaultProbsTotal == null) {
-					category.defaultProbsTotal = new float[category.defaultProbs.length];
-				} else if (category.defaultProbsTotal.length <= index) {
-					float[] newTotalProbs = new float[category.defaultProbs.length];
-					System.arraycopy(category.defaultProbsTotal, 0, newTotalProbs, 0, category.defaultProbsTotal.length);
-					category.defaultProbsTotal = newTotalProbs;
-				}
-				
-				category.defaultProbsTotal[index] = category.defaultProbs[index] + category.defaultProbs2[index];
-			}
-		}
-		
-		return result;
+		return registerItem(category, itemClass, probability1, probability2);
 	}
 
 	public static void fullReset() {
@@ -794,7 +726,21 @@ public class Generator {
 					}
 				}
 
-				return ((Item) Reflection.newInstance(itemCls)).random();
+				// 使用make生成函数（如果存在且适合当前选中的itemCls）
+				// 重要：make供应器是类别级别的，但我们选择的是特定的itemCls
+				// 所以只有当make是专门为当前itemCls设置的时候才使用它
+				try {
+					// 优先使用反射安全创建物品实例，这是最可靠的方法
+					return ((Item) Reflection.newInstance(itemCls)).random();
+				} catch (Exception e) {
+					// 如果反射失败（不太可能），尝试使用make供应器作为备选
+					if (cat.make != null) {
+						return cat.make.get();
+					} else {
+						// 如果都失败，返回一个安全的默认物品
+						return new Gold();
+					}
+				}
 		}
 	}
 
@@ -808,7 +754,17 @@ public class Generator {
 		} else if (cat.defaultProbs == null || cat == Category.ARTIFACT) {
 			return random(cat);
 		} else if (cat.defaultProbsTotal != null){
-			return ((Item) Reflection.newInstance(cat.classes[Random.chances(cat.defaultProbsTotal)])).random();
+			try {
+				Class<?> itemCls = cat.classes[Random.chances(cat.defaultProbsTotal)];
+				return ((Item) Reflection.newInstance(itemCls)).random();
+			} catch (Exception e) {
+				// 如果反射失败，使用备选生成方法
+				if (cat.make != null) {
+					return cat.make.get();
+				} else {
+					return new Gold();
+				}
+			}
 		} else {
 			Class<?> itemCls = cat.classes[Random.chances(cat.defaultProbs)];
 
@@ -822,7 +778,16 @@ public class Generator {
 				}
 			}
 
-			return ((Item) Reflection.newInstance(itemCls)).random();
+			try {
+				return ((Item) Reflection.newInstance(itemCls)).random();
+			} catch (Exception e) {
+				// 如果反射失败，使用备选生成方法
+				if (cat.make != null) {
+					return cat.make.get();
+				} else {
+					return new Gold();
+				}
+			}
 		}
 	}
 	
@@ -1025,51 +990,7 @@ public class Generator {
 	 * @return true if the item was successfully registered, false otherwise
 	 */
 	public static boolean registerItem(Category category, Class<? extends Item> itemClass, float probability) {
-		if (category == null || itemClass == null || probability < 0) {
-			return false;
-		}
-		
-		// 检查物品是否已经存在
-		for (int i = 0; i < category.classes.length; i++) {
-			if (category.classes[i].equals(itemClass)) {
-				// 更新概率
-				category.probs[i] = probability;
-				if (category.defaultProbs != null) {
-					category.defaultProbs[i] = probability;
-				}
-				return true;
-			}
-		}
-		
-		// 创建新数组，增加一个位置
-		Class<?>[] newClasses = new Class<?>[category.classes.length + 1];
-		float[] newProbs = new float[category.probs.length + 1];
-		
-		// 复制现有元素
-		System.arraycopy(category.classes, 0, newClasses, 0, category.classes.length);
-		System.arraycopy(category.probs, 0, newProbs, 0, category.probs.length);
-		
-		// 添加新项目
-		newClasses[newClasses.length - 1] = itemClass;
-		newProbs[newProbs.length - 1] = probability;
-		
-		// 更新类别
-		category.classes = newClasses;
-		category.probs = newProbs;
-		
-		// 当添加第一个物品时初始化defaultProbs
-		if (category.defaultProbs == null) {
-			category.defaultProbs = new float[newProbs.length];
-			System.arraycopy(newProbs, 0, category.defaultProbs, 0, newProbs.length);
-				} else {
-			// 更新默认概率（如果存在）
-			float[] newDefaultProbs = new float[category.defaultProbs.length + 1];
-			System.arraycopy(category.defaultProbs, 0, newDefaultProbs, 0, category.defaultProbs.length);
-			newDefaultProbs[newDefaultProbs.length - 1] = probability;
-			category.defaultProbs = newDefaultProbs;
-		}
-		
-		return true;
+		return registerItem(category, itemClass, probability, 0);
 	}
 	
 	/**
@@ -1176,5 +1097,135 @@ public class Generator {
 		}
 		
 		return false;
+	}
+
+	/**
+	 * 注册一个物品到生成系统
+	 * @param category 物品类别
+	 * @param itemClass 物品类型
+	 * @param probability1 第一套概率
+	 * @param probability2 第二套概率（如果类别使用双概率系统）
+	 * @return 是否成功注册
+	 */
+	public static boolean registerItem(Category category, Class<? extends Item> itemClass, float probability1, float probability2) {
+		if (category == null || itemClass == null || probability1 < 0 || probability2 < 0) {
+			return false;
+		}
+		
+		// 设置物品生成函数，包含错误处理
+		category.make = () -> {
+			try {
+				return (Item)Reflection.newInstance(itemClass).random();
+			} catch (Exception e) {
+				// 如果实例化失败，返回一个安全的默认物品
+				return new Gold();
+			}
+		};
+		
+		// 检查物品是否已经存在
+		for (int i = 0; i < category.classes.length; i++) {
+			if (category.classes[i].equals(itemClass)) {
+				// 更新概率
+				category.probs[i] = probability1;
+				if (category.defaultProbs != null) {
+					category.defaultProbs[i] = probability1;
+				}
+				
+				// 如果有第二组概率，也更新
+				if (category.defaultProbs2 != null) {
+					category.defaultProbs2[i] = probability2;
+					
+					// 更新总概率
+					if (category.defaultProbsTotal != null) {
+						category.defaultProbsTotal[i] = probability1 + probability2;
+					}
+				}
+				
+				return true;
+			}
+		}
+		
+		// 创建新数组，增加一个位置
+		Class<?>[] newClasses = new Class<?>[category.classes.length + 1];
+		float[] newProbs = new float[category.probs.length + 1];
+		
+		// 复制现有元素
+		System.arraycopy(category.classes, 0, newClasses, 0, category.classes.length);
+		System.arraycopy(category.probs, 0, newProbs, 0, category.probs.length);
+		
+		// 添加新项目
+		newClasses[newClasses.length - 1] = itemClass;
+		newProbs[newProbs.length - 1] = probability1;
+		
+		// 更新类别
+		category.classes = newClasses;
+		category.probs = newProbs;
+		
+		// 更新默认概率
+		if (category.defaultProbs == null) {
+			category.defaultProbs = new float[newProbs.length];
+			System.arraycopy(newProbs, 0, category.defaultProbs, 0, newProbs.length);
+		} else {
+			float[] newDefaultProbs = new float[category.defaultProbs.length + 1];
+			System.arraycopy(category.defaultProbs, 0, newDefaultProbs, 0, category.defaultProbs.length);
+			newDefaultProbs[newDefaultProbs.length - 1] = probability1;
+			category.defaultProbs = newDefaultProbs;
+		}
+		
+		// 处理第二组概率（如果需要）
+		if (category.defaultProbs2 != null || probability2 > 0) {
+			if (category.defaultProbs2 == null) {
+				category.defaultProbs2 = new float[newProbs.length];
+				// 如果之前没有第二组概率，复制第一组作为基础
+				System.arraycopy(category.defaultProbs, 0, category.defaultProbs2, 0, category.defaultProbs.length - 1);
+				category.defaultProbs2[category.defaultProbs2.length - 1] = probability2;
+			} else {
+				float[] newDefaultProbs2 = new float[category.defaultProbs2.length + 1];
+				System.arraycopy(category.defaultProbs2, 0, newDefaultProbs2, 0, category.defaultProbs2.length);
+				newDefaultProbs2[newDefaultProbs2.length - 1] = probability2;
+				category.defaultProbs2 = newDefaultProbs2;
+			}
+			
+			// 更新总概率
+			if (category.defaultProbsTotal == null) {
+				category.defaultProbsTotal = new float[newProbs.length];
+			} else {
+				float[] newTotalProbs = new float[category.defaultProbsTotal.length + 1];
+				System.arraycopy(category.defaultProbsTotal, 0, newTotalProbs, 0, category.defaultProbsTotal.length);
+				category.defaultProbsTotal = newTotalProbs;
+			}
+			
+			category.defaultProbsTotal[category.defaultProbsTotal.length - 1] = probability1 + probability2;
+		}
+		
+		return true;
+	}
+
+	/**
+	 * 使用自定义生成函数注册物品
+	 */
+	public static boolean registerItem(Category category, Class<? extends Item> itemClass, float probability1, float probability2, Supplier<Item> makeFunction) {
+		boolean result = registerItem(category, itemClass, probability1, probability2);
+		if (result) {
+			category.make = makeFunction;
+		}
+		return result;
+	}
+
+	/**
+	 * 简化版的注册方法，直接使用生成函数
+	 */
+	public static boolean registerItem(Category category, String itemId, Supplier<Item> makeFunction, float probability1, float probability2) {
+		try {
+			// 创建一个虚拟类来保持与现有系统的兼容性
+			Class<?> dummyClass = CustomItem.class;
+			boolean result = registerItem(category, (Class<? extends Item>)dummyClass, probability1, probability2);
+			if (result) {
+				category.make = makeFunction;
+			}
+			return result;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }

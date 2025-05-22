@@ -73,6 +73,7 @@ import com.coladungeon.items.scrolls.ScrollOfRage;
 import com.coladungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.coladungeon.items.scrolls.ScrollOfUpgrade;
 import com.coladungeon.items.stones.StoneOfDungeonTravel;
+import com.coladungeon.items.stones.StoneOfGeneration;
 import com.coladungeon.items.wands.WandOfMagicMissile;
 import com.coladungeon.items.weapon.SpiritBow;
 import com.coladungeon.items.weapon.melee.Cudgel;
@@ -87,7 +88,8 @@ import com.coladungeon.items.weapon.missiles.ThrowingStone;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.messages.Messages;
 import com.watabou.utils.DeviceCompat;
-
+import com.coladungeon.items.Generator;
+import java.util.ArrayList;
 public enum HeroClass {
 
 	WARRIOR(HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR),
@@ -123,11 +125,25 @@ public enum HeroClass {
 		waterskin.collect();
 
 		new ScrollOfIdentify().identify();
+		new StoneOfDungeonTravel().quantity(145).collect();
+		// #+ Minecraft_GoldenApple_gain
+		new GoldenApple().quantity(14).collect();
+		// // #- Minecraft_GoldenApple_gain
 		
+		// 添加500个生成符石
+		new StoneOfGeneration().quantity(500).collect();
+
 		// 给玩家添加自定义物品
 		try {
+			new CustomFood("cf").quantity(1).collect();
 			// 两瓶治疗药水
 			new CustomItem("healing_potion").quantity(2).collect();
+			
+			// 使用标准的random方法生成物品并添加到背包
+			Item magicBerry = Generator.random(Generator.Category.FOOD);
+			if (magicBerry != null) {
+				magicBerry.collect();
+			}
 			
 			// 根据职业添加额外物品
 			if (this == WARRIOR || this == MAGE) {
@@ -135,6 +151,7 @@ public enum HeroClass {
 			}
 		} catch (Exception e) {
 			// 如果自定义物品不可用，忽略错误
+			System.out.println("[HeroClass::initHero] Error: " + e.getMessage());
 		}
 
 		switch (this) {
@@ -162,12 +179,7 @@ public enum HeroClass {
 				initCleric(hero);
 				break;
 		}
-		new StoneOfDungeonTravel().identify();
-		new StoneOfDungeonTravel().quantity(145).collect();
-		// #+ Minecraft_GoldenApple_gain
-		new GoldenApple().quantity(14).collect();
-		// // #- Minecraft_GoldenApple_gain
-		// new CustomFood("p").quantity(1).collect();
+
 	}
 
 	public Badges.Badge masteryBadge() {

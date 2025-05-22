@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class CustomItem extends Item {
+    //not well implemented
 
     public String id = "default_item";
     public String label = "Custom Item";
@@ -88,7 +89,14 @@ public class CustomItem extends Item {
         super.storeInBundle(bundle);
         bundle.put("id", id);
     }
-    
+    private void receive_template(String id) {
+        CITemplate template = item_records.get(id);
+        if (template == null) {
+            System.out.println("[CustomItem::receive_template] template is null");
+            return;
+        }
+        receive_template(template);
+    }
     private void receive_template(CITemplate template) {
         if (template == null) {
             System.out.println("[CustomItem::receive_template] template is null");
@@ -101,10 +109,7 @@ public class CustomItem extends Item {
         this.defaultAction = template.defaultAction;
     }
     
-    private void receive_template(String id) {
-        CITemplate template = item_records.get(id);
-        receive_template(template);
-    }
+    
     
     public static class CITemplate {
         public CITemplate() {
@@ -214,8 +219,8 @@ public class CustomItem extends Item {
             .setStackable(true)
             .onUse(hero -> {
                 hero.HP = Math.min(hero.HP + 20, hero.HT);
-                hero.spend(1f);
-                hero.busy();
+                // hero.spend(1f);
+                // hero.busy();
                 hero.sprite.operate(hero.pos);
             })
             .setPrice(50)

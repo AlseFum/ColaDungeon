@@ -133,7 +133,7 @@ public class ItemSpriteManager {
     }
 
     static {
-        registerTexture("minecraft/misc.png", 32)
+        registerTexture("minecraft/misc.png", 16)
             .span(144).label("skel");
         registerTexture("minecraft/bread.png", 16)
             .label("bread");
@@ -158,10 +158,7 @@ public class ItemSpriteManager {
         if (image < 114514) {
             System.out.println("mapImage should not receive image:int<114514");
             return null;
-            // return new ImageMapping(
-            // TextureCache.get(Assets.Sprites.ITEMS),
-            // ItemSpriteSheet.film.get(image),
-            // ItemSpriteSheet.film.height(image));
+
         } else {
             if (getSegment(image) != null) {
                 return getSegment(image).get(image);

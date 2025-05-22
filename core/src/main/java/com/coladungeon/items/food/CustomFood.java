@@ -150,7 +150,7 @@ public class CustomFood extends Food {
     public static HashMap<String, CFTemplate> food_records = new HashMap<>();
     static {
         new Factory("p")
-            .setLabel("Pshi")
+            .setLabel("Custom food")
             .setEnergy(10.0f)
             .onEat(h -> System.out.println("wdmnd"))
             .register();
