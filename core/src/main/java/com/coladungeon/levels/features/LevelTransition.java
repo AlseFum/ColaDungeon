@@ -153,4 +153,10 @@ public class LevelTransition extends Rect implements Bundlable {
 		destBranch = bundle.getInt(DEST_BRANCH);
 		if (bundle.contains(DEST_TYPE)) destType = bundle.getEnum(DEST_TYPE, Type.class);
 	}
+
+	// 添加一个方法用于调试输出transition信息
+	public String toString() {
+		return "<Transition to " +destDepth +
+				"@" + destBranch +'>';
+	}
 }

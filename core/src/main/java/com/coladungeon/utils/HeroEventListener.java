@@ -35,7 +35,7 @@ import java.util.function.Function;
 public class HeroEventListener {
     
     private boolean enabled = true;
-    private boolean debugLogging = true;
+    private boolean debugLogging = false;
     
     /**
      * 创建并注册一个监听器实例

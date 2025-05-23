@@ -56,6 +56,17 @@ import com.coladungeon.items.wands.WandOfWarding;
 import com.coladungeon.journal.Notes;
 import com.coladungeon.levels.DeadEndLevel;
 import com.coladungeon.levels.Level;
+import com.coladungeon.levels.LastLevel;
+import com.coladungeon.levels.SewerLevel;
+import com.coladungeon.levels.SewerBossLevel;
+import com.coladungeon.levels.PrisonLevel;
+import com.coladungeon.levels.PrisonBossLevel;
+import com.coladungeon.levels.CavesLevel;
+import com.coladungeon.levels.CavesBossLevel;
+import com.coladungeon.levels.CityLevel;
+import com.coladungeon.levels.CityBossLevel;
+import com.coladungeon.levels.HallsLevel;
+import com.coladungeon.levels.HallsBossLevel;
 import com.coladungeon.levels.MiningLevel;
 import com.coladungeon.levels.RegularLevel;
 import com.coladungeon.levels.features.LevelTransition;
@@ -63,6 +74,7 @@ import com.coladungeon.levels.rooms.secret.SecretRoom;
 import com.coladungeon.levels.rooms.special.SpecialRoom;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;
+import com.coladungeon.scenes.InterlevelScene;
 import com.coladungeon.ui.QuickSlotButton;
 import com.coladungeon.ui.Toolbar;
 import com.coladungeon.utils.DungeonSeed;
@@ -85,7 +97,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import com.coladungeon.utils.Helper;
 import com.coladungeon.utils.HeroEventListener;
 
 public class Dungeon {
@@ -292,8 +303,49 @@ public class Dungeon {
 		
 		Dungeon.level = null;
 		Actor.clear();
-		
-		Level level=Helper.newLevel(depth, branch);
+
+		Level level;
+		switch (depth) {
+			case 0:
+				level = new DeadEndLevel();
+				break;
+			case 1: case 2: case 3: case 4:
+				level = new SewerLevel();
+				break;
+			case 5:
+				level = new SewerBossLevel();
+				break;
+			case 6: case 7: case 8: case 9:
+				level = new PrisonLevel();
+				break;
+			case 10:
+				level = new PrisonBossLevel();
+				break;
+			case 11: case 12: case 13: case 14:
+				level = new CavesLevel();
+				break;
+			case 15:
+				level = new CavesBossLevel();
+				break;
+			case 16: case 17: case 18: case 19:
+				level = new CityLevel();
+				break;
+			case 20:
+				level = new CityBossLevel();
+				break;
+			case 21: case 22: case 23: case 24:
+				level = new HallsLevel();
+				break;
+			case 25:
+				level = new HallsBossLevel();
+				break;
+			case 26:
+				level = new LastLevel();
+				break;
+			default:
+				level = new DeadEndLevel();
+				Statistics.deepestFloor--;
+		}
 
 		//dead end levels get cleared, don't count as generated
 		if (!(level instanceof DeadEndLevel)){

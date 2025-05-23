@@ -45,6 +45,7 @@ import com.coladungeon.ui.IconButton;
 import com.coladungeon.ui.Icons;
 import com.coladungeon.ui.RenderedTextBlock;
 import com.coladungeon.ui.StyledButton;
+import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndError;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.input.KeyEvent;
@@ -113,6 +114,13 @@ public class InterlevelScene extends PixelScene {
 	@Override
 	public void create() {
 		super.create();
+		
+		// 记录初始传入的transition信息
+		if (curTransition != null) {
+			GLog.i("[InterlevelScene.create] 初始transition: " + curTransition+"\n");
+		} else {
+			GLog.i("[InterlevelScene.create] 初始transition为null");
+		}
 		
 		String loadingAsset;
 		int loadingDepth;
@@ -598,7 +606,6 @@ public class InterlevelScene extends PixelScene {
 			phase = Phase.FADE_OUT;
 			timeLeft = fadeTime;
 		}
-
 	}
 
 	private void descend() throws IOException {
@@ -632,21 +639,31 @@ public class InterlevelScene extends PixelScene {
 			Mob.holdAllies( Dungeon.level );
 			Dungeon.saveAll();
 
-			Level level;
-			Dungeon.depth = curTransition.destDepth;
-			Dungeon.branch = curTransition.destBranch;
+			if (curTransition != null){
+				Dungeon.depth = curTransition.destDepth;
+				Dungeon.branch = curTransition.destBranch;
+			} else {
+				Dungeon.depth++;
+			}
 
+			Level level;
 			if (Dungeon.levelHasBeenGenerated(Dungeon.depth, Dungeon.branch)) {
 				level = Dungeon.loadLevel( GamesInProgress.curSlot );
 			} else {
 				level = Dungeon.newLevel();
 			}
-
-			LevelTransition destTransition = level.getTransition(curTransition.destType);
+			
+			int destCell = -1;
+			if (curTransition != null){
+				LevelTransition dest = level.getTransition(curTransition.destType);
+				if (dest != null) {
+					destCell = dest.cell();
+				}
+			}
 			curTransition = null;
-			Dungeon.switchLevel( level, destTransition.cell() );
+			
+			Dungeon.switchLevel( level, destCell );
 		}
-
 	}
 
 	//TODO atm falling always just increments depth by 1, do we eventually want to roll it into the transition system?
@@ -671,19 +688,30 @@ public class InterlevelScene extends PixelScene {
 		Mob.holdAllies( Dungeon.level );
 		Dungeon.saveAll();
 
-		Level level;
-		Dungeon.depth = curTransition.destDepth;
-		Dungeon.branch = curTransition.destBranch;
+		if (curTransition != null){
+			Dungeon.depth = curTransition.destDepth;
+			Dungeon.branch = curTransition.destBranch;
+		} else {
+			Dungeon.depth--;
+		}
 
+		Level level;
 		if (Dungeon.levelHasBeenGenerated(Dungeon.depth, Dungeon.branch)) {
 			level = Dungeon.loadLevel( GamesInProgress.curSlot );
 		} else {
 			level = Dungeon.newLevel();
 		}
-
-		LevelTransition destTransition = level.getTransition(curTransition.destType);
+		
+		int destCell = -1;
+		if (curTransition != null){
+			LevelTransition dest = level.getTransition(curTransition.destType);
+			if (dest != null) {
+				destCell = dest.cell();
+			}
+		}
 		curTransition = null;
-		Dungeon.switchLevel( level, destTransition.cell() );
+		
+		Dungeon.switchLevel( level, destCell );
 	}
 	
 	private void returnTo() throws IOException {

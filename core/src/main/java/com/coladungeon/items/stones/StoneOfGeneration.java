@@ -23,22 +23,15 @@ package com.coladungeon.items.stones;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
-import com.coladungeon.actors.Actor;
-import com.coladungeon.actors.Char;
-import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.Speck;
 import com.coladungeon.items.Generator;
 import com.coladungeon.items.Item;
-import com.coladungeon.items.scrolls.ScrollOfTeleportation;
-import com.coladungeon.messages.Messages;
-import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -46,7 +39,7 @@ import java.util.ArrayList;
 public class StoneOfGeneration extends Runestone {
 	
 	{
-		image = ItemSpriteSheet.STONE_BLAST;
+		image = ItemSpriteSheet.STONE_BLINK;
 	}
 	
 	// 存储当前选择的物品类别
@@ -68,6 +61,7 @@ public class StoneOfGeneration extends Runestone {
 			try {
 				selectedCategory = Generator.Category.valueOf(catName);
 			} catch (Exception e) {
+				GLog.w("Error restoring category: " + e.getMessage());
 				selectedCategory = null;
 			}
 		}
@@ -81,6 +75,14 @@ public class StoneOfGeneration extends Runestone {
 	}
 	
 	private static final String AC_SELECT = "SELECT";
+	
+	@Override
+	public String actionName(String action, Hero hero) {
+		if (action.equals(AC_SELECT)) {
+			return "选择类别";
+		}
+		return super.actionName(action, hero);
+	}
 	
 	@Override
 	public void execute(Hero hero, String action) {

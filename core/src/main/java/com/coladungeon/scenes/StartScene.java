@@ -26,9 +26,11 @@ import com.coladungeon.Chrome;
 import com.coladungeon.GamesInProgress;
 import com.coladungeon.CDSettings;
 import com.coladungeon.ColaDungeon;
+import com.coladungeon.Dungeon;
+import com.coladungeon.messages.Messages;
+import com.coladungeon.actors.hero.HeroClass;
 import com.coladungeon.actors.hero.HeroSubClass;
 import com.coladungeon.journal.Journal;
-import com.coladungeon.messages.Messages;
 import com.coladungeon.ui.Archs;
 import com.coladungeon.ui.Button;
 import com.coladungeon.ui.ExitButton;
@@ -43,6 +45,8 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
+import com.watabou.utils.DeviceCompat;
+import com.watabou.utils.GameMath;
 
 import java.util.ArrayList;
 
@@ -339,7 +343,8 @@ public class StartScene extends PixelScene {
 			if (newGame) {
 				GamesInProgress.selectedClass = null;
 				GamesInProgress.curSlot = slot;
-				ColaDungeon.switchScene(HeroSelectScene.class);
+				Dungeon.branch = 0;
+				Game.switchScene(HeroSelectScene.class);
 			} else {
 				ColaDungeon.scene().add( new WndGameInProgress(slot));
 			}
