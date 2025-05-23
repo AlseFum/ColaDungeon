@@ -1,4 +1,3 @@
-
 package com.coladungeon.levels.themes;
 
 import com.coladungeon.levels.Level;
@@ -54,7 +53,7 @@ public class ThemeBuilder {
      */
     public ThemePack register(String themeName) {
         ThemePack built = build();
-        ThemeManager.getInstance().registerTheme(themeName, built);
+        ThemeManager.registerTheme(themeName, built);
         return built;
     }
 } 

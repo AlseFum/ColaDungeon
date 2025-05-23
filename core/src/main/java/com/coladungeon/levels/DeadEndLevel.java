@@ -72,9 +72,11 @@ public class DeadEndLevel extends Level {
 				Terrain.WATER;
 		}
 		
+		// 入口（向上）
 		int entrance = SIZE * width() + SIZE / 2 + 1;
+		map[entrance] = Terrain.ENTRANCE;
 
-		//different exit behaviour depending on main branch or side one
+		//different entrance behaviour depending on main branch or side one
 		if (Dungeon.branch == 0) {
 			transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
 		} else {
@@ -85,7 +87,24 @@ public class DeadEndLevel extends Level {
 					0,
 					LevelTransition.Type.BRANCH_EXIT));
 		}
-		map[entrance] = Terrain.ENTRANCE;
+		
+		// 出口（向下）
+		int exit = 2 * width() + SIZE / 2 + 1;
+		map[exit] = Terrain.EXIT;
+		
+		//different exit behaviour depending on main branch or side one  
+		if (Dungeon.branch == 0) {
+			// 主线分支：标准出口（游戏会自动决定去向）
+			transitions.add(new LevelTransition(this, exit, LevelTransition.Type.REGULAR_EXIT));
+		} else {
+			// 分支：回到主线分支
+			transitions.add(new LevelTransition(this,
+					exit,
+					LevelTransition.Type.BRANCH_EXIT,
+					Dungeon.depth + 1,
+					0,
+					LevelTransition.Type.REGULAR_ENTRANCE));
+		}
 		
 		return true;
 	}

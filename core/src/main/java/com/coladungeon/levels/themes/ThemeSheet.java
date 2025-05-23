@@ -1,58 +1,80 @@
 package com.coladungeon.levels.themes;
 
-import com.watabou.utils.Bundlable;
-import com.watabou.utils.Bundle;
+import com.coladungeon.levels.SewerLevel;
+import com.coladungeon.levels.SewerBossLevel;
+import com.coladungeon.levels.CavesBossLevel;
+import com.coladungeon.levels.CavesLevel;
+import com.coladungeon.levels.CityBossLevel;
+import com.coladungeon.levels.CityLevel;
+import com.coladungeon.levels.HallsBossLevel;
+import com.coladungeon.levels.HallsLevel;
+import com.coladungeon.levels.PrisonBossLevel;
+import com.coladungeon.levels.PrisonLevel;
+import com.coladungeon.levels.DebugLevel;
+import com.coladungeon.levels.themes.CrystalTempleThemePack.CrystalTempleLevel;
+import com.coladungeon.levels.themes.ShadowForestThemePack.ShadowForestLevel;
 
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 /**
- * ThemeSheet is a singleton that stores all available ThemePack objects.
+ * ThemeSheet is a static utility class that stores all available ThemePack objects.
  * It provides centralized access to themes for the ThemeManager to use.
  */
-public class ThemeSheet implements Bundlable {
-    
-    // Singleton instance
-    private static ThemeSheet instance = null;
-    
-    // Keys for storing in bundle
-    private static final String THEME_PACKS = "theme_packs";
-    private static final String THEME_NAMES = "theme_names";
+public class ThemeSheet {
     
     // Map of theme name to ThemePack
-    private Map<String, ThemePack> themePacks = new HashMap<>();
+    private static Map<String, ThemePack> themePacks = new HashMap<>();
     
-    // Private constructor to enforce singleton pattern
-    private ThemeSheet() {
+    // Static theme pack instances - centralized here
+    public static ThemePack SewerTheme;
+    public static ThemePack CavesTheme;
+    public static ThemePack CityTheme;
+    public static ThemePack HallsTheme;
+    public static ThemePack PrisonTheme;
+    public static ThemePack DebugTheme;
+    public static ThemePack CrystalTempleTheme;
+    public static ThemePack ShadowForestTheme;
+    
+    static {
+        // Initialize all theme packs
+        SewerTheme = new ThemePack(SewerLevel.class, SewerBossLevel.class);
+        CavesTheme = new ThemePack(CavesLevel.class, CavesBossLevel.class);
+        CityTheme = new ThemePack(CityLevel.class, CityBossLevel.class);
+        HallsTheme = new ThemePack(HallsLevel.class, HallsBossLevel.class);
+        PrisonTheme = new ThemePack(PrisonLevel.class, PrisonBossLevel.class);
+        DebugTheme = new ThemePack(DebugLevel.class, DebugLevel.class);
+        
+        // Special theme packs
+        CrystalTempleTheme = new ThemePack(CrystalTempleLevel.class, CrystalTempleLevel.class);
+        ShadowForestTheme = new ThemePack(ShadowForestLevel.class, ShadowForestLevel.class);
+        
         // Initialize with default themes
         registerDefaultThemes();
     }
     
-    /**
-     * Get the singleton instance
-     * @return The ThemeSheet instance
-     */
-    public static ThemeSheet getInstance() {
-        if (instance == null) {
-            instance = new ThemeSheet();
-        }
-        return instance;
+    // Private constructor to prevent instantiation
+    private ThemeSheet() {
+        throw new AssertionError("ThemeSheet is a utility class and should not be instantiated");
     }
     
     /**
      * Register built-in default themes
      */
-    private void registerDefaultThemes() {
+    private static void registerDefaultThemes() {
         // Default themes are registered here
         // These correspond to the static themes in ThemePack
-        registerThemePack("sewer", ThemePack.getTheme(1));
-        registerThemePack("prison", ThemePack.getTheme(6));
-        registerThemePack("caves", ThemePack.getTheme(11));
-        registerThemePack("city", ThemePack.getTheme(16));
-        registerThemePack("halls", ThemePack.getTheme(21));
+        registerThemePack("sewer", SewerTheme);
+        registerThemePack("prison", PrisonTheme);
+        registerThemePack("caves", CavesTheme);
+        registerThemePack("city", CityTheme);
+        registerThemePack("halls", HallsTheme);
+        
+        // 注册新的特殊主题包
+        registerThemePack("crystal_temple", CrystalTempleTheme);
+        registerThemePack("shadow_forest", ShadowForestTheme);
     }
     
     /**
@@ -60,7 +82,7 @@ public class ThemeSheet implements Bundlable {
      * @param name The name of the theme
      * @param themePack The ThemePack object
      */
-    public void registerThemePack(String name, ThemePack themePack) {
+    public static void registerThemePack(String name, ThemePack themePack) {
         themePacks.put(name, themePack);
     }
     
@@ -69,7 +91,7 @@ public class ThemeSheet implements Bundlable {
      * @param name The name of the theme
      * @return The ThemePack, or null if not found
      */
-    public ThemePack getThemePack(String name) {
+    public static ThemePack getThemePack(String name) {
         return themePacks.get(name);
     }
     
@@ -77,65 +99,24 @@ public class ThemeSheet implements Bundlable {
      * Get all available theme names
      * @return List of theme names
      */
-    public List<String> getThemeNames() {
+    public static List<String> getThemeNames() {
         return new ArrayList<>(themePacks.keySet());
     }
     
-    /**
-     * Get all available theme packs
-     * @return Map of theme names to theme packs
-     */
-    public Map<String, ThemePack> getAllThemePacks() {
-        return new HashMap<>(themePacks);
-    }
+    // /**
+    //  * Get all available theme packs
+    //  * @return Map of theme names to theme packs
+    //  */
+    // public static Map<String, ThemePack> getAllThemePacks() {
+    //     return new HashMap<>(themePacks);
+    // }
     
     /**
      * Check if a theme exists
      * @param name The name of the theme
      * @return true if the theme exists, false otherwise
      */
-    public boolean hasTheme(String name) {
+    public static boolean hasTheme(String name) {
         return themePacks.containsKey(name);
-    }
-    
-    @Override
-    public void storeInBundle(Bundle bundle) {
-        String[] names = themePacks.keySet().toArray(new String[0]);
-        bundle.put(THEME_NAMES, names);
-        
-        // Store theme packs as a collection of Bundlable objects
-        ArrayList<Bundlable> packs = new ArrayList<>();
-        for (String name : names) {
-            packs.add(themePacks.get(name));
-        }
-        bundle.put(THEME_PACKS, packs);
-    }
-    
-    @Override
-    public void restoreFromBundle(Bundle bundle) {
-        themePacks.clear();
-        
-        String[] names = bundle.getStringArray(THEME_NAMES);
-        Collection<Bundlable> packs = bundle.getCollection(THEME_PACKS);
-        
-        if (names != null && packs != null && names.length == packs.size()) {
-            int i = 0;
-            for (Bundlable pack : packs) {
-                if (pack instanceof ThemePack && i < names.length) {
-                    themePacks.put(names[i], (ThemePack)pack);
-                    i++;
-                }
-            }
-        } else {
-            // If loading fails, reinitialize with defaults
-            registerDefaultThemes();
-        }
-    }
-    
-    /**
-     * Reset the singleton instance (for testing or resets)
-     */
-    public static void reset() {
-        instance = null;
     }
 } 

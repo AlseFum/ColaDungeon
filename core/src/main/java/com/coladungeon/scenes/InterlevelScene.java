@@ -652,7 +652,7 @@ public class InterlevelScene extends PixelScene {
 			} else {
 				level = Dungeon.newLevel();
 			}
-			
+
 			int destCell = -1;
 			if (curTransition != null){
 				LevelTransition dest = level.getTransition(curTransition.destType);
@@ -701,7 +701,7 @@ public class InterlevelScene extends PixelScene {
 		} else {
 			level = Dungeon.newLevel();
 		}
-		
+
 		int destCell = -1;
 		if (curTransition != null){
 			LevelTransition dest = level.getTransition(curTransition.destType);

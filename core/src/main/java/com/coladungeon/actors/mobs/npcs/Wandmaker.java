@@ -158,17 +158,17 @@ public class Wandmaker extends NPC {
 			String msg1 = "";
 			String msg2 = "";
 			if (Dungeon.hero.heroClass.equals(HeroClass.WARRIOR)) {
-				msg1 += Messages.get(this, "intro_warrior");
+					msg1 += Messages.get(this, "intro_warrior");
 			} else if (Dungeon.hero.heroClass.equals(HeroClass.ROGUE)) {
-				msg1 += Messages.get(this, "intro_rogue");
+					msg1 += Messages.get(this, "intro_rogue");
 			} else if (Dungeon.hero.heroClass.equals(HeroClass.MAGE)) {
-				msg1 += Messages.get(this, "intro_mage", Messages.titleCase(Dungeon.hero.name()));
+					msg1 += Messages.get(this, "intro_mage", Messages.titleCase(Dungeon.hero.name()));
 			} else if (Dungeon.hero.heroClass.equals(HeroClass.HUNTRESS)) {
-				msg1 += Messages.get(this, "intro_huntress");
+					msg1 += Messages.get(this, "intro_huntress");
 			} else if (Dungeon.hero.heroClass.equals(HeroClass.DUELIST)) {
-				msg1 += Messages.get(this, "intro_duelist");
+					msg1 += Messages.get(this, "intro_duelist");
 			} else if (Dungeon.hero.heroClass.equals(HeroClass.CLERIC)) {
-				msg1 += Messages.get(this, "intro_cleric");
+					msg1 += Messages.get(this, "intro_cleric");
 			}
 
 			msg1 += Messages.get(this, "intro_1");

@@ -924,17 +924,17 @@ public class Badges {
 		Badge badge = null;
 		
 		if (Dungeon.hero.heroClass.equals(HeroClass.WARRIOR)) {
-			badge = Badge.MASTERY_WARRIOR;
+				badge = Badge.MASTERY_WARRIOR;
 		} else if (Dungeon.hero.heroClass.equals(HeroClass.MAGE)) {
-			badge = Badge.MASTERY_MAGE;
+				badge = Badge.MASTERY_MAGE;
 		} else if (Dungeon.hero.heroClass.equals(HeroClass.ROGUE)) {
-			badge = Badge.MASTERY_ROGUE;
+				badge = Badge.MASTERY_ROGUE;
 		} else if (Dungeon.hero.heroClass.equals(HeroClass.HUNTRESS)) {
-			badge = Badge.MASTERY_HUNTRESS;
+				badge = Badge.MASTERY_HUNTRESS;
 		} else if (Dungeon.hero.heroClass.equals(HeroClass.DUELIST)) {
-			badge = Badge.MASTERY_DUELIST;
+				badge = Badge.MASTERY_DUELIST;
 		} else if (Dungeon.hero.heroClass.equals(HeroClass.CLERIC)) {
-			badge = Badge.MASTERY_CLERIC;
+				badge = Badge.MASTERY_CLERIC;
 		}
 		
 		unlock(badge);

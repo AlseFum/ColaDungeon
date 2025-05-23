@@ -88,17 +88,17 @@ public class Bones {
 		}
 		
 		if (item != null) {
-			Bundle bundle = new Bundle();
+		Bundle bundle = new Bundle();
 			bundle.put(HERO_ID, heroID(Dungeon.hero));
 			bundle.put(HERO_CLASS, Dungeon.hero.heroClass.id());
 			bundle.put(ITEM, item);
 			bundle.put(LEVEL, depth);
 			bundle.put(BRANCH, branch);
 
-			try {
+		try {
 				FileUtils.bundleToFile(BONES_FILE, bundle);
-			} catch (IOException e) {
-				ColaDungeon.reportException(e);
+		} catch (IOException e) {
+			ColaDungeon.reportException(e);
 			}
 		}
 	}

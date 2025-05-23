@@ -50,7 +50,6 @@ import com.watabou.utils.Random;
 import java.nio.Buffer;
 //@Alsefum
 import com.coladungeon.sprites.ItemSpriteManager.ImageMapping;
-import com.coladungeon.utils.Helper;
 
 public class ItemSprite extends MovieClip {
 
@@ -254,7 +253,7 @@ public class ItemSprite extends MovieClip {
 	public void frame(int image) {
 		// @Alsefum
 		if (image >= 114514) {
-			ImageMapping map = Helper.map_image(image);
+			ImageMapping map = ItemSpriteManager.mapImage(image);
 			if (map != null) {
 				texture = map.texture;
 				frame(map.rect);

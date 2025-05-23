@@ -58,17 +58,17 @@ public class WndHeroInfo extends WndTabbed {
 
 		Image tabIcon;
 		if (cl.equals(HeroClass.WARRIOR)) {
-			tabIcon = new ItemSprite(ItemSpriteSheet.SEAL, null);
+				tabIcon = new ItemSprite(ItemSpriteSheet.SEAL, null);
 		} else if (cl.equals(HeroClass.MAGE)) {
-			tabIcon = new ItemSprite(ItemSpriteSheet.MAGES_STAFF, null);
+				tabIcon = new ItemSprite(ItemSpriteSheet.MAGES_STAFF, null);
 		} else if (cl.equals(HeroClass.ROGUE)) {
-			tabIcon = new ItemSprite(ItemSpriteSheet.ARTIFACT_CLOAK, null);
+				tabIcon = new ItemSprite(ItemSpriteSheet.ARTIFACT_CLOAK, null);
 		} else if (cl.equals(HeroClass.HUNTRESS)) {
-			tabIcon = new ItemSprite(ItemSpriteSheet.SPIRIT_BOW, null);
+				tabIcon = new ItemSprite(ItemSpriteSheet.SPIRIT_BOW, null);
 		} else if (cl.equals(HeroClass.DUELIST)) {
-			tabIcon = new ItemSprite(ItemSpriteSheet.RAPIER, null);
+				tabIcon = new ItemSprite(ItemSpriteSheet.RAPIER, null);
 		} else if (cl.equals(HeroClass.CLERIC)) {
-			tabIcon = new ItemSprite(ItemSpriteSheet.ARTIFACT_TOME, null);
+				tabIcon = new ItemSprite(ItemSpriteSheet.ARTIFACT_TOME, null);
 		} else {
 			// Default case
 			tabIcon = new ItemSprite(ItemSpriteSheet.SEAL, null);
@@ -169,33 +169,33 @@ public class WndHeroInfo extends WndTabbed {
 			}
 
 			if (cls.equals(HeroClass.WARRIOR)) {
-				icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SEAL),
-						new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD),
-						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SEAL),
+							new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD),
+							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 			} else if (cls.equals(HeroClass.MAGE)) {
-				icons = new Image[]{ new ItemSprite(ItemSpriteSheet.MAGES_STAFF),
-						new ItemSprite(ItemSpriteSheet.WAND_MAGIC_MISSILE),
-						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.MAGES_STAFF),
+							new ItemSprite(ItemSpriteSheet.WAND_MAGIC_MISSILE),
+							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 			} else if (cls.equals(HeroClass.ROGUE)) {
-				icons = new Image[]{ new ItemSprite(ItemSpriteSheet.ARTIFACT_CLOAK),
-						Icons.get(Icons.STAIRS),
-						new ItemSprite(ItemSpriteSheet.DAGGER),
-						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.ARTIFACT_CLOAK),
+							Icons.get(Icons.STAIRS),
+							new ItemSprite(ItemSpriteSheet.DAGGER),
+							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 			} else if (cls.equals(HeroClass.HUNTRESS)) {
-				icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SPIRIT_BOW),
-						Icons.GRASS.get(),
-						new ItemSprite(ItemSpriteSheet.GLOVES),
-						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SPIRIT_BOW),
+							Icons.GRASS.get(),
+							new ItemSprite(ItemSpriteSheet.GLOVES),
+							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 			} else if (cls.equals(HeroClass.DUELIST)) {
-				icons = new Image[]{ new ItemSprite(ItemSpriteSheet.RAPIER),
-						new ItemSprite(ItemSpriteSheet.WAR_HAMMER),
-						new ItemSprite(ItemSpriteSheet.THROWING_SPIKE),
-						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.RAPIER),
+							new ItemSprite(ItemSpriteSheet.WAR_HAMMER),
+							new ItemSprite(ItemSpriteSheet.THROWING_SPIKE),
+							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 			} else if (cls.equals(HeroClass.CLERIC)) {
-				icons = new Image[]{ new ItemSprite(ItemSpriteSheet.ARTIFACT_TOME),
-						Icons.TALENT.get(),
-						new ItemSprite(ItemSpriteSheet.CUDGEL),
-						new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
+					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.ARTIFACT_TOME),
+							Icons.TALENT.get(),
+							new ItemSprite(ItemSpriteSheet.CUDGEL),
+							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 			} else {
 				// Default case
 				icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SEAL),

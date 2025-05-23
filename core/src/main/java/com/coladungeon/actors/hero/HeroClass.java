@@ -151,7 +151,7 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 	// 职业属性
 	private String id;
 	private HeroSubClass[] subClasses;
-	
+
 	public HeroClass(String id, HeroSubClass... subClasses) {
 		this.id = id;
 		this.subClasses = subClasses;
@@ -189,23 +189,23 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 	public int ordinal() {
 		return ALL_CLASSES.indexOf(this);
 	}
-	
+
 	public void initHero(Hero hero) {
 		hero.heroClass = this;
 		initCommon(hero);
-		
+
 		if (this == WARRIOR) {
-			initWarrior(hero);
+				initWarrior(hero);
 		} else if (this == MAGE) {
-			initMage(hero);
+				initMage(hero);
 		} else if (this == ROGUE) {
-			initRogue(hero);
+				initRogue(hero);
 		} else if (this == HUNTRESS) {
-			initHuntress(hero);
+				initHuntress(hero);
 		} else if (this == DUELIST) {
-			initDuelist(hero);
+				initDuelist(hero);
 		} else if (this == CLERIC) {
-			initCleric(hero);
+				initCleric(hero);
 		} else if (this == HEAVY_SQUAD) {
 			initHeavySquad(hero);
 		} else {
@@ -224,17 +224,17 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 
 	public Badges.Badge masteryBadge() {
 		if (this == WARRIOR) {
-			return Badges.Badge.MASTERY_WARRIOR;
+				return Badges.Badge.MASTERY_WARRIOR;
 		} else if (this == MAGE) {
-			return Badges.Badge.MASTERY_MAGE;
+				return Badges.Badge.MASTERY_MAGE;
 		} else if (this == ROGUE) {
-			return Badges.Badge.MASTERY_ROGUE;
+				return Badges.Badge.MASTERY_ROGUE;
 		} else if (this == HUNTRESS) {
-			return Badges.Badge.MASTERY_HUNTRESS;
+				return Badges.Badge.MASTERY_HUNTRESS;
 		} else if (this == DUELIST) {
-			return Badges.Badge.MASTERY_DUELIST;
+				return Badges.Badge.MASTERY_DUELIST;
 		} else if (this == CLERIC) {
-			return Badges.Badge.MASTERY_CLERIC;
+				return Badges.Badge.MASTERY_CLERIC;
 		} else if (this == HEAVY_SQUAD) {
 			return Badges.Badge.MASTERY_HEAVY_SQUAD;
 		}
@@ -415,17 +415,17 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 
 	public ArmorAbility[] armorAbilities() {
 		if (this == WARRIOR) {
-			return new ArmorAbility[] { new HeroicLeap(), new Shockwave(), new Endure() };
+				return new ArmorAbility[] { new HeroicLeap(), new Shockwave(), new Endure() };
 		} else if (this == MAGE) {
-			return new ArmorAbility[] { new ElementalBlast(), new WildMagic(), new WarpBeacon() };
+				return new ArmorAbility[] { new ElementalBlast(), new WildMagic(), new WarpBeacon() };
 		} else if (this == ROGUE) {
-			return new ArmorAbility[] { new SmokeBomb(), new DeathMark(), new ShadowClone() };
+				return new ArmorAbility[] { new SmokeBomb(), new DeathMark(), new ShadowClone() };
 		} else if (this == HUNTRESS) {
-			return new ArmorAbility[] { new SpectralBlades(), new NaturesPower(), new SpiritHawk() };
+				return new ArmorAbility[] { new SpectralBlades(), new NaturesPower(), new SpiritHawk() };
 		} else if (this == DUELIST) {
-			return new ArmorAbility[] { new Challenge(), new ElementalStrike(), new Feint() };
+				return new ArmorAbility[] { new Challenge(), new ElementalStrike(), new Feint() };
 		} else if (this == CLERIC) {
-			return new ArmorAbility[] { new AscendedForm(), new Trinity(), new PowerOfMany() };
+				return new ArmorAbility[] { new AscendedForm(), new Trinity(), new PowerOfMany() };
 		} else if (this == HEAVY_SQUAD) {
 			// Heavy Squad 使用战士的技能，但可以自定义为特有技能
 			return new ArmorAbility[] { new HeroicLeap(), new Shockwave(), new Endure() };
@@ -437,17 +437,17 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 
 	public String spritesheet() {
 		if (this == WARRIOR) {
-			return Assets.Sprites.WARRIOR;
+				return Assets.Sprites.WARRIOR;
 		} else if (this == MAGE) {
-			return Assets.Sprites.MAGE;
+				return Assets.Sprites.MAGE;
 		} else if (this == ROGUE) {
-			return Assets.Sprites.ROGUE;
+				return Assets.Sprites.ROGUE;
 		} else if (this == HUNTRESS) {
-			return Assets.Sprites.HUNTRESS;
+				return Assets.Sprites.HUNTRESS;
 		} else if (this == DUELIST) {
-			return Assets.Sprites.DUELIST;
+				return Assets.Sprites.DUELIST;
 		} else if (this == CLERIC) {
-			return Assets.Sprites.CLERIC;
+				return Assets.Sprites.CLERIC;
 		} else if (this == HEAVY_SQUAD) {
 			// 使用战士的精灵图，实际应用中应该有专属图像
 			return Assets.Sprites.WARRIOR;
@@ -459,17 +459,17 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 
 	public String splashArt() {
 		if (this == WARRIOR) {
-			return Assets.Splashes.WARRIOR;
+				return Assets.Splashes.WARRIOR;
 		} else if (this == MAGE) {
-			return Assets.Splashes.MAGE;
+				return Assets.Splashes.MAGE;
 		} else if (this == ROGUE) {
-			return Assets.Splashes.ROGUE;
+				return Assets.Splashes.ROGUE;
 		} else if (this == HUNTRESS) {
-			return Assets.Splashes.HUNTRESS;
+				return Assets.Splashes.HUNTRESS;
 		} else if (this == DUELIST) {
-			return Assets.Splashes.DUELIST;
+				return Assets.Splashes.DUELIST;
 		} else if (this == CLERIC) {
-			return Assets.Splashes.CLERIC;
+				return Assets.Splashes.CLERIC;
 		} else if (this == HEAVY_SQUAD) {
 			// 使用战士的启动图，实际应用中应该有专属图像
 			return Assets.Splashes.WARRIOR;
@@ -484,15 +484,15 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 		if (DeviceCompat.isDebug()) {
 			return true;
 		}
-		
+
 		if (this == WARRIOR) {
-			return true;
+				return true;
 		} else if (this == MAGE) {
-			return Badges.isUnlocked(Badges.Badge.UNLOCK_MAGE);
+				return Badges.isUnlocked(Badges.Badge.UNLOCK_MAGE);
 		} else if (this == ROGUE) {
-			return Badges.isUnlocked(Badges.Badge.UNLOCK_ROGUE);
+				return Badges.isUnlocked(Badges.Badge.UNLOCK_ROGUE);
 		} else if (this == HUNTRESS) {
-			return Badges.isUnlocked(Badges.Badge.UNLOCK_HUNTRESS);
+				return Badges.isUnlocked(Badges.Badge.UNLOCK_HUNTRESS);
 		} else if (this == DUELIST) {
 			//duelist is unlocked if player has won with two other characters, or has unlocked one character and duelist
 			if (Badges.isUnlocked(Badges.Badge.UNLOCK_DUELIST)){
@@ -511,7 +511,7 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 			}
 			return false;
 		} else if (this == CLERIC) {
-			return Badges.isUnlocked(Badges.Badge.UNLOCK_CLERIC);
+				return Badges.isUnlocked(Badges.Badge.UNLOCK_CLERIC);
 		} else if (this == HEAVY_SQUAD) {
 			// Heavy Squad 总是解锁的
 			return true;

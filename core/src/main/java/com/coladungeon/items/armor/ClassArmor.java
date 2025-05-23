@@ -106,17 +106,17 @@ abstract public class ClassArmor extends Armor {
 		ClassArmor classArmor = null;
 		
 		if (owner.heroClass == HeroClass.WARRIOR) {
-			classArmor = new WarriorArmor();
+				classArmor = new WarriorArmor();
 		} else if (owner.heroClass == HeroClass.ROGUE) {
-			classArmor = new RogueArmor();
+				classArmor = new RogueArmor();
 		} else if (owner.heroClass == HeroClass.MAGE) {
-			classArmor = new MageArmor();
+				classArmor = new MageArmor();
 		} else if (owner.heroClass == HeroClass.HUNTRESS) {
-			classArmor = new HuntressArmor();
+				classArmor = new HuntressArmor();
 		} else if (owner.heroClass == HeroClass.DUELIST) {
-			classArmor = new DuelistArmor();
+				classArmor = new DuelistArmor();
 		} else if (owner.heroClass == HeroClass.CLERIC) {
-			classArmor = new ClericArmor();
+				classArmor = new ClericArmor();
 		} else if (owner.heroClass == HeroClass.HEAVY_SQUAD) {
 			classArmor = new WarriorArmor(); // 重装小队使用战士装甲
 		}
@@ -324,7 +324,7 @@ abstract public class ClassArmor extends Armor {
 	@Override
 	public String desc() {
 		String desc = Messages.get(this, "desc");
-		
+
 		if (Badges.isUnlocked(masteryBadge()) && owner != null){
 			if (owner.equals(HeroClass.WARRIOR)) {
 				desc += "\n\n" + Messages.get(this, "desc_warrior");
@@ -338,12 +338,12 @@ abstract public class ClassArmor extends Armor {
 				desc += "\n\n" + Messages.get(this, "desc_duelist");
 			} else if (owner.equals(HeroClass.CLERIC)) {
 				desc += "\n\n" + Messages.get(this, "desc_cleric");
-			}
+				}
 
 		} else if (masteryBadge() != null) {
 			desc += "\n\n" + Messages.get(Badges.class, "need_to_win");
 		}
-		
+
 		return desc;
 	}
 	
