@@ -68,6 +68,7 @@ public class Badges {
 		MASTERY_HUNTRESS,
 		MASTERY_DUELIST,
 		MASTERY_CLERIC,
+		MASTERY_HEAVY_SQUAD,
 		FOUND_RATMOGRIFY,
 
 		//bronze
@@ -921,25 +922,19 @@ public class Badges {
 	public static void validateMastery() {
 		
 		Badge badge = null;
-		switch (Dungeon.hero.heroClass) {
-			case WARRIOR:
-				badge = Badge.MASTERY_WARRIOR;
-				break;
-			case MAGE:
-				badge = Badge.MASTERY_MAGE;
-				break;
-			case ROGUE:
-				badge = Badge.MASTERY_ROGUE;
-				break;
-			case HUNTRESS:
-				badge = Badge.MASTERY_HUNTRESS;
-				break;
-			case DUELIST:
-				badge = Badge.MASTERY_DUELIST;
-				break;
-			case CLERIC:
-				badge = Badge.MASTERY_CLERIC;
-				break;
+		
+		if (Dungeon.hero.heroClass.equals(HeroClass.WARRIOR)) {
+			badge = Badge.MASTERY_WARRIOR;
+		} else if (Dungeon.hero.heroClass.equals(HeroClass.MAGE)) {
+			badge = Badge.MASTERY_MAGE;
+		} else if (Dungeon.hero.heroClass.equals(HeroClass.ROGUE)) {
+			badge = Badge.MASTERY_ROGUE;
+		} else if (Dungeon.hero.heroClass.equals(HeroClass.HUNTRESS)) {
+			badge = Badge.MASTERY_HUNTRESS;
+		} else if (Dungeon.hero.heroClass.equals(HeroClass.DUELIST)) {
+			badge = Badge.MASTERY_DUELIST;
+		} else if (Dungeon.hero.heroClass.equals(HeroClass.CLERIC)) {
+			badge = Badge.MASTERY_CLERIC;
 		}
 		
 		unlock(badge);

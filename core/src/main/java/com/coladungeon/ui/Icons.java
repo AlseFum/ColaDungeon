@@ -444,26 +444,27 @@ public enum Icons {
 	}
 	
 	public static Image get( HeroClass cl ) {
-		switch (cl) {
-			case WARRIOR:
-				return new ItemSprite(ItemSpriteSheet.SEAL);
-			case MAGE:
-				//mage's staff normally has 2 pixels extra at the top for particle effects, we chop that off here
-				Image result = new ItemSprite(ItemSpriteSheet.MAGES_STAFF);
-				RectF frame = result.frame();
-				frame.top += frame.height()/8f;
-				result.frame(frame);
-				return result;
-			case ROGUE:
-				return new ItemSprite(ItemSpriteSheet.ARTIFACT_CLOAK);
-			case HUNTRESS:
-				return new ItemSprite(ItemSpriteSheet.SPIRIT_BOW);
-			case DUELIST:
-				return new ItemSprite(ItemSpriteSheet.RAPIER);
-			case CLERIC:
-				return new ItemSprite(ItemSpriteSheet.ARTIFACT_TOME);
-			default:
-				return null;
+		if (cl == HeroClass.WARRIOR) {
+			return new ItemSprite(ItemSpriteSheet.SEAL);
+		} else if (cl == HeroClass.MAGE) {
+			//mage's staff normally has 2 pixels extra at the top for particle effects, we chop that off here
+			Image result = new ItemSprite(ItemSpriteSheet.MAGES_STAFF);
+			RectF frame = result.frame();
+			frame.top += frame.height()/8f;
+			result.frame(frame);
+			return result;
+		} else if (cl == HeroClass.ROGUE) {
+			return new ItemSprite(ItemSpriteSheet.ARTIFACT_CLOAK);
+		} else if (cl == HeroClass.HUNTRESS) {
+			return new ItemSprite(ItemSpriteSheet.SPIRIT_BOW);
+		} else if (cl == HeroClass.DUELIST) {
+			return new ItemSprite(ItemSpriteSheet.RAPIER);
+		} else if (cl == HeroClass.CLERIC) {
+			return new ItemSprite(ItemSpriteSheet.ARTIFACT_TOME);
+		} else if (cl == HeroClass.HEAVY_SQUAD) {
+			return new ItemSprite(ItemSpriteSheet.SEAL); // 重装小队使用战士的图标
+		} else {
+			return null;
 		}
 	}
 

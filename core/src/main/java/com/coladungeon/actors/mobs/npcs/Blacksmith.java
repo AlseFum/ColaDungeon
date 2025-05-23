@@ -21,11 +21,16 @@
 
 package com.coladungeon.actors.mobs.npcs;
 
+import com.coladungeon.Assets;
+import com.coladungeon.Badges;
 import com.coladungeon.Dungeon;
 import com.coladungeon.Statistics;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.AscensionChallenge;
 import com.coladungeon.actors.buffs.Buff;
+import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.actors.hero.HeroClass;
+import com.coladungeon.actors.hero.Talent;
 import com.coladungeon.items.Generator;
 import com.coladungeon.items.Item;
 import com.coladungeon.items.armor.Armor;
@@ -89,13 +94,19 @@ public class Blacksmith extends NPC {
 			String msg1 = "";
 			String msg2 = "";
 
-			switch (Dungeon.hero.heroClass){
-				case WARRIOR:   msg1 += Messages.get(Blacksmith.this, "intro_quest_warrior"); break;
-				case MAGE:      msg1 += Messages.get(Blacksmith.this, "intro_quest_mage"); break;
-				case ROGUE:     msg1 += Messages.get(Blacksmith.this, "intro_quest_rogue"); break;
-				case HUNTRESS:  msg1 += Messages.get(Blacksmith.this, "intro_quest_huntress"); break;
-				case DUELIST:   msg1 += Messages.get(Blacksmith.this, "intro_quest_duelist"); break;
-				case CLERIC:    msg1 += Messages.get(Blacksmith.this, "intro_quest_cleric"); break;
+			// Using if-else instead of switch for class comparison
+			if (Dungeon.hero.heroClass.equals(HeroClass.WARRIOR)) {
+				msg1 += Messages.get(Blacksmith.this, "intro_quest_warrior");
+			} else if (Dungeon.hero.heroClass.equals(HeroClass.MAGE)) {
+				msg1 += Messages.get(Blacksmith.this, "intro_quest_mage");
+			} else if (Dungeon.hero.heroClass.equals(HeroClass.ROGUE)) {
+				msg1 += Messages.get(Blacksmith.this, "intro_quest_rogue");
+			} else if (Dungeon.hero.heroClass.equals(HeroClass.HUNTRESS)) {
+				msg1 += Messages.get(Blacksmith.this, "intro_quest_huntress");
+			} else if (Dungeon.hero.heroClass.equals(HeroClass.DUELIST)) {
+				msg1 += Messages.get(Blacksmith.this, "intro_quest_duelist");
+			} else if (Dungeon.hero.heroClass.equals(HeroClass.CLERIC)) {
+				msg1 += Messages.get(Blacksmith.this, "intro_quest_cleric");
 			}
 
 			msg1 += "\n\n" + Messages.get(Blacksmith.this, "intro_quest_start");

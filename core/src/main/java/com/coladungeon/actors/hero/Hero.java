@@ -252,6 +252,12 @@ public class Hero extends Char {
 		belongings = new Belongings( this );
 		
 		visibleEnemies = new ArrayList<>();
+		
+		// 初始化天赋数组
+		talents = new ArrayList<>();
+		for (int i = 0; i < Talent.MAX_TALENT_TIERS; i++) {
+			talents.add(new LinkedHashMap<>());
+		}
 	}
 	
 	public void updateHT( boolean boostHP ){
@@ -304,7 +310,7 @@ public class Hero extends Char {
 
 		super.storeInBundle( bundle );
 
-		bundle.put( CLASS, heroClass );
+		bundle.put( CLASS, heroClass.id() );
 		bundle.put( SUBCLASS, subClass );
 		bundle.put( ABILITY, armorAbility );
 		Talent.storeTalentsInBundle( bundle, this );
@@ -332,9 +338,40 @@ public class Hero extends Char {
 
 		super.restoreFromBundle( bundle );
 
-		heroClass = bundle.getEnum( CLASS, HeroClass.class );
+		// 确保 talents 数组已初始化
+		if (talents.isEmpty()) {
+			for (int i = 0; i < Talent.MAX_TALENT_TIERS; i++) {
+				talents.add(new LinkedHashMap<>());
+			}
+		}
+
+		// 兼容处理：尝试不同方法获取 HeroClass
+		try {
+			if (bundle.contains(CLASS)) {
+				String heroClassStr = bundle.getString(CLASS);
+				// 尝试通过 valueOf 获取 HeroClass
+				heroClass = HeroClass.valueOf(heroClassStr);
+				// 如果为 null，则使用默认 WARRIOR
+				if (heroClass == null) {
+					heroClass = HeroClass.WARRIOR;
+				}
+			} else {
+				// 没有 HeroClass 信息时使用默认 WARRIOR
+				heroClass = HeroClass.WARRIOR;
+			}
+		} catch (Exception e) {
+			// 如果转换失败，使用默认 WARRIOR
+			heroClass = HeroClass.WARRIOR;
+		}
+		
 		subClass = bundle.getEnum( SUBCLASS, HeroSubClass.class );
 		armorAbility = (ArmorAbility)bundle.get( ABILITY );
+		
+		// 确保在从 bundle 恢复天赋之前初始化类天赋
+		if (talents.isEmpty()) {
+			Talent.initClassTalents(this);
+		}
+		
 		Talent.restoreTalentsFromBundle( bundle, this );
 		
 		attackSkill = bundle.getInt( ATTACK );
@@ -352,7 +389,24 @@ public class Hero extends Char {
 		info.hp = bundle.getInt( Char.TAG_HP );
 		info.ht = bundle.getInt( Char.TAG_HT );
 		info.shld = bundle.getInt( Char.TAG_SHLD );
-		info.heroClass = bundle.getEnum( CLASS, HeroClass.class );
+		// 兼容处理：尝试不同方法获取 HeroClass
+		try {
+			if (bundle.contains(CLASS)) {
+				String heroClassStr = bundle.getString(CLASS);
+				// 尝试通过 id 获取 HeroClass
+				info.heroClass = HeroClass.valueOf(heroClassStr);
+				// 如果为 null，则使用默认 WARRIOR
+				if (info.heroClass == null) {
+					info.heroClass = HeroClass.WARRIOR;
+				}
+			} else {
+				// 没有 HeroClass 信息时使用默认 WARRIOR
+				info.heroClass = HeroClass.WARRIOR;
+			}
+		} catch (Exception e) {
+			// 如果转换失败，使用默认 WARRIOR
+			info.heroClass = HeroClass.WARRIOR;
+		}
 		info.subClass = bundle.getEnum( SUBCLASS, HeroSubClass.class );
 		Belongings.preview( info, bundle );
 	}

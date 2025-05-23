@@ -46,6 +46,7 @@ public class Bones {
 	private static final String BRANCH	= "branch";
 	private static final String ITEM	= "item";
 	private static final String HERO_CLASS	= "hero_class";
+	private static final String HERO_ID	= "hero_id";
 
 	private static int depth = -1;
 	private static int branch = -1;
@@ -70,16 +71,35 @@ public class Bones {
 		item = pickItem(Dungeon.hero);
 		heroClass = Dungeon.hero.heroClass;
 
-		Bundle bundle = new Bundle();
-		bundle.put( LEVEL, depth );
-		bundle.put( BRANCH, branch );
-		bundle.put( ITEM, item );
-		bundle.put( HERO_CLASS, heroClass );
+		if (Dungeon.hero.belongings.backpack.contains(item)) {
+			item = null;
+		}
+		
+		// Skip quest items and special items
+		if (item != null) {
+			// Various checks for special items
+			if (item.unique) {
+				item = null;
+			}
+			
+			if (Dungeon.hero.belongings.backpack.contains(item)) {
+				item = null;
+			}
+		}
+		
+		if (item != null) {
+			Bundle bundle = new Bundle();
+			bundle.put(HERO_ID, heroID(Dungeon.hero));
+			bundle.put(HERO_CLASS, Dungeon.hero.heroClass.id());
+			bundle.put(ITEM, item);
+			bundle.put(LEVEL, depth);
+			bundle.put(BRANCH, branch);
 
-		try {
-			FileUtils.bundleToFile( BONES_FILE, bundle );
-		} catch (IOException e) {
-			ColaDungeon.reportException(e);
+			try {
+				FileUtils.bundleToFile(BONES_FILE, bundle);
+			} catch (IOException e) {
+				ColaDungeon.reportException(e);
+			}
 		}
 	}
 
@@ -162,8 +182,8 @@ public class Bones {
 			try {
 				Bundle bundle = FileUtils.bundleFromFile(BONES_FILE);
 
-				depth = bundle.getInt( LEVEL );
-				branch = bundle.getInt( BRANCH );
+				depth = bundle.getInt(LEVEL);
+				branch = bundle.getInt(BRANCH);
 				if (depth > 0) {
 					if (bundle.contains(ITEM)) {
 						item = (Item) bundle.get(ITEM);
@@ -171,7 +191,7 @@ public class Bones {
 						item = null;
 					}
 					if (bundle.contains(HERO_CLASS)){
-						heroClass = bundle.getEnum(HERO_CLASS, HeroClass.class);
+						heroClass = HeroClass.valueOf(bundle.getString(HERO_CLASS));
 					} else {
 						heroClass = null;
 					}
@@ -189,7 +209,7 @@ public class Bones {
 				Bundle emptyBones = new Bundle();
 				emptyBones.put(LEVEL, 0);
 				try {
-					FileUtils.bundleToFile( BONES_FILE, emptyBones );
+					FileUtils.bundleToFile(BONES_FILE, emptyBones);
 				} catch (IOException e) {
 					ColaDungeon.reportException(e);
 				}
@@ -268,5 +288,9 @@ public class Bones {
 			}
 		}
 		return false;
+	}
+	
+	private static String heroID(Hero hero) {
+		return hero.heroClass.id() + "_" + hero.id();
 	}
 }

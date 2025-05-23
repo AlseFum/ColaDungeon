@@ -29,6 +29,7 @@ import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.buffs.Regeneration;
 import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.actors.hero.HeroClass;
 import com.coladungeon.actors.hero.abilities.ArmorAbility;
 import com.coladungeon.actors.hero.abilities.cleric.Trinity;
 import com.coladungeon.effects.Speck;
@@ -53,6 +54,8 @@ abstract public class ClassArmor extends Armor {
 	private static final String AC_ABILITY = "ABILITY";
 	private static final String AC_TRANSFER = "TRANSFER";
 	
+	protected HeroClass owner;
+	
 	{
 		levelKnown = true;
 		cursedKnown = true;
@@ -71,6 +74,9 @@ abstract public class ClassArmor extends Armor {
 	@Override
 	public void activate(Char ch) {
 		super.activate(ch);
+		if (ch instanceof Hero) {
+			owner = ((Hero)ch).heroClass;
+		}
 		charger = new Charger();
 		charger.attachTo(ch);
 	}
@@ -99,25 +105,20 @@ abstract public class ClassArmor extends Armor {
 		
 		ClassArmor classArmor = null;
 		
-		switch (owner.heroClass) {
-			case WARRIOR:
-				classArmor = new WarriorArmor();
-				break;
-			case ROGUE:
-				classArmor = new RogueArmor();
-				break;
-			case MAGE:
-				classArmor = new MageArmor();
-				break;
-			case HUNTRESS:
-				classArmor = new HuntressArmor();
-				break;
-			case DUELIST:
-				classArmor = new DuelistArmor();
-				break;
-			case CLERIC:
-				classArmor = new ClericArmor();
-				break;
+		if (owner.heroClass == HeroClass.WARRIOR) {
+			classArmor = new WarriorArmor();
+		} else if (owner.heroClass == HeroClass.ROGUE) {
+			classArmor = new RogueArmor();
+		} else if (owner.heroClass == HeroClass.MAGE) {
+			classArmor = new MageArmor();
+		} else if (owner.heroClass == HeroClass.HUNTRESS) {
+			classArmor = new HuntressArmor();
+		} else if (owner.heroClass == HeroClass.DUELIST) {
+			classArmor = new DuelistArmor();
+		} else if (owner.heroClass == HeroClass.CLERIC) {
+			classArmor = new ClericArmor();
+		} else if (owner.heroClass == HeroClass.HEAVY_SQUAD) {
+			classArmor = new WarriorArmor(); // 重装小队使用战士装甲
 		}
 		
 		classArmor.level(armor.trueLevel());
@@ -140,17 +141,23 @@ abstract public class ClassArmor extends Armor {
 
 		classArmor.charge = 50;
 		
+		classArmor.owner = owner.heroClass;
+		
 		return classArmor;
 	}
 
 	private static final String ARMOR_TIER	= "armortier";
 	private static final String CHARGE	    = "charge";
+	private static final String OWNER       = "owner";
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
 		bundle.put( ARMOR_TIER, tier );
 		bundle.put( CHARGE, charge );
+		if (owner != null) {
+			bundle.put( OWNER, owner );
+		}
 	}
 
 	@Override
@@ -158,6 +165,9 @@ abstract public class ClassArmor extends Armor {
 		super.restoreFromBundle( bundle );
 		tier = bundle.getInt( ARMOR_TIER );
 		charge = bundle.getFloat(CHARGE);
+		if (bundle.contains(OWNER)) {
+			owner = (HeroClass) bundle.get(OWNER);
+		}
 	}
 	
 	@Override
@@ -292,24 +302,48 @@ abstract public class ClassArmor extends Armor {
 		}
 	}
 
+	public Badges.Badge masteryBadge() {
+		if (owner.equals(HeroClass.WARRIOR)) {
+			return Badges.Badge.MASTERY_WARRIOR;
+		} else if (owner.equals(HeroClass.MAGE)) {
+			return Badges.Badge.MASTERY_MAGE;
+		} else if (owner.equals(HeroClass.ROGUE)) {
+			return Badges.Badge.MASTERY_ROGUE;
+		} else if (owner.equals(HeroClass.HUNTRESS)) {
+			return Badges.Badge.MASTERY_HUNTRESS;
+		} else if (owner.equals(HeroClass.DUELIST)) {
+			return Badges.Badge.MASTERY_DUELIST;
+		} else if (owner.equals(HeroClass.CLERIC)) {
+			return Badges.Badge.MASTERY_CLERIC;
+		} else if (owner.equals(HeroClass.HEAVY_SQUAD)) {
+			return Badges.Badge.MASTERY_HEAVY_SQUAD;
+		}
+		return null;
+	}
+
 	@Override
 	public String desc() {
-		String desc = super.desc();
-
-		if (Dungeon.hero != null && Dungeon.hero.belongings.contains(this)) {
-			ArmorAbility ability = Dungeon.hero.armorAbility;
-			if (ability != null) {
-				desc += "\n\n" + ability.shortDesc();
-				float chargeUse = ability.chargeUse(Dungeon.hero);
-				//trinity has variable charge cost
-				if (!(ability instanceof Trinity)) {
-					desc += " " + Messages.get(this, "charge_use", Messages.decimalFormat("#.##", chargeUse));
-				}
-			} else {
-				desc += "\n\n" + "_" + Messages.get(this, "no_ability") + "_";
+		String desc = Messages.get(this, "desc");
+		
+		if (Badges.isUnlocked(masteryBadge()) && owner != null){
+			if (owner.equals(HeroClass.WARRIOR)) {
+				desc += "\n\n" + Messages.get(this, "desc_warrior");
+			} else if (owner.equals(HeroClass.ROGUE)) {
+				desc += "\n\n" + Messages.get(this, "desc_rogue");
+			} else if (owner.equals(HeroClass.MAGE)) {
+				desc += "\n\n" + Messages.get(this, "desc_mage");
+			} else if (owner.equals(HeroClass.HUNTRESS)) {
+				desc += "\n\n" + Messages.get(this, "desc_huntress");
+			} else if (owner.equals(HeroClass.DUELIST)) {
+				desc += "\n\n" + Messages.get(this, "desc_duelist");
+			} else if (owner.equals(HeroClass.CLERIC)) {
+				desc += "\n\n" + Messages.get(this, "desc_cleric");
 			}
-		}
 
+		} else if (masteryBadge() != null) {
+			desc += "\n\n" + Messages.get(Badges.class, "need_to_win");
+		}
+		
 		return desc;
 	}
 	
@@ -345,6 +379,30 @@ abstract public class ClassArmor extends Armor {
 			}
 			spend(TICK);
 			return true;
+		}
+	}
+
+	public boolean canUse( Hero hero ) {
+		if (hero.belongings.armor != this) {
+			return false;
+		}
+		
+		if (hero.heroClass == HeroClass.WARRIOR) {
+			return charge >= 35;
+		} else if (hero.heroClass == HeroClass.ROGUE) {
+			return charge >= 20;
+		} else if (hero.heroClass == HeroClass.MAGE) {
+			return charge >= 25;
+		} else if (hero.heroClass == HeroClass.HUNTRESS) {
+			return charge >= 20;
+		} else if (hero.heroClass == HeroClass.DUELIST) {
+			return charge >= 20;
+		} else if (hero.heroClass == HeroClass.CLERIC) {
+			return charge >= 20;
+		} else if (hero.heroClass == HeroClass.HEAVY_SQUAD) {
+			return charge >= 35;
+		} else {
+			return charge >= 30;
 		}
 	}
 }

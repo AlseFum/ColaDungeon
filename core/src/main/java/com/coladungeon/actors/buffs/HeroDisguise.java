@@ -73,12 +73,12 @@ public class HeroDisguise extends FlavourBuff {
 	@Override
 	public void storeInBundle(Bundle bundle) {
 		super.storeInBundle(bundle);
-		bundle.put(CLASS, cls);
+		bundle.put(CLASS, cls.id());
 	}
 
 	@Override
 	public void restoreFromBundle(Bundle bundle) {
 		super.restoreFromBundle(bundle);
-		cls = bundle.getEnum(CLASS, HeroClass.class);
+		cls = HeroClass.valueOf(bundle.getString(CLASS));
 	}
 }

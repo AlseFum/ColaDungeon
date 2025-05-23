@@ -47,6 +47,7 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
+import com.coladungeon.Assets;
 
 import java.util.ArrayList;
 
@@ -216,12 +217,14 @@ public class StartScene extends PixelScene {
 				
 				if (info.subClass != HeroSubClass.NONE){
 					name.text(Messages.titleCase(info.subClass.title()));
-				} else {
+				} else if (info.heroClass != null) {
 					name.text(Messages.titleCase(info.heroClass.title()));
+				} else {
+					name.text(Messages.get(StartScene.class, "data_error"));
 				}
 				
 				if (hero == null){
-					hero = new Image(info.heroClass.spritesheet(), 0, 15*info.armorTier, 12, 15);
+					hero = new Image(info.heroClass != null ? info.heroClass.spritesheet() : Assets.Sprites.WARRIOR, 0, 15*info.armorTier, 12, 15);
 					add(hero);
 					
 					steps = new Image(Icons.get(Icons.STAIRS));
@@ -229,14 +232,16 @@ public class StartScene extends PixelScene {
 					depth = new BitmapText(PixelScene.pixelFont);
 					add(depth);
 					
-					classIcon = new Image(Icons.get(info.heroClass));
+					classIcon = new Image(Icons.get(info.heroClass != null ? info.heroClass : HeroClass.WARRIOR));
 					add(classIcon);
 					level = new BitmapText(PixelScene.pixelFont);
 					add(level);
-				} else {
+				} else if (info.heroClass != null) {
 					hero.copy(new Image(info.heroClass.spritesheet(), 0, 15*info.armorTier, 12, 15));
-					
 					classIcon.copy(Icons.get(info.heroClass));
+				} else {
+					hero.copy(new Image(Assets.Sprites.WARRIOR, 0, 15*info.armorTier, 12, 15));
+					classIcon.copy(Icons.get(HeroClass.WARRIOR));
 				}
 
 				long diff = Game.realTime - info.lastPlayed;

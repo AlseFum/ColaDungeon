@@ -55,6 +55,7 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
+import com.coladungeon.actors.hero.HeroClass;
 
 import java.util.ArrayList;
 
@@ -156,25 +157,18 @@ public class Wandmaker extends NPC {
 
 			String msg1 = "";
 			String msg2 = "";
-			switch(Dungeon.hero.heroClass){
-				case WARRIOR:
-					msg1 += Messages.get(this, "intro_warrior");
-					break;
-				case ROGUE:
-					msg1 += Messages.get(this, "intro_rogue");
-					break;
-				case MAGE:
-					msg1 += Messages.get(this, "intro_mage", Messages.titleCase(Dungeon.hero.name()));
-					break;
-				case HUNTRESS:
-					msg1 += Messages.get(this, "intro_huntress");
-					break;
-				case DUELIST:
-					msg1 += Messages.get(this, "intro_duelist");
-					break;
-				case CLERIC:
-					msg1 += Messages.get(this, "intro_cleric");
-					break;
+			if (Dungeon.hero.heroClass.equals(HeroClass.WARRIOR)) {
+				msg1 += Messages.get(this, "intro_warrior");
+			} else if (Dungeon.hero.heroClass.equals(HeroClass.ROGUE)) {
+				msg1 += Messages.get(this, "intro_rogue");
+			} else if (Dungeon.hero.heroClass.equals(HeroClass.MAGE)) {
+				msg1 += Messages.get(this, "intro_mage", Messages.titleCase(Dungeon.hero.name()));
+			} else if (Dungeon.hero.heroClass.equals(HeroClass.HUNTRESS)) {
+				msg1 += Messages.get(this, "intro_huntress");
+			} else if (Dungeon.hero.heroClass.equals(HeroClass.DUELIST)) {
+				msg1 += Messages.get(this, "intro_duelist");
+			} else if (Dungeon.hero.heroClass.equals(HeroClass.CLERIC)) {
+				msg1 += Messages.get(this, "intro_cleric");
 			}
 
 			msg1 += Messages.get(this, "intro_1");

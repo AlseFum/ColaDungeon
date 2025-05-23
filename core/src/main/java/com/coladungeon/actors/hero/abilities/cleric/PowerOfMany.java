@@ -257,7 +257,7 @@ public class PowerOfMany extends ArmorAbility {
 
 		public LightAlly(){
 			super();
-			cls = HeroClass.values()[Random.Int(5)];
+			cls = HeroClass.values()[Random.Int(HeroClass.values().length)];
 		}
 
 		public LightAlly(int heroLevel ){
@@ -340,14 +340,14 @@ public class PowerOfMany extends ArmorAbility {
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
-			bundle.put(HERO_CLS, cls);
+			bundle.put(HERO_CLS, cls.id());
 			bundle.put(DEF_SKILL, defenseSkill);
 		}
 
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
-			cls = bundle.getEnum(HERO_CLS, HeroClass.class);
+			cls = HeroClass.valueOf(bundle.getString(HERO_CLS));
 			defenseSkill = bundle.getInt(DEF_SKILL);
 		}
 	}
@@ -357,7 +357,7 @@ public class PowerOfMany extends ArmorAbility {
 		public LightAllySprite() {
 			super();
 
-			setup(HeroClass.values()[Random.Int(5)]);
+			setup(HeroClass.values()[Random.Int(HeroClass.values().length)]);
 		}
 
 		public void setup(HeroClass cls){
