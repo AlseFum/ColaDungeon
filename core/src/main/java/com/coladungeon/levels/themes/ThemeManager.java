@@ -3,11 +3,11 @@ package com.coladungeon.levels.themes;
 import com.coladungeon.Dungeon;
 import com.coladungeon.levels.Level;
 import com.coladungeon.levels.DeadEndLevel;
-import com.coladungeon.levels.LastLevel;
-import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class ThemeManager {
 
@@ -29,88 +29,55 @@ public class ThemeManager {
      * 为指定深度和分支创建楼层 - 核心公共接口
      */
     public static Level createLevel(int depth, int branch) {
-        System.out.println("[ThemeManager] 创建楼层: depth=" + depth + ", branch=" + branch);
+        if(depth <=0){return new DeadEndLevel();}
         
-        // 第一层：随机选择主题分支，创建特殊房间
-        if (depth == 1 && branch == 0) {
-            String[] themes = {"crystal_temple", "shadow_forest"};
-            String selectedTheme = Random.element(themes);
-            System.out.println("[ThemeManager] 第一层随机选择主题: " + selectedTheme);
-            
-            setCurrentTheme(selectedTheme);
-            ThemePack themePack = getCurrentTheme();
-            if (themePack != null) {
-                Level level = themePack.getNormalLevel();
-                System.out.println("[ThemeManager] 成功创建第一层: " + level.getClass().getSimpleName());
-                return level;
-            }
-            return createStandardLevel(1);
-        }
+        // 一次遍历找到最高权重并收集对应主题
+        short maxWeight = 0;
+        List<String> topThemes = new ArrayList<>();
         
-        // 分支楼层：直接使用对应的主题楼层
-        if (branch == 16) {
-            // 水晶神殿分支
-            if (depth == 2) {
-                return new CrystalTempleThemePack.CrystalTempleBranchLevel();
-            } else {
-                setCurrentTheme("crystal_temple");
-                ThemePack themePack = getCurrentTheme();
-                if (themePack != null) {
-                    boolean isBoss = Dungeon.bossLevel(depth);
-                    return isBoss ? themePack.getBossLevel() : themePack.getNormalLevel();
+        for (Map.Entry<String, ThemePack> entry : ThemeSheet.themePacks.entrySet()) {
+            String themeName = entry.getKey();
+            ThemePack themePack = entry.getValue();
+            short weight = themePack.getWeight(depth, branch);
+            if (weight > 0) {
+                if (weight > maxWeight) {
+                    // 发现更高权重，清空列表并添加新主题
+                    maxWeight = weight;
+                    topThemes.clear();
+                    topThemes.add(themeName);
+                } else if (weight == maxWeight) {
+                    // 相同权重，添加到列表
+                    topThemes.add(themeName);
                 }
             }
         }
         
-        if (branch == 17) {
-            // 暗影森林分支
-            if (depth == 2) {
-                return new ShadowForestThemePack.ShadowForestBranchLevel();
-            } else {
-                setCurrentTheme("shadow_forest");
-                ThemePack themePack = getCurrentTheme();
-                if (themePack != null) {
-                    boolean isBoss = Dungeon.bossLevel(depth);
-                    return isBoss ? themePack.getBossLevel() : themePack.getNormalLevel();
-                }
-            }
-        }
-        
-        // 主线分支：使用标准楼层
-        return createStandardLevel(depth);
-    }
-    
-    /**
-     * 创建标准楼层（优化后的逻辑）
-     */
-    private static Level createStandardLevel(int depth) {
-        // 特殊情况
-        if (depth == 0) return new DeadEndLevel();
-        if (depth == 26) return new LastLevel();
-        if (depth > 26) return new DeadEndLevel();
-        
-        // 判断是否为boss层
-        boolean isBoss = (depth % 5 == 0) && (depth <= 25);
-        
-        // 根据深度选择对应的主题包
-        ThemePack themePack;
-        if (depth <= 5) {
-            themePack = ThemeSheet.SewerTheme;
-        } else if (depth <= 10) {
-            themePack = ThemeSheet.PrisonTheme;
-        } else if (depth <= 15) {
-            themePack = ThemeSheet.CavesTheme;
-        } else if (depth <= 20) {
-            themePack = ThemeSheet.CityTheme;
-        } else if (depth <= 25) {
-            themePack = ThemeSheet.HallsTheme;
-        } else {
+        if (topThemes.isEmpty()) {
+            // 没有可用主题，返回死胡同
             return new DeadEndLevel();
         }
         
-        // 使用主题包创建楼层
-        return isBoss ? themePack.getBossLevel() : themePack.getNormalLevel();
+        // 从最高权重主题中随机选择
+        String selectedTheme = Random.element(topThemes);
+        System.out.println("[ThemeManager] select Theme: " + selectedTheme + " (by weight: " + maxWeight + ")");
+        
+        setCurrentTheme(selectedTheme);
+        ThemePack themePack = getCurrentTheme();
+        
+        if (themePack != null) {
+            boolean isBoss = Dungeon.bossLevel(depth);
+            Level level = isBoss ? themePack.getBossLevel() : themePack.getNormalLevel();
+            System.out.println("[ThemeManager] success create level: " + level.getClass().getSimpleName());
+            return level;
+        }
+        
+        // 备用方案：返回死胡同
+        return new DeadEndLevel();
     }
+    
+
+    
+
     
     public static void registerTheme(String themeName, ThemePack themePack) {
         // Delegate to ThemeSheet

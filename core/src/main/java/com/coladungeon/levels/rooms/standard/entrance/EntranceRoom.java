@@ -168,8 +168,20 @@
 		 chances[26] = chances[25] = chances[24] = chances[23] = chances[22] = chances[21];
 	 }
  
-	 public static StandardRoom createEntrance(){
-		 return Reflection.newInstance(rooms.get(Random.chances(chances[Dungeon.depth])));
-	 }
+	 	public static StandardRoom createEntrance(){
+		// 支持任意深度，包括负数深度
+		int depth = Dungeon.depth;
+		
+		// 如果深度超出预定义范围，使用合适的默认值
+		if (depth < 1) {
+			// 负数或0深度使用第1层的配置
+			depth = 1;
+		} else if (depth > 26) {
+			// 超过26层使用第26层的配置
+			depth = 26;
+		}
+		
+		return Reflection.newInstance(rooms.get(Random.chances(chances[depth])));
+	}
  
  }

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.android;
+package com.coladungeon.android;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -36,8 +36,8 @@ import com.badlogic.gdx.backends.android.AndroidGraphics;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.coladungeon.CDSettings;
+import com.coladungeon.scenes.PixelScene;
 import com.watabou.noosa.Game;
 import com.watabou.utils.PlatformSupport;
 
@@ -48,8 +48,8 @@ import java.util.regex.Pattern;
 public class AndroidPlatformSupport extends PlatformSupport {
 	
 	public void updateDisplaySize(){
-		if (SPDSettings.landscape() != null) {
-			AndroidLauncher.instance.setRequestedOrientation( SPDSettings.landscape() ?
+		if (CDSettings.landscape() != null) {
+			AndroidLauncher.instance.setRequestedOrientation( CDSettings.landscape() ?
 					ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE :
 					ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT );
 		}
@@ -65,8 +65,8 @@ public class AndroidPlatformSupport extends PlatformSupport {
 		boolean fullscreen = Build.VERSION.SDK_INT < Build.VERSION_CODES.N
 				|| !AndroidLauncher.instance.isInMultiWindowMode();
 
-		if (fullscreen && SPDSettings.landscape() != null
-				&& (Game.dispWidth >= Game.dispHeight) != SPDSettings.landscape()){
+		if (fullscreen && CDSettings.landscape() != null
+				&& (Game.dispWidth >= Game.dispHeight) != CDSettings.landscape()){
 			int tmp = Game.dispWidth;
 			Game.dispWidth = Game.dispHeight;
 			Game.dispHeight = tmp;
@@ -79,9 +79,9 @@ public class AndroidPlatformSupport extends PlatformSupport {
 		
 		//force power saver in this case as all devices must run at at least 2x scale.
 		if (Game.dispWidth < renderWidth*2 || Game.dispHeight < renderHeight*2)
-			SPDSettings.put( SPDSettings.KEY_POWER_SAVER, true );
+			CDSettings.put( CDSettings.KEY_POWER_SAVER, true );
 		
-		if (SPDSettings.powerSaver() && fullscreen){
+		if (CDSettings.powerSaver() && fullscreen){
 			
 			int maxZoom = (int)Math.min(Game.dispWidth/renderWidth, Game.dispHeight/renderHeight);
 			
@@ -134,7 +134,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 				}
 				
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-					if (SPDSettings.fullscreen()) {
+					if (CDSettings.fullscreen()) {
 						AndroidLauncher.instance.getWindow().getDecorView().setSystemUiVisibility(
 								View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 										| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -210,7 +210,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 		if (Gdx.files.absolute("/system/fonts/NotoSansCJK-Regular.ttc").exists()) {
 			//typefaces are 0-JP, 1-KR, 2-SC, 3-TC.
 			int typeFace;
-			switch (SPDSettings.language()) {
+			switch (CDSettings.language()) {
 				case JAPANESE:
 					typeFace = 0;
 					break;

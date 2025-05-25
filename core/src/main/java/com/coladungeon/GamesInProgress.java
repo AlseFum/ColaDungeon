@@ -35,7 +35,7 @@ import java.util.HashMap;
 
 public class GamesInProgress {
 	
-	public static final int MAX_SLOTS = 6; // 固定为标准职业的数量
+	public static final int MAX_SLOTS = 42;
 	
 	//null means we have loaded info and it is empty, no entry means unknown.
 	private static HashMap<Integer, Info> slotStates = new HashMap<>();
@@ -112,7 +112,7 @@ public class GamesInProgress {
 				
 				Bundle bundle = FileUtils.bundleFromFile(gameFile(slot));
 
-				if (bundle.getInt( "version" ) < ColaDungeon.v2_3_2) {
+				if (bundle.getInt( "version" ) < ColaDungeon.oldest_compatiable_version) {
 					info = null;
 				} else {
 

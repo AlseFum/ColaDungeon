@@ -6,28 +6,41 @@ import com.coladungeon.levels.SewerLevel;
 import com.coladungeon.levels.SewerBossLevel;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
+import java.util.function.BiFunction;
 
 public class ThemePack implements Bundlable {
     // Theme pack data
     public Class<? extends Level> normalLevel;
     public Class<? extends Level> BossLevel;
+    
+    // Weight function: (depth, branch) -> weight (0=unavailable, >0=available)
+    public BiFunction<Integer, Integer, Short> available;
 
-    // Default constructor
     public ThemePack() {
+        this.available = (depth, branch) -> (short) 1;
     }
     
-    // Constructor with level classes
     public ThemePack(Class<? extends Level> normalLevel, Class<? extends Level> bossLevel) {
         this.normalLevel = normalLevel;
         this.BossLevel = bossLevel;
+        this.available = (depth, branch) -> (short) 1;
     }
     
-    /**
-     * Creates a new instance of the normal level
-     * 
-     * @return A new instance of the normal level, or DeadEndLevel if instantiation
-     *         fails
-     */
+    public ThemePack(Class<? extends Level> normalLevel, Class<? extends Level> bossLevel, 
+                     BiFunction<Integer, Integer, Short> available) {
+        this.normalLevel = normalLevel;
+        this.BossLevel = bossLevel;
+        this.available = available != null ? available : (depth, branch) -> (short) 1;
+    }
+    
+    public short getWeight(int depth, int branch) {
+        return available.apply(depth, branch);
+    }
+    
+    public boolean isAvailable(int depth, int branch) {
+        return available.apply(depth, branch) > 0;
+    }
+    
     public Level getNormalLevel() {
         try {
             return normalLevel.getDeclaredConstructor().newInstance();
@@ -35,13 +48,6 @@ public class ThemePack implements Bundlable {
             return new DeadEndLevel();
         }
     }
-    
-    /**
-     * Creates a new instance of the boss level
-     * 
-     * @return A new instance of the boss level, or DeadEndLevel if instantiation
-     *         fails
-     */
     public Level getBossLevel() {
         try {
             return BossLevel.getDeclaredConstructor().newInstance();
@@ -49,7 +55,6 @@ public class ThemePack implements Bundlable {
             return new DeadEndLevel();
         }
     }
-    
     // Bundle keys for serialization
     private static final String NORMAL_LEVEL = "normal_level";
     private static final String BOSS_LEVEL = "boss_level";

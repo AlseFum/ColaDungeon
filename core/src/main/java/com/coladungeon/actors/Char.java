@@ -463,15 +463,7 @@ public abstract class Char extends Actor {
 		bundle.put( TAG_HT, HT );
 		bundle.put( TAG_SHLD, cachedShield );
 		
-		Bundle buffsBundle = new Bundle();
-		
-		for (Buff b : buffs) {
-			Bundle buffBundle = new Bundle();
-			b.storeInBundle( buffBundle );
-			buffsBundle.put( b.getClass().getName(), buffBundle );
-		}
-		
-		bundle.put( BUFFS, buffsBundle );
+		bundle.put( BUFFS, buffs );
 		
 		// 保存特质到bundle
 		Bundle traitsBundle = new Bundle();

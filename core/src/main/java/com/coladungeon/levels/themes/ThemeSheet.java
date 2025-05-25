@@ -26,7 +26,7 @@ import java.util.Map;
 public class ThemeSheet {
     
     // Map of theme name to ThemePack
-    private static Map<String, ThemePack> themePacks = new HashMap<>();
+    public static Map<String, ThemePack> themePacks = new HashMap<>();
     
     // Static theme pack instances - centralized here
     public static ThemePack SewerTheme;
@@ -35,21 +35,27 @@ public class ThemeSheet {
     public static ThemePack HallsTheme;
     public static ThemePack PrisonTheme;
     public static ThemePack DebugTheme;
-    public static ThemePack CrystalTempleTheme;
-    public static ThemePack ShadowForestTheme;
+    // public static ThemePack CrystalTempleTheme;
+    // public static ThemePack ShadowForestTheme;
     
     static {
-        // Initialize all theme packs
-        SewerTheme = new ThemePack(SewerLevel.class, SewerBossLevel.class);
-        CavesTheme = new ThemePack(CavesLevel.class, CavesBossLevel.class);
-        CityTheme = new ThemePack(CityLevel.class, CityBossLevel.class);
-        HallsTheme = new ThemePack(HallsLevel.class, HallsBossLevel.class);
-        PrisonTheme = new ThemePack(PrisonLevel.class, PrisonBossLevel.class);
-        DebugTheme = new ThemePack(DebugLevel.class, DebugLevel.class);
+        // Initialize theme packs with appropriate weight functions
+        SewerTheme = new ThemePack(SewerLevel.class, SewerBossLevel.class, 
+            (depth, branch) -> (branch == 0 && depth >= 1 && depth <= 5) ? (short) 1 : (short) 0);
         
-        // Special theme packs
-        CrystalTempleTheme = new ThemePack(CrystalTempleLevel.class, CrystalTempleLevel.class);
-        ShadowForestTheme = new ThemePack(ShadowForestLevel.class, ShadowForestLevel.class);
+        PrisonTheme = new ThemePack(PrisonLevel.class, PrisonBossLevel.class,
+            (depth, branch) -> (branch == 0 && depth >= 6 && depth <= 10) ? (short) 1 : (short) 0);
+        
+        CavesTheme = new ThemePack(CavesLevel.class, CavesBossLevel.class,
+            (depth, branch) -> (branch == 0 && depth >= 11 && depth <= 15) ? (short) 1 : (short) 0);
+        
+        CityTheme = new ThemePack(CityLevel.class, CityBossLevel.class,
+            (depth, branch) -> (branch == 0 && depth >= 16 && depth <= 20) ? (short) 1 : (short) 0);
+        
+        HallsTheme = new ThemePack(HallsLevel.class, HallsBossLevel.class,
+            (depth, branch) -> (branch == 0 && depth >= 21 && depth <= 25) ? (short) 1 : (short) 0);
+        
+        DebugTheme = new ThemePack(DebugLevel.class, DebugLevel.class);
         
         // Initialize with default themes
         registerDefaultThemes();
@@ -64,8 +70,6 @@ public class ThemeSheet {
      * Register built-in default themes
      */
     private static void registerDefaultThemes() {
-        // Default themes are registered here
-        // These correspond to the static themes in ThemePack
         registerThemePack("sewer", SewerTheme);
         registerThemePack("prison", PrisonTheme);
         registerThemePack("caves", CavesTheme);
@@ -73,8 +77,8 @@ public class ThemeSheet {
         registerThemePack("halls", HallsTheme);
         
         // 注册新的特殊主题包
-        registerThemePack("crystal_temple", CrystalTempleTheme);
-        registerThemePack("shadow_forest", ShadowForestTheme);
+        registerThemePack("crystal_temple", new ThemePack(CrystalTempleLevel.class, CrystalTempleLevel.class, (depth, branch) -> (branch == 0 && depth >= 1 && depth <= 5) ? (short) 1 : (short) 0));
+        registerThemePack("shadow_forest", new ThemePack(ShadowForestLevel.class, ShadowForestLevel.class));
     }
     
     /**
@@ -86,36 +90,16 @@ public class ThemeSheet {
         themePacks.put(name, themePack);
     }
     
-    /**
-     * Get a theme pack by name
-     * @param name The name of the theme
-     * @return The ThemePack, or null if not found
-     */
+
     public static ThemePack getThemePack(String name) {
         return themePacks.get(name);
     }
     
-    /**
-     * Get all available theme names
-     * @return List of theme names
-     */
+
     public static List<String> getThemeNames() {
         return new ArrayList<>(themePacks.keySet());
     }
-    
-    // /**
-    //  * Get all available theme packs
-    //  * @return Map of theme names to theme packs
-    //  */
-    // public static Map<String, ThemePack> getAllThemePacks() {
-    //     return new HashMap<>(themePacks);
-    // }
-    
-    /**
-     * Check if a theme exists
-     * @param name The name of the theme
-     * @return true if the theme exists, false otherwise
-     */
+
     public static boolean hasTheme(String name) {
         return themePacks.containsKey(name);
     }

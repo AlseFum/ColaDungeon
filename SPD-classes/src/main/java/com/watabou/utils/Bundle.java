@@ -298,10 +298,22 @@ public class Bundle {
 		ArrayList<Bundlable> list = new ArrayList<>();
 
 		try {
-			JSONArray array = data.getJSONArray( key );
-			for (int i=0; i < array.length(); i++) {
-				Bundlable O = new Bundle( array.getJSONObject( i ) ).get();
-				if (O != null) list.add( O );
+			// 检查键是否存在
+			if (!data.has(key)) {
+				return list;
+			}
+			
+			// 尝试获取JSONArray，如果失败则返回空列表
+			Object value = data.get(key);
+			if (value instanceof JSONArray) {
+				JSONArray array = (JSONArray) value;
+				for (int i=0; i < array.length(); i++) {
+					Bundlable O = new Bundle( array.getJSONObject( i ) ).get();
+					if (O != null) list.add( O );
+				}
+			} else {
+				// 如果不是JSONArray，记录警告但不抛出异常
+				System.out.println("[Bundle] Warning: Expected JSONArray for key '" + key + "' but got " + value.getClass().getSimpleName());
 			}
 		} catch (JSONException e) {
 			Game.reportException(e);

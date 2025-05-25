@@ -20,18 +20,6 @@
  */
 
 package com.coladungeon;
-
-import com.coladungeon.actors.buffs.Invulnerability;
-import com.coladungeon.actors.mobs.MobSpawner;
-import com.coladungeon.items.bombs.FlashBangBomb;
-import com.coladungeon.items.bombs.SmokeBomb;
-import com.coladungeon.items.potions.brews.AquaBrew;
-import com.coladungeon.items.potions.brews.UnstableBrew;
-import com.coladungeon.items.potions.elixirs.ElixirOfFeatherFall;
-import com.coladungeon.items.spells.UnstableSpell;
-import com.coladungeon.items.stones.StoneOfDetectMagic;
-import com.coladungeon.levels.rooms.standard.entrance.EntranceRoom;
-import com.coladungeon.levels.rooms.standard.exit.ExitRoom;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.scenes.PixelScene;
 import com.coladungeon.scenes.TitleScene;
@@ -45,10 +33,10 @@ import com.watabou.utils.PlatformSupport;
 public class ColaDungeon extends Game {
 
 	//rankings from v1.2.3 and older use a different score formula, so this reference is kept
-	public static final int v1_2_3 = 628;
+	public static final int older_scorer_version = 628;
 
 	//savegames from versions older than v2.3.2 are no longer supported, and data from them is ignored
-	public static final int v2_3_2 = 768;
+	public static final int oldest_compatiable_version = 768;
 	public static final int v2_4_2 = 782;
 	public static final int v2_5_4 = 802;
 
@@ -96,6 +84,7 @@ public class ColaDungeon extends Game {
 	public static void seamlessResetScene(SceneChangeCallback callback) {
 		if (scene() instanceof PixelScene){
 			((PixelScene) scene()).saveWindows();
+			
 			switchNoFade((Class<? extends PixelScene>) sceneClass, callback );
 		} else {
 			resetScene();

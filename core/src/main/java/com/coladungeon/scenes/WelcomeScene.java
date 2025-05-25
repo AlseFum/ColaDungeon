@@ -295,7 +295,7 @@ public class WelcomeScene extends PixelScene {
 			}
 			Dungeon.daily = Dungeon.dailyReplay = false;
 
-			if (previousVersion <= ColaDungeon.v2_3_2){
+			if (previousVersion <= ColaDungeon.oldest_compatiable_version){
 				Document.ADVENTURERS_GUIDE.findPage(Document.GUIDE_ALCHEMY);
 			}
 

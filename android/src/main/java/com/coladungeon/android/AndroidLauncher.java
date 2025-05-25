@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.android;
+package com.coladungeon.android;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -37,13 +37,13 @@ import com.badlogic.gdx.backends.android.AndroidAudio;
 import com.badlogic.gdx.backends.android.AsynchronousAndroidAudio;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.utils.GdxNativesLoader;
-import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.services.news.News;
-import com.shatteredpixel.shatteredpixeldungeon.services.news.NewsImpl;
-import com.shatteredpixel.shatteredpixeldungeon.services.updates.UpdateImpl;
-import com.shatteredpixel.shatteredpixeldungeon.services.updates.Updates;
-import com.shatteredpixel.shatteredpixeldungeon.ui.Button;
+import com.coladungeon.CDSettings;
+import com.coladungeon.ColaDungeon;
+import com.coladungeon.services.news.News;
+import com.coladungeon.services.news.NewsImpl;
+import com.coladungeon.services.updates.UpdateImpl;
+import com.coladungeon.services.updates.Updates;
+import com.coladungeon.ui.Button;
 import com.watabou.noosa.Game;
 import com.watabou.utils.FileUtils;
 
@@ -98,15 +98,15 @@ public class AndroidLauncher extends AndroidApplication {
 			// so that we don't need to rely on Gdx.app, which isn't initialized yet.
 			// Note that we use a different prefs name on android for legacy purposes,
 			// this is the default prefs filename given to an android app (.xml is automatically added to it)
-			SPDSettings.set(instance.getPreferences("ShatteredPixelDungeon"));
+			CDSettings.set(instance.getPreferences("ShatteredPixelDungeon"));
 
 		} else {
 			instance = this;
 		}
 		
 		//set desired orientation (if it exists) before initializing the app.
-		if (SPDSettings.landscape() != null) {
-			instance.setRequestedOrientation( SPDSettings.landscape() ?
+		if (CDSettings.landscape() != null) {
+			instance.setRequestedOrientation( CDSettings.landscape() ?
 					ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE :
 					ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT );
 		}
@@ -133,7 +133,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		Button.longClick = ViewConfiguration.getLongPressTimeout()/1000f;
 		
-		initialize(new ShatteredPixelDungeon(support), config);
+		initialize(new ColaDungeon(support), config);
 		
 	}
 
