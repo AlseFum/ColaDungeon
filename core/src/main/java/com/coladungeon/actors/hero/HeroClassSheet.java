@@ -315,6 +315,7 @@ public final class HeroClassSheet {
         new Drone().collect();
 
         // 事件通知
-        EventBus.fire("Hero:created", Hero.class, "hero", hero);
+        EventBus.fire("Hero:created", 
+            "hero", hero);
     }
 } 

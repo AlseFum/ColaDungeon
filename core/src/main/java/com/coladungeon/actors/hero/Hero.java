@@ -1666,7 +1666,7 @@ public class Hero extends Char {
 		
 		// 使用更简洁的方式发布伤害事件
 		if (effectiveDamage > 0) {
-			EventBus.fire(EVENT_HERO_DAMAGE, Hero.class,
+			EventBus.fire(EVENT_HERO_DAMAGE,
 				"hero", this,
 				"damage", effectiveDamage,
 				"source", src,
@@ -2080,7 +2080,7 @@ public class Hero extends Char {
 		
 		if (levelUp) {
 			// 使用更简洁的方式发布升级事件
-			EventBus.fire(EVENT_HERO_LEVEL_UP, Hero.class,
+			EventBus.fire(EVENT_HERO_LEVEL_UP,
 				"hero", this,
 				"level", lvl);
 			
@@ -2318,7 +2318,7 @@ public class Hero extends Char {
 		super.move( step, travelling);
 		
 		// 使用更简洁的方式发布移动事件
-		EventBus.fire(EVENT_HERO_MOVE, Hero.class,
+		EventBus.fire(EVENT_HERO_MOVE,
 			"hero", this,
 			"fromPosition", oldPos,
 			"toPosition", step,
@@ -2359,7 +2359,7 @@ public class Hero extends Char {
 		boolean hit = attack( enemy );
 		
 		// 使用更简洁的方式发布攻击事件
-		EventBus.fire(EVENT_HERO_ATTACKED, Hero.class,
+		EventBus.fire(EVENT_HERO_ATTACKED,
 			"hero", this,
 			"target", enemy,
 			"hit", hit,

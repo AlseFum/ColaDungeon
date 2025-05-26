@@ -18,15 +18,11 @@
 
 package com.coladungeon.utils;
 
+import java.util.function.Function;
+
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.actors.mobs.Mob;
-import com.coladungeon.messages.Messages;
-import com.coladungeon.utils.EventBus;
-import com.coladungeon.utils.GLog;
-import com.watabou.utils.Random;
-
-import java.util.function.Function;
 
 /**
  * 示例类，演示如何使用EventBus监听英雄事件
@@ -78,10 +74,10 @@ public class HeroEventListener {
             // 使用EventData处理事件
             EventBus.EventData event = (EventBus.EventData) obj;
             
-            // 检查是否为英雄相关事件
-            if (event.isType(Hero.class)) {
+            Hero hero = event.get("hero");
+            if (hero != null) {
                 onHeroDamage(
-                    event.get("hero"),
+                    hero,
                     event.getOr("damage", 0),
                     event.getOr("source", null),
                     event.getOr("previousHealth", 0),
@@ -99,10 +95,10 @@ public class HeroEventListener {
             // 使用EventData处理事件
             EventBus.EventData event = (EventBus.EventData) obj;
             
-            // 检查是否为英雄相关事件
-            if (event.isType(Hero.class)) {
+            Hero hero = event.get("hero");
+            if (hero != null) {
                 onHeroMove(
-                    event.get("hero"),
+                    hero,
                     event.getOr("fromPosition", -1),
                     event.getOr("toPosition", -1),
                     event.getOr("travelling", false)
@@ -119,10 +115,10 @@ public class HeroEventListener {
             // 使用EventData处理事件
             EventBus.EventData event = (EventBus.EventData) obj;
             
-            // 检查是否为英雄相关事件
-            if (event.isType(Hero.class)) {
+            Hero hero = event.get("hero");
+            if (hero != null) {
                 onHeroAttack(
-                    event.get("hero"),
+                    hero,
                     event.getOr("target", null),
                     event.getOr("hit", false),
                     event.getOr("wasEnemy", false)
@@ -139,10 +135,10 @@ public class HeroEventListener {
             // 使用EventData处理事件
             EventBus.EventData event = (EventBus.EventData) obj;
             
-            // 检查是否为英雄相关事件
-            if (event.isType(Hero.class)) {
+            Hero hero = event.get("hero");
+            if (hero != null) {
                 onHeroLevelUp(
-                    event.get("hero"),
+                    hero,
                     event.getOr("level", 1)
                 );
             }
