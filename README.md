@@ -8,10 +8,6 @@
 ## 基于NodeJS的宏系统
 详情可以看script文件夹，现在功能完备但仍未启用
 
-## 内容
-此改版主要作为明日方舟同人作，相应内容形式为Mod包。
-目前只是设想，后续会进行补充。
-
 ## 重构
 1.把Generator改为Consumer+probability
 2.使用Id+record+template来做物品

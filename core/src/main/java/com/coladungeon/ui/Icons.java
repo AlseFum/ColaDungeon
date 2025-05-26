@@ -444,9 +444,7 @@ public enum Icons {
 	}
 	
 	public static Image get( HeroClass cl ) {
-		if (cl == HeroClass.WARRIOR) {
-				return new ItemSprite(ItemSpriteSheet.SEAL);
-		} else if (cl == HeroClass.MAGE) {
+		if (cl == HeroClass.MAGE) {
 				//mage's staff normally has 2 pixels extra at the top for particle effects, we chop that off here
 				Image result = new ItemSprite(ItemSpriteSheet.MAGES_STAFF);
 				RectF frame = result.frame();
@@ -461,10 +459,8 @@ public enum Icons {
 				return new ItemSprite(ItemSpriteSheet.RAPIER);
 		} else if (cl == HeroClass.CLERIC) {
 				return new ItemSprite(ItemSpriteSheet.ARTIFACT_TOME);
-		} else if (cl == HeroClass.HEAVY_SQUAD) {
-			return new ItemSprite(ItemSpriteSheet.SEAL); // 重装小队使用战士的图标
 		} else {
-				return null;
+				return new ItemSprite(ItemSpriteSheet.SEAL); // Default icon for unknown classes
 		}
 	}
 

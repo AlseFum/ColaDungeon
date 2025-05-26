@@ -38,4 +38,9 @@ allprojects {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 
+
 }
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+

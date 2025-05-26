@@ -20,7 +20,7 @@ public class EventBus {
     }
     
     // 事件总线 - 存储事件ID到处理器的映射
-    public static HashMap<String, ArrayList<PriorityHandler>> eventBus = new HashMap<>();
+    private static HashMap<String, ArrayList<PriorityHandler>> eventBus = new HashMap<>();
 
     // 默认优先级值
     public static final int DEFAULT_PRIORITY = 0;
@@ -48,7 +48,7 @@ public class EventBus {
     }
     
     // 触发事件并收集处理结果
-    public static ArrayList<Object> collect(String event_id, Object args) {
+    private static ArrayList<Object> collect(String event_id, Object args) {
         ArrayList<Object> result = new ArrayList<>();
         if (!eventBus.containsKey(event_id)) return result;
         
@@ -63,14 +63,9 @@ public class EventBus {
         return result;
     }
     
-    // 简单的事件数据类 - 使用Map存储属性，避免创建专门的类
+    // 简单的事件数据类 - 使用Map存储属性
     public static class EventData {
         private final Map<String, Object> data = new HashMap<>();
-        private final Class<?> type;
-        
-        public EventData(Class<?> type) {
-            this.type = type;
-        }
         
         public EventData put(String key, Object value) {
             data.put(key, value);
@@ -82,33 +77,13 @@ public class EventBus {
             return (T) data.get(key);
         }
         
-        /**
-         * 获取指定键的值，如果不存在则返回默认值
-         * @param key 键名
-         * @param defaultValue 默认值
-         * @return 键对应的值，如果键不存在则返回默认值
-         */
-        @SuppressWarnings("unchecked")
         public <T> T getOr(String key, T defaultValue) {
             Object value = data.get(key);
             return value != null ? (T) value : defaultValue;
         }
         
-        /**
-         * 检查是否包含指定键
-         * @param key 键名
-         * @return 是否包含该键
-         */
         public boolean has(String key) {
             return data.containsKey(key);
-        }
-        
-        public Class<?> getType() {
-            return type;
-        }
-        
-        public boolean isType(Class<?> cls) {
-            return type == cls || cls.isAssignableFrom(type);
         }
     }
     
@@ -118,12 +93,12 @@ public class EventBus {
     }
     
     // 便捷方法：创建事件数据并触发事件
-    public static ArrayList<Object> fire(String event_id, Class<?> type, Object... keyValues) {
+    public static ArrayList<Object> fire(String event_id, Object... keyValues) {
         if (keyValues.length % 2 != 0) {
             throw new IllegalArgumentException("Must provide key-value pairs");
         }
         
-        EventData data = new EventData(type);
+        EventData data = new EventData();
         for (int i = 0; i < keyValues.length; i += 2) {
             if (!(keyValues[i] instanceof String)) {
                 throw new IllegalArgumentException("Keys must be strings");

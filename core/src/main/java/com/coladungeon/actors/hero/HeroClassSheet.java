@@ -21,28 +21,30 @@
 
 package com.coladungeon.actors.hero;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Badges;
 import com.coladungeon.Dungeon;
-import com.coladungeon.actors.hero.abilities.ArmorAbility;
-import com.coladungeon.actors.hero.abilities.warrior.Endure;
-import com.coladungeon.actors.hero.abilities.warrior.HeroicLeap;
-import com.coladungeon.actors.hero.abilities.warrior.Shockwave;
-import com.coladungeon.actors.hero.abilities.mage.ElementalBlast;
-import com.coladungeon.actors.hero.abilities.mage.WildMagic;
-import com.coladungeon.actors.hero.abilities.mage.WarpBeacon;
-import com.coladungeon.actors.hero.abilities.rogue.SmokeBomb;
-import com.coladungeon.actors.hero.abilities.rogue.DeathMark;
-import com.coladungeon.actors.hero.abilities.rogue.ShadowClone;
-import com.coladungeon.actors.hero.abilities.huntress.SpectralBlades;
-import com.coladungeon.actors.hero.abilities.huntress.NaturesPower;
-import com.coladungeon.actors.hero.abilities.huntress.SpiritHawk;
+import com.coladungeon.actors.hero.abilities.cleric.AscendedForm;
+import com.coladungeon.actors.hero.abilities.cleric.PowerOfMany;
+import com.coladungeon.actors.hero.abilities.cleric.Trinity;
 import com.coladungeon.actors.hero.abilities.duelist.Challenge;
 import com.coladungeon.actors.hero.abilities.duelist.ElementalStrike;
 import com.coladungeon.actors.hero.abilities.duelist.Feint;
-import com.coladungeon.actors.hero.abilities.cleric.AscendedForm;
-import com.coladungeon.actors.hero.abilities.cleric.Trinity;
-import com.coladungeon.actors.hero.abilities.cleric.PowerOfMany;
+import com.coladungeon.actors.hero.abilities.huntress.NaturesPower;
+import com.coladungeon.actors.hero.abilities.huntress.SpectralBlades;
+import com.coladungeon.actors.hero.abilities.huntress.SpiritHawk;
+import com.coladungeon.actors.hero.abilities.mage.ElementalBlast;
+import com.coladungeon.actors.hero.abilities.mage.WarpBeacon;
+import com.coladungeon.actors.hero.abilities.mage.WildMagic;
+import com.coladungeon.actors.hero.abilities.rogue.DeathMark;
+import com.coladungeon.actors.hero.abilities.rogue.ShadowClone;
+import com.coladungeon.actors.hero.abilities.rogue.SmokeBomb;
+import com.coladungeon.actors.hero.abilities.warrior.Endure;
+import com.coladungeon.actors.hero.abilities.warrior.HeroicLeap;
+import com.coladungeon.actors.hero.abilities.warrior.Shockwave;
 import com.coladungeon.items.BrokenSeal;
 import com.coladungeon.items.Waterskin;
 import com.coladungeon.items.armor.ClothArmor;
@@ -53,17 +55,14 @@ import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfStrength;
 import com.coladungeon.items.scrolls.ScrollOfIdentify;
 import com.coladungeon.items.scrolls.ScrollOfUpgrade;
-import com.coladungeon.items.weapon.melee.WornShortsword;
-import com.coladungeon.items.weapon.melee.MagesStaff;
-import com.coladungeon.items.weapon.missiles.ThrowingStone;
+import com.coladungeon.items.stones.StoneOfGeneration;
 import com.coladungeon.items.wands.WandOfMagicMissile;
+import com.coladungeon.items.weapon.drone.Drone;
+import com.coladungeon.items.weapon.melee.MagesStaff;
+import com.coladungeon.items.weapon.melee.WornShortsword;
+import com.coladungeon.items.weapon.missiles.ThrowingStone;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * HeroClassSheet 定义了游戏中所有标准职业及其初始化逻辑。
  */
@@ -253,7 +252,11 @@ public final class HeroClassSheet {
 
         static{
             registerStandardClass("Peter")
-            .desc("from family guy")
+            .title("Peter")
+            .desc("from family guy").initializer(hero->{
+                initCommon(hero);
+                
+            })
             .register();
         }
     // 私有构造函数，防止实例化
@@ -305,6 +308,11 @@ public final class HeroClassSheet {
         new PotionOfHealing().identify();
         new ScrollOfIdentify().identify();
         new Waterskin().collect();
+
+        new StoneOfGeneration().quantity(5).collect();
+
+        // 添加Drone
+        new Drone().collect();
 
         // 事件通知
         EventBus.fire("Hero:created", Hero.class, "hero", hero);

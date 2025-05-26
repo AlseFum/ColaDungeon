@@ -21,9 +21,13 @@
 
 package com.coladungeon.items;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.function.Supplier;
+
 import com.coladungeon.Dungeon;
-import com.coladungeon.actors.hero.Hero;
-import com.coladungeon.actors.mobs.npcs.Shopkeeper;
 import com.coladungeon.items.armor.Armor;
 import com.coladungeon.items.armor.ClericArmor;
 import com.coladungeon.items.armor.ClothArmor;
@@ -211,12 +215,6 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.function.Supplier;
 
 public class Generator {
 	

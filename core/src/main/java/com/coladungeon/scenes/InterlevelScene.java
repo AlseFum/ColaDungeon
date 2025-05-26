@@ -115,13 +115,6 @@ public class InterlevelScene extends PixelScene {
 	public void create() {
 		super.create();
 		
-		// 记录初始传入的transition信息
-		if (curTransition != null) {
-			GLog.i("[InterlevelScene.create] 初始transition: " + curTransition+"\n");
-		} else {
-			GLog.i("[InterlevelScene.create] 初始transition为null");
-		}
-		
 		String loadingAsset;
 		int loadingDepth;
 		fadeTime = NORM_FADE;
