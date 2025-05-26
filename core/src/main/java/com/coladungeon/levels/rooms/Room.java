@@ -21,6 +21,10 @@
 
 package com.coladungeon.levels.rooms;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+
 import com.coladungeon.levels.Level;
 import com.coladungeon.levels.painters.Painter;
 import com.watabou.utils.Bundlable;
@@ -29,10 +33,6 @@ import com.watabou.utils.Graph;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 import com.watabou.utils.Rect;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
 
 public abstract class Room extends Rect implements Graph.Node, Bundlable {
 	

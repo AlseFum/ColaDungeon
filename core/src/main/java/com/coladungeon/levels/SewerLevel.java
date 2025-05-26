@@ -22,14 +22,11 @@
 package com.coladungeon.levels;
 
 import com.coladungeon.Assets;
-import com.coladungeon.Badges;
 import com.coladungeon.Dungeon;
-import com.coladungeon.GamesInProgress;
 import com.coladungeon.Statistics;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.actors.mobs.npcs.Ghost;
 import com.coladungeon.effects.Ripple;
-import com.coladungeon.items.Amulet;
 import com.coladungeon.levels.features.LevelTransition;
 import com.coladungeon.levels.painters.Painter;
 import com.coladungeon.levels.painters.SewerPainter;
@@ -46,15 +43,13 @@ import com.coladungeon.levels.traps.ToxicTrap;
 import com.coladungeon.levels.traps.WornDartTrap;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;
-import com.coladungeon.scenes.SurfaceScene;
+import com.coladungeon.scenes.InterlevelScene;
 import com.coladungeon.tiles.DungeonTilemap;
-import com.coladungeon.windows.WndMessage;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.audio.Music;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
@@ -123,7 +118,7 @@ public class SewerLevel extends RegularLevel {
 						ChillingTrap.class, ShockingTrap.class, ToxicTrap.class, WornDartTrap.class,
 						AlarmTrap.class, OozeTrap.class,
 						ConfusionTrap.class, FlockTrap.class, SummoningTrap.class, TeleportationTrap.class, GatewayTrap.class };
-}
+	}
 
 	@Override
 	protected float[] trapChances() {
@@ -143,33 +138,11 @@ public class SewerLevel extends RegularLevel {
 	
 	@Override
 	public boolean activateTransition(Hero hero, LevelTransition transition) {
-		if (transition.type == LevelTransition.Type.SURFACE){
-			if (hero.belongings.getItem( Amulet.class ) == null) {
-				Game.runOnRenderThread(new Callback() {
-					@Override
-					public void call() {
-						GameScene.show( new WndMessage( Messages.get(hero, "leave") ) );
-					}
-				});
-				return false;
-			} else {
-				Statistics.ascended = true;
-				Game.switchScene(SurfaceScene.class, new Game.SceneChangeCallback() {
-					@Override
-					public void beforeCreate() {
-
-					}
-
-					@Override
-					public void afterCreate() {
-						Badges.validateHappyEnd();
-						Dungeon.win( Amulet.class );
-						Dungeon.deleteGame( GamesInProgress.curSlot, true );
-						Badges.saveGlobal();
-					}
-				});
-				return true;
-			}
+		if (transition.type == LevelTransition.Type.REGULAR_ENTRANCE && transition.destDepth == 0){
+			Dungeon.depth = 0;
+			InterlevelScene.mode = InterlevelScene.Mode.ASCEND;
+			Game.switchScene(InterlevelScene.class);
+			return true;
 		} else {
 			return super.activateTransition(hero, transition);
 		}

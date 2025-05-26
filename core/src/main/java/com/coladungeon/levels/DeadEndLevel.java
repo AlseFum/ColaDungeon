@@ -21,6 +21,8 @@
 
 package com.coladungeon.levels;
 
+import java.util.ArrayList;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Bones;
 import com.coladungeon.Dungeon;
@@ -30,13 +32,15 @@ import com.coladungeon.actors.mobs.Mob;
 import com.coladungeon.items.Heap;
 import com.coladungeon.items.Item;
 import com.coladungeon.levels.features.LevelTransition;
+import com.coladungeon.levels.rooms.Room;
+import com.coladungeon.levels.rooms.special.RuinedAltarRoom;
+import com.watabou.utils.Point;
 import com.watabou.utils.Random;
-
-import java.util.ArrayList;
 
 public class DeadEndLevel extends Level {
 
-	private static final int SIZE = 5;
+	private static final int SIZE = 9;
+	private RuinedAltarRoom altarRoom;
 	
 	{
 		color1 = 0x534f3e;
@@ -55,28 +59,26 @@ public class DeadEndLevel extends Level {
 	
 	@Override
 	protected boolean build() {
+		setSize(SIZE + 6, SIZE + 6);
 		
-		setSize(7, 7);
-		
-		for (int i=2; i < SIZE; i++) {
-			for (int j=2; j < SIZE; j++) {
-				map[i * width() + j] = Terrain.EMPTY;
-			}
+		// 清空地图
+		for (int i = 0; i < length(); i++) {
+			map[i] = Terrain.WALL;
 		}
 		
-		for (int i=1; i <= SIZE; i++) {
-			map[width() + i] =
-			map[width() * SIZE + i] =
-			map[width() * i + 1] =
-			map[width() * i + SIZE] =
-				Terrain.WATER;
-		}
+		// 创建中心区域
+		altarRoom = new RuinedAltarRoom();
+		altarRoom.setSize();
+		altarRoom.set(3, 3, 3 + SIZE - 1, 3 + SIZE - 1);
+		altarRoom.connected.put(null, new Room.Door(altarRoom.left + SIZE/2, altarRoom.top)); // 上门
+		altarRoom.connected.put(null, new Room.Door(altarRoom.left + SIZE/2, altarRoom.bottom)); // 下门
+		altarRoom.paint(this);
 		
 		// 入口（向上）
-		int entrance = SIZE * width() + SIZE / 2 + 1;
+		int entrance = (SIZE + 6) * (SIZE + 3) + (SIZE + 6) / 2;
 		map[entrance] = Terrain.ENTRANCE;
-
-		//different entrance behaviour depending on main branch or side one
+		
+		// 不同分支的入口行为
 		if (Dungeon.branch == 0) {
 			transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
 		} else {
@@ -89,21 +91,47 @@ public class DeadEndLevel extends Level {
 		}
 		
 		// 出口（向下）
-		int exit = 2 * width() + SIZE / 2 + 1;
+		int exit = (SIZE + 6) * 3 + (SIZE + 6) / 2;
 		map[exit] = Terrain.EXIT;
 		
-		//different exit behaviour depending on main branch or side one  
+		// 不同分支的出口行为
 		if (Dungeon.branch == 0) {
-			// 主线分支：标准出口（游戏会自动决定去向）
 			transitions.add(new LevelTransition(this, exit, LevelTransition.Type.REGULAR_EXIT));
 		} else {
-			// 分支：回到主线分支
 			transitions.add(new LevelTransition(this,
 					exit,
 					LevelTransition.Type.BRANCH_EXIT,
 					Dungeon.depth + 1,
 					0,
 					LevelTransition.Type.REGULAR_ENTRANCE));
+		}
+		
+		// 创建通道
+		Point entrancePoint = cellToPoint(entrance);
+		Point exitPoint = cellToPoint(exit);
+		
+		// 连接入口到祭坛房间
+		for (int y = altarRoom.top; y < entrancePoint.y; y++) {
+			map[y * width() + entrancePoint.x] = Terrain.EMPTY;
+		}
+		
+		// 连接祭坛房间到出口
+		for (int y = exitPoint.y + 1; y <= altarRoom.bottom; y++) {
+			map[y * width() + exitPoint.x] = Terrain.EMPTY;
+		}
+		
+		// 在通道两侧添加水
+		for (int y = altarRoom.top; y < entrancePoint.y; y++) {
+			if (map[y * width() + entrancePoint.x] == Terrain.EMPTY) {
+				map[y * width() + entrancePoint.x - 1] = Terrain.WATER;
+				map[y * width() + entrancePoint.x + 1] = Terrain.WATER;
+			}
+		}
+		for (int y = exitPoint.y + 1; y <= altarRoom.bottom; y++) {
+			if (map[y * width() + exitPoint.x] == Terrain.EMPTY) {
+				map[y * width() + exitPoint.x - 1] = Terrain.WATER;
+				map[y * width() + exitPoint.x + 1] = Terrain.WATER;
+			}
 		}
 		
 		return true;
@@ -125,12 +153,12 @@ public class DeadEndLevel extends Level {
 	@Override
 	protected void createItems() {
 		Random.pushGenerator(Random.Long());
-			ArrayList<Item> bonesItems = Bones.get();
-			if (bonesItems != null) {
-				for (Item i : bonesItems) {
-					drop(i, entrance()-width()).setHauntedIfCursed().type = Heap.Type.REMAINS;
-				}
+		ArrayList<Item> bonesItems = Bones.get();
+		if (bonesItems != null) {
+			for (Item i : bonesItems) {
+				drop(i, entrance()-width()).setHauntedIfCursed().type = Heap.Type.REMAINS;
 			}
+		}
 		Random.popGenerator();
 	}
 	

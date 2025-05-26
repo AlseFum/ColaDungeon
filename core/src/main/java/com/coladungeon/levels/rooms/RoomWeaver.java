@@ -18,71 +18,65 @@
 
 package com.coladungeon.levels.rooms;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.coladungeon.levels.Level;
 import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.painters.Painter;
 import com.watabou.utils.Point;
 import com.watabou.utils.Rect;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * A utility class for painting terrain in rooms using a more intuitive API.
+ * A utility class for weaving terrain in rooms using a more intuitive API.
  * Provides character-to-terrain mapping for creating room layouts from strings.
  */
-public class RoomPainter {
-
+public class RoomWeaver {
+    
     // Default character-to-terrain mapping
     private static final Map<Character, Integer> DEFAULT_CHAR_MAP = new HashMap<>();
+    
     static {
         // Basic terrain types
-        DEFAULT_CHAR_MAP.put(' ', Terrain.EMPTY);      // Empty space
-        DEFAULT_CHAR_MAP.put('#', Terrain.WALL);       // Wall
-        DEFAULT_CHAR_MAP.put('.', Terrain.EMPTY);      // Floor/empty
-        DEFAULT_CHAR_MAP.put(',', Terrain.GRASS);      // Grass
-        DEFAULT_CHAR_MAP.put(':', Terrain.HIGH_GRASS); // High grass
-        DEFAULT_CHAR_MAP.put('~', Terrain.WATER);      // Water
-        DEFAULT_CHAR_MAP.put('C', Terrain.CHASM);      // Chasm
+        DEFAULT_CHAR_MAP.put('#', Terrain.WALL);           // Wall
+        DEFAULT_CHAR_MAP.put('.', Terrain.EMPTY);          // Floor
+        DEFAULT_CHAR_MAP.put(' ', Terrain.EMPTY);          // Alternative floor
+        DEFAULT_CHAR_MAP.put('0', Terrain.EMPTY_SP);       // Empty space
         
-        // Doors
+        // Door types
         DEFAULT_CHAR_MAP.put('+', Terrain.DOOR);           // Door
-        DEFAULT_CHAR_MAP.put('/', Terrain.OPEN_DOOR);      // Open door
         DEFAULT_CHAR_MAP.put('L', Terrain.LOCKED_DOOR);    // Locked door
         DEFAULT_CHAR_MAP.put('S', Terrain.SECRET_DOOR);    // Secret door
-        DEFAULT_CHAR_MAP.put('X', Terrain.CRYSTAL_DOOR);   // Crystal door
+        DEFAULT_CHAR_MAP.put('C', Terrain.CRYSTAL_DOOR);   // Crystal door
         
         // Special terrain
-        DEFAULT_CHAR_MAP.put('>', Terrain.EXIT);           // Exit
-        DEFAULT_CHAR_MAP.put('<', Terrain.ENTRANCE);       // Entrance
-        DEFAULT_CHAR_MAP.put('E', Terrain.ENTRANCE);       // Entrance (alternative)
-        DEFAULT_CHAR_MAP.put('T', Terrain.TRAP);           // Trap
-        DEFAULT_CHAR_MAP.put('t', Terrain.INACTIVE_TRAP);  // Inactive trap
-        DEFAULT_CHAR_MAP.put('_', Terrain.EMPTY_WELL);     // Empty well
-        DEFAULT_CHAR_MAP.put('W', Terrain.WELL);           // Well
-        DEFAULT_CHAR_MAP.put('B', Terrain.BOOKSHELF);      // Bookshelf
-        DEFAULT_CHAR_MAP.put('A', Terrain.ALCHEMY);        // Alchemy pot
+        DEFAULT_CHAR_MAP.put('~', Terrain.WATER);          // Water
+        DEFAULT_CHAR_MAP.put('"', Terrain.HIGH_GRASS);     // High grass
+        DEFAULT_CHAR_MAP.put('\'', Terrain.GRASS);         // Normal grass
         DEFAULT_CHAR_MAP.put('P', Terrain.PEDESTAL);       // Pedestal
         DEFAULT_CHAR_MAP.put('s', Terrain.STATUE);         // Statue
-        DEFAULT_CHAR_MAP.put('D', Terrain.WALL_DECO);      // Wall decoration
+        DEFAULT_CHAR_MAP.put('T', Terrain.TRAP);           // Trap
+        DEFAULT_CHAR_MAP.put('_', Terrain.EMPTY_WELL);     // Empty well
+        DEFAULT_CHAR_MAP.put('W', Terrain.WELL);           // Well
+        DEFAULT_CHAR_MAP.put('I', Terrain.BOOKSHELF);      // Bookshelf
         DEFAULT_CHAR_MAP.put('e', Terrain.EMBERS);         // Embers
         DEFAULT_CHAR_MAP.put('*', Terrain.BARRICADE);      // Barricade
     }
     
-    // The character-to-terrain mapping being used for this painter
+    // The character-to-terrain mapping being used for this weaver
     private Map<Character, Integer> charMap;
     
-    // The room and level being painted
+    // The room and level being woven
     private Room room;
     private Level level;
     
     /**
-     * Creates a new RoomPainter for the given room and level.
+     * Creates a new RoomWeaver for the given room and level.
      * 
-     * @param room the room to paint in
+     * @param room the room to weave in
      * @param level the level containing the room
      */
-    public RoomPainter(Room room, Level level) {
+    public RoomWeaver(Room room, Level level) {
         this.room = room;
         this.level = level;
         this.charMap = new HashMap<>(DEFAULT_CHAR_MAP);
@@ -93,9 +87,9 @@ public class RoomPainter {
      * 
      * @param c the character to map
      * @param terrain the terrain type to associate with the character
-     * @return this RoomPainter instance for method chaining
+     * @return this RoomWeaver instance for method chaining
      */
-    public RoomPainter setCharMapping(char c, int terrain) {
+    public RoomWeaver setCharMapping(char c, int terrain) {
         charMap.put(c, terrain);
         return this;
     }
@@ -117,9 +111,9 @@ public class RoomPainter {
      * @param x the x-coordinate relative to the room's left edge
      * @param y the y-coordinate relative to the room's top edge
      * @param terrain the terrain type to place
-     * @return this RoomPainter instance for method chaining
+     * @return this RoomWeaver instance for method chaining
      */
-    public RoomPainter set(int x, int y, int terrain) {
+    public RoomWeaver set(int x, int y, int terrain) {
         if (x >= 0 && x < room.width() && y >= 0 && y < room.height()) {
             Painter.set(level, room.left + x, room.top + y, terrain);
         }
@@ -132,9 +126,9 @@ public class RoomPainter {
      * 
      * @param p the point relative to the room's top-left corner
      * @param terrain the terrain type to place
-     * @return this RoomPainter instance for method chaining
+     * @return this RoomWeaver instance for method chaining
      */
-    public RoomPainter set(Point p, int terrain) {
+    public RoomWeaver set(Point p, int terrain) {
         return set(p.x, p.y, terrain);
     }
     
@@ -144,9 +138,9 @@ public class RoomPainter {
      * @param x the x-coordinate relative to the room's left edge
      * @param y the y-coordinate relative to the room's top edge
      * @param c the character representing the terrain type
-     * @return this RoomPainter instance for method chaining
+     * @return this RoomWeaver instance for method chaining
      */
-    public RoomPainter setChar(int x, int y, char c) {
+    public RoomWeaver setChar(int x, int y, char c) {
         return set(x, y, getTerrainForChar(c));
     }
     
@@ -159,9 +153,9 @@ public class RoomPainter {
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      * @param terrain the terrain type to fill with
-     * @return this RoomPainter instance for method chaining
+     * @return this RoomWeaver instance for method chaining
      */
-    public RoomPainter fill(int left, int top, int width, int height, int terrain) {
+    public RoomWeaver fill(int left, int top, int width, int height, int terrain) {
         Painter.fill(level, 
                 room.left + left, 
                 room.top + top, 
@@ -176,9 +170,9 @@ public class RoomPainter {
      * 
      * @param rect the rectangle to fill, relative to the room's top-left corner
      * @param terrain the terrain type to fill with
-     * @return this RoomPainter instance for method chaining
+     * @return this RoomWeaver instance for method chaining
      */
-    public RoomPainter fill(Rect rect, int terrain) {
+    public RoomWeaver fill(Rect rect, int terrain) {
         return fill(rect.left, rect.top, rect.width(), rect.height(), terrain);
     }
     
@@ -190,9 +184,9 @@ public class RoomPainter {
      * @param width the width of the rectangle
      * @param height the height of the rectangle
      * @param c the character representing the terrain type
-     * @return this RoomPainter instance for method chaining
+     * @return this RoomWeaver instance for method chaining
      */
-    public RoomPainter fillChar(int left, int top, int width, int height, char c) {
+    public RoomWeaver fillChar(int left, int top, int width, int height, char c) {
         return fill(left, top, width, height, getTerrainForChar(c));
     }
     
@@ -202,9 +196,9 @@ public class RoomPainter {
      * Lines in the string should be separated by newline characters.
      * 
      * @param layout the string representation of the room layout
-     * @return this RoomPainter instance for method chaining
+     * @return this RoomWeaver instance for method chaining
      */
-    public RoomPainter paintLayout(String layout) {
+    public RoomWeaver weaveLayout(String layout) {
         String[] lines = layout.split("\n");
         int height = Math.min(lines.length, room.height());
         
@@ -225,9 +219,9 @@ public class RoomPainter {
      * Draws a border around the room with the specified terrain.
      * 
      * @param terrain the terrain type for the border
-     * @return this RoomPainter instance for method chaining
+     * @return this RoomWeaver instance for method chaining
      */
-    public RoomPainter border(int terrain) {
+    public RoomWeaver border(int terrain) {
         Painter.fill(level, room.left, room.top, room.width(), 1, terrain);
         Painter.fill(level, room.left, room.bottom, room.width(), 1, terrain);
         Painter.fill(level, room.left, room.top + 1, 1, room.height() - 2, terrain);
@@ -239,9 +233,9 @@ public class RoomPainter {
      * Draws a border around the room using a character mapping.
      * 
      * @param c the character representing the terrain type for the border
-     * @return this RoomPainter instance for method chaining
+     * @return this RoomWeaver instance for method chaining
      */
-    public RoomPainter borderChar(char c) {
+    public RoomWeaver borderChar(char c) {
         return border(getTerrainForChar(c));
     }
     
@@ -273,24 +267,6 @@ public class RoomPainter {
                 return entry.getKey();
             }
         }
-        return '#'; // default to wall if not found
-    }
-    
-    /**
-     * Gets a string representation of the current room layout.
-     * 
-     * @return a string representation of the room layout
-     */
-    public String getLayoutString() {
-        StringBuilder sb = new StringBuilder();
-        
-        for (int y = 0; y < room.height(); y++) {
-            for (int x = 0; x < room.width(); x++) {
-                sb.append(getChar(x, y));
-            }
-            sb.append('\n');
-        }
-        
-        return sb.toString();
+        return '#';
     }
 } 

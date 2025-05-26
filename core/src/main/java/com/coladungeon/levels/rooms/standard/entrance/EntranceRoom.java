@@ -21,8 +21,10 @@
 
  package com.coladungeon.levels.rooms.standard.entrance;
 
- import com.coladungeon.Dungeon;
+ import java.util.ArrayList;
+
  import com.coladungeon.CDSettings;
+ import com.coladungeon.Dungeon;
  import com.coladungeon.items.journal.GuidePage;
  import com.coladungeon.items.journal.Guidebook;
  import com.coladungeon.journal.Document;
@@ -35,8 +37,6 @@
  import com.watabou.utils.Point;
  import com.watabou.utils.Random;
  import com.watabou.utils.Reflection;
- 
- import java.util.ArrayList;
  
  public class EntranceRoom extends StandardRoom {
 	 
@@ -88,11 +88,9 @@
 		 } while (level.findMob(entrance) != null);
 		 Painter.set( level, entrance, Terrain.ENTRANCE );
  
-		 if (Dungeon.depth == 1){
-			 level.transitions.add(new LevelTransition(level, entrance, LevelTransition.Type.SURFACE));
-		 } else {
-			 level.transitions.add(new LevelTransition(level, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
-		 }
+		 // Connect to level 0
+		 LevelTransition transition = new LevelTransition(level, entrance, LevelTransition.Type.REGULAR_ENTRANCE, 0, 0, LevelTransition.Type.REGULAR_EXIT);
+		 level.transitions.add(transition);
  
 		 //use a separate generator here so meta progression doesn't affect levelgen
 		 Random.pushGenerator();
