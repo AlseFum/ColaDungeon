@@ -4,6 +4,9 @@
 
 package com.coladungeon.items.weapon.gun;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
@@ -17,9 +20,9 @@ import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.Lightning;
 import com.coladungeon.effects.particles.BlastParticle;
 import com.coladungeon.effects.particles.FlameParticle;
-import com.coladungeon.effects.particles.PoisonParticle;
 import com.coladungeon.effects.particles.SnowParticle;
 import com.coladungeon.items.Item;
+import com.coladungeon.items.bags.AmmoHolder;
 import com.coladungeon.items.weapon.Weapon;
 import com.coladungeon.items.weapon.ammo.Ammo;
 import com.coladungeon.mechanics.Ballistica;
@@ -28,15 +31,10 @@ import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.tiles.DungeonTilemap;
 import com.coladungeon.utils.GLog;
-import com.coladungeon.windows.WndBag;
 import com.coladungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
-import com.watabou.utils.Random;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Gun是所有枪械类武器的基类，实现了通用的射击和装弹逻辑。
@@ -168,6 +166,15 @@ public abstract class Gun extends Weapon {
     
     protected List<Ammo> findAllAmmo() {
         List<Ammo> result = new ArrayList<>();
+        // 首先从弹药包中查找
+        for (AmmoHolder holder : Dungeon.hero.belongings.getAllItems(AmmoHolder.class)) {
+            for (Item item : holder.items) {
+                if (item instanceof Ammo) {
+                    result.add((Ammo)item);
+                }
+            }
+        }
+        // 如果弹药包中没有，再从背包中查找
         for (Ammo ammo : Dungeon.hero.belongings.getAllItems(Ammo.class)) {
             result.add(ammo);
         }
@@ -175,6 +182,15 @@ public abstract class Gun extends Weapon {
     }
     
     protected Ammo findAmmo() {
+        // 首先从弹药包中查找
+        for (AmmoHolder holder : Dungeon.hero.belongings.getAllItems(AmmoHolder.class)) {
+            for (Item item : holder.items) {
+                if (item instanceof Ammo && ((Ammo)item).getType() == defaultAmmoType) {
+                    return (Ammo)item;
+                }
+            }
+        }
+        // 如果弹药包中没有，再从背包中查找
         for (Ammo ammo : Dungeon.hero.belongings.getAllItems(Ammo.class)) {
             if (ammo.getType() == defaultAmmoType) {
                 return ammo;
@@ -297,8 +313,24 @@ public abstract class Gun extends Weapon {
         super.restoreFromBundle(bundle);
         ammo = bundle.getInt(AMMO);
         maxAmmo = bundle.getInt(MAX_AMMO);
-        defaultAmmoType = Ammo.AmmoType.valueOf(bundle.getString(DEFAULT_AMMO_TYPE));
-        loadedAmmoType = Ammo.AmmoType.valueOf(bundle.getString(LOADED_AMMO_TYPE));
+        
+        // 安全地恢复 defaultAmmoType
+        try {
+            String defaultAmmoTypeName = bundle.getString(DEFAULT_AMMO_TYPE);
+            defaultAmmoType = Ammo.AmmoType.valueOf(defaultAmmoTypeName);
+        } catch (Exception e) {
+            GLog.w("无法恢复默认弹药类型，使用NORMAL");
+            defaultAmmoType = Ammo.AmmoType.NORMAL;
+        }
+        
+        // 安全地恢复 loadedAmmoType
+        try {
+            String loadedAmmoTypeName = bundle.getString(LOADED_AMMO_TYPE);
+            loadedAmmoType = Ammo.AmmoType.valueOf(loadedAmmoTypeName);
+        } catch (Exception e) {
+            GLog.w("无法恢复已装填弹药类型，使用默认类型");
+            loadedAmmoType = defaultAmmoType;
+        }
     }
     
     @Override

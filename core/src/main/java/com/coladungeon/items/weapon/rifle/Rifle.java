@@ -4,42 +4,74 @@
 
 package com.coladungeon.items.weapon.rifle;
 
+import java.util.ArrayList;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
-import com.coladungeon.actors.buffs.Buff;
-import com.coladungeon.actors.buffs.FlavourBuff;
 import com.coladungeon.actors.hero.Hero;
-import com.coladungeon.effects.Beam;
 import com.coladungeon.effects.Lightning;
-import com.coladungeon.items.weapon.Weapon;
+import com.coladungeon.items.Item;
+import com.coladungeon.items.weapon.ammo.Ammo;
+import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.tiles.DungeonTilemap;
-import com.coladungeon.ui.ActionIndicator;
-import com.coladungeon.ui.BuffIndicator;
 import com.coladungeon.utils.GLog;
-import com.watabou.noosa.Game;
-import com.watabou.noosa.Image;
-import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-import java.util.ArrayList;
+public class Rifle extends Gun {
 
-public class Rifle extends Weapon {
+    // 确保 AmmoType 枚举的有效性
+    static {
+        try {
+            // 验证 NORMAL 类型是否存在
+            Ammo.AmmoType normal = Ammo.AmmoType.NORMAL;
+            if (normal == null) {
+                GLog.w("警告: AmmoType.NORMAL 为 null，可能导致存档问题");
+            }
+        } catch (Exception e) {
+            GLog.w("警告: AmmoType 枚举初始化异常，可能导致存档问题");
+        }
+    }
 
-    private static final int MAX_AMMO = 30; // 最大弹药量
-    private int ammo = MAX_AMMO; // 初始弹药量
+    // 初始化方法，确保默认值正确设置
+    private void init() {
+        try {
+            // 确保弹药类型被正确初始化
+            if (defaultAmmoType == null) {
+                defaultAmmoType = Ammo.AmmoType.NORMAL;
+            }
+            if (loadedAmmoType == null) {
+                loadedAmmoType = defaultAmmoType;
+            }
+            
+            // 确保弹药数量合理
+            if (ammo < 0) ammo = 0;
+            if (ammo > maxAmmo) ammo = maxAmmo;
+            
+        } catch (Exception e) {
+            GLog.w("步枪初始化异常: " + e.getMessage());
+            // 强制设置默认值
+            defaultAmmoType = Ammo.AmmoType.NORMAL;
+            loadedAmmoType = Ammo.AmmoType.NORMAL;
+            ammo = Math.min(Math.max(0, ammo), maxAmmo);
+        }
+    }
+
     private static final int SHOTS_PER_BURST = 3; // 每次射击发射的子弹数
     private static final int SPRAY_AMMO_COST = 10; // 扫射消耗的弹药量
     private static final float SPRAY_CHANCE = 0.4f; // 扫射命中周围格子的基础概率
+
+    private static final String AC_SHOOT = "点射";
+    private static final String AC_SPRAY = "扫射";
+    private static final String AC_RELOAD = "装弹";
 
     {
         image = ItemSpriteSheet.CROSSBOW; // 暂时使用十字弩的图标
@@ -51,11 +83,18 @@ public class Rifle extends Weapon {
         ACC = 1.1f; // 命中率
         
         defaultAction = AC_SHOOT; // 默认动作为射击
+        
+        maxAmmo = 30;
+        ammo = maxAmmo;
+        reloadTime = 1.5f;
+        defaultAmmoType = Ammo.AmmoType.NORMAL;
+        loadedAmmoType = defaultAmmoType;
+        
+        usesTargeting = true;
+        
+        // 调用初始化方法确保一致性
+        init();
     }
-
-    private static final String AC_SHOOT = "点射";
-    private static final String AC_SPRAY = "扫射";
-    private static final String AC_RELOAD = "装弹";
 
     @Override
     public String name() {
@@ -83,7 +122,7 @@ public class Rifle extends Weapon {
         desc.append("- 消耗10发弹药\n\n");
         
         desc.append("_弹药系统:_\n");
-        desc.append("- 最大弹药：").append(MAX_AMMO).append("发\n");
+        desc.append("- 最大弹药：").append(maxAmmo).append("发\n");
         desc.append("- 当前弹药：").append(ammo).append("发\n");
         desc.append("- 装弹时间：1秒\n\n");
         
@@ -138,7 +177,7 @@ public class Rifle extends Weapon {
             GameScene.selectCell(sprayer);
             
         } else if (action.equals(AC_RELOAD)) {
-            if (ammo >= MAX_AMMO) {
+            if (ammo >= maxAmmo) {
                 GLog.w("弹药已满！");
                 return;
             }
@@ -147,11 +186,11 @@ public class Rifle extends Weapon {
     }
 
     private void reload() {
-        ammo = MAX_AMMO;
-        GLog.p("重新装填完成！弹药：%d/%d", ammo, MAX_AMMO);
-        curUser.spend(1f);
-        curUser.busy();
-        curUser.sprite.operate(curUser.pos);
+        ammo = maxAmmo;
+        GLog.p("重新装填完成！弹药：%d/%d", ammo, maxAmmo);
+        Item.curUser.spend(1f);
+        Item.curUser.busy();
+        Item.curUser.sprite.operate(Item.curUser.pos);
         Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
     }
 
@@ -183,76 +222,68 @@ public class Rifle extends Weapon {
         }
     };
 
-    private void fire(int targetPos) {
+    @Override
+    protected void fire(int targetPos) {
         if (ammo < SHOTS_PER_BURST) {
-            GLog.w("弹药不足！");
+            GLog.w("弹药不足！需要%d发子弹。", SHOTS_PER_BURST);
             return;
         }
 
-        final Ballistica shot = new Ballistica(curUser.pos, targetPos, Ballistica.PROJECTILE);
+        final Ballistica shot = new Ballistica(Item.curUser.pos, targetPos, Ballistica.PROJECTILE);
         int cell = shot.collisionPos;
 
-        // 消耗弹药
         ammo -= SHOTS_PER_BURST;
 
-        curUser.sprite.zap(cell);
+        Item.curUser.sprite.zap(cell);
         Sample.INSTANCE.play(Assets.Sounds.HIT);
 
-        // 添加射击光束特效
-        curUser.sprite.parent.add(new Lightning(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(cell), null));
+        Item.curUser.sprite.parent.add(new Lightning(Item.curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(cell), null));
 
         Char enemy = Actor.findChar(cell);
         if (enemy != null) {
-            // 进行多次伤害计算
             for (int i = 0; i < SHOTS_PER_BURST; i++) {
-                int damage = damageRoll(curUser);
+                int damage = damageRoll(Item.curUser);
                 enemy.damage(damage, this);
                 
                 if (i < SHOTS_PER_BURST - 1) {
-                    // 在连发之间添加小延迟的音效
                     float pitch = 0.8f + Random.Float(0.4f);
                     Sample.INSTANCE.play(Assets.Sounds.HIT, pitch);
                 }
             }
         }
         
-        // 只消耗一次行动时间
-        curUser.spendAndNext(DLY);
+        Item.curUser.spendAndNext(delayFactor(Item.curUser));
     }
 
     private void spray(int targetPos) {
         if (ammo < SPRAY_AMMO_COST) {
-            GLog.w("弹药不足！");
+            GLog.w("弹药不足！需要%d发子弹。", SPRAY_AMMO_COST);
             return;
         }
 
-        // 消耗弹药
         ammo -= SPRAY_AMMO_COST;
 
-        curUser.sprite.zap(targetPos);
+        Item.curUser.sprite.zap(targetPos);
         Sample.INSTANCE.play(Assets.Sounds.HIT);
 
-        // 获取目标周围的格子
         boolean[] passable = Dungeon.level.passable;
         
-        // 对中心点造成必定伤害
         Char centerEnemy = Actor.findChar(targetPos);
         if (centerEnemy != null) {
-            int damage = damageRoll(curUser);
+            int damage = damageRoll(Item.curUser);
             centerEnemy.damage(damage, this);
-            curUser.sprite.parent.add(new Lightning(curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(targetPos), null));
+            Item.curUser.sprite.parent.add(new Lightning(Item.curUser.sprite.center(), DungeonTilemap.raisedTileCenterToWorld(targetPos), null));
         }
 
-        // 对周围一格进行概率伤害
         int[] neighbours = PathFinder.NEIGHBOURS8;
         for (int i = 0; i < neighbours.length; i++) {
             int pos = targetPos + neighbours[i];
             if (passable[pos]) {
                 Char enemy = Actor.findChar(pos);
                 if (enemy != null && Random.Float() < SPRAY_CHANCE) {
-                    int damage = damageRoll(curUser);
+                    int damage = damageRoll(Item.curUser);
                     enemy.damage(damage, this);
-                    curUser.sprite.parent.add(new Lightning(
+                    Item.curUser.sprite.parent.add(new Lightning(
                         DungeonTilemap.raisedTileCenterToWorld(targetPos),
                         DungeonTilemap.raisedTileCenterToWorld(pos),
                         null));
@@ -261,8 +292,7 @@ public class Rifle extends Weapon {
             }
         }
 
-        // 只消耗一次行动时间
-        curUser.spendAndNext(DLY);
+        Item.curUser.spendAndNext(delayFactor(Item.curUser));
     }
 
     @Override
@@ -282,20 +312,66 @@ public class Rifle extends Weapon {
 
     @Override
     public String status() {
-        return ammo + "/" + MAX_AMMO;
+        return ammo + "/" + maxAmmo;
     }
 
     private static final String AMMO = "ammo";
     
     @Override
     public void storeInBundle(Bundle bundle) {
-        super.storeInBundle(bundle);
+        try {
+            super.storeInBundle(bundle);
+        } catch (Exception e) {
+            GLog.w("存储步枪状态时出错: " + e.getMessage());
+        }
+        
+        // 确保存储弹药数量
         bundle.put(AMMO, ammo);
+        
+        // 明确存储弹药类型，以防父类没有存储或存储出错
+        try {
+            if (loadedAmmoType != null) {
+                bundle.put("loadedAmmoType", loadedAmmoType.name());
+            } else {
+                bundle.put("loadedAmmoType", Ammo.AmmoType.NORMAL.name());
+            }
+            
+            if (defaultAmmoType != null) {
+                bundle.put("defaultAmmoType", defaultAmmoType.name());
+            } else {
+                bundle.put("defaultAmmoType", Ammo.AmmoType.NORMAL.name());
+            }
+        } catch (Exception e) {
+            GLog.w("存储弹药类型时出错，使用默认值");
+            bundle.put("loadedAmmoType", "NORMAL");
+            bundle.put("defaultAmmoType", "NORMAL");
+        }
     }
     
     @Override
     public void restoreFromBundle(Bundle bundle) {
-        super.restoreFromBundle(bundle);
-        ammo = bundle.getInt(AMMO);
+        try {
+            super.restoreFromBundle(bundle);
+        } catch (IllegalArgumentException e) {
+            // 如果是 AmmoType 枚举解析错误，设置默认值
+            if (e.getMessage() != null && e.getMessage().contains("AmmoType")) {
+                GLog.w("存档中的弹药类型无效，已重置为默认值");
+                loadedAmmoType = Ammo.AmmoType.NORMAL;
+                defaultAmmoType = Ammo.AmmoType.NORMAL;
+            } else {
+                // 其他错误则继续抛出
+                throw e;
+            }
+        }
+        
+        // 确保从 bundle 中读取 ammo 值
+        if (bundle.contains(AMMO)) {
+            ammo = bundle.getInt(AMMO);
+        } else {
+            ammo = 0; // 默认值
+        }
+        
+        // 调用初始化方法确保一致性
+        init();
     }
 } 

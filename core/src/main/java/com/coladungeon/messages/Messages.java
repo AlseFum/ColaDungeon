@@ -21,12 +21,6 @@
 
 package com.coladungeon.messages;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.I18NBundle;
-import com.coladungeon.Assets;
-import com.coladungeon.CDSettings;
-import com.coladungeon.ColaDungeon;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -35,6 +29,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IllegalFormatException;
 import java.util.Locale;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.I18NBundle;
+import com.coladungeon.Assets;
+import com.coladungeon.CDSettings;
+import com.coladungeon.ColaDungeon;
 
 /*
 	Simple wrapper class for libGDX I18NBundles.
@@ -91,7 +91,7 @@ public class Messages {
 			locale = Locale.ENGLISH;
 			bundleLocal = Locale.ROOT; //english is source, uses root locale for fetching bundle
 		} else {
-			locale = new Locale(lang.code());
+			locale = Locale.forLanguageTag(lang.code());
 			bundleLocal = locale;
 		}
 		formatters.clear();

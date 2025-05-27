@@ -15,7 +15,6 @@ import com.coladungeon.actors.buffs.FlavourBuff;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.effects.Beam;
 import com.coladungeon.effects.Lightning;
-import com.coladungeon.effects.Speck;
 import com.coladungeon.effects.particles.ShadowParticle;
 import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.mechanics.Ballistica;
@@ -234,7 +233,7 @@ public class SniperGun extends Gun {
         
         return acc;
     }
-    
+
     @Override
     public String actionName(String action, Hero hero) {
         if (action.equals(AC_AIM)) return "瞄准";
@@ -261,10 +260,10 @@ public class SniperGun extends Gun {
         public boolean act() {
             if (target == Dungeon.hero) {
                 if (isCharging && target.pos == lastPos) {
-                    chargeTime = Math.min(MAX_CHARGE, chargeTime + CHARGE_RATE);
+                chargeTime = Math.min(MAX_CHARGE, chargeTime + CHARGE_RATE);
                     target.sprite.showStatus(0x00FFFF, "蓄力: %.1f秒", chargeTime);
                     
-                    if (chargeTime >= MAX_CHARGE) {
+                if (chargeTime >= MAX_CHARGE) {
                         target.sprite.showStatus(0x00FF00, "蓄力完成!");
                         isCharging = false;
                     }
@@ -298,7 +297,7 @@ public class SniperGun extends Gun {
             super.detach();
             ActionIndicator.clearAction(this);
         }
-        
+
         @Override
         public String actionName() {
             if (chargeTime >= MAX_CHARGE) {
@@ -307,12 +306,12 @@ public class SniperGun extends Gun {
                 return String.format("蓄力 (%.1f秒)", chargeTime);
             }
         }
-        
+
         @Override
         public int actionIcon() {
             return HeroIcon.PREPARATION;
         }
-        
+
         @Override
         public Visual primaryVisual() {
             return new Image(Assets.Interfaces.BUFFS_LARGE, 208, 32, 16, 16);
@@ -326,7 +325,7 @@ public class SniperGun extends Gun {
             txt.hardlight(0x00FFFF);
             return txt;
         }
-        
+
         @Override
         public int indicatorColor() {
             if (chargeTime >= MAX_CHARGE) {
@@ -335,7 +334,7 @@ public class SniperGun extends Gun {
                 return 0x00FFFF;
             }
         }
-        
+
         @Override
         public void doAction() {
             Hero hero = Dungeon.hero;

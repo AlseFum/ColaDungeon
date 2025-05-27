@@ -21,6 +21,15 @@
 
 package com.coladungeon;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.TimeZone;
+
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.Amok;
@@ -56,17 +65,18 @@ import com.coladungeon.items.wands.WandOfWarding;
 import com.coladungeon.journal.Notes;
 import com.coladungeon.levels.DeadEndLevel;
 import com.coladungeon.levels.Level;
-
 import com.coladungeon.levels.MiningLevel;
 import com.coladungeon.levels.RegularLevel;
 import com.coladungeon.levels.features.LevelTransition;
 import com.coladungeon.levels.rooms.secret.SecretRoom;
 import com.coladungeon.levels.rooms.special.SpecialRoom;
+import com.coladungeon.levels.themes.ThemeManager;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.ui.QuickSlotButton;
 import com.coladungeon.ui.Toolbar;
 import com.coladungeon.utils.DungeonSeed;
+import com.coladungeon.utils.HeroEventListener;
 import com.coladungeon.windows.WndResurrect;
 import com.watabou.noosa.Game;
 import com.watabou.utils.BArray;
@@ -76,18 +86,6 @@ import com.watabou.utils.FileUtils;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.SparseArray;
-
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.TimeZone;
-
-import com.coladungeon.utils.HeroEventListener;
-import com.coladungeon.levels.themes.ThemeManager;
 
 public class Dungeon {
 
@@ -128,6 +126,7 @@ public class Dungeon {
 		SCROLL_HOLDER,
 		POTION_BANDOLIER,
 		MAGICAL_HOLSTER,
+		AMMO_HOLDER,
 
 		//lore documents
 		LORE_SEWERS,

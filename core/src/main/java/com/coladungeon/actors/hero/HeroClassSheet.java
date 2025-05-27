@@ -50,6 +50,7 @@ import com.coladungeon.items.weapon.bfg.BigFockingGun;
 import com.coladungeon.items.weapon.melee.HeavySword;
 import com.coladungeon.items.weapon.ammo.NormalAmmo;
 import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
+import com.coladungeon.items.bags.AmmoHolder;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
 /**
@@ -323,6 +324,10 @@ public final class HeroClassSheet {
         new PotionOfHealing().identify();
         new ScrollOfIdentify().identify();
         new Waterskin().collect();
+
+        // 添加弹药包
+        AmmoHolder ammoHolder = new AmmoHolder();
+        ammoHolder.identify().collect();
 
         // 添加法杖（魔法飞弹）
         WandOfMagicMissile wand = new WandOfMagicMissile();

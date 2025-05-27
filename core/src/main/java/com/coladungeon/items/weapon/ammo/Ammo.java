@@ -13,7 +13,7 @@ public class Ammo extends Item {
     private static final int DEFAULT_MAX_STACK = 99;
     
     {
-        image = ItemSpriteSheet.THROWING_KNIFE; // 暂时使用飞刀的图标
+        image = ItemSpriteSheet.DARTS;
         stackable = true;
         defaultAction = AC_THROW;
     }
@@ -21,15 +21,15 @@ public class Ammo extends Item {
     private AmmoType type = AmmoType.NORMAL;
     
     public enum AmmoType {
-        NORMAL("普通弹药", 1.0f),
+        NORMAL("普通弹", 1.0f),
         PIERCING("穿甲弹", 1.2f),
-        EXPLOSIVE("爆炸弹", 1.5f),
-        INCENDIARY("燃烧弹", 1.3f),
-        FROST("冰冻弹", 1.3f),
-        POISON("毒气弹", 1.2f);
+        EXPLOSIVE("爆炸弹", 0.8f),
+        INCENDIARY("燃烧弹", 0.9f),
+        FROST("冰冻弹", 0.9f),
+        POISON("毒气弹", 0.9f);
         
-        private String name;
-        private float damageMultiplier;
+        private final String name;
+        private final float damageMultiplier;
         
         AmmoType(String name, float damageMultiplier) {
             this.name = name;
@@ -61,30 +61,22 @@ public class Ammo extends Item {
     
     @Override
     public String desc() {
-        String desc = "一种" + type.getName() + "。\n\n";
-        
         switch (type) {
             case NORMAL:
-                desc += "标准弹药，没有特殊效果。";
-                break;
+                return "标准弹药，没有特殊效果。";
             case PIERCING:
-                desc += "能够穿透敌人的装甲，造成额外伤害。";
-                break;
+                return "能够穿透敌人护甲的特殊弹药。";
             case EXPLOSIVE:
-                desc += "击中目标时会产生爆炸，对周围造成范围伤害。";
-                break;
+                return "击中目标时会产生爆炸的弹药。";
             case INCENDIARY:
-                desc += "击中目标时会点燃目标，造成持续燃烧伤害。";
-                break;
+                return "能够点燃目标的燃烧弹药。";
             case FROST:
-                desc += "击中目标时会冻结目标，降低其移动和攻击速度。";
-                break;
+                return "能够冰冻并减速目标的弹药。";
             case POISON:
-                desc += "击中目标时会释放毒气，造成持续毒素伤害。";
-                break;
+                return "能够使目标中毒的毒气弹药。";
+            default:
+                return "未知类型的弹药。";
         }
-        
-        return desc;
     }
     
     @Override
@@ -111,7 +103,20 @@ public class Ammo extends Item {
     }
     
     public int value() {
-        return 2 * quantity;
+        switch (type) {
+            case NORMAL:
+                return 5;
+            case PIERCING:
+                return 10;
+            case EXPLOSIVE:
+                return 15;
+            case INCENDIARY:
+            case FROST:
+            case POISON:
+                return 12;
+            default:
+                return 5;
+        }
     }
     
     @Override
@@ -130,6 +135,15 @@ public class Ammo extends Item {
     @Override
     public void restoreFromBundle(Bundle bundle) {
         super.restoreFromBundle(bundle);
-        type = AmmoType.valueOf(bundle.getString(TYPE));
+        try {
+            String typeName = bundle.getString(TYPE);
+            type = AmmoType.valueOf(typeName);
+        } catch (Exception e) {
+            type = AmmoType.NORMAL;
+        }
+    }
+
+    public void setType(AmmoType type) {
+        this.type = type;
     }
 } 
