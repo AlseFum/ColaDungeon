@@ -88,4 +88,17 @@ public class HeroAction {
 			this.target = target;
 		}
 	}
+
+	public static class SniperAim extends HeroAction {
+		public SniperAim() {
+			// 不需要目标位置
+		}
+	}
+
+	public static class SniperFire extends HeroAction {
+		public int targetPos;
+		public SniperFire(int targetPos) {
+			this.targetPos = targetPos;
+		}
+	}
 }

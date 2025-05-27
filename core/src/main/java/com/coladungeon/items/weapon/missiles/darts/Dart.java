@@ -48,7 +48,7 @@ import java.util.ArrayList;
 public class Dart extends MissileWeapon {
 
 	{
-		image = ItemSpriteSheet.DART;
+		image = ItemSpriteSheet.THROWING_KNIFE;
 		hitSound = Assets.Sounds.HIT_ARROW;
 		hitSoundPitch = 1.3f;
 		

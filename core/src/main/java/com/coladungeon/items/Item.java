@@ -715,4 +715,12 @@ public class Item implements Bundlable {
 			return Messages.get(Item.class, "prompt");
 		}
 	};
+
+	public int price() {
+		return 0;
+	}
+	
+	public int getMaxStack() {
+		return 1;
+	}
 }

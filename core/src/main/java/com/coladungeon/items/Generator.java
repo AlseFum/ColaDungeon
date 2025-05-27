@@ -28,206 +28,46 @@ import java.util.LinkedHashMap;
 import java.util.function.Supplier;
 
 import com.coladungeon.Dungeon;
-import com.coladungeon.items.armor.Armor;
-import com.coladungeon.items.armor.ClericArmor;
-import com.coladungeon.items.armor.ClothArmor;
-import com.coladungeon.items.armor.DuelistArmor;
-import com.coladungeon.items.armor.HuntressArmor;
-import com.coladungeon.items.armor.LeatherArmor;
-import com.coladungeon.items.armor.MageArmor;
-import com.coladungeon.items.armor.MailArmor;
-import com.coladungeon.items.armor.PlateArmor;
-import com.coladungeon.items.armor.RogueArmor;
-import com.coladungeon.items.armor.ScaleArmor;
-import com.coladungeon.items.armor.WarriorArmor;
-import com.coladungeon.items.artifacts.AlchemistsToolkit;
-import com.coladungeon.items.artifacts.Artifact;
-import com.coladungeon.items.artifacts.ChaliceOfBlood;
-import com.coladungeon.items.artifacts.CloakOfShadows;
-import com.coladungeon.items.artifacts.DriedRose;
-import com.coladungeon.items.artifacts.EtherealChains;
-import com.coladungeon.items.artifacts.HolyTome;
-import com.coladungeon.items.artifacts.HornOfPlenty;
-import com.coladungeon.items.artifacts.MasterThievesArmband;
-import com.coladungeon.items.artifacts.SandalsOfNature;
-import com.coladungeon.items.artifacts.TalismanOfForesight;
-import com.coladungeon.items.artifacts.TimekeepersHourglass;
-import com.coladungeon.items.artifacts.UnstableSpellbook;
-import com.coladungeon.items.bombs.Bomb;
-import com.coladungeon.items.food.Food;
-import com.coladungeon.items.food.MysteryMeat;
-import com.coladungeon.items.food.Pasty;
-import com.coladungeon.items.potions.Potion;
-import com.coladungeon.items.potions.PotionOfExperience;
-import com.coladungeon.items.potions.PotionOfFrost;
-import com.coladungeon.items.potions.PotionOfHaste;
-import com.coladungeon.items.potions.PotionOfHealing;
-import com.coladungeon.items.potions.PotionOfInvisibility;
-import com.coladungeon.items.potions.PotionOfLevitation;
-import com.coladungeon.items.potions.PotionOfLiquidFlame;
-import com.coladungeon.items.potions.PotionOfMindVision;
-import com.coladungeon.items.potions.PotionOfParalyticGas;
-import com.coladungeon.items.potions.PotionOfPurity;
-import com.coladungeon.items.potions.PotionOfStrength;
-import com.coladungeon.items.potions.PotionOfToxicGas;
-import com.coladungeon.items.potions.brews.Brew;
-import com.coladungeon.items.potions.elixirs.Elixir;
-import com.coladungeon.items.potions.exotic.ExoticPotion;
-import com.coladungeon.items.quest.Pickaxe;
-import com.coladungeon.items.rings.Ring;
-import com.coladungeon.items.rings.RingOfAccuracy;
-import com.coladungeon.items.rings.RingOfArcana;
-import com.coladungeon.items.rings.RingOfElements;
-import com.coladungeon.items.rings.RingOfEnergy;
-import com.coladungeon.items.rings.RingOfEvasion;
-import com.coladungeon.items.rings.RingOfForce;
-import com.coladungeon.items.rings.RingOfFuror;
-import com.coladungeon.items.rings.RingOfHaste;
-import com.coladungeon.items.rings.RingOfMight;
-import com.coladungeon.items.rings.RingOfSharpshooting;
-import com.coladungeon.items.rings.RingOfTenacity;
-import com.coladungeon.items.rings.RingOfWealth;
-import com.coladungeon.items.scrolls.Scroll;
-import com.coladungeon.items.scrolls.ScrollOfIdentify;
-import com.coladungeon.items.scrolls.ScrollOfLullaby;
-import com.coladungeon.items.scrolls.ScrollOfMagicMapping;
-import com.coladungeon.items.scrolls.ScrollOfMirrorImage;
-import com.coladungeon.items.scrolls.ScrollOfRage;
-import com.coladungeon.items.scrolls.ScrollOfRecharging;
-import com.coladungeon.items.scrolls.ScrollOfRemoveCurse;
-import com.coladungeon.items.scrolls.ScrollOfRetribution;
-import com.coladungeon.items.scrolls.ScrollOfTeleportation;
-import com.coladungeon.items.scrolls.ScrollOfTerror;
-import com.coladungeon.items.scrolls.ScrollOfTransmutation;
-import com.coladungeon.items.scrolls.ScrollOfUpgrade;
-import com.coladungeon.items.scrolls.exotic.ExoticScroll;
-import com.coladungeon.items.spells.Spell;
-import com.coladungeon.items.stones.Runestone;
-import com.coladungeon.items.stones.StoneOfAggression;
-import com.coladungeon.items.stones.StoneOfAugmentation;
-import com.coladungeon.items.stones.StoneOfBlast;
-import com.coladungeon.items.stones.StoneOfBlink;
-import com.coladungeon.items.stones.StoneOfClairvoyance;
-import com.coladungeon.items.stones.StoneOfDeepSleep;
-import com.coladungeon.items.stones.StoneOfDetectMagic;
-import com.coladungeon.items.stones.StoneOfDungeonTravel;
-import com.coladungeon.items.stones.StoneOfEnchantment;
-import com.coladungeon.items.stones.StoneOfFear;
-import com.coladungeon.items.stones.StoneOfFlock;
-import com.coladungeon.items.stones.StoneOfGeneration;
-import com.coladungeon.items.stones.StoneOfIntuition;
-import com.coladungeon.items.stones.StoneOfShock;
-import com.coladungeon.items.trinkets.ChaoticCenser;
-import com.coladungeon.items.trinkets.DimensionalSundial;
-import com.coladungeon.items.trinkets.ExoticCrystals;
-import com.coladungeon.items.trinkets.EyeOfNewt;
-import com.coladungeon.items.trinkets.MimicTooth;
-import com.coladungeon.items.trinkets.MossyClump;
-import com.coladungeon.items.trinkets.ParchmentScrap;
-import com.coladungeon.items.trinkets.PetrifiedSeed;
-import com.coladungeon.items.trinkets.RatSkull;
-import com.coladungeon.items.trinkets.SaltCube;
-import com.coladungeon.items.trinkets.ShardOfOblivion;
-import com.coladungeon.items.trinkets.ThirteenLeafClover;
-import com.coladungeon.items.trinkets.TrapMechanism;
-import com.coladungeon.items.trinkets.Trinket;
-import com.coladungeon.items.trinkets.TrinketCatalyst;
-import com.coladungeon.items.trinkets.VialOfBlood;
-import com.coladungeon.items.trinkets.WondrousResin;
-import com.coladungeon.items.wands.Wand;
-import com.coladungeon.items.wands.WandOfBlastWave;
-import com.coladungeon.items.wands.WandOfCorrosion;
-import com.coladungeon.items.wands.WandOfCorruption;
-import com.coladungeon.items.wands.WandOfDisintegration;
-import com.coladungeon.items.wands.WandOfFireblast;
-import com.coladungeon.items.wands.WandOfFrost;
-import com.coladungeon.items.wands.WandOfLightning;
-import com.coladungeon.items.wands.WandOfLivingEarth;
-import com.coladungeon.items.wands.WandOfMagicMissile;
-import com.coladungeon.items.wands.WandOfPrismaticLight;
-import com.coladungeon.items.wands.WandOfRegrowth;
-import com.coladungeon.items.wands.WandOfTransfusion;
-import com.coladungeon.items.wands.WandOfWarding;
-import com.coladungeon.items.weapon.melee.AssassinsBlade;
-import com.coladungeon.items.weapon.melee.BattleAxe;
-import com.coladungeon.items.weapon.melee.Crossbow;
-import com.coladungeon.items.weapon.melee.Cudgel;
-import com.coladungeon.items.weapon.melee.Dagger;
-import com.coladungeon.items.weapon.melee.Dirk;
-import com.coladungeon.items.weapon.melee.Flail;
-import com.coladungeon.items.weapon.melee.Gauntlet;
-import com.coladungeon.items.weapon.melee.Glaive;
-import com.coladungeon.items.weapon.melee.Gloves;
-import com.coladungeon.items.weapon.melee.Greataxe;
-import com.coladungeon.items.weapon.melee.Greatshield;
-import com.coladungeon.items.weapon.melee.Greatsword;
-import com.coladungeon.items.weapon.melee.HandAxe;
-import com.coladungeon.items.weapon.melee.Katana;
-import com.coladungeon.items.weapon.melee.Longsword;
-import com.coladungeon.items.weapon.melee.Mace;
-import com.coladungeon.items.weapon.melee.MagesStaff;
-import com.coladungeon.items.weapon.melee.MeleeWeapon;
-import com.coladungeon.items.weapon.melee.Quarterstaff;
-import com.coladungeon.items.weapon.melee.Rapier;
-import com.coladungeon.items.weapon.melee.RoundShield;
-import com.coladungeon.items.weapon.melee.RunicBlade;
-import com.coladungeon.items.weapon.melee.Sai;
-import com.coladungeon.items.weapon.melee.Scimitar;
-import com.coladungeon.items.weapon.melee.Shortsword;
-import com.coladungeon.items.weapon.melee.Sickle;
-import com.coladungeon.items.weapon.melee.Spear;
-import com.coladungeon.items.weapon.melee.Sword;
-import com.coladungeon.items.weapon.melee.WarHammer;
-import com.coladungeon.items.weapon.melee.WarScythe;
-import com.coladungeon.items.weapon.melee.Whip;
-import com.coladungeon.items.weapon.melee.WornShortsword;
-import com.coladungeon.items.weapon.missiles.Bolas;
-import com.coladungeon.items.weapon.missiles.FishingSpear;
-import com.coladungeon.items.weapon.missiles.ForceCube;
-import com.coladungeon.items.weapon.missiles.HeavyBoomerang;
-import com.coladungeon.items.weapon.missiles.Javelin;
-import com.coladungeon.items.weapon.missiles.Kunai;
-import com.coladungeon.items.weapon.missiles.MissileWeapon;
-import com.coladungeon.items.weapon.missiles.Shuriken;
-import com.coladungeon.items.weapon.missiles.ThrowingClub;
-import com.coladungeon.items.weapon.missiles.ThrowingHammer;
-import com.coladungeon.items.weapon.missiles.ThrowingKnife;
-import com.coladungeon.items.weapon.missiles.ThrowingSpear;
-import com.coladungeon.items.weapon.missiles.ThrowingSpike;
-import com.coladungeon.items.weapon.missiles.ThrowingStone;
-import com.coladungeon.items.weapon.missiles.Tomahawk;
-import com.coladungeon.items.weapon.missiles.Trident;
-import com.coladungeon.items.weapon.missiles.darts.Dart;
-import com.coladungeon.plants.Blindweed;
-import com.coladungeon.plants.Earthroot;
-import com.coladungeon.plants.Fadeleaf;
-import com.coladungeon.plants.Firebloom;
-import com.coladungeon.plants.Icecap;
-import com.coladungeon.plants.Mageroyal;
-import com.coladungeon.plants.Plant;
-import com.coladungeon.plants.Rotberry;
-import com.coladungeon.plants.Sorrowmoss;
-import com.coladungeon.plants.Starflower;
-import com.coladungeon.plants.Stormvine;
-import com.coladungeon.plants.Sungrass;
-import com.coladungeon.plants.Swiftthistle;
+import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.items.armor.*;
+import com.coladungeon.items.artifacts.*;
+import com.coladungeon.items.bags.*;
+import com.coladungeon.items.food.*;
+import com.coladungeon.items.potions.*;
+import com.coladungeon.items.rings.*;
+import com.coladungeon.items.scrolls.*;
+import com.coladungeon.items.stones.*;
+import com.coladungeon.items.wands.*;
+import com.coladungeon.items.weapon.melee.*;
+import com.coladungeon.items.weapon.missiles.*;
+import com.coladungeon.items.weapon.dart.BigDart;
+import com.coladungeon.plants.*;
+import com.watabou.utils.*;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
+import com.coladungeon.items.potions.exotic.ExoticPotion;
+import com.coladungeon.items.scrolls.exotic.ExoticScroll;
+import com.coladungeon.items.trinkets.ExoticCrystals;
+import com.coladungeon.items.trinkets.Trinket;
+import com.coladungeon.items.trinkets.TrinketCatalyst;
+import com.coladungeon.items.weapon.missiles.darts.Dart;
+// 暂时注释掉未实现的类
+// import com.coladungeon.items.weapon.Pickaxe;
+// import com.coladungeon.items.sundial.DimensionalSundial;
+// import com.coladungeon.items.clover.ThirteenLeafClover;
+// import com.coladungeon.items.traps.TrapMechanism;
 
 public class Generator {
 	
 	public enum Category {
-		TRINKET ( 0, 0, Trinket.class, null),
-
 		WEAPON	( 2, 2, MeleeWeapon.class, null),
 		WEP_T1	( 0, 0, MeleeWeapon.class, null),
 		WEP_T2	( 0, 0, MeleeWeapon.class, null),
 		WEP_T3	( 0, 0, MeleeWeapon.class, null),
 		WEP_T4	( 0, 0, MeleeWeapon.class, null),
 		WEP_T5	( 0, 0, MeleeWeapon.class, null),
-		WEP_EXTRA( 0, 0, MeleeWeapon.class, null),
 		
 		ARMOR	( 2, 1, Armor.class, null),
 		
@@ -237,14 +77,12 @@ public class Generator {
 		MIS_T3  ( 0, 0, MissileWeapon.class, null),
 		MIS_T4  ( 0, 0, MissileWeapon.class, null),
 		MIS_T5  ( 0, 0, MissileWeapon.class, null),
-		MIS_EXTRA( 0, 0, MissileWeapon.class, null),
 		
 		WAND	( 1, 1, Wand.class, null),
 		RING	( 1, 0, Ring.class, null),
 		ARTIFACT( 0, 1, Artifact.class, null),
 		
 		FOOD	( 0, 0, Food.class, null),
-		CUSTOM_FOOD ( 0, 0, com.coladungeon.items.food.CustomFood.class, null),
 		
 		POTION	( 8, 8, Potion.class, null),
 		SEED	( 1, 1, Plant.Seed.class, null),
@@ -252,9 +90,12 @@ public class Generator {
 		SCROLL	( 8, 8, Scroll.class, null),
 		STONE   ( 1, 1, Runestone.class, null),
 		
-		CUSTOM_ITEM ( 0, 0, CustomItem.class, null),
+		GOLD	( 10, 10, Gold.class, ()->new Gold()),
 		
-		GOLD	( 10, 10, Gold.class, ()->new Gold());
+		// Add missing categories
+		TRINKET ( 1, 1, Trinket.class, null),
+		CUSTOM_ITEM ( 0, 0, Item.class, null),
+		CUSTOM_FOOD ( 0, 0, Food.class, null);
 		
 		public Class<?>[] classes;
 
@@ -300,10 +141,9 @@ public class Generator {
 		// to that categories superclass, e.g. bombs are ordered within thrown weapons
 		private static HashMap<Class, ArrayList<Class>> subOrderings = new HashMap<>();
 		static {
-			subOrderings.put(Trinket.class, new ArrayList<>(Arrays.asList(Trinket.class, TrinketCatalyst.class)));
-			subOrderings.put(MissileWeapon.class, new ArrayList<>(Arrays.asList(MissileWeapon.class, Bomb.class)));
-			subOrderings.put(Potion.class, new ArrayList<>(Arrays.asList(Waterskin.class, Potion.class, ExoticPotion.class, Brew.class, Elixir.class, LiquidMetal.class)));
-			subOrderings.put(Scroll.class, new ArrayList<>(Arrays.asList(Scroll.class, ExoticScroll.class, Spell.class, ArcaneResin.class)));
+			subOrderings.put(MissileWeapon.class, new ArrayList<>(Arrays.asList(MissileWeapon.class)));
+			subOrderings.put(Potion.class, new ArrayList<>(Arrays.asList(Waterskin.class, Potion.class, ExoticPotion.class)));
+			subOrderings.put(Scroll.class, new ArrayList<>(Arrays.asList(Scroll.class, ExoticScroll.class)));
 		}
 
 		//in case there are multiple matches, this will return the latest match
@@ -439,7 +279,7 @@ public class Generator {
 		registerTieredItem(Category.WEP_T2, Quarterstaff.class, 2f);
 		registerTieredItem(Category.WEP_T2, Dirk.class, 2f);
 		registerTieredItem(Category.WEP_T2, Sickle.class, 2f);
-		registerTieredItem(Category.WEP_T2, Pickaxe.class, 0f);
+		// registerTieredItem(Category.WEP_T2, Pickaxe.class, 0f);
 		
 		// 初始化T3武器
 		registerTieredItem(Category.WEP_T3, Sword.class, 2f);
@@ -448,6 +288,7 @@ public class Generator {
 		registerTieredItem(Category.WEP_T3, RoundShield.class, 2f);
 		registerTieredItem(Category.WEP_T3, Sai.class, 2f);
 		registerTieredItem(Category.WEP_T3, Whip.class, 2f);
+		registerTieredItem(Category.WEP_T3, BigDart.class, 2f);
 		
 		// 初始化T4武器
 		registerTieredItem(Category.WEP_T4, Longsword.class, 2f);
@@ -457,6 +298,7 @@ public class Generator {
 		registerTieredItem(Category.WEP_T4, AssassinsBlade.class, 2f);
 		registerTieredItem(Category.WEP_T4, Crossbow.class, 2f);
 		registerTieredItem(Category.WEP_T4, Katana.class, 2f);
+		registerTieredItem(Category.WEP_T4, HeavySword.class, 2f);
 		
 		// 初始化T5武器
 		registerTieredItem(Category.WEP_T5, Greatsword.class, 2f);
@@ -540,25 +382,26 @@ public class Generator {
 		registerItem(Category.ARTIFACT, UnstableSpellbook.class, 1f);
 		
 		// 初始化饰品
-		registerItem(Category.TRINKET, RatSkull.class, 1f);
-		registerItem(Category.TRINKET, ParchmentScrap.class, 1f);
-		registerItem(Category.TRINKET, PetrifiedSeed.class, 1f);
 		registerItem(Category.TRINKET, ExoticCrystals.class, 1f);
-		registerItem(Category.TRINKET, MossyClump.class, 1f);
-		registerItem(Category.TRINKET, DimensionalSundial.class, 1f);
-		registerItem(Category.TRINKET, ThirteenLeafClover.class, 1f);
-		registerItem(Category.TRINKET, TrapMechanism.class, 1f);
-		registerItem(Category.TRINKET, MimicTooth.class, 1f);
-		registerItem(Category.TRINKET, WondrousResin.class, 1f);
-		registerItem(Category.TRINKET, EyeOfNewt.class, 1f);
-		registerItem(Category.TRINKET, SaltCube.class, 1f);
-		registerItem(Category.TRINKET, VialOfBlood.class, 1f);
-		registerItem(Category.TRINKET, ShardOfOblivion.class, 1f);
-		registerItem(Category.TRINKET, ChaoticCenser.class, 1f);
+		// registerItem(Category.TRINKET, RatSkull.class, 1f);
+		// registerItem(Category.TRINKET, ParchmentScrap.class, 1f);
+		// registerItem(Category.TRINKET, PetrifiedSeed.class, 1f);
+		// registerItem(Category.TRINKET, MossyClump.class, 1f);
+		// registerItem(Category.TRINKET, DimensionalSundial.class, 1f);
+		// registerItem(Category.TRINKET, ThirteenLeafClover.class, 1f);
+		// registerItem(Category.TRINKET, TrapMechanism.class, 1f);
+		// registerItem(Category.TRINKET, MimicTooth.class, 1f);
+		// registerItem(Category.TRINKET, WondrousResin.class, 1f);
+		// registerItem(Category.TRINKET, EyeOfNewt.class, 1f);
+		// registerItem(Category.TRINKET, SaltCube.class, 1f);
+		// registerItem(Category.TRINKET, VialOfBlood.class, 1f);
+		// registerItem(Category.TRINKET, ShardOfOblivion.class, 1f);
+		// registerItem(Category.TRINKET, ChaoticCenser.class, 1f);
 		
 		// 初始化自定义物品类别
 		// 注意：自定义物品已经在 CustomItem 类的静态初始化块中注册了
 		// 这里我们需要将每个自定义物品单独添加到生成器系统中
+		/*
 		String[] customItemKeys = CustomItem.item_records.keySet().toArray(new String[0]);
 		for (String key : customItemKeys) {
 			final String itemKey = key; // Create final copy for lambda
@@ -576,6 +419,7 @@ public class Generator {
 				return new com.coladungeon.items.food.CustomFood(foodKey);
 			});
 		}
+		*/
 		
 		// 更新有两套概率的类别的总概率
 		updateCategoryTotalProbs();
@@ -695,6 +539,18 @@ public class Generator {
 				return randomCustomItem();
 			case CUSTOM_FOOD:
 				return randomCustomFood();
+			case TRINKET:
+				// For now, return a basic item from the trinket category
+				// This will be improved in future updates
+				if (cat.classes.length > 0) {
+					int idx = Random.chances(cat.probs);
+					if (idx != -1) {
+						@SuppressWarnings("unchecked")
+						Class<? extends Item> cls = (Class<? extends Item>) cat.classes[idx];
+						return random(cls);
+					}
+				}
+				return new Gold(); // Fallback
 			default:
 				if (cat.defaultProbs != null && cat.seed != null){
 					Random.pushGenerator(cat.seed);
@@ -1011,71 +867,7 @@ public class Generator {
 		return registerItem(tierCategory, itemClass, probability);
 	}
 
-	/**
-	 * 生成一个随机的自定义物品
-	 * @return 随机的自定义物品
-	 */
-	public static CustomItem randomCustomItem() {
-		// 从已注册的自定义物品中随机选择
-		if (CustomItem.item_records.isEmpty()) {
-			return null;
-		}
-		
-		// 获取所有物品键
-		String[] keys = CustomItem.item_records.keySet().toArray(new String[0]);
-		if (keys.length == 0) {
-			return null;
-		}
-		
-		// 随机选择一个
-		String key = keys[Random.Int(keys.length)];
-		return new CustomItem(key);
-	}
-	
-	/**
-	 * 根据指定的ID生成一个自定义物品
-	 * @param id 物品ID
-	 * @return 指定ID的自定义物品
-	 */
-	public static CustomItem customItem(String id) {
-		if (CustomItem.item_records.containsKey(id)) {
-			return new CustomItem(id);
-		}
-		return null;
-	}
-	
-	/**
-	 * 生成一个随机的自定义食物
-	 * @return 随机的自定义食物
-	 */
-	public static com.coladungeon.items.food.CustomFood randomCustomFood() {
-		// 从已注册的自定义食物中随机选择
-		if (com.coladungeon.items.food.CustomFood.food_records.isEmpty()) {
-			return null;
-		}
-		
-		// 获取所有食物键
-		String[] keys = com.coladungeon.items.food.CustomFood.food_records.keySet().toArray(new String[0]);
-		if (keys.length == 0) {
-			return null;
-		}
-		
-		// 随机选择一个
-		String key = keys[Random.Int(keys.length)];
-		return new com.coladungeon.items.food.CustomFood(key);
-	}
-	
-	/**
-	 * 根据指定的ID生成一个自定义食物
-	 * @param id 食物ID
-	 * @return 指定ID的自定义食物
-	 */
-	public static com.coladungeon.items.food.CustomFood customFood(String id) {
-		if (com.coladungeon.items.food.CustomFood.food_records.containsKey(id)) {
-			return new com.coladungeon.items.food.CustomFood(id);
-		}
-		return null;
-	}
+
 
 	/**
 	 * 检查指定的类别是否包含指定的类型
@@ -1216,7 +1008,7 @@ public class Generator {
 	public static boolean registerItem(Category category, String itemId, Supplier<Item> makeFunction, float probability1, float probability2) {
 		try {
 			// 创建一个虚拟类来保持与现有系统的兼容性
-			Class<?> dummyClass = CustomItem.class;
+			Class<?> dummyClass = Gold.class; // Use Gold class instead of CustomItem
 			boolean result = registerItem(category, (Class<? extends Item>)dummyClass, probability1, probability2);
 			if (result) {
 				category.make = makeFunction;
@@ -1225,5 +1017,21 @@ public class Generator {
 		} catch (Exception e) {
 			return false;
 		}
+	}
+
+	/**
+	 * Placeholder method for future implementation of custom item generation
+	 */
+	private static Item randomCustomItem() {
+		// This will be implemented in future updates
+		return new Gold();
+	}
+
+	/**
+	 * Placeholder method for future implementation of custom food generation
+	 */
+	private static Item randomCustomFood() {
+		// This will be implemented in future updates
+		return new Food();
 	}
 }

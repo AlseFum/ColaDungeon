@@ -1917,6 +1917,14 @@ public class Hero extends Char {
 		if (cell == -1) {
 			return false;
 		}
+		
+		// 检查是否在瞄准状态下，如果是则不能移动
+		if (buff(com.coladungeon.items.weapon.sniper.SniperGun.SniperAim.class) != null) {
+			if (cell != pos) {
+				GLog.w("瞄准时无法移动！");
+				return false;
+			}
+		}
 
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
 			fieldOfView = new boolean[Dungeon.level.length()];

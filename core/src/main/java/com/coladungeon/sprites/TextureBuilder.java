@@ -180,4 +180,40 @@ public class TextureBuilder {
         
         return builder.buildAndRegister(name);
     }
+    
+    /**
+     * Creates a BFG texture with a futuristic design
+     */
+    public static ImageMapping createBFGTexture() {
+        TextureBuilder builder = new TextureBuilder(16, 16);
+        
+        // Main body of the gun (dark gray)
+        builder.setColor(0xFF333333);
+        builder.fillRect(3, 4, 13, 12);
+        
+        // Energy core (bright green)
+        builder.setColor(0xFF00FF00);
+        builder.fillCircle(8, 8, 2);
+        
+        // Barrel (light gray)
+        builder.setColor(0xFF666666);
+        builder.fillRect(1, 7, 3, 9);
+        
+        // Handle (dark gray)
+        builder.setColor(0xFF333333);
+        builder.fillRect(10, 12, 13, 15);
+        
+        // Energy vents (cyan)
+        builder.setColor(0xFF00FFFF);
+        builder.fillRect(5, 3, 6, 4);
+        builder.fillRect(8, 3, 9, 4);
+        builder.fillRect(11, 3, 12, 4);
+        
+        // Highlights (white)
+        builder.setColor(0xFFFFFFFF);
+        builder.drawLine(3, 6, 12, 6);
+        builder.drawLine(3, 10, 12, 10);
+        
+        return builder.buildAndRegister("bfg");
+    }
 } 

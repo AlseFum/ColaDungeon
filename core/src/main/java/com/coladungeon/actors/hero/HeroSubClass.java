@@ -57,11 +57,41 @@ public enum HeroSubClass {
 	}
 	
 	public String title() {
-		return Messages.get(this, name());
+		switch(this) {
+			case NONE: return "无";
+			case BERSERKER: return "狂战士";
+			case GLADIATOR: return "角斗士";
+			case BATTLEMAGE: return "战斗法师";
+			case WARLOCK: return "术士";
+			case ASSASSIN: return "刺客";
+			case FREERUNNER: return "自由奔跑者";
+			case SNIPER: return "狙击手";
+			case WARDEN: return "守望者";
+			case CHAMPION: return "勇士";
+			case MONK: return "武僧";
+			case PRIEST: return "祭司";
+			case PALADIN: return "圣骑士";
+			default: return name();
+		}
 	}
 
 	public String shortDesc() {
-		return Messages.get(this, name()+"_short_desc");
+		switch(this) {
+			case NONE: return "无特殊能力";
+			case BERSERKER: return "受伤时进入狂暴状态，提高攻击力";
+			case GLADIATOR: return "连击可以触发特殊效果";
+			case BATTLEMAGE: return "近战攻击可以触发法杖效果";
+			case WARLOCK: return "攻击敌人时可以吸取生命值";
+			case ASSASSIN: return "从隐身状态攻击造成额外伤害";
+			case FREERUNNER: return "移动速度更快，闪避率提高";
+			case SNIPER: return "远程攻击更准确，造成更多伤害";
+			case WARDEN: return "获得草药强化效果，可以在草丛中隐身";
+			case CHAMPION: return "可以挑战敌人进行决斗";
+			case MONK: return "空手战斗获得额外效果";
+			case PRIEST: return "可以使用治疗和增益法术";
+			case PALADIN: return "近战能力和神圣魔法的结合";
+			default: return name() + "_short_desc";
+		}
 	}
 
 	public String desc() {

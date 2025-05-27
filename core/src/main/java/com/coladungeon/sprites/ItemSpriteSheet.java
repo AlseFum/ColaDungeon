@@ -287,6 +287,7 @@ public class ItemSpriteSheet {
 	public static final int GREATSHIELD     = WEP_TIER5+4;
 	public static final int GAUNTLETS       = WEP_TIER5+5;
 	public static final int WAR_SCYTHE      = WEP_TIER5+6;
+	public static final int BFG             = WEP_TIER5+7;
 	static{
 		assignItemRect(GREATSWORD,  16, 16);
 		assignItemRect(WAR_HAMMER,  16, 16);
@@ -295,6 +296,7 @@ public class ItemSpriteSheet {
 		assignItemRect(GREATSHIELD, 12, 16);
 		assignItemRect(GAUNTLETS,   13, 15);
 		assignItemRect(WAR_SCYTHE,  14, 15);
+		assignItemRect(BFG,         16, 16);
 	}
 
 	                                                                                    //8 free slots
@@ -347,7 +349,6 @@ public class ItemSpriteSheet {
 	}
 	
 	public static final int DARTS    =                                      xy(1, 11);  //16 slots
-	public static final int DART            = DARTS+0;
 	public static final int ROT_DART        = DARTS+1;
 	public static final int INCENDIARY_DART = DARTS+2;
 	public static final int ADRENALINE_DART = DARTS+3;
