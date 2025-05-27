@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-
 package com.coladungeon.levels.rooms.standard.exit;
 
 import com.coladungeon.Dungeon;
@@ -35,96 +34,93 @@ import com.watabou.utils.Reflection;
 import java.util.ArrayList;
 
 public class ExitRoom extends StandardRoom {
-	
-	@Override
-	public int minWidth() {
-		return Math.max(super.minWidth(), 5);
-	}
-	
-	@Override
-	public int minHeight() {
-		return Math.max(super.minHeight(), 5);
-	}
 
-	@Override
-	public boolean isExit() {
-		return true;
-	}
+    @Override
+    public int minWidth() {
+        return Math.max(super.minWidth(), 5);
+    }
 
-	public void paint(Level level) {
+    @Override
+    public int minHeight() {
+        return Math.max(super.minHeight(), 5);
+    }
 
-		Painter.fill( level, this, Terrain.WALL );
-		Painter.fill( level, this, 1, Terrain.EMPTY );
-		
-		for (Room.Door door : connected.values()) {
-			door.set( Room.Door.Type.REGULAR );
-		}
-		//#+ ExitRoom_closed_entrance_exit default
-		//int exit = level.pointToCell(random( 2 ));
-		//#- ExitRoom_closed_entrance_exit default
-		//#+ ExitRoom_closed_entrance_exit
-int exit = level.pointToCell(random( 2 ));
-		//#- ExitRoom_closed_entrance_exit
-		Painter.set( level, exit, Terrain.EXIT );
-		level.transitions.add(new LevelTransition(level, exit, LevelTransition.Type.REGULAR_EXIT));
-	}
-	
-	@Override
-	public boolean canPlaceCharacter(Point p, Level l) {
-		return super.canPlaceCharacter(p, l) && l.pointToCell(p) != l.exit();
-	}
+    @Override
+    public boolean isExit() {
+        return true;
+    }
 
-	private static ArrayList<Class<?extends StandardRoom>> rooms = new ArrayList<>();
-	static {
-		rooms.add(ExitRoom.class);
+    public void paint(Level level) {
 
-		rooms.add(WaterBridgeExitRoom.class);
-		rooms.add(CircleBasinExitRoom.class);
+        Painter.fill(level, this, Terrain.WALL);
+        Painter.fill(level, this, 1, Terrain.EMPTY);
 
-		rooms.add(ChasmBridgeExitRoom.class);
-		rooms.add(PillarsExitRoom.class);
+        for (Room.Door door : connected.values()) {
+            door.set(Room.Door.Type.REGULAR);
+        }
+        int exit = level.pointToCell(random(2));
+        Painter.set(level, exit, Terrain.EXIT);
+        level.transitions.add(new LevelTransition(level, exit, LevelTransition.Type.REGULAR_EXIT));
+    }
 
-		rooms.add(CaveExitRoom.class);
-		rooms.add(CavesFissureExitRoom.class);
+    @Override
+    public boolean canPlaceCharacter(Point p, Level l) {
+        return super.canPlaceCharacter(p, l) && l.pointToCell(p) != l.exit();
+    }
 
-		rooms.add(HallwayExitRoom.class);
-		rooms.add(StatuesExitRoom.class);
+    private static ArrayList<Class<? extends StandardRoom>> rooms = new ArrayList<>();
 
-		rooms.add(ChasmExitRoom.class);
-		rooms.add(RitualExitRoom.class);
-	}
+    static {
+        rooms.add(ExitRoom.class);
 
-	private static float[][] chances = new float[27][];
-	static {
-		chances[1] =  new float[]{3,  6,1, 0,0, 0,0, 0,0, 0,0};
-		chances[5] =  chances[4] = chances[3] = chances[2] = chances[1];
+        rooms.add(WaterBridgeExitRoom.class);
+        rooms.add(CircleBasinExitRoom.class);
 
-		chances[6] =  new float[]{2,  0,0, 4,4, 0,0, 0,0, 0,0};
-		chances[10] = chances[9] = chances[8] = chances[7] = chances[6];
+        rooms.add(ChasmBridgeExitRoom.class);
+        rooms.add(PillarsExitRoom.class);
 
-		chances[11] = new float[]{2,  0,0, 0,0, 4,4, 0,0, 0,0};
-		chances[15] = chances[14] = chances[13] = chances[12] = chances[11];
+        rooms.add(CaveExitRoom.class);
+        rooms.add(CavesFissureExitRoom.class);
 
-		chances[16] = new float[]{2,  0,0, 0,0, 0,0, 4,4, 0,0};
-		chances[20] = chances[19] = chances[18] = chances[17] = chances[16];
+        rooms.add(HallwayExitRoom.class);
+        rooms.add(StatuesExitRoom.class);
 
-		chances[21] = new float[]{3,  0,0, 0,0, 0,0, 0,0, 6,1};
-		chances[26] = chances[25] = chances[24] = chances[23] = chances[22] = chances[21];
-	}
+        rooms.add(ChasmExitRoom.class);
+        rooms.add(RitualExitRoom.class);
+    }
 
-	public static StandardRoom createExit(){
-		// 支持任意深度，包括负数深度
-		int depth = Dungeon.depth;
-		
-		// 如果深度超出预定义范围，使用合适的默认值
-		if (depth < 1) {
-			// 负数或0深度使用第1层的配置
-			depth = 1;
-		} else if (depth > 26) {
-			// 超过26层使用第26层的配置
-			depth = 26;
-		}
-		
-		return Reflection.newInstance(rooms.get(Random.chances(chances[depth])));
-	}
+    private static float[][] chances = new float[27][];
+
+    static {
+        chances[1] = new float[]{3, 6, 1, 0, 0, 0, 0, 0, 0, 0, 0};
+        chances[5] = chances[4] = chances[3] = chances[2] = chances[1];
+
+        chances[6] = new float[]{2, 0, 0, 4, 4, 0, 0, 0, 0, 0, 0};
+        chances[10] = chances[9] = chances[8] = chances[7] = chances[6];
+
+        chances[11] = new float[]{2, 0, 0, 0, 0, 4, 4, 0, 0, 0, 0};
+        chances[15] = chances[14] = chances[13] = chances[12] = chances[11];
+
+        chances[16] = new float[]{2, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0};
+        chances[20] = chances[19] = chances[18] = chances[17] = chances[16];
+
+        chances[21] = new float[]{3, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1};
+        chances[26] = chances[25] = chances[24] = chances[23] = chances[22] = chances[21];
+    }
+
+    public static StandardRoom createExit() {
+        // 支持任意深度，包括负数深度
+        int depth = Dungeon.depth;
+
+        // 如果深度超出预定义范围，使用合适的默认值
+        if (depth < 1) {
+            // 负数或0深度使用第1层的配置
+            depth = 1;
+        } else if (depth > 26) {
+            // 超过26层使用第26层的配置
+            depth = 26;
+        }
+
+        return Reflection.newInstance(rooms.get(Random.chances(chances[depth])));
+    }
 }

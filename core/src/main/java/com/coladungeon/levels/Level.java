@@ -573,7 +573,9 @@ public abstract class Level implements Bundlable {
 		} else {
 			InterlevelScene.mode = InterlevelScene.Mode.ASCEND;
 		}
+
 		Game.switchScene(InterlevelScene.class);
+
 		return true;
 	}
 

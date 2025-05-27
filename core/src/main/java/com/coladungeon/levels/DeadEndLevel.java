@@ -76,35 +76,13 @@ public class DeadEndLevel extends Level {
 		
 		// 入口（向上）
 		int entrance = (SIZE + 6) * (SIZE + 3) + (SIZE + 6) / 2;
-		map[entrance] = Terrain.ENTRANCE;
 		
-		// 不同分支的入口行为
-		if (Dungeon.branch == 0) {
-			transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
-		} else {
-			transitions.add(new LevelTransition(this,
-					entrance,
-					LevelTransition.Type.BRANCH_ENTRANCE,
-					Dungeon.depth,
-					0,
-					LevelTransition.Type.BRANCH_EXIT));
-		}
+		transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
 		
 		// 出口（向下）
 		int exit = (SIZE + 6) * 3 + (SIZE + 6) / 2;
-		map[exit] = Terrain.EXIT;
 		
-		// 不同分支的出口行为
-		if (Dungeon.branch == 0) {
-			transitions.add(new LevelTransition(this, exit, LevelTransition.Type.REGULAR_EXIT));
-		} else {
-			transitions.add(new LevelTransition(this,
-					exit,
-					LevelTransition.Type.BRANCH_EXIT,
-					Dungeon.depth + 1,
-					0,
-					LevelTransition.Type.REGULAR_ENTRANCE));
-		}
+		transitions.add(new LevelTransition(this, exit, LevelTransition.Type.REGULAR_EXIT));
 		
 		// 创建通道
 		Point entrancePoint = cellToPoint(entrance);
@@ -133,6 +111,10 @@ public class DeadEndLevel extends Level {
 				map[y * width() + exitPoint.x + 1] = Terrain.WATER;
 			}
 		}
+		
+		// 确保梯子位置正确
+		map[entrance] = Terrain.ENTRANCE;
+		map[exit] = Terrain.EXIT;
 		
 		return true;
 	}

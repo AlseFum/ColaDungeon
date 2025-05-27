@@ -32,6 +32,10 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 import com.coladungeon.items.weapon.rifle.Rifle;
+import com.coladungeon.effects.MagicMissile;
+import com.coladungeon.effects.Splash;
+import com.coladungeon.effects.Wound;
+import com.coladungeon.effects.Flare;
 
 import java.util.ArrayList;
 
@@ -98,22 +102,32 @@ public class HandGun extends Gun {
 
         // 射击特效
         curUser.sprite.zap(cell);
-        Sample.INSTANCE.play(Assets.Sounds.HIT);
         
-        // 消耗弹药
-        ammo--;
-        
-        // 造成伤害
-        if (ch != null) {
-            int dmg = damageRoll(ch);
-            ch.damage(dmg, this);
-            
-            // 显示伤害数字
-            ch.sprite.bloodBurstA(ch.sprite.center(), dmg);
-            ch.sprite.flash();
-        }
-        
-        curUser.spendAndNext(DLY);
+        // 子弹轨迹特效
+        MagicMissile.boltFromChar(curUser.sprite.parent,
+                MagicMissile.FORCE,
+                curUser.sprite,
+                cell,
+                () -> {
+                    // 击中特效
+                    if (ch != null) {
+                        int dmg = damageRoll(ch);
+                        ch.damage(dmg, this);
+                        
+                        // 显示伤害数字和击中效果
+                        ch.sprite.bloodBurstA(ch.sprite.center(), dmg);
+                        ch.sprite.flash();
+                        Wound.hit(ch);
+                    }
+                    
+                    // 击中点溅射特效
+                    Splash.at(DungeonTilemap.tileCenterToWorld(cell), 0xFFFFFF, 10);
+                    Sample.INSTANCE.play(Assets.Sounds.HIT);
+                    
+                    // 消耗弹药
+                    ammo--;
+                    curUser.spendAndNext(DLY);
+                });
     }
 
     // 快速射击监听器
@@ -121,6 +135,11 @@ public class HandGun extends Gun {
         @Override
         public void onSelect(Integer target) {
             if (target != null) {
+                // 快速射击特效
+                Flare flare = new Flare(6, 32);
+                flare.color(0xFFFF00, true);
+                flare.show(curUser.sprite, 0.5f);
+                
                 // 使用更短的延迟进行射击
                 float originalDLY = DLY;
                 DLY = QUICKDRAW_SPEED;

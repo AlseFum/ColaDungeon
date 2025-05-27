@@ -23,7 +23,7 @@ public class AmmoHolder extends Bag {
 
     @Override
     public int capacity() {
-        return 30; // 弹药和枪械的容量限制
+        return 140; // 弹药和枪械的容量限制
     }
 
     @Override
