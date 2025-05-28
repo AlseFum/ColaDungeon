@@ -20,7 +20,7 @@ public class EventBus {
     }
     
     // 事件总线 - 存储事件ID到处理器的映射
-    private static HashMap<String, ArrayList<PriorityHandler>> eventBus = new HashMap<>();
+    private final static HashMap<String, ArrayList<PriorityHandler>> eventBus = new HashMap<>();
 
     // 默认优先级值
     public static final int DEFAULT_PRIORITY = 0;

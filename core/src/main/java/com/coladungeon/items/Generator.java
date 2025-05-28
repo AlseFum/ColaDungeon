@@ -40,7 +40,7 @@ import com.coladungeon.items.stones.*;
 import com.coladungeon.items.wands.*;
 import com.coladungeon.items.weapon.melee.*;
 import com.coladungeon.items.weapon.missiles.*;
-import com.coladungeon.items.weapon.dart.BigDart;
+import com.coladungeon.items.weapon.chakram.Chakram;
 import com.coladungeon.plants.*;
 import com.watabou.utils.*;
 import com.watabou.utils.Bundle;
@@ -53,6 +53,7 @@ import com.coladungeon.items.trinkets.ExoticCrystals;
 import com.coladungeon.items.trinkets.Trinket;
 import com.coladungeon.items.trinkets.TrinketCatalyst;
 import com.coladungeon.items.weapon.missiles.darts.Dart;
+import com.coladungeon.items.weapon.heavysword.HeavySword;
 // 暂时注释掉未实现的类
 // import com.coladungeon.items.weapon.Pickaxe;
 // import com.coladungeon.items.sundial.DimensionalSundial;
@@ -288,7 +289,7 @@ public class Generator {
 		registerTieredItem(Category.WEP_T3, RoundShield.class, 2f);
 		registerTieredItem(Category.WEP_T3, Sai.class, 2f);
 		registerTieredItem(Category.WEP_T3, Whip.class, 2f);
-		registerTieredItem(Category.WEP_T3, BigDart.class, 2f);
+
 		
 		// 初始化T4武器
 		registerTieredItem(Category.WEP_T4, Longsword.class, 2f);

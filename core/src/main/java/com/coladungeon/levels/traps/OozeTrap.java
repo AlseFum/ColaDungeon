@@ -1,24 +1,3 @@
-/*
- * Pixel Dungeon
- * Copyright (C) 2012-2015 Oleg Dolya
- *
- * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
-
 package com.coladungeon.levels.traps;
 
 import com.coladungeon.Dungeon;
@@ -27,6 +6,9 @@ import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.buffs.Ooze;
 import com.coladungeon.effects.Splash;
+import com.coladungeon.items.food.Food;
+import com.coladungeon.items.food.OozedFood;
+import com.coladungeon.items.Item;
 import com.watabou.utils.PathFinder;
 
 public class OozeTrap extends Trap {
@@ -38,13 +20,31 @@ public class OozeTrap extends Trap {
 
 	@Override
 	public void activate() {
-
 		for( int i : PathFinder.NEIGHBOURS9) {
 			if (!Dungeon.level.solid[pos + i]) {
 				Splash.at( pos + i, 0x000000, 5);
+				
+				// Handle characters
 				Char ch = Actor.findChar( pos + i );
 				if (ch != null && !ch.flying){
 					Buff.affect(ch, Ooze.class).set( Ooze.DURATION );
+				}
+
+				// Handle items on the ground
+				if (Dungeon.level.heaps.get(pos + i) != null) {
+					for (Item item : Dungeon.level.heaps.get(pos + i).items.toArray(new Item[0])) {
+						// Check if the item is a food item
+						if (item instanceof Food && !(item instanceof OozedFood)) {
+							// Remove the original food
+							Dungeon.level.heaps.get(pos + i).items.remove(item);
+							
+							// Create an OozedFood version
+							OozedFood oozedFood = new OozedFood(item);
+							
+							// Add the OozedFood back to the heap
+							Dungeon.level.heaps.get(pos + i).items.add(oozedFood);
+						}
+					}
 				}
 			}
 		}

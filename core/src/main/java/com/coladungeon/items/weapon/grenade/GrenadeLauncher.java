@@ -1,5 +1,7 @@
 package com.coladungeon.items.weapon.grenade;
 
+import java.util.ArrayList;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
@@ -11,22 +13,17 @@ import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.particles.BlastParticle;
 import com.coladungeon.effects.particles.SmokeParticle;
-import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.items.weapon.ammo.Ammo;
+import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.mechanics.Ballistica;
-import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.utils.EventBus;
 import com.coladungeon.utils.GLog;
-import com.watabou.utils.PathFinder;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Callback;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
-
-import java.util.ArrayList;
-
-import com.coladungeon.utils.EventBus;
 
 public class GrenadeLauncher extends Gun {
 

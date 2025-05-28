@@ -30,27 +30,27 @@ import com.coladungeon.items.Waterskin;
 import com.coladungeon.items.armor.ClothArmor;
 import com.coladungeon.items.artifacts.CloakOfShadows;
 import com.coladungeon.items.artifacts.HolyTome;
+import com.coladungeon.items.bags.AmmoHolder;
 import com.coladungeon.items.food.Food;
 import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfStrength;
 import com.coladungeon.items.scrolls.ScrollOfIdentify;
 import com.coladungeon.items.scrolls.ScrollOfUpgrade;
 import com.coladungeon.items.wands.WandOfMagicMissile;
+import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
+import com.coladungeon.items.weapon.ammo.NormalAmmo;
+import com.coladungeon.items.weapon.bfg.BigFockingGun;
+import com.coladungeon.items.weapon.chakram.Chakram;
+import com.coladungeon.items.weapon.grenade.GrenadeLauncher;
+import com.coladungeon.items.weapon.handgun.HandGun;
+import com.coladungeon.items.weapon.heavysword.HeavySword;
 import com.coladungeon.items.weapon.melee.MagesStaff;
 import com.coladungeon.items.weapon.melee.WornShortsword;
 import com.coladungeon.items.weapon.missiles.ThrowingStone;
+import com.coladungeon.items.weapon.proj.Proj;
+import com.coladungeon.items.weapon.rifle.Rifle;
 import com.coladungeon.items.weapon.shotgun.Shotgun;
 import com.coladungeon.items.weapon.sniper.SniperGun;
-import com.coladungeon.items.weapon.handgun.HandGun;
-import com.coladungeon.items.weapon.rifle.Rifle;
-import com.coladungeon.items.weapon.grenade.GrenadeLauncher;
-import com.coladungeon.items.weapon.dart.BigDart;
-import com.coladungeon.items.weapon.proj.Proj;
-import com.coladungeon.items.weapon.bfg.BigFockingGun;
-import com.coladungeon.items.weapon.melee.HeavySword;
-import com.coladungeon.items.weapon.ammo.NormalAmmo;
-import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
-import com.coladungeon.items.bags.AmmoHolder;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
 /**
@@ -368,9 +368,9 @@ public final class HeroClassSheet {
         grenadeLauncher.identify().collect();
 
         // 添加巨型飞镖到快捷栏
-        BigDart bigDart = new BigDart();
-        bigDart.level(1);
-        bigDart.identify().collect();
+        Chakram chakram = new Chakram();
+        chakram.level(1);
+        chakram.identify().collect();
 
         // 添加投射器到快捷栏
         Proj proj = new Proj();

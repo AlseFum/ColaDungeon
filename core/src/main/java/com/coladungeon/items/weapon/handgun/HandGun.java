@@ -146,6 +146,7 @@ public class HandGun extends Gun {
                 fire(target);
                 DLY = originalDLY;
             }
+            //这里要切换为主武器
         }
 
         @Override

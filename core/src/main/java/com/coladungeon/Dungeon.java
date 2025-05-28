@@ -76,7 +76,6 @@ import com.coladungeon.scenes.GameScene;
 import com.coladungeon.ui.QuickSlotButton;
 import com.coladungeon.ui.Toolbar;
 import com.coladungeon.utils.DungeonSeed;
-import com.coladungeon.utils.HeroEventListener;
 import com.coladungeon.windows.WndResurrect;
 import com.watabou.noosa.Game;
 import com.watabou.utils.BArray;
@@ -276,8 +275,6 @@ public class Dungeon {
 		
 		GamesInProgress.selectedClass.initHero( hero );
 		
-		// Register hero event listener
-		HeroEventListener.register();
 	}
 
 	public static boolean isChallenged( int mask ) {

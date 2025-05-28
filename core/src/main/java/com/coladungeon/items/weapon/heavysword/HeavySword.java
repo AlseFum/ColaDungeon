@@ -1,18 +1,12 @@
-/*
- * Cola Dungeon
- */
-
-package com.coladungeon.items.weapon.melee;
+package com.coladungeon.items.weapon.heavysword;
 
 import com.coladungeon.Assets;
-import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.buffs.Vertigo;
 import com.coladungeon.actors.hero.Hero;
-import com.coladungeon.messages.Messages;
+import com.coladungeon.items.weapon.melee.MeleeWeapon;
 import com.coladungeon.sprites.ItemSpriteSheet;
-import com.coladungeon.utils.GLog;
 import com.watabou.utils.Random;
 
 public class HeavySword extends MeleeWeapon {
@@ -22,43 +16,40 @@ public class HeavySword extends MeleeWeapon {
     private static final int ARMOR_BREAK_AMOUNT = 5; // Amount of armor reduction
 
     {
-        image = ItemSpriteSheet.GREATSWORD; // Temporarily using greatsword sprite
+        image = ItemSpriteSheet.GREATSWORD; 
         hitSound = Assets.Sounds.HIT_SLASH;
-        hitSoundPitch = 0.8f; // Lower pitch for heavier sound
+        hitSoundPitch = 0.8f; 
 
-        tier = 4;
-        DLY = 1.5f; // 50% slower than normal
-        
-        // Bonus reach due to its size
+        tier = 0;
+        DLY = 1.5f; 
         RCH = 2;
     }
 
     @Override
     public int STRReq(int lvl) {
-        return super.STRReq(lvl) + 1; // Requires +1 strength compared to normal weapons
+        return super.STRReq(lvl) + 1;
     }
 
     @Override
     public int min(int lvl) {
-        return tier + 3 + lvl; // Higher base damage
+        return tier + 3 + lvl;
     }
 
     @Override
     public int max(int lvl) {
-        return 5 * (tier + 2) + lvl * (tier + 1); // Higher max damage
+        return 5 * (tier + 2) + lvl * (tier + 1);
     }
 
     @Override
     public int proc(Char attacker, Char defender, int damage) {
-        // Chance to stun the target
+        // 眩晕效果
         if (Random.Float() < STUN_CHANCE) {
             Buff.affect(defender, Vertigo.class, 2f);
             defender.sprite.showStatus(0xFF0000, "眩晕");
         }
 
-        // Chance to deal bonus damage by bypassing some armor
+        // 破甲效果
         if (Random.Float() < ARMOR_BREAK_CHANCE) {
-            // Calculate additional damage from armor penetration
             int bonusDmg = Math.min(ARMOR_BREAK_AMOUNT, defender.drRoll());
             if (bonusDmg > 0) {
                 damage += bonusDmg;
@@ -95,7 +86,6 @@ public class HeavySword extends MeleeWeapon {
 
     @Override
     protected void duelistAbility(Hero hero, Integer target) {
-        // Heavy sword ability: Crushing Blow
-        // This could be implemented later when needed
+        // 预留的特殊能力接口
     }
 } 

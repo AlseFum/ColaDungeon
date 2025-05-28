@@ -114,35 +114,39 @@ public class HeroIcon extends Image {
 	public static final int MONK_ABILITIES  = 110;
 
 	public HeroIcon(HeroSubClass subCls){
-		super( Assets.Interfaces.HERO_ICONS );
-		if (film == null){
-			film = new TextureFilm(texture, SIZE, SIZE);
-		}
-		frame(film.get(subCls.icon()));
+		super(Assets.Interfaces.HERO_ICONS);
+		
+		int iconId = HeroIconManager.getIconForSubclass(subCls);
+		HeroIconManager.ImageMapping mapping = HeroIconManager.getImageMapping(iconId);
+		
+		frame(mapping.rect);
 	}
 
 	public HeroIcon(ArmorAbility abil){
-		super( Assets.Interfaces.HERO_ICONS );
-		if (film == null){
-			film = new TextureFilm(texture, SIZE, SIZE);
-		}
-		frame(film.get(abil.icon()));
+		super(Assets.Interfaces.HERO_ICONS);
+		
+		int iconId = HeroIconManager.getIconForArmorAbility(abil);
+		HeroIconManager.ImageMapping mapping = HeroIconManager.getImageMapping(iconId);
+		
+		frame(mapping.rect);
 	}
 
 	public HeroIcon(ActionIndicator.Action action){
-		super( Assets.Interfaces.HERO_ICONS );
-		if (film == null){
-			film = new TextureFilm(texture, SIZE, SIZE);
-		}
-		frame(film.get(action.actionIcon()));
+		super(Assets.Interfaces.HERO_ICONS);
+		
+		int iconId = action.actionIcon();
+		HeroIconManager.ImageMapping mapping = HeroIconManager.getImageMapping(iconId);
+		
+		frame(mapping.rect);
 	}
 
 	public HeroIcon(ClericSpell spell){
-		super( Assets.Interfaces.HERO_ICONS );
-		if (film == null){
-			film = new TextureFilm(texture, SIZE, SIZE);
-		}
-		frame(film.get(spell.icon()));
+		super(Assets.Interfaces.HERO_ICONS);
+		
+		int iconId = HeroIconManager.getIconForClericSpell(spell);
+		HeroIconManager.ImageMapping mapping = HeroIconManager.getImageMapping(iconId);
+		
+		frame(mapping.rect);
 	}
 
 }

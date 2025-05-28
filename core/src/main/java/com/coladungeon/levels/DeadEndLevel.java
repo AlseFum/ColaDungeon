@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Bones;
-import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.mobs.Mob;
@@ -75,18 +74,18 @@ public class DeadEndLevel extends Level {
 		altarRoom.paint(this);
 		
 		// 入口（向上）
-		int entrance = (SIZE + 6) * (SIZE + 3) + (SIZE + 6) / 2;
+		int _entrance = (SIZE + 6) * (SIZE + 3) + (SIZE + 6) / 2;
 		
-		transitions.add(new LevelTransition(this, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
+		transitions.add(new LevelTransition(this, _entrance, LevelTransition.Type.REGULAR_ENTRANCE));
 		
 		// 出口（向下）
-		int exit = (SIZE + 6) * 3 + (SIZE + 6) / 2;
+		int _exit = (SIZE + 6) * 3 + (SIZE + 6) / 2;
 		
-		transitions.add(new LevelTransition(this, exit, LevelTransition.Type.REGULAR_EXIT));
+		transitions.add(new LevelTransition(this, _exit, LevelTransition.Type.REGULAR_EXIT));
 		
 		// 创建通道
-		Point entrancePoint = cellToPoint(entrance);
-		Point exitPoint = cellToPoint(exit);
+		Point entrancePoint = cellToPoint(_entrance);
+		Point exitPoint = cellToPoint(_exit);
 		
 		// 连接入口到祭坛房间
 		for (int y = altarRoom.top; y < entrancePoint.y; y++) {
@@ -113,8 +112,8 @@ public class DeadEndLevel extends Level {
 		}
 		
 		// 确保梯子位置正确
-		map[entrance] = Terrain.ENTRANCE;
-		map[exit] = Terrain.EXIT;
+		map[_entrance] = Terrain.ENTRANCE;
+		map[_exit] = Terrain.EXIT;
 		
 		return true;
 	}
@@ -128,6 +127,7 @@ public class DeadEndLevel extends Level {
 	protected void createMobs() {
 	}
 
+	@Override
 	public Actor addRespawner() {
 		return null;
 	}
