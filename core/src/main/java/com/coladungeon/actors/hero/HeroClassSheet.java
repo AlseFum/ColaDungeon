@@ -53,6 +53,8 @@ import com.coladungeon.items.weapon.shotgun.Shotgun;
 import com.coladungeon.items.weapon.sniper.SniperGun;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
+import com.coladungeon.items.weapon.melee.vambrace.Vambrace;
+import com.coladungeon.items.weapon.melee.knuckles.Knuckles;
 /**
  * HeroClassSheet 定义了游戏中所有标准职业及其初始化逻辑。
  */
@@ -324,6 +326,16 @@ public final class HeroClassSheet {
         new PotionOfHealing().identify();
         new ScrollOfIdentify().identify();
         new Waterskin().collect();
+
+        // 添加护手
+        Vambrace vambrace = new Vambrace();
+        vambrace.level(1);
+        vambrace.identify().collect();
+
+        // 添加指虎
+        Knuckles knuckles = new Knuckles();
+        knuckles.level(1);
+        knuckles.identify().collect();
 
         // 添加弹药包
         AmmoHolder ammoHolder = new AmmoHolder();
