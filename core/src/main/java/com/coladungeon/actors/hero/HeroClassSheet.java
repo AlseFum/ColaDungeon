@@ -55,6 +55,7 @@ import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
 import com.coladungeon.items.weapon.melee.vambrace.Vambrace;
 import com.coladungeon.items.weapon.melee.knuckles.Knuckles;
+import com.coladungeon.items.weapon.melee.assassin.AssassinDagger;
 /**
  * HeroClassSheet 定义了游戏中所有标准职业及其初始化逻辑。
  */
@@ -326,6 +327,11 @@ public final class HeroClassSheet {
         new PotionOfHealing().identify();
         new ScrollOfIdentify().identify();
         new Waterskin().collect();
+
+        // 添加伏击匕首
+        AssassinDagger dagger = new AssassinDagger();
+        dagger.level(1);
+        dagger.identify().collect();
 
         // 添加护手
         Vambrace vambrace = new Vambrace();
