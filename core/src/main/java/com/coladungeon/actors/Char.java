@@ -1,24 +1,3 @@
-/*
- * Pixel Dungeon
- * Copyright (C) 2012-2015 Oleg Dolya
- *
- * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
-
 package com.coladungeon.actors;
 
 import com.coladungeon.Assets;
@@ -190,126 +169,121 @@ public abstract class Char extends Actor {
 	
 	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
 	
-	// 特质系统
-	private com.coladungeon.actors.traits.TraitSet traits;
+	// // 特质系统
+	// private com.coladungeon.actors.traits.TraitSet traits;
 	
-	/**
-	 * 获取角色的特质集合
-	 * @return 特质集合
-	 */
-	public com.coladungeon.actors.traits.TraitSet traits() {
-		if (traits == null) {
-			traits = new com.coladungeon.actors.traits.TraitSet(this);
-		}
-		return traits;
-	}
+	// /**
+	//  * 获取角色的特质集合
+	//  * @return 特质集合
+	//  */
+	// public com.coladungeon.actors.traits.TraitSet traits() {
+	// 	if (traits == null) {
+	// 		traits = new com.coladungeon.actors.traits.TraitSet(this);
+	// 	}
+	// 	return traits;
+	// }
 	
-	/**
-	 * 添加一个特质到角色
-	 * @param trait 要添加的特质
-	 */
-	public void addTrait(com.coladungeon.actors.traits.Trait trait) {
-		traits().add(trait);
-	}
+	// /**
+	//  * 添加一个特质到角色
+	//  * @param trait 要添加的特质
+	//  */
+	// public void addTrait(com.coladungeon.actors.traits.Trait trait) {
+	// 	traits().add(trait);
+	// }
 	
-	/**
-	 * 添加一个特质到角色，指定强度值
-	 * @param trait 要添加的特质
-	 * @param value 特质的强度值
-	 */
-	public void addTrait(com.coladungeon.actors.traits.Trait trait, float value) {
-		traits().add(trait, value);
-	}
+	// /**
+	//  * 添加一个特质到角色，指定强度值
+	//  * @param trait 要添加的特质
+	//  * @param value 特质的强度值
+	//  */
+	// public void addTrait(com.coladungeon.actors.traits.Trait trait, float value) {
+	// 	traits().add(trait, value);
+	// }
 	
-	/**
-	 * 添加一个特质到角色，通过ID
-	 * @param traitId 特质ID
-	 */
-	public void addTrait(String traitId) {
-		traits().add(traitId);
-	}
+	// /**
+	//  * 添加一个特质到角色，通过ID
+	//  * @param traitId 特质ID
+	//  */
+	// public void addTrait(String traitId) {
+	// 	traits().add(traitId);
+	// }
 	
-	/**
-	 * 添加一个特质到角色，通过ID并指定强度值
-	 * @param traitId 特质ID
-	 * @param value 特质的强度值
-	 */
-	public void addTrait(String traitId, float value) {
-		traits().add(traitId, value);
-	}
+	// /**
+	//  * 添加一个特质到角色，通过ID并指定强度值
+	//  * @param traitId 特质ID
+	//  * @param value 特质的强度值
+	//  */
+	// public void addTrait(String traitId, float value) {
+	// 	traits().add(traitId, value);
+	// }
 	
-	/**
-	 * 移除一个特质
-	 * @param trait 要移除的特质
-	 */
-	public void removeTrait(com.coladungeon.actors.traits.Trait trait) {
-		traits().remove(trait);
-	}
+	// /**
+	//  * 移除一个特质
+	//  * @param trait 要移除的特质
+	//  */
+	// public void removeTrait(com.coladungeon.actors.traits.Trait trait) {
+	// 	traits().remove(trait);
+	// }
 	
-	/**
-	 * 移除一个特质，通过ID
-	 * @param traitId 特质ID
-	 */
-	public void removeTrait(String traitId) {
-		traits().remove(traitId);
-	}
+	// /**
+	//  * 移除一个特质，通过ID
+	//  * @param traitId 特质ID
+	//  */
+	// public void removeTrait(String traitId) {
+	// 	traits().remove(traitId);
+	// }
 	
-	/**
-	 * 检查是否具有某个特质
-	 * @param trait 要检查的特质
-	 * @return 是否拥有特质
-	 */
-	public boolean hasTrait(com.coladungeon.actors.traits.Trait trait) {
-		return traits() != null && traits().has(trait);
-	}
+	// /**
+	//  * 检查是否具有某个特质
+	//  * @param trait 要检查的特质
+	//  * @return 是否拥有特质
+	//  */
+	// public boolean hasTrait(com.coladungeon.actors.traits.Trait trait) {
+	// 	return traits() != null && traits().has(trait);
+	// }
 	
-	/**
-	 * 检查是否具有某个特质，通过ID
-	 * @param traitId 特质ID
-	 * @return 是否拥有特质
-	 */
-	public boolean hasTrait(String traitId) {
-		return traits().has(traitId);
-	}
+	// /**
+	//  * 检查是否具有某个特质，通过ID
+	//  * @param traitId 特质ID
+	//  * @return 是否拥有特质
+	//  */
+	// public boolean hasTrait(String traitId) {
+	// 	return traits().has(traitId);
+	// }
 	
-	/**
-	 * 获取特质的强度值
-	 * @param trait 特质
-	 * @return 强度值
-	 */
-	public float getTraitValue(com.coladungeon.actors.traits.Trait trait) {
-		if (traits() != null) {
-			return traits().getValue(trait);
-		}
-		return 1.0f; // 默认值
-	}
+	// /**
+	//  * 获取特质的强度值
+	//  * @param trait 特质
+	//  * @return 强度值
+	//  */
+	// public float getTraitValue(com.coladungeon.actors.traits.Trait trait) {
+	// 	if (traits() != null) {
+	// 		return traits().getValue(trait);
+	// 	}
+	// 	return 1.0f; // 默认值
+	// }
 	
-	/**
-	 * 获取特质的强度值，通过ID
-	 * @param traitId 特质ID
-	 * @return 强度值
-	 */
-	public float getTraitValue(String traitId) {
-		return traits().getValue(traitId);
-	}
+	// /**
+	//  * 获取特质的强度值，通过ID
+	//  * @param traitId 特质ID
+	//  * @return 强度值
+	//  */
+	// public float getTraitValue(String traitId) {
+	// 	return traits().getValue(traitId);
+	// }
 	
-	/**
-	 * 设置特质的强度值
-	 * @param trait 特质
-	 * @param value 强度值
-	 */
-	public void setTraitValue(com.coladungeon.actors.traits.Trait trait, float value) {
-		traits().setValue(trait, value);
-	}
+	// public void setTraitValue(com.coladungeon.actors.traits.Trait trait, float value) {
+	// 	traits().setValue(trait, value);
+	// }
 	
-	/**
-	 * 设置特质的强度值，通过ID
-	 * @param traitId 特质ID
-	 * @param value 强度值
-	 */
-	public void setTraitValue(String traitId, float value) {
-		traits().setValue(traitId, value);
-	}
+	// /**
+	//  * 设置特质的强度值，通过ID
+	//  * @param traitId 特质ID
+	//  * @param value 强度值
+	//  */
+	// public void setTraitValue(String traitId, float value) {
+	// 	traits().setValue(traitId, value);
+	// }
 
 	@Override
 	protected boolean act() {
@@ -451,7 +425,6 @@ public abstract class Char extends Actor {
 	protected static final String TAG_HT    = "HT";
 	protected static final String TAG_SHLD  = "SHLD";
 	protected static final String BUFFS	    = "buffs";
-	protected static final String TRAITS    = "traits";
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -464,13 +437,6 @@ public abstract class Char extends Actor {
 		bundle.put( TAG_SHLD, cachedShield );
 		
 		bundle.put( BUFFS, buffs );
-		
-		// 保存特质到bundle
-		Bundle traitsBundle = new Bundle();
-		if (traits != null) {
-			traits.storeInBundle(traitsBundle);
-		}
-		bundle.put(TRAITS, traitsBundle);
 	}
 	
 	@Override
@@ -487,13 +453,6 @@ public abstract class Char extends Actor {
 			if (b != null) {
 				((Buff)b).attachTo(this);
 			}
-		}
-		
-		// 恢复特质数据
-		Bundle traitsBundle = bundle.getBundle(TRAITS);
-		if (traitsBundle != null) {
-			traits = new com.coladungeon.actors.traits.TraitSet(this);
-			traits.restoreFromBundle(traitsBundle);
 		}
 	}
 

@@ -1,24 +1,3 @@
-/*
- * Pixel Dungeon
- * Copyright (C) 2012-2015 Oleg Dolya
- *
- * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
-
 package com.coladungeon.actors.mobs;
 
 import com.coladungeon.Assets;
@@ -94,8 +73,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
-import com.coladungeon.actors.traits.MobTraitGenerator;
-import com.coladungeon.actors.traits.Trait;
+// import com.coladungeon.actors.traits.MobTraitGenerator;
+// import com.coladungeon.actors.traits.Trait;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -141,11 +120,7 @@ public abstract class Mob extends Char {
 			HT = Math.round(HT * AscensionChallenge.statModifier(this));
 			HP = Math.round(HT * percent);
 			
-			// 为怪物添加随机特质
-			MobTraitGenerator.assignTraits(this);
 			
-			// 测试强制添加特质
-			testAddTraits(this);
 			
 			firstAdded = false;
 		}
@@ -1459,19 +1434,6 @@ public abstract class Mob extends Char {
 		heldAllies.clear();
 	}
 
-	public static void testAddTraits(Mob mob) {
-		// 清空现有特质
-		if (mob.traits() != null && !mob.traits().getTraits().isEmpty()) {
-			ArrayList<Trait> existingTraits = new ArrayList<>(mob.traits().getTraits());
-			for (Trait t : existingTraits) {
-				mob.removeTrait(t);
-			}
-		}
-		
-		// 强制给怪物添加几个特质
-		mob.addTrait("strong", 1.5f);
-		mob.addTrait("fiery", 1.2f);
-		mob.addTrait("aggressive", 1.0f);
-	}
+
 }
 

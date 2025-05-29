@@ -161,6 +161,7 @@ public class HeroClassBuilder {
         heroClass.armorAbilitiesSupplier = abilities;
         heroClass.masteryBadgeSupplier = masteryBadge;
         heroClass.initializer = initializer;
+        
         return heroClass;
     }
 

@@ -1036,6 +1036,7 @@ public enum Talent {
 
 		//tier4
 		//TBD
+		
 	}
 
 	public static void initSubclassTalents( Hero hero ){

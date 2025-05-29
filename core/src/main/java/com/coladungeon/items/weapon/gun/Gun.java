@@ -364,4 +364,43 @@ public abstract class Gun extends Weapon {
         this.ammo = this.maxAmmo;
         this.loadedAmmoType = type;
     }
+
+    @Override
+    public int min(int lvl) {
+        return 2 + lvl;
+    }
+
+    @Override
+    public int max(int lvl) {
+        return 8 + 2 * lvl;
+    }
+
+    @Override
+    public int STRReq(int lvl) {
+        return 8 + lvl;
+    }
+
+    @Override
+    public float accuracyFactor(Char owner, Char target) {
+        float acc = super.accuracyFactor(owner, target);
+        return acc * 1.5f; // 枪械基础命中率提升50%
+    }
+
+    @Override
+    public int proc(Char attacker, Char defender, int damage) {
+        return super.proc(attacker, defender, damage);
+    }
+
+    @Override
+    public String desc() {
+        StringBuilder desc = new StringBuilder();
+        desc.append("一把威力强大的枪械武器。\n\n");
+        
+        desc.append("_基础属性:_\n");
+        desc.append("- 基础伤害：").append(min(0)).append("-").append(max(0)).append("\n");
+        desc.append("- 力量需求：").append(STRReq(0)).append("\n");
+        desc.append("- 命中率提升：50%\n");
+        
+        return desc.toString();
+    }
 } 

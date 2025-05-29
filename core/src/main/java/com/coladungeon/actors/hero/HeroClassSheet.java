@@ -26,12 +26,14 @@ import com.coladungeon.actors.hero.abilities.warrior.HeroicLeap;
 import com.coladungeon.actors.hero.abilities.warrior.Shockwave;
 import com.coladungeon.items.Ankh;
 import com.coladungeon.items.BrokenSeal;
+import com.coladungeon.items.TengusMask;
 import com.coladungeon.items.Waterskin;
 import com.coladungeon.items.armor.ClothArmor;
 import com.coladungeon.items.artifacts.CloakOfShadows;
 import com.coladungeon.items.artifacts.HolyTome;
 import com.coladungeon.items.bags.AmmoHolder;
 import com.coladungeon.items.food.Food;
+import com.coladungeon.items.potions.PotionOfExperience;
 import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfStrength;
 import com.coladungeon.items.scrolls.ScrollOfIdentify;
@@ -56,6 +58,7 @@ import com.coladungeon.utils.EventBus;
 import com.coladungeon.items.weapon.melee.vambrace.Vambrace;
 import com.coladungeon.items.weapon.melee.knuckles.Knuckles;
 import com.coladungeon.items.weapon.melee.assassin.AssassinDagger;
+import com.coladungeon.items.TengusMask;
 /**
  * HeroClassSheet 定义了游戏中所有标准职业及其初始化逻辑。
  */
@@ -229,50 +232,50 @@ public final class HeroClassSheet {
         })
         .register();
 
-    public static final HeroClass HEAVY_SQUAD = registerStandardClass("heavy_squad")
-        .subClasses(HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR)
-        .title("重装部队")
-        .desc("重装部队是一个特殊的近战职业，起始装备更好。\n\n重装部队的特点：\n- 起始装备：+1短剑和+1布甲（带印记）\n- 额外的治疗药水和投掷石头\n- 自动识别：\n  * 鉴定卷轴\n  * 力量药水\n  * 升级卷轴")
-        .shortDesc("重装部队是一个特殊的近战职业，起始装备更好。")
-        .unlockMsg("The Heavy Squad starts with upgraded equipment including a +1 short sword and +1 cloth armor with a broken seal. They also carry more healing potions and throwing stones.\n\nThe Heavy Squad is automatically unlocked.")
-        .spritesheet(Assets.Sprites.WARRIOR)
-        .splashArt(Assets.Splashes.WARRIOR)
-        .abilities(new HeroicLeap(), new Shockwave(), new Endure())
-        .masteryBadge(Badges.Badge.MASTERY_HEAVY_SQUAD)
-        .unlocked(true)
-        .initializer(hero -> {
-            hero.heroClass = HeroClass.HEAVY_SQUAD;
-            initCommon(hero);
+    // public static final HeroClass HEAVY_SQUAD = registerStandardClass("heavy_squad")
+    //     .subClasses(HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR)
+    //     .title("重装部队")
+    //     .desc("重装部队是一个特殊的近战职业，起始装备更好。\n\n重装部队的特点：\n- 起始装备：+1短剑和+1布甲（带印记）\n- 额外的治疗药水和投掷石头\n- 自动识别：\n  * 鉴定卷轴\n  * 力量药水\n  * 升级卷轴")
+    //     .shortDesc("重装部队是一个特殊的近战职业，起始装备更好。")
+    //     .unlockMsg("The Heavy Squad starts with upgraded equipment including a +1 short sword and +1 cloth armor with a broken seal. They also carry more healing potions and throwing stones.\n\nThe Heavy Squad is automatically unlocked.")
+    //     .spritesheet(Assets.Sprites.WARRIOR)
+    //     .splashArt(Assets.Splashes.WARRIOR)
+    //     .abilities(new HeroicLeap(), new Shockwave(), new Endure())
+    //     .masteryBadge(Badges.Badge.MASTERY_HEAVY_SQUAD)
+    //     .unlocked(true)
+    //     .initializer(hero -> {
+    //         hero.heroClass = HeroClass.HEAVY_SQUAD;
+    //         initCommon(hero);
             
-            // 升级的短剑
-            WornShortsword sword = new WornShortsword();
-            sword.level(1);
-            (hero.belongings.weapon = sword).identify();
+    //         // 升级的短剑
+    //         WornShortsword sword = new WornShortsword();
+    //         sword.level(1);
+    //         (hero.belongings.weapon = sword).identify();
 
-            // 投掷石头
-            ThrowingStone stones = new ThrowingStone();
-            stones.quantity(5).collect();
-            Dungeon.quickslot.setSlot(0, stones);
+    //         // 投掷石头
+    //         ThrowingStone stones = new ThrowingStone();
+    //         stones.quantity(5).collect();
+    //         Dungeon.quickslot.setSlot(0, stones);
 
-            // 升级的护甲和印记
-            if (hero.belongings.armor != null) {
-                hero.belongings.armor.affixSeal(new BrokenSeal());
-                hero.belongings.armor.level(1);
-                Catalog.setSeen(BrokenSeal.class);
-            }
+    //         // 升级的护甲和印记
+    //         if (hero.belongings.armor != null) {
+    //             hero.belongings.armor.affixSeal(new BrokenSeal());
+    //             hero.belongings.armor.level(1);
+    //             Catalog.setSeen(BrokenSeal.class);
+    //         }
 
-            // 自动识别和额外物品
-            new PotionOfStrength().identify();
-            new ScrollOfUpgrade().identify();
-            new PotionOfHealing().quantity(2).collect();
-        })
-        .register();
+    //         // 自动识别和额外物品
+    //         new PotionOfStrength().identify();
+    //         new ScrollOfUpgrade().identify();
+    //         new PotionOfHealing().quantity(2).collect();
+    //     })
+    //     .register();
 
         static{
             registerStandardClass("Peter")
             .title("Peter")
             .desc("from family guy").initializer(hero->{
-                hero.heroClass = HeroClass.WARRIOR; // 使用战士作为基础职业
+                hero.heroClass = registeredClasses.get("Peter");
                 initCommon(hero);
                 
             })
@@ -361,7 +364,7 @@ public final class HeroClassSheet {
         // 添加散弹枪作为主武器
         Shotgun shotgun = new Shotgun();
         shotgun.level(1);
-        (hero.belongings.weapon = shotgun).identify();
+        (hero.belongings.weapon = shotgun).identify().collect();
 
         // 添加狙击枪到快捷栏
         SniperGun sniperGun = new SniperGun();
@@ -402,20 +405,19 @@ public final class HeroClassSheet {
         // 添加弹药
         // 普通弹药
         NormalAmmo normalAmmo = new NormalAmmo();
-        normalAmmo.identify().collect();
+        normalAmmo.identify().quantity(1145).collect();
         
         // 爆炸弹药
         ExplosiveAmmo explosiveAmmo = new ExplosiveAmmo();
         explosiveAmmo.identify().collect();
 
-        // 添加500个已祝福的重生十字架
+        // 添加5个已祝福的重生十字架
         for (int i = 0; i < 5; i++) {
             Ankh ankh = new Ankh();
             ankh.bless();
             ankh.identify().collect();
         }
-
         // 事件通知
         EventBus.fire("Hero:created", "hero", hero);
     }
-} 
+};

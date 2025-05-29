@@ -117,9 +117,7 @@ abstract public class ClassArmor extends Armor {
 				classArmor = new DuelistArmor();
 		} else if (owner.heroClass == HeroClass.CLERIC) {
 				classArmor = new ClericArmor();
-		} else if (owner.heroClass == HeroClass.HEAVY_SQUAD) {
-			classArmor = new WarriorArmor(); // 重装小队使用战士装甲
-		}
+		} 
 		
 		classArmor.level(armor.trueLevel());
 		classArmor.tier = armor.tier;
@@ -315,9 +313,7 @@ abstract public class ClassArmor extends Armor {
 			return Badges.Badge.MASTERY_DUELIST;
 		} else if (owner.equals(HeroClass.CLERIC)) {
 			return Badges.Badge.MASTERY_CLERIC;
-		} else if (owner.equals(HeroClass.HEAVY_SQUAD)) {
-			return Badges.Badge.MASTERY_HEAVY_SQUAD;
-		}
+		} 
 		return null;
 	}
 
@@ -399,9 +395,7 @@ abstract public class ClassArmor extends Armor {
 			return charge >= 20;
 		} else if (hero.heroClass == HeroClass.CLERIC) {
 			return charge >= 20;
-		} else if (hero.heroClass == HeroClass.HEAVY_SQUAD) {
-			return charge >= 35;
-		} else {
+		}  else {
 			return charge >= 30;
 		}
 	}

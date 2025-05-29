@@ -21,10 +21,16 @@
 
 package com.coladungeon.levels;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Challenges;
-import com.coladungeon.Dungeon;
 import com.coladungeon.ColaDungeon;
+import com.coladungeon.Dungeon;
 import com.coladungeon.Statistics;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
@@ -110,12 +116,6 @@ import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 import com.watabou.utils.SparseArray;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 
 public abstract class Level implements Bundlable {
 	
@@ -754,9 +754,7 @@ public abstract class Level implements Bundlable {
 			
 			// 确保正确初始化
 			Actor.ensureActorAdded(mob);
-			
-			// 测试：强制给怪物添加特质
-			Mob.testAddTraits(mob);
+
 			
 			if (!mob.buffs(ChampionEnemy.class).isEmpty()){
 				GLog.w(Messages.get(ChampionEnemy.class, "warn"));

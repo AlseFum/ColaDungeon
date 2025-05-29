@@ -17,7 +17,7 @@ import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.Flare;
 import com.coladungeon.effects.Splash;
 import com.coladungeon.effects.particles.BlastParticle;
-import com.coladungeon.items.weapon.Weapon;
+import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
@@ -25,7 +25,7 @@ import com.watabou.utils.Point;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
-public class Shotgun extends Weapon {
+public class Shotgun extends Gun {
 
     private static final float CONE_ANGLE = 60f; // 60度的锥形范围
     private static final int MAX_DISTANCE = 4; // 最大射程
@@ -38,6 +38,11 @@ public class Shotgun extends Weapon {
         DLY = 0.5f;
         RCH = MAX_DISTANCE; // 设置最大射程
         ACC = 2f; // 提高命中率
+        
+        // 设置弹药相关参数
+        maxAmmo = 6; // 弹夹容量
+        ammo = maxAmmo; // 初始装满弹药
+        reloadTime = 1.5f; // 装弹时间
     }
 
     @Override
@@ -67,30 +72,36 @@ public class Shotgun extends Weapon {
     }
 
     @Override
-    public int proc(Char attacker, Char defender, int damage) {
+    protected void fire(int targetPos) {
+        // 消耗弹药
+        consumeAmmo(1);
+        
         // 获取锥形范围内的目标格子
-        ArrayList<Integer> targetCells = getConeTargets(attacker.pos, defender.pos);
+        ArrayList<Integer> targetCells = getConeTargets(curUser.pos, targetPos);
         
         // 对锥形范围内的所有敌人造成伤害
         for (int cell : targetCells) {
             Char target = Actor.findChar(cell);
-            if (target != null && target != attacker) {
+            if (target != null && target != curUser) {
                 // 计算距离衰减的伤害
-                float distance = Dungeon.level.distance(attacker.pos, cell);
-                float damageMultiplier = Math.max(0.2f, 1f - (distance * 0.2f)); // 最小20%伤害，衰减更慢
+                float distance = Dungeon.level.distance(curUser.pos, cell);
+                float damageMultiplier = Math.max(0.2f, 1f - (distance * 0.2f)) * getAmmoDamageMultiplier();
                 
                 // 近距离额外伤害加成
                 if (distance <= 1) {
                     damageMultiplier *= 1.5f;
                 }
                 
-                int targetDamage = Math.round(damage * damageMultiplier);
+                int damage = Math.round(damageRoll(curUser) * damageMultiplier);
                 
                 // 在目标头上显示红色标记
                 new Flare(6, 32).color(0xFF0000, true).show(target.sprite, 0.5f);
                 
                 // 造成伤害
-                target.damage(targetDamage, this);
+                target.damage(damage, this);
+                
+                // 应用弹药效果
+                applyAmmoEffects(target, damage);
                 
                 // 击退效果
                 if (Random.Int(2) == 0) {
@@ -99,7 +110,7 @@ public class Shotgun extends Weapon {
                 
                 // 流血效果（近距离更容易触发）
                 if (Random.Float() > distance * 0.25f) {
-                    Buff.affect(target, Bleeding.class).set(Math.round(targetDamage * 0.5f));
+                    Buff.affect(target, Bleeding.class).set(Math.round(damage * 0.5f));
                 }
                 
                 // 视觉效果
@@ -111,7 +122,11 @@ public class Shotgun extends Weapon {
         // 播放音效
         Sample.INSTANCE.play(Assets.Sounds.BLAST, 0.8f, Random.Float(0.85f, 1.15f));
         
-        return super.proc(attacker, defender, damage);
+        // 添加射击光束特效
+        shootBeam(targetPos);
+        
+        // 让英雄完成动作
+        curUser.spendAndNext(1f);
     }
 
     private ArrayList<Integer> getConeTargets(int attackerPos, int targetPos) {
@@ -176,8 +191,8 @@ public class Shotgun extends Weapon {
         desc.append("- 距离越近，命中率和伤害越高\n\n");
         
         desc.append("_升级效果:_\n");
-        desc.append("- 基础伤害：").append(min()).append("-").append(max()).append("\n");
-        desc.append("- 力量需求：").append(STRReq()).append("\n");
+        desc.append("- 基础伤害：").append(min(0)).append("-").append(max(0)).append("\n");
+        desc.append("- 力量需求：").append(STRReq(0)).append("\n");
         desc.append("- 每级提升：\n");
         desc.append("  * 最小伤害+2\n");
         desc.append("  * 最大伤害+5\n");

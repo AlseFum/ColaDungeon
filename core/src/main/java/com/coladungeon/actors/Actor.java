@@ -1,25 +1,6 @@
-/*
- * Pixel Dungeon
- * Copyright (C) 2012-2015 Oleg Dolya
- *
- * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
-
 package com.coladungeon.actors;
+
+import java.util.HashSet;
 
 import com.coladungeon.Dungeon;
 import com.coladungeon.Statistics;
@@ -30,8 +11,6 @@ import com.watabou.noosa.Game;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.SparseArray;
-
-import java.util.HashSet;
 
 public abstract class Actor implements Bundlable {
 	
@@ -341,13 +320,13 @@ public abstract class Actor implements Bundlable {
 		all.add( actor );
 		actor.time += time;
 		
-		// 如果是Mob且已经有特质，标记为非首次添加
-		if (actor instanceof Mob) {
-			Mob mob = (Mob)actor;
-			if (mob.traits() != null && !mob.traits().getTraits().isEmpty()) {
-				mob.firstAdded = false;
-			}
-		}
+		// // 如果是Mob且已经有特质，标记为非首次添加
+		// if (actor instanceof Mob) {
+		// 	Mob mob = (Mob)actor;
+		// 	if (mob.traits() != null && !mob.traits().getTraits().isEmpty()) {
+		// 		mob.firstAdded = false;
+		// 	}
+		// }
 		
 		actor.onAdd();
 		

@@ -1,5 +1,10 @@
 package com.coladungeon.levels;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import com.coladungeon.Bones;
 import com.coladungeon.Challenges;
 import com.coladungeon.Dungeon;
@@ -60,11 +65,6 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Point;
 import com.watabou.utils.Random;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 
 public abstract class RegularLevel extends Level {
 	
@@ -244,8 +244,8 @@ public abstract class RegularLevel extends Level {
 				// 确保正确初始化
 				Actor.ensureActorAdded(mob);
 				
-				// 测试：强制给怪物添加特质
-				Mob.testAddTraits(mob);
+				// // 测试：强制给怪物添加特质
+				// Mob.testAddTraits(mob);
 				
 				mob = null;
 
@@ -273,8 +273,8 @@ public abstract class RegularLevel extends Level {
 						// 确保正确初始化
 						Actor.ensureActorAdded(mob);
 						
-						// 测试：强制给第二个怪物添加特质
-						Mob.testAddTraits(mob);
+						// // 测试：强制给第二个怪物添加特质
+						// Mob.testAddTraits(mob);
 						
 						mob = null;
 					}

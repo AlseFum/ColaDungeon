@@ -4,7 +4,7 @@ import com.coladungeon.items.Item;
 import com.coladungeon.items.weapon.ammo.Ammo;
 import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.sprites.ItemSpriteSheet;
-
+import com.coladungeon.items.Ankh;
 public class AmmoHolder extends Bag {
 
     {
@@ -16,7 +16,7 @@ public class AmmoHolder extends Bag {
     @Override
     public boolean canHold(Item item) {
         if (super.canHold(item)) {
-            return item instanceof Ammo || item instanceof Gun;
+            return item instanceof Ammo || item instanceof Gun || item instanceof Ankh;
         }
         return false;
     }

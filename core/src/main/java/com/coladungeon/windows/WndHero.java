@@ -1,24 +1,3 @@
-/*
- * Pixel Dungeon
- * Copyright (C) 2012-2015 Oleg Dolya
- *
- * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
-
 package com.coladungeon.windows;
 
 import com.coladungeon.Dungeon;
@@ -60,7 +39,6 @@ public class WndHero extends WndTabbed {
 	private StatsTab stats;
 	private TalentsTab talents;
 	private BuffsTab buffs;
-	private TraitsTab traitsTab;
 
 	public static int lastIdx = 0;
 
@@ -81,11 +59,6 @@ public class WndHero extends WndTabbed {
 		add( buffs );
 		buffs.setRect(0, 0, WIDTH, HEIGHT);
 		buffs.setupList();
-		
-		traitsTab = new TraitsTab();
-		add( traitsTab );
-		traitsTab.setRect(0, 0, WIDTH, HEIGHT);
-		traitsTab.setupList();
 		
 		add( new IconTab( Icons.get(Icons.RANKINGS) ) {
 			protected void select( boolean value ) {
@@ -114,15 +87,6 @@ public class WndHero extends WndTabbed {
 				buffs.visible = buffs.active = selected;
 			}
 		} );
-		
-		// Add traits tab
-		add( new IconTab( Icons.get(Icons.INFO) ) {  // Using INFO icon, you can replace with a more appropriate one if available
-			protected void select( boolean value ) {
-				super.select( value );
-				if (selected) lastIdx = 3;
-				traitsTab.visible = traitsTab.active = selected;
-			}
-		} );
 
 		layoutTabs();
 
@@ -148,7 +112,6 @@ public class WndHero extends WndTabbed {
 		super.offset(xOffset, yOffset);
 		talents.layout();
 		buffs.layout();
-		traitsTab.layout();
 	}
 
 	private class StatsTab extends Group {
@@ -255,12 +218,18 @@ public class WndHero extends WndTabbed {
 	public class TalentsTab extends Component {
 
 		TalentsPane pane;
-
+		public TalentsTab(){
+			super();
+			System.out.println("[WndHero::TalentsTab]");
+		}
 		@Override
 		protected void createChildren() {
 			super.createChildren();
 			pane = new TalentsPane(TalentButton.Mode.UPGRADE);
 			add(pane);
+			System.out.println(
+				"[WndHero::TalentsTab::createChildren]:"+
+				pane.toString());
 		}
 
 		@Override
@@ -363,163 +332,6 @@ public class WndHero extends WndTabbed {
 				} else {
 					return false;
 				}
-			}
-		}
-	}
-
-	private class TraitsTab extends Component {
-		
-		private static final int GAP = 2;
-		
-		private float pos;
-		private ScrollPane traitsList;
-		private ArrayList<TraitSlot> slots = new ArrayList<>();
-		
-		@Override
-		protected void createChildren() {
-			super.createChildren();
-			
-			traitsList = new ScrollPane( new Component() ) {
-				@Override
-				public void onClick( float x, float y ) {
-					int size = slots.size();
-					for (int i=0; i < size; i++) {
-						if (slots.get( i ).onClick( x, y )) {
-							break;
-						}
-					}
-				}
-			};
-			add( traitsList );
-		}
-		
-		@Override
-		protected void layout() {
-			super.layout();
-			traitsList.setRect( 0, 0, width, height );
-		}
-		
-		public void setupList() {
-			Component content = traitsList.content();
-			content.clear();
-			slots.clear();
-			
-			pos = 0;
-			
-			ArrayList<com.coladungeon.actors.traits.Trait> traits = Dungeon.hero.traits().getTraits();
-			
-			if (traits.isEmpty()) {
-				RenderedTextBlock noTraits = PixelScene.renderTextBlock("未发现特质", 8);
-				noTraits.hardlight(0xAAAAAA);
-				content.add(noTraits);
-				noTraits.setPos((WIDTH - noTraits.width())/2, pos);
-				pos = noTraits.bottom() + GAP;
-			} else {
-				// 按类别分组特质
-				for (com.coladungeon.actors.traits.Trait.TraitCategory category : 
-						com.coladungeon.actors.traits.Trait.TraitCategory.values()) {
-					
-					ArrayList<com.coladungeon.actors.traits.Trait> categoryTraits = new ArrayList<>();
-					for (com.coladungeon.actors.traits.Trait trait : traits) {
-						if (trait.getCategory() == category) {
-							categoryTraits.add(trait);
-						}
-					}
-					
-					if (!categoryTraits.isEmpty()) {
-						// 添加类别标题
-						String categoryName = "";
-						switch (category) {
-							case PHYSICAL: categoryName = "物理特质"; break;
-							case ELEMENTAL: categoryName = "元素特质"; break;
-							case BEHAVIOR: categoryName = "行为特质"; break;
-							case SPECIAL: categoryName = "特殊特质"; break;
-							case MENTAL: categoryName = "心智特质"; break;
-						}
-						RenderedTextBlock categoryHeader = PixelScene.renderTextBlock(
-							categoryName, 8);
-						categoryHeader.hardlight(TITLE_COLOR);
-						content.add(categoryHeader);
-						categoryHeader.setPos((WIDTH - categoryHeader.width())/2, pos);
-						pos = categoryHeader.bottom() + GAP;
-						
-						// 添加该类别的特质
-						for (com.coladungeon.actors.traits.Trait trait : categoryTraits) {
-							TraitSlot slot = new TraitSlot(trait);
-							slot.setRect(0, pos, WIDTH, slot.height());
-							content.add(slot);
-							slots.add(slot);
-							pos = slot.bottom() + GAP;
-						}
-						
-						pos += 4; // 类别之间的额外空间
-					}
-				}
-			}
-			
-			content.setSize(WIDTH, pos);
-			traitsList.setSize(WIDTH, height);
-			traitsList.scrollTo(0, 0);
-		}
-		
-		@Override
-		public Component setRect(float x, float y, float w, float h) {
-			super.setRect(x, y, w, h);
-			setupList();
-			return this;
-		}
-		
-		private class TraitSlot extends Component {
-			
-			private com.coladungeon.actors.traits.Trait trait;
-			private RenderedTextBlock name;
-			private RenderedTextBlock desc;
-			private RenderedTextBlock value;
-			
-			public TraitSlot(com.coladungeon.actors.traits.Trait trait) {
-				super();
-				this.trait = trait;
-				
-				name = PixelScene.renderTextBlock(trait.name(), 8);
-				add(name);
-				
-				float traitValue = Dungeon.hero.getTraitValue(trait);
-				if (traitValue != 1.0f) {
-					value = PixelScene.renderTextBlock(Float.toString(traitValue), 8);
-					add(value);
-				}
-				
-				String traitDesc = trait.desc();
-				if (traitDesc != null && !traitDesc.isEmpty()) {
-					desc = PixelScene.renderTextBlock(traitDesc, 6);
-					desc.hardlight(0xAAAAAA);
-					add(desc);
-				}
-			}
-			
-			@Override
-			protected void layout() {
-				super.layout();
-				
-				name.setPos(3, 1);
-				height = name.height() + 2;
-				
-				if (value != null) {
-					value.setPos(width - value.width() - 3, 1);
-				}
-				
-				if (desc != null) {
-					desc.maxWidth((int)(width - 6));
-					desc.setPos(3, name.bottom() + 1);
-					height = desc.bottom() + 1;
-				}
-			}
-			
-			protected boolean onClick(float x, float y) {
-				if (inside(x, y)) {
-					return true;
-				}
-				return false;
 			}
 		}
 	}
