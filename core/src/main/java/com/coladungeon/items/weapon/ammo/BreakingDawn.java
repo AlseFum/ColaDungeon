@@ -1,16 +1,14 @@
 package com.coladungeon.items.weapon.ammo;
 
+import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
-import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.buffs.FlavourBuff;
-import com.coladungeon.Dungeon;
-import com.coladungeon.scenes.GameScene;
+import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.particles.BlastParticle;
 import com.coladungeon.utils.GLog;
-import com.coladungeon.utils.EventBus;
 import com.watabou.utils.Random;
 
 public class BreakingDawn extends Ammo {
@@ -60,6 +58,7 @@ public class BreakingDawn extends Ammo {
                     }
                 }
             }
+            hero.spendAndNext(0.5f);
         }
     }
 
