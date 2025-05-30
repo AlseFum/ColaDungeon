@@ -26,21 +26,6 @@ public class Shotgun extends Gun {
     private static final int MAX_DISTANCE = 4; // 最大射程
     private static final int PELLET_COUNT = 8; // 霰弹数量
 
-    {
-        image = ItemSpriteSheet.CROSSBOW;
-        hitSound = Assets.Sounds.BLAST;
-        hitSoundPitch = 1.2f;
-
-        DLY = 1f;
-        RCH = 1; // RCH只是近战伤害
-        ACC = 1f; // 提高命中率
-        
-        // 设置弹药相关参数
-        maxAmmo = 12; // 弹夹容量
-        ammo = maxAmmo; // 初始装满弹药
-        reloadTime = 1.5f; // 装弹时间
-        usesTargeting = true;
-    }
     static {
         EventBus.register("Hero:created",(hero)->{
             new Shotgun().collect();

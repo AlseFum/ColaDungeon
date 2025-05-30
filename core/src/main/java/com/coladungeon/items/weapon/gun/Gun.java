@@ -16,8 +16,7 @@ import com.coladungeon.items.weapon.ammo.CartridgeEffect;
 import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
-import com.coladungeon.sprites.ItemSpriteManager;
-import com.coladungeon.utils.EventBus;
+import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
@@ -29,26 +28,19 @@ public class Gun extends Weapon {
     protected static final String AC_RELOAD = "装弹";
     protected static final String AC_FIRE = "开火";
 
-    protected int ammo = 6;
-    protected int maxAmmo = 6;
+    protected int ammo = 8;
+    protected int maxAmmo = 8;
     public Cartridge cartridge;
     protected float reloadTime = 1f;
 
     {
-        image = ItemSpriteManager.ByName("square");
+        image = ItemSpriteSheet.CROSSBOW;
         hitSound = Assets.Sounds.HIT;
         hitSoundPitch = 1.2f;
 
         usesTargeting = true;
         defaultAction = AC_FIRE;
-        cartridge = new Cartridge(10, CartridgeEffect.Explosive);
-    }
-
-    static {
-        EventBus.register("Hero:created", (data) -> {
-            new Gun().collect();
-            return null;
-        });
+        cartridge = new Cartridge(10, CartridgeEffect.Normal);
     }
 
     @Override
@@ -59,8 +51,16 @@ public class Gun extends Weapon {
     @Override
     public String desc() {
         StringBuilder desc = new StringBuilder();
-        desc.append("一把威力强大的枪械武器。\n\n");
-        desc.append("- 力量需求：").append(STRReq(0)).append("\n");
+        desc.append("枪械武器基类，可远程射击和装填弹药。\n");
+        desc.append("近战伤害区间：").append(min(0)).append("-").append(max(0)).append("。\n");
+        desc.append("当前弹药类型：").append(cartridge != null ? cartridge.cartridgeType : "无").append("。\n");
+        desc.append("弹药量：").append(ammo).append("/一般最大弹药量：").append(maxAmmo).append("。\n");
+        desc.append("增益：");
+        if (cartridge != null && cartridge.onHit != null && cartridge.onHit != CartridgeEffect.Normal) {
+            desc.append(cartridge.onHit.name);
+        } else {
+            desc.append("无");
+        }
         return desc.toString();
     }
 
@@ -248,10 +248,7 @@ public class Gun extends Weapon {
     }
 
     public static ShotResult shoot(Gun gun, Char shooter, int targetPos, Cartridge cartridge, int projectileType) {
-        // Function<Integer, String> todo = (inte) -> {
-        //     Point p = new Point(inte % Dungeon.level.width(), inte / Dungeon.level.width());
-        //     return "(" + p.x + "," + p.y + ")";
-        // };
+
 
         Ballistica shot = new Ballistica(shooter.pos, targetPos, projectileType);
 
@@ -279,7 +276,10 @@ public class Gun extends Weapon {
         Sample.INSTANCE.play(gun.hitSound, 1, gun.hitSoundPitch);
         return new ShotResult(hit, blocked, damage, shot.dist, target, collisionPos, gun.accuracyFactor(shooter, target));
     }
-
+    @Override
+    public String status(){
+        return ammo+"/"+maxAmmo;
+    }
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);

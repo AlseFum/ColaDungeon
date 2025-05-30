@@ -1449,7 +1449,22 @@ public class GameScene extends PixelScene {
 			scene.prompt(listener.prompt());
 		}
 	}
-	
+	public static void selectCell(String prompt, CellSelectorListener listener){
+		selectCell(new CellSelector.Listener(){
+			@Override
+			public void onSelect(Integer cell){
+				listener.onSelect(cell);
+			}
+			@Override
+			public String prompt() {
+				return prompt;
+			}
+		});
+	}
+	@FunctionalInterface
+	public interface CellSelectorListener{
+		void onSelect(Integer cell);
+	}
 	public static boolean cancelCellSelector() {
 		if (cellSelector.listener != null && cellSelector.listener != defaultCellListener) {
 			cellSelector.resetKeyHold();

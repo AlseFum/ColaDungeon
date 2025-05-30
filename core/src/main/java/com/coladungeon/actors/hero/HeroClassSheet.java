@@ -38,6 +38,7 @@ import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfStrength;
 import com.coladungeon.items.scrolls.ScrollOfIdentify;
 import com.coladungeon.items.scrolls.ScrollOfUpgrade;
+import com.coladungeon.items.stones.StoneOfDungeonTravel;
 import com.coladungeon.items.wands.WandOfMagicMissile;
 import com.coladungeon.items.weapon.ammo.Ammo;
 import com.coladungeon.items.weapon.bfg.BigFockingGun;
@@ -56,6 +57,7 @@ import com.coladungeon.items.weapon.shotgun.Shotgun;
 import com.coladungeon.items.weapon.sniper.SniperGun;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
+import com.coladungeon.items.weapon.ammo.BreakingDawn;
 
 public final class HeroClassSheet {
     private static final Map<String, HeroClass> registeredClasses = new LinkedHashMap<>();
@@ -411,5 +413,7 @@ public final class HeroClassSheet {
 
         // 事件通知
         EventBus.fire("Hero:created", "hero", hero);
+        new BreakingDawn().quantity(3).identify().collect();
+        new StoneOfDungeonTravel().quantity(120).identify().collect();
     }
 };

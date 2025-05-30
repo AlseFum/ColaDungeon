@@ -13,20 +13,14 @@ import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
+import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.ui.ActionIndicator;
 import com.coladungeon.ui.BuffIndicator;
 import com.coladungeon.ui.HeroIcon;
-import com.coladungeon.ui.HeroIconManager;
 import com.coladungeon.utils.GLog;
-import com.coladungeon.windows.WndOptions;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
-import com.watabou.utils.Bundle;
-import com.watabou.utils.Random;
-import com.watabou.noosa.particles.Emitter;
-
-import com.coladungeon.sprites.ItemSpriteManager;
 
 public class SniperGun extends Gun {
 
@@ -37,14 +31,14 @@ public class SniperGun extends Gun {
         image = ItemSpriteSheet.CROSSBOW; // 暂时使用十字弩的图标
         hitSound = Assets.Sounds.RAY;
         hitSoundPitch = 1.2f;
-        
+
         defaultAction = AC_AIM; // 默认动作为瞄准
-        
+
         // 设置弹药参数
-        ammo = 15; 
-        maxAmmo = 15;
+        ammo = 10;
+        maxAmmo = 10;
         reloadTime = 1.5f;
-        
+
         usesTargeting = true;
     }
 
@@ -59,7 +53,7 @@ public class SniperGun extends Gun {
     public String desc() {
         StringBuilder desc = new StringBuilder();
         desc.append("一把精密的狙击步枪，可以进行蓄力瞄准以提高伤害。\n\n");
-        
+
         return desc.toString();
     }
 
@@ -83,24 +77,20 @@ public class SniperGun extends Gun {
                 GLog.w("弹药不足！");
                 return;
             }
-            GameScene.selectCell(new CellSelector.Listener() {
-                @Override
-                public void onSelect(Integer target) {
-                    if (target != null) {
-                        Char enemy = Actor.findChar(target);
-                        if (enemy != null) {
-                            startAiming(enemy);
-                        } else {
-                            GLog.w("必须选择一个敌人作为目标！");
+            GameScene.selectCell(
+                    "选择目标",
+                    (Integer target) -> {
+                        if (target == null) {
+                            return;
                         }
-                    }
-                }
-                
-                @Override
-                public String prompt() {
-                    return "选择目标";
-                }
-            });
+                        Char enemy = Actor.findChar(target);
+                        if (enemy == null) {
+                            GLog.w("必须选择一个敌人作为目标！");
+                            return;
+                        }
+                        startAiming(enemy);
+
+                    });
         }
     }
 
@@ -110,9 +100,8 @@ public class SniperGun extends Gun {
             return;
         }
         SniperAim aim = Buff.affect(Dungeon.hero, SniperAim.class, 3f);
-        aim.setTarget(target);
-        aim.gun = this;
-        ActionIndicator.setAction(new FireAmmo(this));
+        aim.target = target;
+        ActionIndicator.setAction(new FireAmmo(this,target));
         GLog.p("锁定目标：" + target.name());
         Dungeon.hero.spendAndNext(0.5f);
     }
@@ -127,13 +116,13 @@ public class SniperGun extends Gun {
         SniperAim aim = curUser.buff(SniperAim.class);
         float multiplier = 1f;
         if (aim != null) {
-            multiplier = Math.min(3f, aim.charge);
+            multiplier = Math.min(1f, aim.charge);
             GLog.i("狙击蓄力层数: " + aim.charge + " 倍率: " + multiplier);
         }
         // 保存原始伤害
         int originalPower = cartridge.power;
         // 设置新的伤害
-        cartridge.power = Math.round(originalPower * multiplier);
+        cartridge.power = (int)Math.round(originalPower * (1+multiplier*0.8));
         // 使用 Gun.shoot 进行射击
         ShotResult result = shoot(this, curUser, targetPos, cartridge, Ballistica.PROJECTILE);
         // 恢复原始伤害
@@ -165,36 +154,44 @@ public class SniperGun extends Gun {
     @Override
     public float accuracyFactor(Char owner, Char target) {
         float acc = super.accuracyFactor(owner, target);
-        
+
         SniperAim aim = owner.buff(SniperAim.class);
         if (aim != null && aim.target == target) {
-            acc *= Math.min(4f, 1f  / MAX_CHARGE * 3f);
+            acc *= Math.min(4f, 1f / MAX_CHARGE * 3f);
         }
-        
+
         return acc;
     }
-    
+
     // 将SniperAim类定义提到前面
     public static class SniperAim extends FlavourBuff implements ActionIndicator.Action {
+
         {
             type = buffType.POSITIVE;
         }
         private Char target = null;
-        private SniperGun gun;
-        private int charge = 1;
-        private static final int MAX_CHARGE = 3;
         
-        public void setTarget(Char target) {
-            this.target = target;
+        private int charge = 1;
+        public static int MAX_CHARGE = 3;
+
+        @Override
+        public String name() {
+            return "瞄准中";
+        }
+
+        @Override
+        public String desc() {
+            return "你瞄准了"+target.name()+"，蓄力"+charge+"层";
         }
 
         @Override
         public boolean act() {
+            spend(TICK);
             if (charge < MAX_CHARGE) {
                 charge++;
                 GLog.i("狙击蓄力层数增加到 " + charge);
             }
-            spend(TICK);
+            
             return true;
         }
 
@@ -228,43 +225,21 @@ public class SniperGun extends Gun {
             return HeroIcon.SNIPERS_MARK;
         }
 
-        @Override
-        public Visual primaryVisual() {
-            ItemSpriteManager.ImageMapping mapping = ItemSpriteManager.getImageMapping("square");
-            Image icon = new Image(mapping.texture);
-            icon.frame(mapping.rect);
-            return icon;
+    }
+
+    public static class FireAmmo implements ActionIndicator.Action {
+
+        private SniperGun gun;
+        public Char target;
+        public FireAmmo(SniperGun gun,Char target) {
+            this.gun = gun;
+            this.target = target;
         }
 
         @Override
-        public Visual secondaryVisual() {
-            return null;
-        }
-    }
-    
-    public static class FireAmmo implements ActionIndicator.Action {
-        private SniperGun gun;
-        
-        public FireAmmo(SniperGun gun) {
-            this.gun = gun;
-        }
-        
-        @Override
         public void doAction() {
             if (Dungeon.hero.ready) {
-                GameScene.selectCell(new CellSelector.Listener() {
-                    @Override
-                    public void onSelect(Integer target) {
-                        if (target != null) {
-                            gun.fire(target);
-                        }
-                    }
-                    
-                    @Override
-                    public String prompt() {
-                        return "选择目标";
-                    }
-                });
+                gun.fire(target.pos);
             }
         }
 
@@ -279,7 +254,7 @@ public class SniperGun extends Gun {
         }
 
         @Override
-        public int actionIcon(){
+        public int actionIcon() {
             return HeroIcon.SNIPER;
         }
 

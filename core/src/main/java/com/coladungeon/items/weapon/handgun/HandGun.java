@@ -26,8 +26,9 @@ public class HandGun extends Gun {
         defaultAction = AC_FIRE;
 
         // 设置弹药相关属性
-        maxAmmo = 10;
+        maxAmmo = 12;
         ammo = maxAmmo;
+        cartridge = new Cartridge(8);
     }
     static {
         EventBus.register("Hero:created", (data) -> {

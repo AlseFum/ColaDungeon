@@ -26,9 +26,6 @@ import com.watabou.utils.Random;
 public class GrenadeLauncher extends Gun {
 
 
-    // private static final String AC_FIRE = "开火";
-    // private static final String AC_RELOAD = "装弹";
-
     {
         image = ItemSpriteSheet.CROSSBOW; // 暂时使用十字弩的图标
 
