@@ -192,8 +192,6 @@ public class Chakram extends Weapon {
             
             // 如果是蓄力投掷，创建持续伤害区域
             if (isPowerThrow) {
-                DartDamageActor damageActor = new DartDamageActor(cell);
-                Actor.add(damageActor);
                 CellEmitter.center(cell).burst(PurpleParticle.BURST, 10);
             }
         }
@@ -299,79 +297,6 @@ public class Chakram extends Weapon {
         }
     }
     
-    // 持续伤害Actor类
-    public static class DartDamageActor extends Actor {
-        
-        private int pos;
-        private int duration = 5;
-        private float damageInterval = 1f;
-        private float nextDamageTime = 0f;
-        
-        public DartDamageActor(int pos) {
-            this.pos = pos;
-        }
-        
-        @Override
-        protected boolean act() {
-            // 检查是否到了造成伤害的时间
-            if (nextDamageTime <= 0) {
-                // 对区域内的敌人造成伤害
-                for (int i : PathFinder.NEIGHBOURS9) {
-                    int cell = pos + i;
-                    if (cell >= 0 && cell < Dungeon.level.length()) {
-                        Char ch = Actor.findChar(cell);
-                        if (ch != null && ch != Dungeon.hero) {
-                            int dmg = Random.NormalIntRange(3, 8);
-                            ch.damage(dmg, this);
-                            
-                            // 特效
-                            CellEmitter.get(cell).burst(PurpleParticle.BURST, 2);
-                        }
-                    }
-                }
-                
-                // 减少持续时间
-                duration--;
-                
-                // 重置下一次伤害时间
-                nextDamageTime = damageInterval;
-            }
-            
-            // 减少下一次伤害时间
-            nextDamageTime -= TICK;
-            
-            // 如果持续时间结束，移除Actor
-            if (duration <= 0) {
-                Actor.remove(this);
-                return true;
-            }
-            
-            // 重要：使用spend()来控制Actor的行动时间
-            spend(TICK);
-            return true;
-        }
-        
-        private static final String POS = "pos";
-        private static final String DURATION = "duration";
-        private static final String NEXT_DAMAGE_TIME = "nextDamageTime";
-        
-        @Override
-        public void storeInBundle(Bundle bundle) {
-            super.storeInBundle(bundle);
-            bundle.put(POS, pos);
-            bundle.put(DURATION, duration);
-            bundle.put(NEXT_DAMAGE_TIME, nextDamageTime);
-        }
-        
-        @Override
-        public void restoreFromBundle(Bundle bundle) {
-            super.restoreFromBundle(bundle);
-            pos = bundle.getInt(POS);
-            duration = bundle.getInt(DURATION);
-            nextDamageTime = bundle.getFloat(NEXT_DAMAGE_TIME);
-        }
-    }
-
     // 飞镖Actor，管理飞镖状态和返回
     public static class ChakramActor extends Actor {
         private Chakram chakram;

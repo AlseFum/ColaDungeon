@@ -59,6 +59,7 @@ public class LevelTransition extends Rect implements Bundlable {
 		this.destDepth = destDepth;
 		this.destBranch = destBranch;
 		this.destType = destType;
+		// System.out.println("[LevelTransition] ctor(full): cell=" + cell + ", type=" + type + ", destDepth=" + destDepth + ", destBranch=" + destBranch + ", destType=" + destType);
 	}
 
 	//gives default values for common transition types
@@ -84,6 +85,14 @@ public class LevelTransition extends Rect implements Bundlable {
 				destType = null;
 				break;
 		}
+		// System.out.println("[LevelTransition] ctor(simple): cell=" + cell + ", type=" + type + ", destDepth=" + destDepth + ", destBranch=" + destBranch + ", destType=" + destType);
+		// if (destType == Type.SURFACE || destType==null) {
+		// 	System.out.println("=>SURFACE");
+		// 	Thread.dumpStack();
+		// 	System.out.println("=<SURFACE");
+		// }else{
+		// 	System.out.println("- "+destType);
+		// }
 	}
 
 	//note that the center cell isn't always the actual center.
@@ -113,6 +122,7 @@ public class LevelTransition extends Rect implements Bundlable {
 		return inside(new Point(Dungeon.level.cellToPoint(cell)));
 	}
 
+	@Override
 	public Point center() {
 		return new Point(
 				(left + right) / 2 + (((right - left) % 2) == 1 ? Random.Int( 2 ) : 0),
@@ -155,6 +165,7 @@ public class LevelTransition extends Rect implements Bundlable {
 	}
 
 	// 添加一个方法用于调试输出transition信息
+	@Override
 	public String toString() {
 		return "<Transition to " +destDepth +
 				"@" + destBranch +'>';

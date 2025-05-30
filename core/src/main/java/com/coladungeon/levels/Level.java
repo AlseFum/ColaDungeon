@@ -553,6 +553,7 @@ public abstract class Level implements Bundlable {
 	public LevelTransition getTransition(int cell){
 		for (LevelTransition transition : transitions){
 			if (transition.inside(cell)){
+				
 				return transition;
 			}
 		}
@@ -573,7 +574,7 @@ public abstract class Level implements Bundlable {
 		} else {
 			InterlevelScene.mode = InterlevelScene.Mode.ASCEND;
 		}
-
+		System.out.println("[Level::activateTransition]Goto"+transition);
 		Game.switchScene(InterlevelScene.class);
 
 		return true;

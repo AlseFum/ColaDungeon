@@ -58,9 +58,12 @@ public class ExitRoom extends StandardRoom {
         for (Room.Door door : connected.values()) {
             door.set(Room.Door.Type.REGULAR);
         }
-        int exit = level.pointToCell(random(2));
-        Painter.set(level, exit, Terrain.EXIT);
-        level.transitions.add(new LevelTransition(level, exit, LevelTransition.Type.REGULAR_EXIT));
+        // int exit = level.pointToCell(random(2));
+        // Painter.set(level, exit, Terrain.EXIT);
+        // level.transitions.add(new LevelTransition(level, exit, LevelTransition.Type.REGULAR_EXIT));
+        int exit = level.pointToCell(random( 2 ));
+		Painter.set( level, exit, Terrain.EXIT );
+		level.transitions.add(new LevelTransition(level, exit, LevelTransition.Type.REGULAR_EXIT));
     }
 
     @Override

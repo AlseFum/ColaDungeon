@@ -47,7 +47,7 @@ public class GLog {
 			text = Messages.format( text, args );
 		}
 		
-		DeviceCompat.log( TAG, text );
+		//DeviceCompat.log( TAG, text );
 		update.dispatch( text );
 	}
 	

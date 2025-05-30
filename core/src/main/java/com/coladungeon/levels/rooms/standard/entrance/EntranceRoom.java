@@ -88,9 +88,12 @@
 		 } while (level.findMob(entrance) != null);
 		 Painter.set( level, entrance, Terrain.ENTRANCE );
  
-		 // Connect to level 0
-		 LevelTransition transition = new LevelTransition(level, entrance, LevelTransition.Type.REGULAR_ENTRANCE, 0, 0, LevelTransition.Type.REGULAR_EXIT);
-		 level.transitions.add(transition);
+		 // Connect to previous level or surface
+		 if (Dungeon.depth == 1) {
+			 level.transitions.add(new LevelTransition(level, entrance, LevelTransition.Type.SURFACE));
+		 } else {
+			 level.transitions.add(new LevelTransition(level, entrance, LevelTransition.Type.REGULAR_ENTRANCE));
+		 }
  
 		 //use a separate generator here so meta progression doesn't affect levelgen
 		 Random.pushGenerator();
