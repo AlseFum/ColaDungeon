@@ -1,116 +1,40 @@
 package com.coladungeon.items.weapon.ammo;
 
+import java.util.ArrayList;
+
+import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.Item;
+import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
-import com.watabou.utils.Bundle;
+import com.coladungeon.windows.WndBag;
 
 public class Ammo extends Item {
 
     private static final int DEFAULT_MAX_STACK = 999;
-
+    
+    public            int amount = 0;
+    public static int max_amount = 6;
+    public Cartridge cartridge;
     {
         image = ItemSpriteSheet.DARTS;
         stackable = true;
         defaultAction = AC_THROW;
     }
 
-    public enum Calibre {
-        SMALL("小口径"),
-        MEDIUM("中口径"),
-        LARGE("大口径"),
-        PELLET("散弹"),
-        SLUG("独头弹"),
-        SPIKE("长钉"),
-        GRENADE("榴弹");
-
-        private final String name;
-
-        Calibre(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    public enum Capacity {
-        BURN("燃烧"),
-        FROST("冰冻"),
-        POISON("毒素"),
-        EXPLOSIVE("爆炸"),
-        PIERCING("穿透"),
-        NONE("无");
-
-        private final String name;
-
-        Capacity(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-    private AmmoType type = AmmoType.NORMAL;
-
-    //compatiability
-    public enum AmmoType {
-        NORMAL(Calibre.MEDIUM, Capacity.NONE),
-        PIERCING(Calibre.MEDIUM, Capacity.PIERCING),
-        EXPLOSIVE(Calibre.MEDIUM, Capacity.EXPLOSIVE),
-        INCENDIARY(Calibre.MEDIUM, Capacity.BURN),
-        FROST(Calibre.MEDIUM, Capacity.FROST),
-        POISON(Calibre.MEDIUM, Capacity.POISON);
-
-        public Calibre cal;
-        public Capacity cap;
-
-        AmmoType(Calibre cal, Capacity cap) {
-            this.cal = cal;
-            this.cap = cap;
-        }
-
-        public String getName() {
-            return cal.getName() + cap.getName();
-        }
-
-        public float getDamageMultiplier() {
-            switch (this) {
-                case PIERCING:
-                    return 1.2f;
-                case EXPLOSIVE:
-                    return 1.3f;
-                case INCENDIARY:
-                    return 1.1f;
-                case FROST:
-                    return 1.0f;
-                case POISON:
-                    return 1.0f;
-                case NORMAL:
-                default:
-                    return 1.0f;
-            }
-        }
-    }
-
     public Ammo() {
-        this(AmmoType.NORMAL);
-    }
-
-    public Ammo(AmmoType type) {
-        this.type = type;
         quantity = 1;
+        cartridge = new Cartridge();
+        amount = max_amount;
     }
 
     @Override
     public String name() {
-        return type.cal.getName() + " " + type.cap.getName() + "弹药";
+        return "弹药";
     }
 
     @Override
     public String desc() {
-        return "由" + type.cal.getName() + "口径的枪械使用，" + type.cap.getName() + "弹药。";
+        return "通用的弹药。";
     }
 
     @Override
@@ -123,15 +47,6 @@ public class Ammo extends Item {
         return true;
     }
 
-    public AmmoType getType() {
-        return type;
-    }
-
-    public float getDamageMultiplier() {
-        //compatiablity
-        return 1.0f;
-    }
-
     @Override
     public int price() {
         return 10 * quantity;
@@ -139,7 +54,6 @@ public class Ammo extends Item {
 
     @Override
     public int value() {
-        //compatiability
         return 10;
     }
 
@@ -148,21 +62,60 @@ public class Ammo extends Item {
         return DEFAULT_MAX_STACK;
     }
 
-    private static final String TYPE = "type";
-
     @Override
-    public void storeInBundle(Bundle bundle) {
-        super.storeInBundle(bundle);
-        bundle.put(TYPE, type.name());
+    public ArrayList<String> actions(Hero hero) {
+        ArrayList<String> actions = super.actions(hero);
+        actions.add("重装子弹");
+        return actions;
     }
 
     @Override
-    public void restoreFromBundle(Bundle bundle) {
-        super.restoreFromBundle(bundle);
-        type = AmmoType.valueOf(bundle.getString(TYPE));
+    public void execute(Hero hero, String action) {
+        super.execute(hero, action);
+        if ("重装子弹".equals(action)) {
+            GameScene.selectItem(new WndBag.ItemSelector() {
+                    @Override
+                    public String textPrompt() {
+                        return "选择要装填子弹的另一个ammo";
+                    }
+
+                    @Override
+                    public boolean itemSelectable(Item item) {
+                        if (!(item instanceof Ammo ammo)) return false;
+                        return ammo.getClass() == Ammo.this.getClass() 
+                            && ammo.cartridge == Ammo.this.cartridge 
+                            && ammo.amount <max_amount;
+                    }
+
+                    @Override
+                    public void onSelect(Item item) {
+                        transfer((Ammo) item);
+                    }
+                });
+        }
     }
 
-    public void setType(AmmoType type) {
-        this.type = type;
+    @Override
+    public boolean isSimilar(Item item) {
+        if (item instanceof Ammo ammo) {
+            return this.getClass() == ammo.getClass() 
+                && this.cartridge == ammo.cartridge 
+                && this.amount == max_amount
+                && ammo.amount == max_amount;
+        }
+        return false;
+    }
+
+    public void transfer(Ammo ammo) {
+        if (this.isSimilar(ammo)) {
+            int totalAmount = ammo.amount + amount;
+            if (totalAmount > max_amount) {
+                ammo.amount = max_amount;
+                amount = totalAmount - max_amount;
+            } else {
+                amount = totalAmount;
+                ammo.amount = 0;
+            }
+        }
     }
 }

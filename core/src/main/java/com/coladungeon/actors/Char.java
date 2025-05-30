@@ -159,7 +159,8 @@ public abstract class Char extends Actor {
 	public enum Alignment{
 		ENEMY,
 		NEUTRAL,
-		ALLY
+		ALLY,
+		//YeahTodoHere
 	}
 	public Alignment alignment;
 	
@@ -168,122 +169,6 @@ public abstract class Char extends Actor {
 	public boolean[] fieldOfView = null;
 	
 	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
-	
-	// // 特质系统
-	// private com.coladungeon.actors.traits.TraitSet traits;
-	
-	// /**
-	//  * 获取角色的特质集合
-	//  * @return 特质集合
-	//  */
-	// public com.coladungeon.actors.traits.TraitSet traits() {
-	// 	if (traits == null) {
-	// 		traits = new com.coladungeon.actors.traits.TraitSet(this);
-	// 	}
-	// 	return traits;
-	// }
-	
-	// /**
-	//  * 添加一个特质到角色
-	//  * @param trait 要添加的特质
-	//  */
-	// public void addTrait(com.coladungeon.actors.traits.Trait trait) {
-	// 	traits().add(trait);
-	// }
-	
-	// /**
-	//  * 添加一个特质到角色，指定强度值
-	//  * @param trait 要添加的特质
-	//  * @param value 特质的强度值
-	//  */
-	// public void addTrait(com.coladungeon.actors.traits.Trait trait, float value) {
-	// 	traits().add(trait, value);
-	// }
-	
-	// /**
-	//  * 添加一个特质到角色，通过ID
-	//  * @param traitId 特质ID
-	//  */
-	// public void addTrait(String traitId) {
-	// 	traits().add(traitId);
-	// }
-	
-	// /**
-	//  * 添加一个特质到角色，通过ID并指定强度值
-	//  * @param traitId 特质ID
-	//  * @param value 特质的强度值
-	//  */
-	// public void addTrait(String traitId, float value) {
-	// 	traits().add(traitId, value);
-	// }
-	
-	// /**
-	//  * 移除一个特质
-	//  * @param trait 要移除的特质
-	//  */
-	// public void removeTrait(com.coladungeon.actors.traits.Trait trait) {
-	// 	traits().remove(trait);
-	// }
-	
-	// /**
-	//  * 移除一个特质，通过ID
-	//  * @param traitId 特质ID
-	//  */
-	// public void removeTrait(String traitId) {
-	// 	traits().remove(traitId);
-	// }
-	
-	// /**
-	//  * 检查是否具有某个特质
-	//  * @param trait 要检查的特质
-	//  * @return 是否拥有特质
-	//  */
-	// public boolean hasTrait(com.coladungeon.actors.traits.Trait trait) {
-	// 	return traits() != null && traits().has(trait);
-	// }
-	
-	// /**
-	//  * 检查是否具有某个特质，通过ID
-	//  * @param traitId 特质ID
-	//  * @return 是否拥有特质
-	//  */
-	// public boolean hasTrait(String traitId) {
-	// 	return traits().has(traitId);
-	// }
-	
-	// /**
-	//  * 获取特质的强度值
-	//  * @param trait 特质
-	//  * @return 强度值
-	//  */
-	// public float getTraitValue(com.coladungeon.actors.traits.Trait trait) {
-	// 	if (traits() != null) {
-	// 		return traits().getValue(trait);
-	// 	}
-	// 	return 1.0f; // 默认值
-	// }
-	
-	// /**
-	//  * 获取特质的强度值，通过ID
-	//  * @param traitId 特质ID
-	//  * @return 强度值
-	//  */
-	// public float getTraitValue(String traitId) {
-	// 	return traits().getValue(traitId);
-	// }
-	
-	// public void setTraitValue(com.coladungeon.actors.traits.Trait trait, float value) {
-	// 	traits().setValue(trait, value);
-	// }
-	
-	// /**
-	//  * 设置特质的强度值，通过ID
-	//  * @param traitId 特质ID
-	//  * @param value 强度值
-	//  */
-	// public void setTraitValue(String traitId, float value) {
-	// 	traits().setValue(traitId, value);
-	// }
 
 	@Override
 	protected boolean act() {

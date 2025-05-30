@@ -1,19 +1,17 @@
 package com.coladungeon.items.weapon.grenade;
 
-import java.util.ArrayList;
-
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.Buff;
+import com.coladungeon.items.weapon.ammo.Ammo;
 import com.coladungeon.actors.buffs.Paralysis;
 import com.coladungeon.actors.buffs.Vertigo;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.particles.BlastParticle;
 import com.coladungeon.effects.particles.SmokeParticle;
-import com.coladungeon.items.weapon.ammo.Ammo;
 import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.GameScene;
@@ -24,83 +22,24 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
-
+//和Gun别无二致，除了对Ammo特别要求为Grenade
 public class GrenadeLauncher extends Gun {
 
-    private static final int BLAST_RADIUS = 2; // 爆炸范围
 
-    private static final String AC_FIRE = "开火";
-    private static final String AC_RELOAD = "装弹";
+    // private static final String AC_FIRE = "开火";
+    // private static final String AC_RELOAD = "装弹";
 
     {
         image = ItemSpriteSheet.CROSSBOW; // 暂时使用十字弩的图标
-        hitSound = Assets.Sounds.BLAST;
-        hitSoundPitch = 0.8f;
-
-        DLY = 1.5f; // 较慢的攻击速度
-        RCH = 8; // 射程
-        ACC = 0.8f; // 命中率较低
 
         defaultAction = AC_FIRE; // 默认动作为开火
 
-        maxAmmo = 3; // 最大弹药量
+        maxAmmo = 6; // 最大弹药量
         ammo = maxAmmo; // 初始弹药量
         reloadTime = 2f; // 装弹时间
-        defaultAmmoType = Ammo.AmmoType.EXPLOSIVE; // 使用爆炸弹
     }
 
-    @Override
-    protected void addGunActions(Hero hero, ArrayList<String> actions) {
-        // actions.add(AC_SPRAY);
-    }
-
-    @Override
-    protected void executeGunAction(Hero hero, String action) {
-        // if (action.equals(AC_SPRAY)) {
-        //     if (ammo < 2) {
-        //         GLog.w("弹药不足！需要至少2发弹药进行扫射！");
-        //         return;
-        //     }
-        //     GameScene.selectCell(new CellSelector.Listener() {
-        //         @Override
-        //         public void onSelect(Integer target) {
-        //             if (target != null) {
-        //                 sprayFire(target);
-        //             }
-        //         }
-
-        //         @Override
-        //         public String prompt() {
-        //             return "选择扫射目标区域";
-        //         }
-        //     });
-        // }
-    }
-
-    // private void sprayFire(int targetPos) {
-    //     final Ballistica shot = new Ballistica(curUser.pos, targetPos, Ballistica.STOP_SOLID);
-    //     int cell = shot.collisionPos;
-    //     curUser.sprite.zap(cell);
-    //     Sample.INSTANCE.play(Assets.Sounds.BLAST, 0.6f, 0.6f);
-    //     curUser.sprite.operate(curUser.pos, new Callback() {
-    //         @Override
-    //         public void call() {
-    //             // 扫射消耗2发弹药，造成更大范围的伤害
-    //             explode(cell);
-    //             // 对周围额外造成爆炸
-    //             for (int i = 0; i < PathFinder.NEIGHBOURS8.length; i++) {
-    //                 if (Random.Float() < 0.5f) {
-    //                     int c = cell + PathFinder.NEIGHBOURS8[i];
-    //                     if (c >= 0 && c < Dungeon.level.length() && !Dungeon.level.solid[c]) {
-    //                         explode(c);
-    //                     }
-    //                 }
-    //             }
-    //             consumeAmmo(2);
-    //             curUser.spendAndNext(DLY * 1.5f);
-    //         }
-    //     });
-    // }
+   
     @Override
     public String name() {
         return "榴弹发射器";
@@ -111,34 +50,12 @@ public class GrenadeLauncher extends Gun {
         StringBuilder desc = new StringBuilder();
         desc.append("一把威力巨大的榴弹发射器，可以发射爆炸榴弹造成范围伤害。\n\n");
 
-        desc.append("_被动效果:_\n");
-        desc.append("- 弹药容量较少，但伤害巨大\n");
-        desc.append("- 击中造成大范围爆炸伤害\n\n");
-
-        desc.append("_主动技能 - 爆炸榴弹:_\n");
         desc.append("- 发射一枚爆炸榴弹\n");
         desc.append("- 命中点附近2格范围内造成爆炸伤害\n");
         desc.append("- 爆炸会击退并眩晕敌人\n");
         desc.append("- 消耗1发弹药\n\n");
 
-        desc.append("_主动技能 - 扫射:_\n");
-        desc.append("- 发射多枚榴弹进行扫射\n");
-        desc.append("- 在目标区域造成多次爆炸\n");
-        desc.append("- 有50%几率在相邻格子产生额外爆炸\n");
-        desc.append("- 消耗2发弹药\n\n");
 
-        desc.append("_弹药系统:_\n");
-        desc.append("- 最大弹药：").append(maxAmmo).append("发\n");
-        desc.append("- 当前弹药：").append(ammo).append("发\n");
-        desc.append("- 装弹时间：2秒\n\n");
-
-        desc.append("_升级效果:_\n");
-        desc.append("- 基础伤害：").append(min()).append("-").append(max()).append("\n");
-        desc.append("- 力量需求：").append(STRReq()).append("\n");
-        desc.append("- 每级提升：\n");
-        desc.append("  * 最小伤害+5\n");
-        desc.append("  * 最大伤害+10\n");
-        desc.append("  * 力量需求+1");
 
         return desc.toString();
     }
@@ -150,20 +67,26 @@ public class GrenadeLauncher extends Gun {
             return;
         }
 
-        final Ballistica shot = new Ballistica(curUser.pos, targetPos, Ballistica.STOP_SOLID);
+        final Ballistica shot = new Ballistica(curUser.pos, targetPos, Ballistica.STOP_TARGET);
         int cell = shot.collisionPos;
 
         curUser.sprite.zap(cell);
         Sample.INSTANCE.play(Assets.Sounds.MISS, 0.6f, 0.6f);
 
         curUser.sprite.operate(curUser.pos, () -> {
-            
             consumeAmmo(1);
             curUser.spendAndNext(DLY);
             EventBus.fire("Grenade:explode", "where", cell,"which",this);
             explode(cell);
         });
     }
+
+    // 只允许Grenade类型弹药
+    @Override
+    public boolean canLoad(Ammo ammo) {
+        return true;
+    }
+    //@deprecated
     private void explode(int cell) {
         Sample.INSTANCE.play(Assets.Sounds.BLAST);
         Camera.main.shake(3, 0.7f);
@@ -276,16 +199,5 @@ public class GrenadeLauncher extends Gun {
     @Override
     public int max(int lvl) {
         return 35 + 10 * lvl; // 较高的最大伤害
-    }
-
-    @Override
-    public String actionName(String action, Hero hero) {
-        if (action.equals(AC_FIRE)) {
-            return "开火";
-        }
-        if (action.equals(AC_RELOAD)) {
-            return "装弹";
-        }
-        return super.actionName(action, hero);
     }
 }

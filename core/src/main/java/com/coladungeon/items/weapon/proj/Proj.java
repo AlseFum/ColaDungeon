@@ -36,12 +36,11 @@ public class Proj extends Gun {
         hitSound = Assets.Sounds.HIT;
         hitSoundPitch = 1.4f;
         
-        defaultAction = AC_SHOOT;
+        defaultAction = AC_FIRE;
         
         maxAmmo = 10;
         ammo = maxAmmo;
         reloadTime = 1.0f;
-        defaultAmmoType = Ammo.AmmoType.NORMAL;
         
         DLY = 0.5f;
         RCH = 8;
@@ -49,12 +48,12 @@ public class Proj extends Gun {
     }
     
     @Override
-    protected void addGunActions(Hero hero, ArrayList<String> actions) {
+    protected void addSubActions(Hero hero, ArrayList<String> actions) {
         actions.add(AC_SPECIAL);
     }
     
     @Override
-    protected void executeGunAction(Hero hero, String action) {
+    protected void executeSubAction(Hero hero, String action) {
         if (action.equals(AC_SPECIAL)) {
             if (ammo < 3) {
                 GLog.w("弹药不足！需要至少3发弹药进行特殊射击！");
@@ -188,7 +187,7 @@ public class Proj extends Gun {
     
     @Override
     public String actionName(String action, Hero hero) {
-        if (action.equals(AC_SHOOT)) return "射击";
+        if (action.equals(AC_FIRE)) return "射击";
         if (action.equals(AC_SPECIAL)) return "特殊射击";
         if (action.equals(AC_RELOAD)) return "装弹";
         return super.actionName(action, hero);

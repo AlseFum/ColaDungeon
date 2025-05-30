@@ -26,28 +26,29 @@ import com.coladungeon.actors.hero.abilities.warrior.HeroicLeap;
 import com.coladungeon.actors.hero.abilities.warrior.Shockwave;
 import com.coladungeon.items.Ankh;
 import com.coladungeon.items.BrokenSeal;
-import com.coladungeon.items.TengusMask;
 import com.coladungeon.items.Waterskin;
 import com.coladungeon.items.armor.ClothArmor;
 import com.coladungeon.items.artifacts.CloakOfShadows;
 import com.coladungeon.items.artifacts.HolyTome;
 import com.coladungeon.items.bags.AmmoHolder;
+import com.coladungeon.items.bags.PotionBandolier;
+import com.coladungeon.items.bags.VelvetPouch;
 import com.coladungeon.items.food.Food;
-import com.coladungeon.items.potions.PotionOfExperience;
 import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfStrength;
 import com.coladungeon.items.scrolls.ScrollOfIdentify;
 import com.coladungeon.items.scrolls.ScrollOfUpgrade;
 import com.coladungeon.items.wands.WandOfMagicMissile;
-import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
-import com.coladungeon.items.weapon.ammo.NormalAmmo;
+import com.coladungeon.items.weapon.ammo.Ammo;
 import com.coladungeon.items.weapon.bfg.BigFockingGun;
 import com.coladungeon.items.weapon.chakram.Chakram;
 import com.coladungeon.items.weapon.grenade.GrenadeLauncher;
-import com.coladungeon.items.weapon.handgun.HandGun;
 import com.coladungeon.items.weapon.heavysword.HeavySword;
 import com.coladungeon.items.weapon.melee.MagesStaff;
 import com.coladungeon.items.weapon.melee.WornShortsword;
+import com.coladungeon.items.weapon.melee.assassin.AssassinDagger;
+import com.coladungeon.items.weapon.melee.knuckles.Knuckles;
+import com.coladungeon.items.weapon.melee.vambrace.Vambrace;
 import com.coladungeon.items.weapon.missiles.ThrowingStone;
 import com.coladungeon.items.weapon.proj.Proj;
 import com.coladungeon.items.weapon.rifle.Rifle;
@@ -55,16 +56,8 @@ import com.coladungeon.items.weapon.shotgun.Shotgun;
 import com.coladungeon.items.weapon.sniper.SniperGun;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
-import com.coladungeon.items.weapon.melee.vambrace.Vambrace;
-import com.coladungeon.items.weapon.melee.knuckles.Knuckles;
-import com.coladungeon.items.weapon.melee.assassin.AssassinDagger;
-import com.coladungeon.items.TengusMask;
-/**
- * HeroClassSheet 定义了游戏中所有标准职业及其初始化逻辑。
- */
+
 public final class HeroClassSheet {
-    
-    // 使用 LinkedHashMap 保持注册顺序
     private static final Map<String, HeroClass> registeredClasses = new LinkedHashMap<>();
     
     // 标准职业
@@ -372,12 +365,6 @@ public final class HeroClassSheet {
         sniperGun.identify().collect();
         Dungeon.quickslot.setSlot(1, sniperGun);
 
-        // 添加手枪到快捷栏
-        HandGun handGun = new HandGun();
-        handGun.level(1);
-        handGun.identify().collect();
-        Dungeon.quickslot.setSlot(2, handGun);
-
         // 添加步枪到快捷栏
         Rifle rifle = new Rifle();
         rifle.level(1);
@@ -404,12 +391,9 @@ public final class HeroClassSheet {
 
         // 添加弹药
         // 普通弹药
-        NormalAmmo normalAmmo = new NormalAmmo();
+        Ammo normalAmmo = new Ammo();
         normalAmmo.identify().quantity(1145).collect();
         
-        // 爆炸弹药
-        ExplosiveAmmo explosiveAmmo = new ExplosiveAmmo();
-        explosiveAmmo.identify().collect();
 
         // 添加5个已祝福的重生十字架
         for (int i = 0; i < 5; i++) {
@@ -417,6 +401,14 @@ public final class HeroClassSheet {
             ankh.bless();
             ankh.identify().collect();
         }
+
+        //添加绒布包和药剂包
+        VelvetPouch velvetPouch = new VelvetPouch();
+        velvetPouch.identify().collect();
+        
+        PotionBandolier potionBandolier = new PotionBandolier();
+        potionBandolier.identify().collect();
+
         // 事件通知
         EventBus.fire("Hero:created", "hero", hero);
     }

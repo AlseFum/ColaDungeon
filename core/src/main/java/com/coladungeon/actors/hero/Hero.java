@@ -2146,7 +2146,7 @@ public class Hero extends Char {
 		curAction = null;
 
 		Ankh ankh = null;
-
+		Boolean debug=true;
 		//look for ankhs in player inventory, prioritize ones which are blessed.
 		for (Ankh i : belongings.getAllItems(Ankh.class)){
 			if (ankh == null || i.isBlessed()) {
@@ -2154,10 +2154,11 @@ public class Hero extends Char {
 			}
 		}
 
-		if (ankh != null) {
+		if (ankh != null || debug) {
 			interrupt();
 
-			if (ankh.isBlessed()) {
+			if (ankh.isBlessed() ||debug) {
+				System.out.println("[Hero]You're dead, but cause it's debugging, you revived without cost now.");
 				this.HP = HT / 4;
 
 				PotionOfHealing.cure(this);
@@ -2170,7 +2171,7 @@ public class Hero extends Char {
 				Statistics.ankhsUsed++;
 				Catalog.countUse(Ankh.class);
 
-				ankh.detach(belongings.backpack);
+				if(!debug)ankh.detach(belongings.backpack);
 
 				for (Char ch : Actor.chars()) {
 					if (ch instanceof DriedRose.GhostHero) {
