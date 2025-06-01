@@ -17,6 +17,7 @@ import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
@@ -34,7 +35,7 @@ public class Gun extends Weapon {
     protected float reloadTime = 1f;
 
     {
-        image = ItemSpriteSheet.CROSSBOW;
+        image = ItemSpriteManager.ByName("gun");
         hitSound = Assets.Sounds.HIT;
         hitSoundPitch = 1.2f;
 
@@ -134,7 +135,7 @@ public class Gun extends Weapon {
 
     protected void reload(Ammo ammoItem) {
         cartridge = ammoItem.cartridge;
-        ammo = ammoItem.amount;
+        ammo = ammoItem.full_reload ? maxAmmo : ammoItem.amount;
         ammoItem.quantity(ammoItem.quantity() - 1);
         if (ammoItem.quantity() <= 0) {
             ammoItem.detach(Dungeon.hero.belongings.backpack);

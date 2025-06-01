@@ -10,10 +10,12 @@ import com.coladungeon.windows.WndBag;
 
 public class Ammo extends Item {
 
-    private static final int DEFAULT_MAX_STACK = 999;
+    public static final int DEFAULT_MAX_STACK = 999;
+    public static int max_amount = 6;
     
     public            int amount = 0;
-    public static int max_amount = 6;
+    public boolean full_reload= false;
+    //if is full_reload, the amount will be set to gun.max_amount
     public Cartridge cartridge;
     {
         image = ItemSpriteSheet.DARTS;
@@ -25,6 +27,7 @@ public class Ammo extends Item {
         quantity = 1;
         cartridge = new Cartridge();
         amount = max_amount;
+        full_reload = true;
     }
 
     @Override

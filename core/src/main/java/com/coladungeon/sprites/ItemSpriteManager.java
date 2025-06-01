@@ -88,7 +88,7 @@ public class ItemSpriteManager {
             if (film.get(id) == null) {
                 settle(where);
             }
-            return new ImageMapping(cache, film.get(where), film.height(where));
+            return new ImageMapping(cache, film.get(where), film.height(where), size);
         }
 
         public Segment label(String label) {
@@ -131,6 +131,8 @@ public class ItemSpriteManager {
             .label("slash");
         registerTexture("arknights/shatteringDawn.png", 16)
             .label("shatteringDawn");
+        registerTexture("sprites/gun.png",16)
+            .label("gun");
         // 使用静态贴图文件的旧方式 - 已注释掉
         // registerTexture("minecraft/golden_apple.png", 16)
         //    .label("golden_apple");
@@ -140,11 +142,20 @@ public class ItemSpriteManager {
         public SmartTexture texture;
         public RectF rect;
         public float height;
-        public float scale=1;
+        public int size;
+
         public ImageMapping(SmartTexture texture, RectF rect, float height) {
             this.rect = rect;
             this.height = height;
             this.texture = texture;
+            this.size = 16; // 默认大小
+        }
+
+        public ImageMapping(SmartTexture texture, RectF rect, float height, int size) {
+            this.rect = rect;
+            this.height = height;
+            this.texture = texture;
+            this.size = size;
         }
     }
 

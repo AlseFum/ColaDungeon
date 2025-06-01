@@ -231,6 +231,9 @@ public class ItemSprite extends MovieClip {
 				if (_height < 8f) {
 					perspectiveRaise = (5 + 8 - _height) / 16f;
 				}
+				if (map.size != 16) {
+					scale.set( 16f/ Math.max(map.size,1) );
+				}
 				return;
 			}
 		}
