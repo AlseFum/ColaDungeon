@@ -7,4 +7,7 @@ public class CartridgeAltFire extends Cartridge {
     public void fire(Hero hero, int targetPos){
         System.out.println("alt fire");
     }
+    public void fire(Hero hero, int targetPos, CartridgeAltFire catf){
+        System.out.println("alt fire");
+    }
 }

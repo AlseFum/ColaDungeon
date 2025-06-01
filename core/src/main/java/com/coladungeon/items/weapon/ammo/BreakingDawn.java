@@ -8,20 +8,26 @@ import com.coladungeon.actors.buffs.FlavourBuff;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.particles.BlastParticle;
+import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.utils.GLog;
 import com.watabou.utils.Random;
+import com.coladungeon.sprites.ItemSpriteManager;
 
 public class BreakingDawn extends Ammo {
     public static int max_amount = 6;
     {
         cartridge= new RoaringDeadSoul();
+        image = ItemSpriteManager.ByName("shatteringDawn");
     }
-
+    @Override
+    public String name(){
+        return "爆裂黎明";
+    }
     
 
     public static class RoaringDeadSoul extends CartridgeAltFire {
         @Override
-        public void fire(Hero hero, int targetPos) {
+        public void fire(Hero hero, int targetPos, CartridgeAltFire catf) {
             // 超大范围爆炸
             int explosionRadius = 2; // 以目标为中心，半径2格
             int baseDamage = 40; // 可根据实际需要调整

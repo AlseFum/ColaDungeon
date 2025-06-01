@@ -47,7 +47,7 @@ import com.coladungeon.items.weapon.grenade.GrenadeLauncher;
 import com.coladungeon.items.weapon.heavysword.HeavySword;
 import com.coladungeon.items.weapon.melee.MagesStaff;
 import com.coladungeon.items.weapon.melee.WornShortsword;
-import com.coladungeon.items.weapon.melee.assassin.AssassinDagger;
+import com.coladungeon.items.weapon.melee.assassin.Dagger;
 import com.coladungeon.items.weapon.melee.knuckles.Knuckles;
 import com.coladungeon.items.weapon.melee.vambrace.Vambrace;
 import com.coladungeon.items.weapon.missiles.ThrowingStone;
@@ -327,8 +327,7 @@ public final class HeroClassSheet {
         new Waterskin().collect();
 
         // 添加伏击匕首
-        AssassinDagger dagger = new AssassinDagger();
-        dagger.level(1);
+        Dagger dagger = new Dagger();
         dagger.identify().collect();
 
         // 添加护手

@@ -1,24 +1,24 @@
 package com.coladungeon.sprites;
 
-import com.watabou.gltextures.TextureCache;
-import com.watabou.gltextures.SmartTexture;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import com.watabou.gltextures.SmartTexture;
+import com.watabou.gltextures.TextureCache;
+import com.watabou.noosa.TextureFilm;
 import com.watabou.utils.RectF;
 
-import com.watabou.noosa.TextureFilm;
-
-/**
- * Manages custom sprite mappings for items
- */
 public class ItemSpriteManager {
-    private static ArrayList<Segment> segments = new ArrayList<>();
+    private static final ArrayList<Segment> segments = new ArrayList<>();
     public static HashMap<String, Integer> texture_id_map = new HashMap<>();
     private static int latestLocation = 120000;
 
     public static Segment getSegment(int id) {
         for (Segment s : segments) {
             if (s.id_start <= id && id <= s.id_start + s.id_size) {
+                if(s.cache.bitmap==null){
+                    s.load();
+                }
                 return s;
             }
         }
@@ -41,7 +41,11 @@ public class ItemSpriteManager {
     }
 
     public static ImageMapping getImageMapping(int id) {
-        return getSegment(id).get(id);
+        Segment s = getSegment(id);
+        if (s == null) {
+            return null;
+        }
+        return s.get(id);
     }
 
     public static ImageMapping getImageMapping(String label) {
@@ -50,6 +54,7 @@ public class ItemSpriteManager {
 
     public static class Segment {
         SmartTexture cache;
+        String path;
         int id_start;
         int id_size;
         int size;
@@ -58,6 +63,7 @@ public class ItemSpriteManager {
         TextureFilm film;
 
         public Segment(String texture, int id_start, int size) {
+            this.path = texture;
             this.cache = TextureCache.get(texture);
             this.film = new TextureFilm(cache, size, size);
             this.id_start = id_start;
@@ -65,7 +71,10 @@ public class ItemSpriteManager {
             this.size = size;
             this.cols = (int) (cache.width / size);
         }
-
+        public void load(){
+            this.cache = TextureCache.get(path);
+            this.film = new TextureFilm(cache, this.size, this.size);
+        }
         private Segment settle(int id) {
             // only local index
             int x = id % cols;
@@ -120,6 +129,8 @@ public class ItemSpriteManager {
             .label("square")
             .label("cross")
             .label("slash");
+        registerTexture("arknights/shatteringDawn.png", 16)
+            .label("shatteringDawn");
         // 使用静态贴图文件的旧方式 - 已注释掉
         // registerTexture("minecraft/golden_apple.png", 16)
         //    .label("golden_apple");
@@ -144,7 +155,10 @@ public class ItemSpriteManager {
 
         } else {
             if (getSegment(image) != null) {
-                return getSegment(image).get(image);
+                Segment s = getSegment(image);
+                
+                ImageMapping im = s.get(image);
+                return im;
             } else {
                 System.out.println("Invalid image segment for " + image);
             }

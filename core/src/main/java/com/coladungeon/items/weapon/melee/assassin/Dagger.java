@@ -1,15 +1,14 @@
-package com.coladungeon.items.weapon.melee;
+package com.coladungeon.items.weapon.melee.assassin;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
-import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.buffs.Invisibility;
 import com.coladungeon.actors.hero.Hero;
-import com.coladungeon.actors.mobs.Mob;
 import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.Speck;
+import com.coladungeon.items.weapon.melee.MeleeWeapon;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.scenes.PixelScene;
@@ -19,7 +18,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.PathFinder;
 
-public class Dagger extends MeleeWeapon {
+public class Dagger extends AssassinWeapon {
 	
 	{
 		image = ItemSpriteSheet.DAGGER;
@@ -37,27 +36,6 @@ public class Dagger extends MeleeWeapon {
 				lvl*(tier+1);   //scaling unchanged
 	}
 	
-	@Override
-	public int damageRoll(Char owner) {
-		if (owner instanceof Hero) {
-			Hero hero = (Hero)owner;
-			Char enemy = hero.enemy();
-			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
-				//deals 75% toward max to max on surprise, instead of min to max.
-				int diff = max() - min();
-				int damage = augment.damageFactor(Hero.heroDamageIntRange(
-						min() + Math.round(diff*0.75f),
-						max()));
-				int exStr = hero.STR() - STRReq();
-				if (exStr > 0) {
-					damage += Hero.heroDamageIntRange(0, exStr);
-				}
-				return damage;
-			}
-		}
-		return super.damageRoll(owner);
-	}
-
 	@Override
 	public String targetingPrompt() {
 		return Messages.get(this, "prompt");

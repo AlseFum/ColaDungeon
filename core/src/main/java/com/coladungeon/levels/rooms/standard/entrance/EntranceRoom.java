@@ -128,7 +128,7 @@
  
 	 }
  
-	 private static ArrayList<Class<?extends StandardRoom>> rooms = new ArrayList<>();
+	 private static final ArrayList<Class<?extends StandardRoom>> rooms = new ArrayList<>();
 	 static {
 		 rooms.add(EntranceRoom.class);
  
@@ -149,7 +149,7 @@
 		 rooms.add(RitualEntranceRoom.class);
 	 }
  
-	 private static float[][] chances = new float[27][];
+	 private static final float[][] chances = new float[27][];
 	 static {
 		 chances[1] =  new float[]{1,  0,0, 0,0, 0,0, 0,0, 0,0};
 		 chances[2] =  chances[1];

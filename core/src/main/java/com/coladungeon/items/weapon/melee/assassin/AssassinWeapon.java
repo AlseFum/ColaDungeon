@@ -78,4 +78,54 @@ public abstract class AssassinWeapon extends MeleeWeapon {
         }
         return desc;
     }
+
+    public static short ambush_level(Char hero,Char enemy){
+        //这个函数用来计算一个抽象的伏击等级，等级越大，武器增益越强
+        //enemy眩晕则+1，定身buff+1，恐惧+1，失明+1
+        //双方每个人处在迷雾药剂范围内+1
+
+        //特别地，盗贼或者刺客专精的应当有个talent，就是在一个enemy身边越久不被发现，ambushlevel越高
+    short level = 0;
+    
+    // 检查敌人是否有眩晕Buff
+    if (enemy.buff(com.coladungeon.actors.buffs.Stunned.class) != null) {
+        level++;
+    }
+    
+    // 检查敌人是否有定身buff
+    if (enemy.buff(com.coladungeon.actors.buffs.Paralysis.class) != null) {
+        level++;
+    }
+    
+    // 检查敌人是否恐惧
+    if (enemy.buff(com.coladungeon.actors.buffs.Terror.class) != null) {
+        level++;
+    }
+    
+    // 检查敌人是否失明
+    if (enemy.buff(com.coladungeon.actors.buffs.Blindness.class) != null) {
+        level++;
+    }
+    
+    // 检查双方是否在迷雾药剂范围内
+    if (hero.buff(com.coladungeon.actors.buffs.Shadows.class) != null) {
+        level++;
+    }
+    if (enemy.buff(com.coladungeon.actors.buffs.Shadows.class) != null) {
+        level++;
+    }
+    
+    return level;
+    }
+
+    @Override
+    public int proc(Char attacker, Char defender, int damage) {
+        short level = ambush_level(attacker, defender);
+        int finalDamage = damage;
+        if (level > 0) {
+            GLog.n("[AssassinWeapon::proc]ambushlevel is "+level);
+            finalDamage = Math.round(damage * (1 + 0.3f * level));
+        }
+        return super.proc(attacker, defender, finalDamage);
+    }
 } 

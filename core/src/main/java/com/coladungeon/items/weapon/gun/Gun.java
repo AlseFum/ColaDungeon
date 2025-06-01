@@ -82,7 +82,7 @@ public class Gun extends Weapon {
             if (target != null) {
                 consumeAmmo(1);
                 if (cartridge instanceof CartridgeAltFire catf) {
-                    catf.fire(curUser, target);
+                    catf.fire(curUser, target,catf);
                 } else {
                     fire(target);
                 }

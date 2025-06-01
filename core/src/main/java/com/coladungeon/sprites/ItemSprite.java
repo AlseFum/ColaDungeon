@@ -1,25 +1,6 @@
-/*
- * Pixel Dungeon
- * Copyright (C) 2012-2015 Oleg Dolya
- *
- * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
-
 package com.coladungeon.sprites;
+
+import java.nio.Buffer;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
@@ -31,6 +12,7 @@ import com.coladungeon.items.Item;
 import com.coladungeon.levels.Terrain;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.scenes.PixelScene;
+import com.coladungeon.sprites.ItemSpriteManager.ImageMapping;
 import com.coladungeon.tiles.DungeonTilemap;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
@@ -44,12 +26,8 @@ import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.PointF;
-import com.watabou.utils.RectF;
 import com.watabou.utils.Random;
-
-import java.nio.Buffer;
-//@Alsefum
-import com.coladungeon.sprites.ItemSpriteManager.ImageMapping;
+import com.watabou.utils.RectF;
 
 public class ItemSprite extends MovieClip {
 
@@ -206,11 +184,11 @@ public class ItemSprite extends MovieClip {
 
 	public ItemSprite view(Item item) {
 		view(item.image(), item.glowing());
-		Emitter emitter = item.emitter();
-		if (emitter != null && parent != null) {
-			emitter.pos(this);
-			parent.add(emitter);
-			this.emitter = emitter;
+		Emitter _emitter = item.emitter();
+		if (_emitter != null && parent != null) {
+			_emitter.pos(this);
+			parent.add(_emitter);
+			this.emitter = _emitter;
 		}
 		return this;
 	}
@@ -221,24 +199,16 @@ public class ItemSprite extends MovieClip {
 		}
 
 		switch (heap.type) {
-			case HEAP:
-			case FOR_SALE:
-				return view(heap.peek());
-			case CHEST:
-				return view(ItemSpriteSheet.CHEST, null);
-			case LOCKED_CHEST:
-				return view(ItemSpriteSheet.LOCKED_CHEST, null);
-			case CRYSTAL_CHEST:
-				return view(ItemSpriteSheet.CRYSTAL_CHEST, null);
-			case TOMB:
-				return view(ItemSpriteSheet.TOMB, null);
-			case SKELETON:
-				return view(ItemSpriteSheet.BONES, null);
-			case REMAINS:
-				return view(ItemSpriteSheet.REMAINS, null);
-			default:
-				return view(0, null);
+			case HEAP, FOR_SALE -> view(heap.peek());
+			case CHEST -> view(ItemSpriteSheet.CHEST, null);
+			case LOCKED_CHEST -> view(ItemSpriteSheet.LOCKED_CHEST, null);
+			case CRYSTAL_CHEST -> view(ItemSpriteSheet.CRYSTAL_CHEST, null);
+			case TOMB -> view(ItemSpriteSheet.TOMB, null);
+			case SKELETON -> view(ItemSpriteSheet.BONES, null);
+			case REMAINS -> view(ItemSpriteSheet.REMAINS, null);
+			default -> view(0, null);
 		}
+		return this;
 	}
 
 	public ItemSprite view(int image, Glowing glowing) {
@@ -252,25 +222,24 @@ public class ItemSprite extends MovieClip {
 
 	public void frame(int image) {
 		// @Alsefum
-		if (image >= 114514) {
+		if (image >= 8000) {
 			ImageMapping map = ItemSpriteManager.mapImage(image);
 			if (map != null) {
 				texture = map.texture;
 				frame(map.rect);
-				float height = map.height;
-				if (height < 8f) {
-					perspectiveRaise = (5 + 8 - height) / 16f;
+				float _height = map.height;
+				if (_height < 8f) {
+					perspectiveRaise = (5 + 8 - _height) / 16f;
 				}
 				return;
 			}
 		}
 		RectF original_map = ItemSpriteSheet.film.get(image);
 		frame(original_map);
-		float height = ItemSpriteSheet.film.height(image);
-		if (height < 8f) {
-			perspectiveRaise = (5 + 8 - height) / 16f;
+		float _height = ItemSpriteSheet.film.height(image);
+		if (_height < 8f) {
+			perspectiveRaise = (5 + 8 - _height) / 16f;
 		}
-		return;
 	}
 
 	public synchronized void glow(Glowing glowing) {

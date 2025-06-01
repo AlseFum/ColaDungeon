@@ -19,51 +19,49 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.coladungeon.items.weapon.melee;
+package com.coladungeon.items.weapon.melee.assassin;
 
 import com.coladungeon.Assets;
-import com.coladungeon.actors.Char;
 import com.coladungeon.actors.hero.Hero;
-import com.coladungeon.actors.mobs.Mob;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.sprites.ItemSpriteSheet;
 
-public class AssassinsBlade extends MeleeWeapon {
+public class Dirk extends AssassinWeapon {
 
 	{
-		image = ItemSpriteSheet.ASSASSINS_BLADE;
+		image = ItemSpriteSheet.DIRK;
 		hitSound = Assets.Sounds.HIT_STAB;
-		hitSoundPitch = 0.9f;
+		hitSoundPitch = 1f;
 
-		tier = 4;
+		tier = 2;
 	}
 
 	@Override
 	public int max(int lvl) {
-		return  4*(tier+1) +    //20 base, down from 25
+		return  4*(tier+1) +    //12 base, down from 15
 				lvl*(tier+1);   //scaling unchanged
 	}
-
-	@Override
-	public int damageRoll(Char owner) {
-		if (owner instanceof Hero) {
-			Hero hero = (Hero)owner;
-			Char enemy = hero.enemy();
-			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
-				//deals 50% toward max to max on surprise, instead of min to max.
-				int diff = max() - min();
-				int damage = augment.damageFactor(Hero.heroDamageIntRange(
-						min() + Math.round(diff*0.50f),
-						max()));
-				int exStr = hero.STR() - STRReq();
-				if (exStr > 0) {
-					damage += Hero.heroDamageIntRange(0, exStr);
-				}
-				return damage;
-			}
-		}
-		return super.damageRoll(owner);
-	}
+	
+	// @Override
+	// public int damageRoll(Char owner) {
+	// 	if (owner instanceof Hero) {
+	// 		Hero hero = (Hero)owner;
+	// 		Char enemy = hero.enemy();
+	// 		if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
+	// 			//deals 67% toward max to max on surprise, instead of min to max.
+	// 			int diff = max() - min();
+	// 			int damage = augment.damageFactor(Hero.heroDamageIntRange(
+	// 					min() + Math.round(diff*0.67f),
+	// 					max()));
+	// 			int exStr = hero.STR() - STRReq();
+	// 			if (exStr > 0) {
+	// 				damage += Hero.heroDamageIntRange(0, exStr);
+	// 			}
+	// 			return damage;
+	// 		}
+	// 	}
+	// 	return super.damageRoll(owner);
+	// }
 
 	@Override
 	public String targetingPrompt() {
@@ -76,7 +74,7 @@ public class AssassinsBlade extends MeleeWeapon {
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		Dagger.sneakAbility(hero, target, 3, 2+buffedLvl(), this);
+		Dagger.sneakAbility(hero, target, 4, 2+buffedLvl(), this);
 	}
 
 	@Override
