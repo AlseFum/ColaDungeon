@@ -133,9 +133,6 @@ public class ItemSpriteManager {
             .label("shatteringDawn");
         registerTexture("sprites/gun.png",16)
             .label("gun");
-        // 使用静态贴图文件的旧方式 - 已注释掉
-        // registerTexture("minecraft/golden_apple.png", 16)
-        //    .label("golden_apple");
     }
 
     public static class ImageMapping {

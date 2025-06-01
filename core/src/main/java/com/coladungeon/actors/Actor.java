@@ -31,7 +31,7 @@ public abstract class Actor implements Bundlable {
     private static final int DEFAULT = -100;  //if no priority is given, act after all else
 
     //used to determine what order actors act in if their time is equal. Higher values act earlier.
-    protected int actPriority = DEFAULT;
+    public int actPriority = DEFAULT;
 
     protected abstract boolean act();
 

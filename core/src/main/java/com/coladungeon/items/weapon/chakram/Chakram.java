@@ -1,7 +1,3 @@
-/*
- * Cola Dungeon
- */
-
 package com.coladungeon.items.weapon.chakram;
 
 import java.util.ArrayList;
@@ -21,87 +17,80 @@ import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.sprites.ItemSprite;
 import com.coladungeon.sprites.MissileSprite;
 import com.coladungeon.tiles.DungeonTilemap;
 import com.coladungeon.utils.GLog;
-import com.watabou.noosa.Visual;
-import com.watabou.noosa.tweeners.PosTweener;
-import com.watabou.noosa.tweeners.Tweener;
+import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.Bundle;
-import com.watabou.utils.Callback;
-import com.watabou.utils.PathFinder;
-import com.watabou.utils.PointF;
-import com.watabou.utils.Random;
 
 public class Chakram extends Weapon {
+//现在是stop char，应当到目的地或硬物再返回。不过现在先解决位置的问题
 
-    private static final String AC_THROW = "投掷";
+    private static final String AC_THROW= "投掷";
     private static final String AC_POWER_THROW = "蓄力投掷";
-    
+
     {
         image = ItemSpriteSheet.THROWING_KNIFE; // 暂时使用飞刀的图标
         hitSound = Assets.Sounds.HIT;
         hitSoundPitch = 1.4f;
-        
+
         defaultAction = AC_THROW;
         usesTargeting = true;
-        
+
         DLY = 1.0f;
         RCH = 6;
         ACC = 1.2f;
     }
-    
+
     // 飞镖状态枚举
     public enum ChakramState {
-        AVAILABLE,   // 可用状态
-        THROWN,      // 普通投掷
+        AVAILABLE, // 可用状态
+        THROWN, // 普通投掷
         POWER_THROWN // 蓄力投掷
     }
 
     // 当前飞镖状态
     private ChakramState currentState = ChakramState.AVAILABLE;
-    
+    public Class<? extends Gizmo> fly_sprite=MissileSprite.class;
+    public Class<? extends Gizmo> still_sprite=MissileSprite.class;
     // 飞镖投掷的目标位置
     private int thrownPosition = -1;
 
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
-        
-        // 根据不同状态显示不同的动作
-        switch (currentState) {
-            case AVAILABLE:
+
+        return switch (currentState) {
+            case AVAILABLE -> {
                 actions.add("投掷");
                 actions.add("蓄力投掷");
-                break;
-            case THROWN:
-                // 普通投掷状态下不可操作
+                yield actions;
+            }
+            case THROWN -> {
                 actions.clear();
-                break;
-            case POWER_THROWN:
-                // 蓄力投掷状态下可以召回
-                actions.add("召回");
-                actions.add("重新充能");
-                break;
-        }
-        
-        return actions;
+                yield actions;
+            }
+            case POWER_THROWN -> {
+                yield actions;
+            }
+        };
     }
-    
+
     @Override
     public void execute(Hero hero, String action) {
         switch (currentState) {
-            case AVAILABLE:
-                if (action.equals("投掷")) {
-                    GameScene.selectCell(thrower);
-                } else if (action.equals("蓄力投掷")) {
-                    GameScene.selectCell(powerThrower);
-                } else {
-                    super.execute(hero, action);
+            case AVAILABLE -> {
+                switch (action) {
+                    case "投掷" ->
+                        GameScene.selectCell(thrower);
+                    case "蓄力投掷" ->
+                        GameScene.selectCell(powerThrower);
+                    default ->
+                        super.execute(hero, action);
                 }
-                break;
-            case POWER_THROWN:
+            }
+            case POWER_THROWN -> {
                 if (action.equals("召回")) {
                     // 强制返回飞镖
                     currentState = ChakramState.AVAILABLE;
@@ -111,10 +100,10 @@ public class Chakram extends Weapon {
                     GLog.p("飞镖加速充能...");
                     // 可以添加额外的充能逻辑
                 }
-                break;
+            }
         }
     }
-    
+
     private CellSelector.Listener thrower = new CellSelector.Listener() {
         @Override
         public void onSelect(Integer target) {
@@ -122,13 +111,13 @@ public class Chakram extends Weapon {
                 throwChakram(target, false);
             }
         }
-        
+
         @Override
         public String prompt() {
             return "选择投掷目标";
         }
     };
-    
+
     private CellSelector.Listener powerThrower = new CellSelector.Listener() {
         @Override
         public void onSelect(Integer target) {
@@ -136,228 +125,254 @@ public class Chakram extends Weapon {
                 throwChakram(target, true);
             }
         }
-        
+
         @Override
         public String prompt() {
             return "选择蓄力投掷目标";
         }
     };
-    
+
     private void throwChakram(int targetPos, boolean isPowerThrow) {
-        Hero curUser = Dungeon.hero;
-        final Ballistica shot = new Ballistica(curUser.pos, targetPos, Ballistica.PROJECTILE);
+        Hero _hero = Dungeon.hero;
+        final Ballistica shot = new Ballistica(_hero.pos, targetPos, Ballistica.STOP_TARGET);
         int cell = shot.collisionPos;
-        
+
         // 更新飞镖状态
         currentState = isPowerThrow ? ChakramState.POWER_THROWN : ChakramState.THROWN;
         thrownPosition = cell;
 
-        curUser.sprite.zap(cell);
-        
+        _hero.sprite.zap(cell);
+
+        // 将ArrayList<Integer>转换为int[]
+        int[] path = shot.path.stream().mapToInt(Integer::intValue).toArray();
+
+        // 创建FlyActor管理飞镖飞行状态
+        FlyActor flyActor = new FlyActor(this, _hero.pos, cell, isPowerThrow, path);
+        Actor.add(flyActor);
+
         // 使用标准的MissileSprite
-        ((MissileSprite)curUser.sprite.parent.recycle(MissileSprite.class)).
-            reset(curUser.sprite, cell, this, new Callback() {
-                @Override
-                public void call() {
-                    onThrowComplete(cell, isPowerThrow);
-                }
-            });
-        
-        // 创建ChakramActor管理飞镖状态
-        ChakramActor chakramActor = new ChakramActor(this, curUser.pos, cell, isPowerThrow);
-        Actor.add(chakramActor);
-        
+        ((MissileSprite) _hero.sprite.parent.recycle(fly_sprite)).
+                reset(_hero.sprite, cell, this, () -> flyActor.onMissileComplete());
+
         Sample.INSTANCE.play(hitSound, 1f, hitSoundPitch);
-        curUser.spendAndNext(DLY * (isPowerThrow ? 1.5f : 1f));
+        _hero.spendAndNext(DLY * (isPowerThrow ? 1.5f : 1f));
     }
-    
-    private void onThrowComplete(int cell, boolean isPowerThrow) {
-        Char enemy = Actor.findChar(cell);
-        
-        if (enemy != null) {
-            // 计算伤害
-            int dmg = damageRoll(curUser);
-            if (isPowerThrow) {
-                dmg *= 1.5f;
-            }
-            
-            // 造成伤害
-            enemy.damage(dmg, this);
-            
-            // 减速效果
-            Buff.affect(enemy, Cripple.class, isPowerThrow ? 5f : 3f);
-            
-            // 特效
-            enemy.sprite.burst(0xCC99FFFF, isPowerThrow ? 10 : 5);
-            
-            // 如果是蓄力投掷，创建持续伤害区域
-            if (isPowerThrow) {
-                CellEmitter.center(cell).burst(PurpleParticle.BURST, 10);
-            }
-        }
-    }
-    
-    @Override
-    public int min(int lvl) {
-        return 3 + 2 * lvl;
-    }
-    
-    @Override
-    public int max(int lvl) {
-        return 6 + 4 * lvl;
-    }
-    
-    @Override
-    public int STRReq(int lvl) {
-        return 9 + lvl;
-    }
-    
-    @Override
-    public String name() {
-        return "巨型飞镖";
-    }
-    
-    @Override
-    public String desc() {
-        switch (currentState) {
-            case THROWN:
-                return "飞镖正在飞行中。\n\n" +
-                       "_当前状态:_\n" +
-                       "- 飞镖已离开，无法控制\n" +
-                       "- 正在飞向目标\n" +
-                       "- 即将命中敌人\n" +
-                       "- 等待自动返回";
-            case POWER_THROWN:
-                return "飞镖正处于蓄力投掷状态。\n\n" +
-                       "_当前状态:_\n" +
-                       "- 飞镖已离开，无法控制\n" +
-                       "- 在目标区域持续造成伤害\n" +
-                       "- 区域内敌人每回合受到伤害\n" +
-                       "- 等待自动返回";
-            default:
-                StringBuilder desc = new StringBuilder();
-                desc.append("一种能够自动返回使用者手中的巨型飞镖，投掷时能够穿透敌人的护甲并造成持续伤害。\n\n");
-                
-                desc.append("_被动效果:_\n");
-                desc.append("- 命中敌人时会减缓其移动速度\n");
-                desc.append("- 穿透护甲造成额外伤害\n");
-                desc.append("- 投掷后会自动返回使用者手中\n\n");
-                
-                desc.append("_主动技能 - 普通投掷:_\n");
-                desc.append("- 投掷飞镖造成单体伤害\n");
-                desc.append("- 减速目标3回合\n");
-                desc.append("- 飞镖会自动返回\n\n");
-                
-                desc.append("_主动技能 - 蓄力投掷:_\n");
-                desc.append("- 蓄力投掷造成1.5倍伤害\n");
-                desc.append("- 减速目标5回合\n");
-                desc.append("- 在目标位置产生持续伤害区域\n");
-                desc.append("- 区域内的敌人每回合受到伤害\n");
-                desc.append("- 持续5回合\n");
-                
-                return desc.toString();
-        }
-    }
-    
-    @Override
-    public String actionName(String action, Hero hero) {
-        if (action.equals("投掷")) return "投掷";
-        if (action.equals("蓄力投掷")) return "蓄力投掷";
-        if (action.equals("召回")) return "召回";
-        if (action.equals("重新充能")) return "重新充能";
-        return super.actionName(action, hero);
-    }
-    
-    // 飞镖Sprite类
-    public static class DartSprite extends MissileSprite {
-        private Callback customCallback;
-        private static final float SPEED = 360f; // 飞镖速度比普通投掷物快50%
-        private static final int ANGULAR_SPEED = 1080; // 旋转速度
-        
-        public void reset(Visual from, Visual to, Item item, Callback listener) {
-            customCallback = listener;
-            reset(from.center(), to.center(), item, new Callback() {
-                @Override
-                public void call() {
-                    if (customCallback != null) {
-                        customCallback.call();
-                    }
-                    kill(); // 确保sprite被清理
-                }
-            });
-        }
-        
-        @Override
-        public void reset(PointF from, PointF to, Item item, Callback listener) {
-            super.reset(from, to, item, listener);
-            
-            // 设置自定义的速度和旋转
-            speed.normalize().scale(SPEED);
-            angularSpeed = ANGULAR_SPEED;
-        }
-    }
-    
-    // 飞镖Actor，管理飞镖状态和返回
-    public static class ChakramActor extends Actor {
+
+    // 飞镖飞行Actor
+    public static class FlyActor extends Actor {
+
         private Chakram chakram;
         private int initialPos;
         private int targetPos;
         private int remainingTurns;
         private boolean isPowerThrow;
+        private boolean isReturning = false; // 是否正在返回
+        private boolean missileComplete = false; // 飞镖是否到达目标
+        private int[] path; // 飞行路径
 
-        public ChakramActor(Chakram chakram, int initialPos, int targetPos, boolean isPowerThrow) {
+        public FlyActor(Chakram chakram, int initialPos, int targetPos, boolean isPowerThrow, int[] path) {
             this.chakram = chakram;
             this.initialPos = initialPos;
             this.targetPos = targetPos;
             this.isPowerThrow = isPowerThrow;
+            this.path = path;
             // 普通投掷3回合，蓄力投掷5回合
-            this.remainingTurns = isPowerThrow ? 5 : 3;
+            this.remainingTurns = isPowerThrow ? 5 : 2;
+        }
+
+        public void onMissileComplete() {
+            missileComplete = true;
+
+            // 处理整个路径上的伤害
+            for (int cell : path) {
+                Char target = Actor.findChar(cell);
+                chakram.flying_effect(target, isPowerThrow);
+            }
+
+            // 创建StillActor显示飞镖在空中停留的状态
+            StillActor stillActor = new StillActor(chakram, targetPos, isPowerThrow);
+            Actor.add(stillActor);
+        }
+
+        @Override
+        protected boolean act() {
+            if (!missileComplete) {
+                spend(TICK);
+                return true;
+            }
+            Actor.remove(this);
+            return true;
+        }
+
+        // 设置返回状态
+        public void setReturning() {
+            isReturning = true;
+        }
+    }
+
+    // 飞镖停留Actor
+    public static class StillActor extends Actor {
+
+        private final Chakram chakram;
+        private final int pos;
+        private final boolean isPowerThrow;
+        private final ItemSprite sprite;
+        private int remainingTurns;
+
+        public StillActor(Chakram chakram, int pos, boolean isPowerThrow) {
+            this.chakram = chakram;
+            this.pos = pos;
+            this.isPowerThrow = isPowerThrow;
+            this.remainingTurns = isPowerThrow ? 5 : 2;
+
+            sprite = new ItemSprite(chakram);
+            sprite.visible = true;
+            sprite.place(pos);
+
+            // 添加到场景
+            Dungeon.hero.sprite.parent.add(sprite);
         }
 
         @Override
         protected boolean act() {
             remainingTurns--;
 
-            // 如果是蓄力投掷，在目标区域造成持续伤害
-            if (isPowerThrow) {
-                for (int i : PathFinder.NEIGHBOURS9) {
-                    int cell = targetPos + i;
-                    if (cell >= 0 && cell < Dungeon.level.length()) {
-                        Char ch = Actor.findChar(cell);
-                        if (ch != null && ch != Dungeon.hero) {
-                            int dmg = Random.NormalIntRange(3, 8);
-                            ch.damage(dmg, this);
-                            CellEmitter.get(cell).burst(PurpleParticle.BURST, 2);
-                        }
-                    }
-                }
-            }
-
-            // 飞镖返回
             if (remainingTurns <= 0) {
-                Hero hero = Dungeon.hero;
-                
-                // 使用MissileSprite返回
-                ((MissileSprite)hero.sprite.parent.recycle(MissileSprite.class)).
-                    reset(DungeonTilemap.tileCenterToWorld(targetPos), 
-                           hero.sprite.center(), 
-                           chakram, 
-                           new Callback() {
-                               @Override
-                               public void call() {
-                                   // 重置飞镖状态
-                                   chakram.currentState = ChakramState.AVAILABLE;
-                                   chakram.thrownPosition = -1;
-                               }
-                           });
+                // 创建返回路径
+                Ballistica returnPath = new Ballistica(pos,
+                        Dungeon.hero.pos,
+                        Ballistica.STOP_TARGET);
+                int[] path = returnPath.path.stream().mapToInt(Integer::intValue).toArray();
 
-                // 移除Actor
+                // 使用MissileSprite显示返回动画
+                ((MissileSprite) Dungeon.hero.sprite.parent.recycle(MissileSprite.class)).
+                        reset(DungeonTilemap.tileCenterToWorld(pos),
+                                Dungeon.hero.sprite.center(),
+                                chakram,
+                                () -> {
+                                    chakram.currentState = ChakramState.AVAILABLE;
+                                    chakram.thrownPosition = -1;
+                                    // 处理返回路径上的伤害
+                                    for (int cell : path) {
+                                        Char target = Actor.findChar(cell);
+                                        if (target != null && target != Dungeon.hero) {
+                                            // 对经过的敌人造成伤害
+                                            // chakram.applyChakramEffect(target, cell, isPowerThrow);
+                                            chakram.flying_effect(target, isPowerThrow);
+                                        }
+                                    }
+                                });
+
+                sprite.killAndErase();
                 Actor.remove(this);
                 return true;
             }
-
+            //静止时的效果
+            chakram.still_effect(pos, isPowerThrow);
             spend(TICK);
             return true;
         }
     }
-} 
+
+    public void flying_effect(Char target, boolean isPowerThrow) {
+        if (target != null && target != Dungeon.hero) {
+            chakram_proc(target, target.pos, isPowerThrow);
+        }
+    }
+
+    public void still_effect(int pos, boolean isPowerThrow) {
+        Char target = Actor.findChar(pos);
+        if (target != null && target != Dungeon.hero) {
+            chakram_proc(target, pos, isPowerThrow);
+        }
+    }
+
+    // 应用飞镖效果
+    private void chakram_proc(Char target, int pos, boolean isPowerThrow) {
+        // 特效
+        if (target != null && target != Dungeon.hero) { // 只对非英雄单位造成伤害
+            // 计算伤害
+            int dmg = damageRoll(Dungeon.hero);
+            if (isPowerThrow) {
+                dmg = Math.round(dmg * 1.5f);
+            }
+
+            // 造成伤害
+            target.damage(dmg, this);
+
+            // 如果目标还活着，应用减速效果和视觉特效
+            if (target.isAlive()) {
+                // 减速效果
+                Buff.affect(target, Cripple.class, isPowerThrow ? 5f : 3f);
+            }
+            // 命中特效
+                target.sprite.burst(0xCC99FFFF, isPowerThrow ? 10 : 5);
+        }
+        // 场域特效（无论是否命中都会显示）
+        if (isPowerThrow) {
+            CellEmitter.center(pos).burst(PurpleParticle.BURST, 10);
+        }
+    }
+
+    @Override
+    public int min(int lvl) {
+        return 3 + 2 * lvl;
+    }
+
+    @Override
+    public int max(int lvl) {
+        return 6 + 4 * lvl;
+    }
+
+    @Override
+    public int STRReq(int lvl) {
+        return 9 + lvl;
+    }
+
+    @Override
+    public String name() {
+        return "巨型飞镖";
+    }
+
+    @Override
+    public String actionName(String action, Hero hero) {
+        if (action.equals(AC_THROW)) {
+            return "投掷";
+        }
+        if (action.equals(AC_POWER_THROW)) {
+            return "蓄力投掷";
+        }
+        // if (action.equals("召回")) {
+        //     return "召回";
+        // }
+        // if (action.equals("重新充能")) {
+        //     return "重新充能";
+        // }
+        return super.actionName(action, hero);
+    }
+
+    @Override
+    public String desc() {
+        switch (currentState) {
+            case THROWN:
+                return "飞镖正在飞行中。\n\n"
+                        + "_当前状态:_\n"
+                        + "- 飞镖已离开，无法控制\n"
+                        + "- 正在飞向目标\n"
+                        + "- 即将命中敌人\n"
+                        + "- 等待自动返回";
+            case POWER_THROWN:
+                return "飞镖正处于蓄力投掷状态。\n\n"
+                        + "_当前状态:_\n"
+                        + "- 飞镖已离开，无法控制\n"
+                        + "- 在目标区域持续造成伤害\n"
+                        + "- 区域内敌人每回合受到伤害\n"
+                        + "- 等待自动返回";
+            default:
+                StringBuilder desc = new StringBuilder();
+                desc.append("一种能够自动返回使用者手中的巨型飞镖，投掷时能够穿透敌人的护甲并造成持续伤害。\n\n");
+
+                return desc.toString();
+        }
+    }
+}
