@@ -1,20 +1,18 @@
 package com.coladungeon.items.weapon.ammo;
 
-import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
-import com.coladungeon.Dungeon;
-import com.watabou.utils.PathFinder;
-import com.coladungeon.effects.particles.BlastParticle;
+import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.effects.CellEmitter;
-import com.coladungeon.utils.GLog;
+import com.coladungeon.effects.particles.BlastParticle;
+import com.watabou.utils.PathFinder;
 
 public enum CartridgeEffect {
     Normal("标准弹", (hero, pos, power, damage) -> -1),
     Explosive("爆炸弹", (hero, pos, power, damage) -> {
         //在pos造成微型爆炸
         int explosionDamage = (int) (power * 0.5f);
-        GLog.p("爆炸弹爆炸！" + explosionDamage);
 
         // 添加爆炸粒子效果
         CellEmitter.center(pos).burst(BlastParticle.FACTORY, 30);
@@ -34,7 +32,6 @@ public enum CartridgeEffect {
 
     @FunctionalInterface
     public interface OnHit {
-
         int apply(Hero hero, int pos, int power, int damage);
     }
 

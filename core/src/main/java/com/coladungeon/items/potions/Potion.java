@@ -163,7 +163,8 @@ public class Potion extends Item {
 		ArrayList<Class<?extends Item>> classes = new ArrayList<>();
 		for (Item i : items){
 			if (i instanceof ExoticPotion){
-				if (!classes.contains(ExoticPotion.exoToReg.get(i.getClass()))){
+				if (!classes.contains(
+					ExoticPotion.exoToReg.get(i.getClass()))){
 					classes.add(ExoticPotion.exoToReg.get(i.getClass()));
 				}
 			} else if (i instanceof Potion){
@@ -201,6 +202,7 @@ public class Potion extends Item {
 			image = handler.image(this);
 			color = handler.label(this);
 		} else {
+			//here, we need to init handler
 			image = ItemSpriteSheet.POTION_CRIMSON;
 			color = "crimson";
 		}

@@ -405,9 +405,10 @@ public class InterlevelScene extends PixelScene {
 					try {
 
 						Actor.fixTime();
-
+						System.out.println("[InterlevelScene::create]mode: "+mode);
 						switch (mode) {
 							case DESCEND:
+								System.out.println("[InterlevelScene::create]descend");
 								descend();
 								break;
 							case ASCEND:
@@ -604,8 +605,10 @@ public class InterlevelScene extends PixelScene {
 	private void descend() throws IOException {
 
 		if (Dungeon.hero == null) {
+			System.out.println("[InterlevelScene]Dungeon.hero is null");
 			Mob.clearHeldAllies();
 			Dungeon.init();
+			System.out.println("[InterlevelScene]descend finished");
 			GameLog.wipe();
 
 			//When debugging, we may start a game at a later depth to quickly test something
@@ -629,6 +632,11 @@ public class InterlevelScene extends PixelScene {
 			Level level = Dungeon.newLevel();
 			Dungeon.switchLevel( level, -1 );
 		} else {
+			System.out.println("Dungeon.hero is not null");
+			System.out.println("[InterlevelScene]Generator.Category.POTION.classes:");
+			for (Class<?> cls : com.coladungeon.items.Generator.Category.POTION.classes) {
+				System.out.println("    " + cls.getSimpleName());
+			}
 			Mob.holdAllies( Dungeon.level );
 			Dungeon.saveAll();
 

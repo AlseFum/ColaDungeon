@@ -38,9 +38,11 @@ import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfStrength;
 import com.coladungeon.items.scrolls.ScrollOfIdentify;
 import com.coladungeon.items.scrolls.ScrollOfUpgrade;
-import com.coladungeon.items.stones.StoneOfDungeonTravel;
+import com.coladungeon.items.stones.StoneOfGeneration;
 import com.coladungeon.items.wands.WandOfMagicMissile;
 import com.coladungeon.items.weapon.ammo.Ammo;
+import com.coladungeon.items.weapon.ammo.BreakingDawn;
+import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
 import com.coladungeon.items.weapon.bfg.BigFockingGun;
 import com.coladungeon.items.weapon.chakram.Chakram;
 import com.coladungeon.items.weapon.grenade.GrenadeLauncher;
@@ -57,7 +59,6 @@ import com.coladungeon.items.weapon.shotgun.Shotgun;
 import com.coladungeon.items.weapon.sniper.SniperGun;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
-import com.coladungeon.items.weapon.ammo.BreakingDawn;
 
 public final class HeroClassSheet {
     private static final Map<String, HeroClass> registeredClasses = new LinkedHashMap<>();
@@ -395,6 +396,8 @@ public final class HeroClassSheet {
         Ammo normalAmmo = new Ammo();
         normalAmmo.identify().quantity(1145).collect();
         
+        ExplosiveAmmo explosiveAmmo = new ExplosiveAmmo();
+        explosiveAmmo.identify().quantity(233).collect();
 
         // 添加5个已祝福的重生十字架
         for (int i = 0; i < 5; i++) {
@@ -413,6 +416,8 @@ public final class HeroClassSheet {
         // 事件通知
         EventBus.fire("Hero:created", "hero", hero);
         new BreakingDawn().quantity(3).identify().collect();
-        new StoneOfDungeonTravel().quantity(120).identify().collect();
+        // new StoneOfDungeonTravel().quantity(120).identify().collect();
+        new StoneOfGeneration().quantity(120).identify().collect();
+        new ScrollOfIdentify().quantity(1200).identify().collect();
     }
 };

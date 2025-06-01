@@ -231,7 +231,8 @@ public class Dungeon {
 
 		//offset seed slightly to avoid output patterns
 		Random.pushGenerator( seed+1 );
-
+			Generator.fullReset();
+			
 			Scroll.initLabels();
 			Potion.initColors();
 			Ring.initGems();
@@ -239,7 +240,7 @@ public class Dungeon {
 			SpecialRoom.initForRun();
 			SecretRoom.initForRun();
 
-			Generator.fullReset();
+			
 
 		Random.resetGenerators();
 		

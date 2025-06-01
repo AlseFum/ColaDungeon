@@ -16,7 +16,6 @@ import com.coladungeon.items.weapon.ammo.CartridgeEffect;
 import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
-import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndOptions;
@@ -41,7 +40,7 @@ public class Gun extends Weapon {
 
         usesTargeting = true;
         defaultAction = AC_FIRE;
-        cartridge = new Cartridge(10, CartridgeEffect.Normal);
+        cartridge = new Cartridge(8, CartridgeEffect.Normal);
     }
 
     @Override
@@ -87,6 +86,7 @@ public class Gun extends Weapon {
                 } else {
                     fire(target);
                 }
+                updateQuickslot();
             }
         }
 
@@ -114,6 +114,7 @@ public class Gun extends Weapon {
             // 否则显示选择窗口
             showAmmoSelectionWindow(availableAmmo);
         }
+        updateQuickslot();
     }
 
     protected void showAmmoSelectionWindow(List<Ammo> availableAmmo) {
@@ -129,6 +130,7 @@ public class Gun extends Weapon {
                 if (index >= 0 && index < availableAmmo.size()) {
                     reload(availableAmmo.get(index));
                 }
+                updateQuickslot();
             }
         });
     }
@@ -187,6 +189,7 @@ public class Gun extends Weapon {
         if (ammo <= 0) {
             GLog.w("弹药耗尽！");
         }
+        GLog.n("弹药："+ammo+"/"+maxAmmo);
     }
 
     private static final String AMMO = "ammo";
