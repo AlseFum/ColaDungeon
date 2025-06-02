@@ -196,6 +196,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
+import com.coladungeon.items.stones.StoneOfDeath;
+import com.coladungeon.items.stones.StoneOfDummy;
 
 
 public class Generator {

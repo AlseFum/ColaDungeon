@@ -965,4 +965,6 @@ public class ItemSpriteSheet {
 
 	}
 
+	public static final int STAFF_SUMMONER = 0x7FF;
+
 }

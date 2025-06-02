@@ -27,7 +27,7 @@ public class Knuckles extends MeleeWeapon {
         image = ItemSpriteSheet.GLOVES;  // 使用手套图标作为指虎的临时图标
         
         // 设置攻击延迟（非常低=超高攻速）
-        DLY = 0.4f;
+        DLY = 0.25f;
         
         // 设置基础伤害（较低，因为攻速快）
         tier = 1;

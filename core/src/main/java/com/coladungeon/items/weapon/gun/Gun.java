@@ -30,18 +30,18 @@ public class Gun extends Weapon {
 
     protected int ammo = 8;
     protected int maxAmmo = 8;
-    public Cartridge cartridge;
-    protected float reloadTime = 1f;
-
+    public CartridgeEffect car_effect=CartridgeEffect.Normal;
+    public Cartridge cartridge ;
     {
-        image = ItemSpriteManager.ByName("gun");
-        hitSound = Assets.Sounds.HIT;
-        hitSoundPitch = 1.2f;
-
-        usesTargeting = true;
-        defaultAction = AC_FIRE;
-        cartridge = new Cartridge(8, CartridgeEffect.Normal);
+         cartridge = new Cartridge(maxAmmo, car_effect);
     }
+    protected float reloadTime = 1f;
+    public int image = ItemSpriteManager.ByName("gun");
+    public String hitSound = Assets.Sounds.HIT;
+    public float hitSoundPitch = 1.2f;
+    public boolean usesTargeting = true;
+    public String defaultAction = AC_FIRE;
+
     private Gun _this = this;
 
     @Override
@@ -129,7 +129,11 @@ public class Gun extends Weapon {
     }
 
     protected void reload(Ammo ammoItem) {
-        cartridge = ammoItem.cartridge;
+        cartridge = 
+            ammoItem.cartridge instanceof Cartridge&&
+            ammoItem.cartridge.onHit!=CartridgeEffect.Supply
+            ?ammoItem.cartridge
+            :new Cartridge(maxAmmo, car_effect);
         ammo = ammoItem.full_reload ? maxAmmo : ammoItem.amount;
         ammoItem.quantity(ammoItem.quantity() - 1);
         if (ammoItem.quantity() <= 0) {
@@ -238,9 +242,11 @@ public class Gun extends Weapon {
             this.hitChance = hitChance;
         }
     }
-    public int fire_damage(Char hero,Char target){
+
+    public int fire_damage(Char hero, Char target) {
         return (int) (damageRoll(target) + 0.5 * cartridge.power);
     }
+
     public static ShotResult shoot(
             Gun gun, Char shooter, int targetPos, Cartridge cartridge) {
         return shoot(gun, shooter, targetPos, cartridge, Ballistica.PROJECTILE);

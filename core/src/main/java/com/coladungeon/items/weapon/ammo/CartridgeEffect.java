@@ -63,7 +63,9 @@ public enum CartridgeEffect {
             }
         }
         return 0;
-    });
+    }),
+    Supply("补充弹药", (hero, pos, power, damage) -> -1)
+    ;
 
     @FunctionalInterface
     public interface OnHit {

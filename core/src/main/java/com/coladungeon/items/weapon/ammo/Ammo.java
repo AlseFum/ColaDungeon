@@ -25,7 +25,7 @@ public class Ammo extends Item {
 
     public Ammo() {
         quantity = 1;
-        cartridge = new Cartridge();
+        cartridge = new Cartridge(10,CartridgeEffect.Supply);
         amount = max_amount;
         full_reload = true;
     }

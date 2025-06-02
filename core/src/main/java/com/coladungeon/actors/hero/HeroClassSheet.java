@@ -58,9 +58,12 @@ import com.coladungeon.items.weapon.proj.Proj;
 import com.coladungeon.items.weapon.rifle.Rifle;
 import com.coladungeon.items.weapon.shotgun.Shotgun;
 import com.coladungeon.items.weapon.sniper.SniperGun;
+import com.coladungeon.items.weapon.SummonerStaff;
 import com.coladungeon.items.Supply;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
+import com.coladungeon.items.stones.StoneOfDummy;
+import com.coladungeon.items.stones.StoneOfDeath;
 
 public final class HeroClassSheet {
     private static final Map<String, HeroClass> registeredClasses = new LinkedHashMap<>();
@@ -290,6 +293,11 @@ public final class HeroClassSheet {
         new ScrollOfIdentify().identify();
         new Waterskin().collect();
 
+        // 添加召唤法杖
+        SummonerStaff staff = new SummonerStaff();
+        staff.identify().collect();
+        Dungeon.quickslot.setSlot(1, staff);
+
         // 空白补给包仅在创建英雄时有用
         Supply meleeSupply = new Supply();
         meleeSupply.put_in(Dagger.class)
@@ -302,12 +310,6 @@ public final class HeroClassSheet {
                    .identify()
                    .collect();
 
-
-        // 添加法杖（魔法飞弹）
-        WandOfMagicMissile wand = new WandOfMagicMissile();
-        wand.level(1);
-        wand.identify().collect();
-        Dungeon.quickslot.setSlot(0, wand);
 
         // 创建枪械补给包
         Supply gunSupply = new Supply();
@@ -355,5 +357,7 @@ public final class HeroClassSheet {
         new StoneOfGeneration().quantity(120).identify().collect();
         new ScrollOfIdentify().quantity(1200).identify().collect();
         new ScrollOfUpgrade().quantity(1200).identify().collect();
+        new StoneOfDummy().quantity(1200).identify().collect();
+        new StoneOfDeath().quantity(1200).identify().collect();
     }
 };
