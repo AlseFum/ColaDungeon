@@ -70,7 +70,6 @@ public class GrenadeLauncher extends Gun {
         curUser.sprite.operate(curUser.pos, () -> {
             curUser.spendAndNext(DLY);
             EventBus.fire("Grenade:explode", "where", cell, "which", this);
-            // explode(cell);
             updateQuickslot();
         });
     }

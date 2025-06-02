@@ -42,6 +42,7 @@ public class Gun extends Weapon {
         defaultAction = AC_FIRE;
         cartridge = new Cartridge(8, CartridgeEffect.Normal);
     }
+    private Gun _this = this;
 
     @Override
     public String name() {
@@ -65,15 +66,7 @@ public class Gun extends Weapon {
     }
 
     protected void fire(int targetPos) {
-        ShotResult result = shoot(this, curUser, targetPos, cartridge);
-
-        if (result.blocked) {
-            GLog.p("射击被阻挡！" + ammo + "/" + maxAmmo);
-        } else if (result.hit) {
-            GLog.p("射击成功！" + ammo + "/" + maxAmmo);
-        } else {
-            GLog.p("射击未命中！" + ammo + "/" + maxAmmo);
-        }
+        shoot(this, curUser, targetPos, cartridge);
     }
 
     protected CellSelector.Listener shooter = new CellSelector.Listener() {
@@ -82,7 +75,7 @@ public class Gun extends Weapon {
             if (target != null) {
                 consumeAmmo(1);
                 if (cartridge instanceof CartridgeAltFire catf) {
-                    catf.fire(curUser, target,catf);
+                    catf.fire(curUser, target, catf, _this);
                 } else {
                     fire(target);
                 }
@@ -189,7 +182,7 @@ public class Gun extends Weapon {
         if (ammo <= 0) {
             GLog.w("弹药耗尽！");
         }
-        GLog.n("弹药："+ammo+"/"+maxAmmo);
+        GLog.n("弹药：" + ammo + "/" + maxAmmo);
     }
 
     private static final String AMMO = "ammo";
@@ -245,7 +238,9 @@ public class Gun extends Weapon {
             this.hitChance = hitChance;
         }
     }
-
+    public int fire_damage(Char hero,Char target){
+        return (int) (damageRoll(target) + 0.5 * cartridge.power);
+    }
     public static ShotResult shoot(
             Gun gun, Char shooter, int targetPos, Cartridge cartridge) {
         return shoot(gun, shooter, targetPos, cartridge, Ballistica.PROJECTILE);
@@ -253,19 +248,18 @@ public class Gun extends Weapon {
 
     public static ShotResult shoot(Gun gun, Char shooter, int targetPos, Cartridge cartridge, int projectileType) {
 
-
         Ballistica shot = new Ballistica(shooter.pos, targetPos, projectileType);
 
         // 检查是否被阻挡
         boolean blocked = shot.collisionPos != targetPos;
         int collisionPos = shot.collisionPos;
         Char target = Actor.findChar(collisionPos);
-        // GLog.n("[Gun::shoot]hit " + target);
-        // 计算命中
-        boolean hit = !blocked && Random.Float() < gun.accuracyFactor(shooter, target);
+
+        boolean hit = !blocked
+                && Random.Float() < gun.accuracyFactor(shooter, target);
 
         // 计算伤害
-        int damage = (int) (gun.damageRoll(target) + 0.5 * cartridge.power);
+        int damage = gun.fire_damage(shooter, target);
 
         // 应用伤害
         //FIXME 应有能复杂的机制
@@ -280,10 +274,12 @@ public class Gun extends Weapon {
         Sample.INSTANCE.play(gun.hitSound, 1, gun.hitSoundPitch);
         return new ShotResult(hit, blocked, damage, shot.dist, target, collisionPos, gun.accuracyFactor(shooter, target));
     }
+
     @Override
-    public String status(){
-        return ammo+"/"+maxAmmo;
+    public String status() {
+        return ammo + "/" + maxAmmo;
     }
+
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);

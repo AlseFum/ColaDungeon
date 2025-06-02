@@ -46,6 +46,7 @@ import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
 import com.coladungeon.items.weapon.bfg.BigFockingGun;
 import com.coladungeon.items.weapon.chakram.Chakram;
 import com.coladungeon.items.weapon.grenade.GrenadeLauncher;
+import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.items.weapon.heavysword.HeavySword;
 import com.coladungeon.items.weapon.melee.MagesStaff;
 import com.coladungeon.items.weapon.melee.WornShortsword;
@@ -57,6 +58,7 @@ import com.coladungeon.items.weapon.proj.Proj;
 import com.coladungeon.items.weapon.rifle.Rifle;
 import com.coladungeon.items.weapon.shotgun.Shotgun;
 import com.coladungeon.items.weapon.sniper.SniperGun;
+import com.coladungeon.items.Supply;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
 
@@ -228,45 +230,6 @@ public final class HeroClassSheet {
         })
         .register();
 
-    // public static final HeroClass HEAVY_SQUAD = registerStandardClass("heavy_squad")
-    //     .subClasses(HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR)
-    //     .title("重装部队")
-    //     .desc("重装部队是一个特殊的近战职业，起始装备更好。\n\n重装部队的特点：\n- 起始装备：+1短剑和+1布甲（带印记）\n- 额外的治疗药水和投掷石头\n- 自动识别：\n  * 鉴定卷轴\n  * 力量药水\n  * 升级卷轴")
-    //     .shortDesc("重装部队是一个特殊的近战职业，起始装备更好。")
-    //     .unlockMsg("The Heavy Squad starts with upgraded equipment including a +1 short sword and +1 cloth armor with a broken seal. They also carry more healing potions and throwing stones.\n\nThe Heavy Squad is automatically unlocked.")
-    //     .spritesheet(Assets.Sprites.WARRIOR)
-    //     .splashArt(Assets.Splashes.WARRIOR)
-    //     .abilities(new HeroicLeap(), new Shockwave(), new Endure())
-    //     .masteryBadge(Badges.Badge.MASTERY_HEAVY_SQUAD)
-    //     .unlocked(true)
-    //     .initializer(hero -> {
-    //         hero.heroClass = HeroClass.HEAVY_SQUAD;
-    //         initCommon(hero);
-            
-    //         // 升级的短剑
-    //         WornShortsword sword = new WornShortsword();
-    //         sword.level(1);
-    //         (hero.belongings.weapon = sword).identify();
-
-    //         // 投掷石头
-    //         ThrowingStone stones = new ThrowingStone();
-    //         stones.quantity(5).collect();
-    //         Dungeon.quickslot.setSlot(0, stones);
-
-    //         // 升级的护甲和印记
-    //         if (hero.belongings.armor != null) {
-    //             hero.belongings.armor.affixSeal(new BrokenSeal());
-    //             hero.belongings.armor.level(1);
-    //             Catalog.setSeen(BrokenSeal.class);
-    //         }
-
-    //         // 自动识别和额外物品
-    //         new PotionOfStrength().identify();
-    //         new ScrollOfUpgrade().identify();
-    //         new PotionOfHealing().quantity(2).collect();
-    //     })
-    //     .register();
-
         static{
             registerStandardClass("Peter")
             .title("Peter")
@@ -327,23 +290,18 @@ public final class HeroClassSheet {
         new ScrollOfIdentify().identify();
         new Waterskin().collect();
 
-        // 添加伏击匕首
-        Dagger dagger = new Dagger();
-        dagger.identify().collect();
+        // 空白补给包仅在创建英雄时有用
+        Supply meleeSupply = new Supply();
+        meleeSupply.put_in(Dagger.class)
+                   .put_in(Vambrace.class)
+                   .put_in(Knuckles.class)
+                   .put_in(HeavySword.class)
+                   .put_in(WornShortsword.class)
+                   .name("近战武器补给包")
+                   .desc("一个装满了近战武器的包，可以从中获取到各种近战武器。")
+                   .identify()
+                   .collect();
 
-        // 添加护手
-        Vambrace vambrace = new Vambrace();
-        vambrace.level(1);
-        vambrace.identify().collect();
-
-        // 添加指虎
-        Knuckles knuckles = new Knuckles();
-        knuckles.level(1);
-        knuckles.identify().collect();
-
-        // 添加弹药包
-        AmmoHolder ammoHolder = new AmmoHolder();
-        ammoHolder.identify().collect();
 
         // 添加法杖（魔法飞弹）
         WandOfMagicMissile wand = new WandOfMagicMissile();
@@ -351,53 +309,31 @@ public final class HeroClassSheet {
         wand.identify().collect();
         Dungeon.quickslot.setSlot(0, wand);
 
-        // 添加重剑
-        HeavySword heavySword = new HeavySword();
-        heavySword.level(1);
-        heavySword.identify().collect();
-
-        // 添加散弹枪作为主武器
-        Shotgun shotgun = new Shotgun();
-        shotgun.level(1);
-        (hero.belongings.weapon = shotgun).identify().collect();
-
-        // 添加狙击枪到快捷栏
-        SniperGun sniperGun = new SniperGun();
-        sniperGun.level(1);
-        sniperGun.identify().collect();
-        Dungeon.quickslot.setSlot(1, sniperGun);
-
-        // 添加步枪到快捷栏
-        Rifle rifle = new Rifle();
-        rifle.level(1);
-        rifle.identify().collect();
-
-        // 添加榴弹发射器到快捷栏
-        GrenadeLauncher grenadeLauncher = new GrenadeLauncher();
-        grenadeLauncher.level(1);
-        grenadeLauncher.identify().collect();
-
-        // 添加巨型飞镖到快捷栏
-        Chakram chakram = new Chakram();
-        chakram.level(1);
-        chakram.identify().collect();
-
-        // 添加投射器到快捷栏
-        Proj proj = new Proj();
-        proj.level(1);
-        proj.identify().collect();
-
-        // 添加BFG到快捷栏
-        BigFockingGun bfg = new BigFockingGun();
-        bfg.identify().collect();
-
-        // 添加弹药
-        // 普通弹药
-        Ammo normalAmmo = new Ammo();
-        normalAmmo.identify().quantity(1145).collect();
-        
-        ExplosiveAmmo explosiveAmmo = new ExplosiveAmmo();
-        explosiveAmmo.identify().quantity(233).collect();
+        // 创建枪械补给包
+        Supply gunSupply = new Supply();
+        gunSupply.put_in(Shotgun.class)
+                 .put_in(SniperGun.class)
+                 .put_in(Rifle.class)
+                 .put_in(GrenadeLauncher.class)
+                 .put_in(Chakram.class)
+                 .put_in(Proj.class)
+                 .put_in(BigFockingGun.class)
+                 .put_in(Gun.class)
+                 .put_in(AmmoHolder.class)
+                 .put_in(() -> {
+                     Ammo ammo = new Ammo();
+                     ammo.quantity(1145);
+                     return ammo;
+                 })
+                 .put_in(() -> {
+                     ExplosiveAmmo ammo = new ExplosiveAmmo();
+                     ammo.quantity(233);
+                     return ammo;
+                 })
+                 .name("枪械补给包")
+                 .desc("一个装满了枪械的包，可以从中获取到各种枪械。")
+                 .identify()
+                 .collect();
 
         // 添加5个已祝福的重生十字架
         for (int i = 0; i < 5; i++) {
@@ -416,8 +352,8 @@ public final class HeroClassSheet {
         // 事件通知
         EventBus.fire("Hero:created", "hero", hero);
         new BreakingDawn().quantity(3).identify().collect();
-        // new StoneOfDungeonTravel().quantity(120).identify().collect();
         new StoneOfGeneration().quantity(120).identify().collect();
         new ScrollOfIdentify().quantity(1200).identify().collect();
+        new ScrollOfUpgrade().quantity(1200).identify().collect();
     }
 };

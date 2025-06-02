@@ -11,23 +11,22 @@ import com.coladungeon.actors.buffs.Cripple;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.particles.PurpleParticle;
-import com.coladungeon.items.Item;
 import com.coladungeon.items.weapon.Weapon;
 import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
-import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.sprites.ItemSprite;
+import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.sprites.MissileSprite;
 import com.coladungeon.tiles.DungeonTilemap;
 import com.coladungeon.utils.GLog;
 import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.PathFinder;
 
 public class Chakram extends Weapon {
-//现在是stop char，应当到目的地或硬物再返回。不过现在先解决位置的问题
 
-    private static final String AC_THROW= "投掷";
+    private static final String AC_THROW = "投掷";
     private static final String AC_POWER_THROW = "蓄力投掷";
 
     {
@@ -52,10 +51,10 @@ public class Chakram extends Weapon {
 
     // 当前飞镖状态
     private ChakramState currentState = ChakramState.AVAILABLE;
-    public Class<? extends Gizmo> fly_sprite=MissileSprite.class;
-    public Class<? extends Gizmo> still_sprite=MissileSprite.class;
-    // 飞镖投掷的目标位置
-    private int thrownPosition = -1;
+    public Class<? extends Gizmo> fly_sprite = MissileSprite.class;
+    public Class<? extends Gizmo> still_sprite = MissileSprite.class;
+    // // 飞镖投掷的目标位置
+    // private int thrownPosition = -1;
 
     @Override
     public ArrayList<String> actions(Hero hero) {
@@ -94,11 +93,8 @@ public class Chakram extends Weapon {
                 if (action.equals("召回")) {
                     // 强制返回飞镖
                     currentState = ChakramState.AVAILABLE;
-                    thrownPosition = -1;
+                    // thrownPosition = -1;
                     GLog.p("强制召回飞镖！");
-                } else if (action.equals("重新充能")) {
-                    GLog.p("飞镖加速充能...");
-                    // 可以添加额外的充能逻辑
                 }
             }
         }
@@ -118,7 +114,7 @@ public class Chakram extends Weapon {
         }
     };
 
-    private CellSelector.Listener powerThrower = new CellSelector.Listener() {
+    private final CellSelector.Listener powerThrower = new CellSelector.Listener() {
         @Override
         public void onSelect(Integer target) {
             if (target != null) {
@@ -139,7 +135,7 @@ public class Chakram extends Weapon {
 
         // 更新飞镖状态
         currentState = isPowerThrow ? ChakramState.POWER_THROWN : ChakramState.THROWN;
-        thrownPosition = cell;
+        // thrownPosition = cell;
 
         _hero.sprite.zap(cell);
 
@@ -161,18 +157,15 @@ public class Chakram extends Weapon {
     // 飞镖飞行Actor
     public static class FlyActor extends Actor {
 
-        private Chakram chakram;
-        private int initialPos;
-        private int targetPos;
-        private int remainingTurns;
-        private boolean isPowerThrow;
-        private boolean isReturning = false; // 是否正在返回
+        private final Chakram chakram;
+        private final int targetPos;
+        private final int remainingTurns;
+        private final boolean isPowerThrow;
         private boolean missileComplete = false; // 飞镖是否到达目标
-        private int[] path; // 飞行路径
+        private final int[] path; // 飞行路径
 
         public FlyActor(Chakram chakram, int initialPos, int targetPos, boolean isPowerThrow, int[] path) {
             this.chakram = chakram;
-            this.initialPos = initialPos;
             this.targetPos = targetPos;
             this.isPowerThrow = isPowerThrow;
             this.path = path;
@@ -190,7 +183,7 @@ public class Chakram extends Weapon {
             }
 
             // 创建StillActor显示飞镖在空中停留的状态
-            StillActor stillActor = new StillActor(chakram, targetPos, isPowerThrow);
+            StillActor stillActor = new StillActor(chakram, targetPos, isPowerThrow, remainingTurns);
             Actor.add(stillActor);
         }
 
@@ -206,7 +199,6 @@ public class Chakram extends Weapon {
 
         // 设置返回状态
         public void setReturning() {
-            isReturning = true;
         }
     }
 
@@ -219,11 +211,11 @@ public class Chakram extends Weapon {
         private final ItemSprite sprite;
         private int remainingTurns;
 
-        public StillActor(Chakram chakram, int pos, boolean isPowerThrow) {
+        public StillActor(Chakram chakram, int pos, boolean isPowerThrow, int remainingTurns) {
             this.chakram = chakram;
             this.pos = pos;
             this.isPowerThrow = isPowerThrow;
-            this.remainingTurns = isPowerThrow ? 5 : 2;
+            this.remainingTurns = remainingTurns;
 
             sprite = new ItemSprite(chakram);
             sprite.visible = true;
@@ -251,13 +243,9 @@ public class Chakram extends Weapon {
                                 chakram,
                                 () -> {
                                     chakram.currentState = ChakramState.AVAILABLE;
-                                    chakram.thrownPosition = -1;
-                                    // 处理返回路径上的伤害
                                     for (int cell : path) {
                                         Char target = Actor.findChar(cell);
                                         if (target != null && target != Dungeon.hero) {
-                                            // 对经过的敌人造成伤害
-                                            // chakram.applyChakramEffect(target, cell, isPowerThrow);
                                             chakram.flying_effect(target, isPowerThrow);
                                         }
                                     }
@@ -273,17 +261,20 @@ public class Chakram extends Weapon {
             return true;
         }
     }
-
+    //TOBE OVERRIDE
     public void flying_effect(Char target, boolean isPowerThrow) {
         if (target != null && target != Dungeon.hero) {
             chakram_proc(target, target.pos, isPowerThrow);
         }
     }
-
+    //TOBE OVERRIDE
     public void still_effect(int pos, boolean isPowerThrow) {
-        Char target = Actor.findChar(pos);
-        if (target != null && target != Dungeon.hero) {
-            chakram_proc(target, pos, isPowerThrow);
+        for (int i : PathFinder.NEIGHBOURS9) {
+            int cell = pos + i;
+            Char target = Actor.findChar(cell);
+            if (target != null && target != Dungeon.hero) {
+                chakram_proc(target, cell, isPowerThrow);
+            }
         }
     }
 
@@ -306,7 +297,7 @@ public class Chakram extends Weapon {
                 Buff.affect(target, Cripple.class, isPowerThrow ? 5f : 3f);
             }
             // 命中特效
-                target.sprite.burst(0xCC99FFFF, isPowerThrow ? 10 : 5);
+            target.sprite.burst(0xCC99FFFF, isPowerThrow ? 10 : 5);
         }
         // 场域特效（无论是否命中都会显示）
         if (isPowerThrow) {
@@ -316,17 +307,17 @@ public class Chakram extends Weapon {
 
     @Override
     public int min(int lvl) {
-        return 3 + 2 * lvl;
+        return 5 + 3 * lvl;  // 提高基础伤害和升级收益
     }
 
     @Override
     public int max(int lvl) {
-        return 6 + 4 * lvl;
+        return 10 + 5 * lvl;  // 提高基础伤害和升级收益
     }
 
     @Override
     public int STRReq(int lvl) {
-        return 9 + lvl;
+        return 10 + lvl;
     }
 
     @Override
@@ -342,12 +333,6 @@ public class Chakram extends Weapon {
         if (action.equals(AC_POWER_THROW)) {
             return "蓄力投掷";
         }
-        // if (action.equals("召回")) {
-        //     return "召回";
-        // }
-        // if (action.equals("重新充能")) {
-        //     return "重新充能";
-        // }
         return super.actionName(action, hero);
     }
 
@@ -370,8 +355,13 @@ public class Chakram extends Weapon {
                         + "- 等待自动返回";
             default:
                 StringBuilder desc = new StringBuilder();
-                desc.append("一种能够自动返回使用者手中的巨型飞镖，投掷时能够穿透敌人的护甲并造成持续伤害。\n\n");
-
+                desc.append("一种能够自动返回使用者手中的巨型飞镖。\n\n");
+                desc.append("力量需求：").append(STRReq(0)).append("\n");
+                desc.append("伤害：").append(min(0)).append("-").append(max(0)).append("\n\n");
+                desc.append("_特殊效果：_\n");
+                desc.append("- 投掷时能够穿透敌人的护甲\n");
+                desc.append("- 命中后会自动返回使用者手中\n");
+                desc.append("- 蓄力投掷时会在目标区域持续造成伤害");
                 return desc.toString();
         }
     }

@@ -1,0 +1,105 @@
+package com.coladungeon.items;
+
+import com.coladungeon.actors.hero.Hero;
+import com.watabou.utils.Bundle;
+import java.util.ArrayList;
+import java.util.function.Supplier;
+
+public class Supply extends Item {
+
+    private static final String AC_OPEN = "启用";
+    public String name="物资包";
+    public String desc="一个装满了物资的包，可以从中获取到各种物品。";
+    public Supply() {
+        super();
+    }
+
+    public Supply name(String _name){
+        this.name=_name;
+        return this;
+    }
+
+    public Supply desc(String _desc){
+        this.desc=_desc;
+        return this;
+    }
+
+    public Supply image(int image){
+        this.image=image;
+        return this;
+    }
+
+    public ArrayList<Supplier<Item>> supplies = new ArrayList<>();
+
+    @Override
+    public ArrayList<String> actions(Hero hero) {
+        ArrayList<String> actions = super.actions(hero);
+        actions.add(AC_OPEN);
+        return actions;
+    }
+
+    @Override
+    public String actionName(String action, Hero hero) {
+        if (action.equals(AC_OPEN)) {
+            return "启用";
+        }
+        return super.actionName(action, hero);
+    }
+
+    @Override
+    public void execute(Hero hero, String action) {
+        if (action.equals(AC_OPEN)) {
+            open(hero);
+        }
+    }
+
+    public void open(Hero hero) {
+        for (Supplier<Item> supply : supplies) {
+            supply.get().collect();
+        }
+        this.detach(hero.belongings.backpack);
+    }
+
+    public Supply put_in(Class<? extends Item> item) {
+        this.supplies.add(
+                () -> {
+                    try {
+                        return item.getConstructor().newInstance();
+                    } catch (Exception e) {
+                        System.err.println("Failed to create instance of " + item.getName() + ": " + e.getMessage());
+                        return new Gold();
+                    }
+                }
+        );
+        return this;
+    }
+
+    public Supply put_in(Item item) {
+        this.supplies.add(
+                () -> item.duplicate()
+        );
+        return this;
+    }
+
+    public Supply put_in(Supplier<Item> supplier) {
+        this.supplies.add(supplier);
+        return this;
+    }
+
+    @Override
+    public void storeInBundle(Bundle bundle) {
+        super.storeInBundle(bundle);
+        bundle.put("name", name);
+        bundle.put("desc", desc);
+        bundle.put("image", image);
+    }
+
+    @Override
+    public void restoreFromBundle(Bundle bundle) {
+        super.restoreFromBundle(bundle);
+        name = bundle.getString("name");
+        desc = bundle.getString("desc");
+        image = bundle.getInt("image");
+    }
+    
+}

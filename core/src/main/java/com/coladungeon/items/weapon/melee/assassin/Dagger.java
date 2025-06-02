@@ -98,4 +98,14 @@ public class Dagger extends AssassinWeapon {
 		hero.next();
 		wep.afterAbilityUsed(hero);
 	}
+
+	@Override
+	public String name() {
+		return "Dagger";
+	}
+
+	@Override
+	public String desc() {
+		return "A small, sharp blade that's perfect for quick strikes. Its lightweight design allows for swift movements and precise attacks.";
+	}
 }

@@ -69,4 +69,14 @@ public class AssassinsBlade extends AssassinWeapon {
 		return Integer.toString(2+level);
 	}
 
+	@Override
+	public String name() {
+		return "Assassin's Blade";
+	}
+
+	@Override
+	public String desc() {
+		return "A masterfully crafted blade designed specifically for assassins. Its deadly precision and balanced weight make it perfect for swift, lethal strikes.";
+	}
+
 }

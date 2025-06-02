@@ -91,4 +91,14 @@ public class Dirk extends AssassinWeapon {
 		return Integer.toString(2+level);
 	}
 
+	@Override
+	public String name() {
+		return "Dirk";
+	}
+
+	@Override
+	public String desc() {
+		return "A slender, double-edged dagger that's longer than a typical dagger. Its extended reach and sharp edges make it particularly effective for surprise attacks.";
+	}
+
 }

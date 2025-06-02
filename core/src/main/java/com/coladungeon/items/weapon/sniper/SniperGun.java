@@ -123,7 +123,7 @@ public class SniperGun extends Gun {
         // 设置新的伤害
         cartridge.power = (int)Math.round(originalPower * (1+multiplier*0.8));
         // 使用 Gun.shoot 进行射击
-        ShotResult result = shoot(this, curUser, targetPos, cartridge, Ballistica.PROJECTILE);
+        shoot(this, curUser, targetPos, cartridge, Ballistica.PROJECTILE);
         // 恢复原始伤害
         cartridge.power = originalPower;
         // 消耗弹药
@@ -194,13 +194,6 @@ public class SniperGun extends Gun {
                 return true;
             }
             
-            // 检查是否还装备着狙击枪
-            if (!(Dungeon.hero.belongings.weapon instanceof SniperGun)) {
-                GLog.w("狙击枪已卸下！");
-                detach();
-                return true;
-            }
-            
             if (charge < MAX_CHARGE) {
                 charge++;
                 GLog.i("狙击蓄力层数增加到 " + charge);
@@ -211,7 +204,7 @@ public class SniperGun extends Gun {
 
         @Override
         public void detach() {
-            ActionIndicator.clearAction(this);
+            ActionIndicator.clearAction(null);
             System.out.println("Should detach action");
             super.detach();
             

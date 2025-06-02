@@ -45,7 +45,7 @@ public class Shotgun extends Gun {
 
     @Override
     public int min(int lvl) {
-        return 4 + 2 * lvl;
+        return 8 + 2 * lvl;
     }
 
     @Override
@@ -55,8 +55,6 @@ public class Shotgun extends Gun {
 
     @Override
     protected void fire(int targetPos) {
-        // 消耗弹药
-        consumeAmmo(1);
         
         // 计算基础方向
         PointF baseDirection = new PointF(
