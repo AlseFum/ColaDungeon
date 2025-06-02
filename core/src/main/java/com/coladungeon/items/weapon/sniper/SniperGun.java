@@ -11,7 +11,6 @@ import com.coladungeon.actors.buffs.FlavourBuff;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.mechanics.Ballistica;
-import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.sprites.ItemSpriteSheet;
@@ -187,12 +186,35 @@ public class SniperGun extends Gun {
         @Override
         public boolean act() {
             spend(TICK);
+            
+            // 检查目标是否还存在
+            if (target == null || !target.isAlive() ) {
+                GLog.w("目标已丢失！");
+                detach();
+                return true;
+            }
+            
+            // 检查是否还装备着狙击枪
+            if (!(Dungeon.hero.belongings.weapon instanceof SniperGun)) {
+                GLog.w("狙击枪已卸下！");
+                detach();
+                return true;
+            }
+            
             if (charge < MAX_CHARGE) {
                 charge++;
                 GLog.i("狙击蓄力层数增加到 " + charge);
             }
             
             return true;
+        }
+
+        @Override
+        public void detach() {
+            ActionIndicator.clearAction(this);
+            System.out.println("Should detach action");
+            super.detach();
+            
         }
 
         @Override

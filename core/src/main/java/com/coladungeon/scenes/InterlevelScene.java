@@ -46,6 +46,7 @@ import com.coladungeon.ui.Icons;
 import com.coladungeon.ui.RenderedTextBlock;
 import com.coladungeon.ui.StyledButton;
 import com.coladungeon.utils.GLog;
+import com.coladungeon.items.Generator;
 import com.coladungeon.windows.WndError;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.input.KeyEvent;
@@ -62,6 +63,8 @@ import com.watabou.utils.Signal;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import com.coladungeon.items.Generator;
 
 public class InterlevelScene extends PixelScene {
 	
@@ -734,7 +737,7 @@ public class InterlevelScene extends PixelScene {
 	private void restore() throws IOException {
 		
 		Mob.clearHeldAllies();
-
+		Generator.initializeItems();
 		GameLog.wipe();
 
 		Dungeon.loadGame( GamesInProgress.curSlot );
