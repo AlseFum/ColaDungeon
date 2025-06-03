@@ -25,8 +25,12 @@ import com.coladungeon.Assets;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.actors.buffs.Buff;
+import com.coladungeon.actors.buffs.Speed;
+import com.coladungeon.utils.GLog;
+import com.coladungeon.actors.Char;
 
-public class Dirk extends AssassinWeapon {
+public class Dirk extends Assassinator {
 
 	{
 		image = ItemSpriteSheet.DIRK;
@@ -35,33 +39,6 @@ public class Dirk extends AssassinWeapon {
 
 		tier = 2;
 	}
-
-	@Override
-	public int max(int lvl) {
-		return  4*(tier+1) +    //12 base, down from 15
-				lvl*(tier+1);   //scaling unchanged
-	}
-	
-	// @Override
-	// public int damageRoll(Char owner) {
-	// 	if (owner instanceof Hero) {
-	// 		Hero hero = (Hero)owner;
-	// 		Char enemy = hero.enemy();
-	// 		if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
-	// 			//deals 67% toward max to max on surprise, instead of min to max.
-	// 			int diff = max() - min();
-	// 			int damage = augment.damageFactor(Hero.heroDamageIntRange(
-	// 					min() + Math.round(diff*0.67f),
-	// 					max()));
-	// 			int exStr = hero.STR() - STRReq();
-	// 			if (exStr > 0) {
-	// 				damage += Hero.heroDamageIntRange(0, exStr);
-	// 			}
-	// 			return damage;
-	// 		}
-	// 	}
-	// 	return super.damageRoll(owner);
-	// }
 
 	@Override
 	public String targetingPrompt() {
@@ -99,6 +76,15 @@ public class Dirk extends AssassinWeapon {
 	@Override
 	public String desc() {
 		return "A slender, double-edged dagger that's longer than a typical dagger. Its extended reach and sharp edges make it particularly effective for surprise attacks.";
+	}
+
+	@Override
+	public void special_effect(Char attacker, Char defender, int damage) {
+		super.special_effect(attacker, defender, damage);
+		if (attacker instanceof Hero) {
+			Buff.affect(attacker, Speed.class, 5f); // Apply speed boost for 5 seconds
+			GLog.i("The Dirk grants you a burst of speed!");
+		}
 	}
 
 }

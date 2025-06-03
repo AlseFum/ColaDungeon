@@ -20,6 +20,7 @@ import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import java.util.stream.Collectors;
@@ -90,6 +91,7 @@ public class Gun extends Weapon {
                     int baseDamage = fire_damage(curUser, targetChar);
                     int actualDamage = fire_proc(curUser, targetChar, baseDamage);
                     targetChar.damage(actualDamage, this);
+                    Sample.INSTANCE.play(Assets.Sounds.HIT);
                 }else{
                 }
             }else{

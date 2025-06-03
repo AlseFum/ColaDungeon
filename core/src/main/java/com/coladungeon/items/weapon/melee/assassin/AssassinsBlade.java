@@ -22,23 +22,21 @@
 package com.coladungeon.items.weapon.melee.assassin;
 
 import com.coladungeon.Assets;
+import com.coladungeon.actors.buffs.Buff;
+import com.coladungeon.actors.buffs.Invisibility;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.utils.GLog;
+import com.coladungeon.actors.Char;
 
-public class AssassinsBlade extends AssassinWeapon {
+public class AssassinsBlade extends Assassinator {
 
 	{
 		image = ItemSpriteSheet.ASSASSINS_BLADE;
 		hitSound = Assets.Sounds.HIT_STAB;
 		hitSoundPitch = 0.9f;
 		tier = 4;
-	}
-
-	@Override
-	public int max(int lvl) {
-		return  4*(tier+1) +    //20 base, down from 25
-				lvl*(tier+1);   //scaling unchanged
 	}
 
 	@Override
@@ -77,6 +75,15 @@ public class AssassinsBlade extends AssassinWeapon {
 	@Override
 	public String desc() {
 		return "A masterfully crafted blade designed specifically for assassins. Its deadly precision and balanced weight make it perfect for swift, lethal strikes.";
+	}
+
+	@Override
+	public void special_effect(Char attacker, Char defender, int damage) {
+		super.special_effect(attacker, defender, damage);
+		if (attacker instanceof Hero) {
+			Buff.affect(attacker, Invisibility.class, 6f); // Apply invisibility for 3 turns
+			GLog.i("The Assassin's Blade shrouds you in shadows!");
+		}
 	}
 
 }

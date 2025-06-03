@@ -36,9 +36,12 @@ import com.coladungeon.items.bags.VelvetPouch;
 import com.coladungeon.items.food.Food;
 import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfStrength;
+import com.coladungeon.items.potions.PotionOfInvisibility;
+import com.coladungeon.items.potions.exotic.PotionOfShroudingFog;
 import com.coladungeon.items.scrolls.ScrollOfIdentify;
 import com.coladungeon.items.scrolls.ScrollOfUpgrade;
 import com.coladungeon.items.scrolls.ScrollOfMagicMapping;
+import com.coladungeon.items.stones.StoneOfBlast;
 import com.coladungeon.items.stones.StoneOfDeath;
 import com.coladungeon.items.stones.StoneOfDummy;
 import com.coladungeon.items.stones.StoneOfGeneration;
@@ -65,6 +68,7 @@ import com.coladungeon.items.weapon.sniper.SniperGun;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
 import com.coladungeon.items.supply.GunSupply;
+import com.coladungeon.items.supply.AssassinSupply;
 public final class HeroClassSheet {
     private static final Map<String, HeroClass> registeredClasses = new LinkedHashMap<>();
     
@@ -316,6 +320,10 @@ public final class HeroClassSheet {
         new ScrollOfUpgrade().quantity(1200).identify().collect();
         new StoneOfDummy().quantity(1200).identify().collect();
         new StoneOfDeath().quantity(1200).identify().collect();
+        new StoneOfBlast().quantity(1200).identify().collect();
         new ScrollOfMagicMapping().quantity(1200).identify().collect();
+        new PotionOfInvisibility().quantity(1200).identify().collect();
+        new AssassinSupply().identify().collect();
+        new PotionOfShroudingFog().quantity(1200).identify().collect();
     }
 };

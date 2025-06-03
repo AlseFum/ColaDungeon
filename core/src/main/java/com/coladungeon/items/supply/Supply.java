@@ -71,7 +71,7 @@ public class Supply extends Item {
 
     public void open(Hero hero) {
         for (Supplier<Item> supply : supplies) {
-            supply.get().collect();
+            supply.get().identify().collect();
         }
         this.detach(hero.belongings.backpack);
     }
