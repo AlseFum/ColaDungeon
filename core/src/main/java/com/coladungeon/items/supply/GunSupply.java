@@ -2,6 +2,7 @@ package com.coladungeon.items.supply;
 
 import com.coladungeon.items.bags.AmmoHolder;
 import com.coladungeon.items.weapon.ammo.Ammo;
+import com.coladungeon.items.weapon.ammo.BreakingDawn;
 import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
 import com.coladungeon.items.weapon.chakram.Chakram;
 import com.coladungeon.items.weapon.grenade.GrenadeLauncher;
@@ -9,7 +10,6 @@ import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.items.weapon.rifle.Rifle;
 import com.coladungeon.items.weapon.shotgun.Shotgun;
 import com.coladungeon.items.weapon.sniper.SniperGun;
-
 public class GunSupply extends Supply {
     public GunSupply() {
         super();
@@ -31,6 +31,11 @@ public class GunSupply extends Supply {
             .put_in(() -> {
                 ExplosiveAmmo ammo = new ExplosiveAmmo();
                 ammo.quantity(233);
+                return ammo;
+            })
+            .put_in(() -> {
+                BreakingDawn ammo = new BreakingDawn();
+                ammo.quantity(1145);
                 return ammo;
             })
             .name("枪械补给包")

@@ -89,6 +89,19 @@ public class Supply extends Item {
         );
         return this;
     }
+    public Supply put_in(Class<? extends Item> item, int quantity) {
+        this.supplies.add(
+                () -> {
+                    try {
+                        return item.getConstructor().newInstance().quantity(quantity);
+                    } catch (Exception e) {
+                        System.err.println("Failed to create instance of " + item.getName() + ": " + e.getMessage());
+                        return null;
+                    }
+                }
+        );
+        return this;
+    }
 
     public Supply put_in(Item item) {
         this.supplies.add(
