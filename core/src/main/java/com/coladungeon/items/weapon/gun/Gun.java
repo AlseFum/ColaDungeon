@@ -17,6 +17,7 @@ import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteManager;
+import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
@@ -33,10 +34,10 @@ public class Gun extends Weapon {
     public CartridgeEffect car_effect=CartridgeEffect.Normal;
     public Cartridge cartridge ;
     {
+         image=ItemSpriteManager.ByName("gun");
          cartridge = new Cartridge(maxAmmo, car_effect);
     }
     protected float reloadTime = 1f;
-    public int image = ItemSpriteManager.ByName("gun");
     public String hitSound = Assets.Sounds.HIT;
     public float hitSoundPitch = 1.2f;
     public boolean usesTargeting = true;

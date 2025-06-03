@@ -1,9 +1,11 @@
-package com.coladungeon.items;
+package com.coladungeon.items.supply;
 
-import com.coladungeon.actors.hero.Hero;
-import com.watabou.utils.Bundle;
 import java.util.ArrayList;
 import java.util.function.Supplier;
+
+import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.items.Item;
+import com.watabou.utils.Bundle;
 
 public class Supply extends Item {
 
@@ -27,6 +29,20 @@ public class Supply extends Item {
     public Supply image(int image){
         this.image=image;
         return this;
+    }
+    @Override
+    public String name(){
+        return name;
+    }
+
+    @Override
+    public String desc(){
+        return desc;
+    }
+
+    @Override
+    public int image(){
+        return image;
     }
 
     public ArrayList<Supplier<Item>> supplies = new ArrayList<>();
@@ -67,7 +83,7 @@ public class Supply extends Item {
                         return item.getConstructor().newInstance();
                     } catch (Exception e) {
                         System.err.println("Failed to create instance of " + item.getName() + ": " + e.getMessage());
-                        return new Gold();
+                        return null;
                     }
                 }
         );

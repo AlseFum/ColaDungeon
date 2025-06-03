@@ -26,13 +26,6 @@ public class Shotgun extends Gun {
     private static final int MAX_DISTANCE = 4; // 最大射程
     private static final int PELLET_COUNT = 8; // 霰弹数量
 
-    static {
-        EventBus.register("Hero:created",(hero)->{
-            new Shotgun().collect();
-            return null;
-        });
-    }
-
     @Override
     public float accuracyFactor(Char owner, Char target) {
         return 1.0f;

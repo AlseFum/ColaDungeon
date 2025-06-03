@@ -47,7 +47,8 @@ public class GLog {
 			text = Messages.format( text, args );
 		}
 		
-		//DeviceCompat.log( TAG, text );
+		DeviceCompat.log( TAG, text );
+		System.out.println("nihao,ceshi [你好，测试]");
 		update.dispatch( text );
 	}
 	

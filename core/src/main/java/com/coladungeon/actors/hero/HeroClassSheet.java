@@ -38,8 +38,12 @@ import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfStrength;
 import com.coladungeon.items.scrolls.ScrollOfIdentify;
 import com.coladungeon.items.scrolls.ScrollOfUpgrade;
+import com.coladungeon.items.stones.StoneOfDeath;
+import com.coladungeon.items.stones.StoneOfDummy;
 import com.coladungeon.items.stones.StoneOfGeneration;
+import com.coladungeon.items.supply.Supply;
 import com.coladungeon.items.wands.WandOfMagicMissile;
+import com.coladungeon.items.weapon.SummonerStaff;
 import com.coladungeon.items.weapon.ammo.Ammo;
 import com.coladungeon.items.weapon.ammo.BreakingDawn;
 import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
@@ -58,13 +62,9 @@ import com.coladungeon.items.weapon.proj.Proj;
 import com.coladungeon.items.weapon.rifle.Rifle;
 import com.coladungeon.items.weapon.shotgun.Shotgun;
 import com.coladungeon.items.weapon.sniper.SniperGun;
-import com.coladungeon.items.weapon.SummonerStaff;
-import com.coladungeon.items.Supply;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
-import com.coladungeon.items.stones.StoneOfDummy;
-import com.coladungeon.items.stones.StoneOfDeath;
-
+import com.coladungeon.items.supply.GunSupply;
 public final class HeroClassSheet {
     private static final Map<String, HeroClass> registeredClasses = new LinkedHashMap<>();
     
@@ -292,57 +292,11 @@ public final class HeroClassSheet {
         new PotionOfHealing().identify();
         new ScrollOfIdentify().identify();
         new Waterskin().collect();
-
         // 添加召唤法杖
         SummonerStaff staff = new SummonerStaff();
         staff.identify().collect();
         Dungeon.quickslot.setSlot(1, staff);
 
-        // 空白补给包仅在创建英雄时有用
-        Supply meleeSupply = new Supply();
-        meleeSupply.put_in(Dagger.class)
-                   .put_in(Vambrace.class)
-                   .put_in(Knuckles.class)
-                   .put_in(HeavySword.class)
-                   .put_in(WornShortsword.class)
-                   .name("近战武器补给包")
-                   .desc("一个装满了近战武器的包，可以从中获取到各种近战武器。")
-                   .identify()
-                   .collect();
-
-
-        // 创建枪械补给包
-        Supply gunSupply = new Supply();
-        gunSupply.put_in(Shotgun.class)
-                 .put_in(SniperGun.class)
-                 .put_in(Rifle.class)
-                 .put_in(GrenadeLauncher.class)
-                 .put_in(Chakram.class)
-                 .put_in(Proj.class)
-                 .put_in(BigFockingGun.class)
-                 .put_in(Gun.class)
-                 .put_in(AmmoHolder.class)
-                 .put_in(() -> {
-                     Ammo ammo = new Ammo();
-                     ammo.quantity(1145);
-                     return ammo;
-                 })
-                 .put_in(() -> {
-                     ExplosiveAmmo ammo = new ExplosiveAmmo();
-                     ammo.quantity(233);
-                     return ammo;
-                 })
-                 .name("枪械补给包")
-                 .desc("一个装满了枪械的包，可以从中获取到各种枪械。")
-                 .identify()
-                 .collect();
-
-        // 添加5个已祝福的重生十字架
-        for (int i = 0; i < 5; i++) {
-            Ankh ankh = new Ankh();
-            ankh.bless();
-            ankh.identify().collect();
-        }
 
         //添加绒布包和药剂包
         VelvetPouch velvetPouch = new VelvetPouch();
@@ -350,6 +304,8 @@ public final class HeroClassSheet {
         
         PotionBandolier potionBandolier = new PotionBandolier();
         potionBandolier.identify().collect();
+
+        new GunSupply().identify().collect();
 
         // 事件通知
         EventBus.fire("Hero:created", "hero", hero);
