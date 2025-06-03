@@ -33,7 +33,7 @@ public class Gun extends Weapon {
     protected int maxAmmo = 8;
     public CartridgeEffect car_effect = CartridgeEffect.Normal;
     public Cartridge cartridge;
-protected float reloadTime = 1f;
+    protected float reloadTime = 1f;
     public int tier=1;
     {
         image = ItemSpriteManager.ByName("gun");
@@ -308,6 +308,11 @@ protected float reloadTime = 1f;
         super.storeInBundle(bundle);
         bundle.put(AMMO, ammo);
         bundle.put(MAX_AMMO, maxAmmo);
+        if (cartridge != null) {
+            bundle.put("cartridgeType", cartridge.cartridgeType);
+            bundle.put("cartridgePower", cartridge.power);
+            // Add more fields if needed
+        }
     }
 
     @Override
@@ -315,6 +320,10 @@ protected float reloadTime = 1f;
         super.restoreFromBundle(bundle);
         ammo = bundle.getInt(AMMO);
         maxAmmo = bundle.getInt(MAX_AMMO);
+        String cartridgeType = bundle.getString("cartridgeType");
+        int cartridgePower = bundle.getInt("cartridgePower");
+        cartridge = new Cartridge(cartridgePower, CartridgeEffect.valueOf(cartridgeType));
+        // Initialize more fields if needed
     }
 
     @Override

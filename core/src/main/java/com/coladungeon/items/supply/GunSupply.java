@@ -3,11 +3,9 @@ package com.coladungeon.items.supply;
 import com.coladungeon.items.bags.AmmoHolder;
 import com.coladungeon.items.weapon.ammo.Ammo;
 import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
-import com.coladungeon.items.weapon.bfg.BigFockingGun;
 import com.coladungeon.items.weapon.chakram.Chakram;
 import com.coladungeon.items.weapon.grenade.GrenadeLauncher;
 import com.coladungeon.items.weapon.gun.Gun;
-import com.coladungeon.items.weapon.proj.Proj;
 import com.coladungeon.items.weapon.rifle.Rifle;
 import com.coladungeon.items.weapon.shotgun.Shotgun;
 import com.coladungeon.items.weapon.sniper.SniperGun;
@@ -23,8 +21,6 @@ public class GunSupply extends Supply {
             .put_in(Rifle.class)
             .put_in(GrenadeLauncher.class)
             .put_in(Chakram.class)
-            .put_in(Proj.class)
-            .put_in(BigFockingGun.class)
             .put_in(Gun.class)
             .put_in(AmmoHolder.class)
             .put_in(() -> {
