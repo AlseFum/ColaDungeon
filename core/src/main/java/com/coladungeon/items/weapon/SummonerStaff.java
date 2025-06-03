@@ -25,7 +25,7 @@ import com.coladungeon.Dungeon;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.Assets;
 import com.coladungeon.actors.Char.Alignment;
-
+import com.coladungeon.actors.mobs.Elemental.FrostElemental;
 import java.util.ArrayList;
 
 public class SummonerStaff extends Weapon {
@@ -42,7 +42,7 @@ public class SummonerStaff extends Weapon {
         bones = false;
     }
     
-    private static Class<? extends Elemental> summonClass = Elemental.AllyNewBornElemental.class;
+    public static Class<? extends Elemental> summonClass = FrostAllyElemental.class;
     
     @Override
     public ArrayList<String> actions(Hero hero) {
@@ -83,10 +83,7 @@ public class SummonerStaff extends Weapon {
                 if (!spawnPoints.isEmpty()) {
                     Elemental elemental = Reflection.newInstance(summonClass);
                     GameScene.add(elemental);
-                    Buff.affect(elemental, Invisibility.class, 1f);
                     elemental.setSummonedALly();
-                    elemental.alignment = Alignment.ALLY;
-                    elemental.HP = elemental.HT;
                     ScrollOfTeleportation.appear(elemental, Random.element(spawnPoints));
                     
                     curUser.sprite.operate(curUser.pos);
@@ -107,6 +104,25 @@ public class SummonerStaff extends Weapon {
         }
     };
     
+
+    public static class FrostAllyElemental extends FrostElemental{
+        {
+            alignment = Char.Alignment.ALLY;
+        }
+        @Override
+        public boolean act() {
+            super.act();
+            if(HP<=0){
+                die(null);
+            }
+            return true;
+        }
+        @Override
+        public void restoreFromBundle(Bundle bundle) {
+            super.restoreFromBundle(bundle);
+            HP = -1;
+        }
+    }
     @Override
     public int min(int lvl) {
         return 1;
