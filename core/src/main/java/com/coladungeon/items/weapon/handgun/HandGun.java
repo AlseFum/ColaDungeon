@@ -1,6 +1,5 @@
 package com.coladungeon.items.weapon.handgun;
 
-import com.coladungeon.Dungeon;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.weapon.Weapon;
 import com.coladungeon.items.weapon.gun.Gun;
@@ -9,14 +8,8 @@ import com.coladungeon.items.weapon.ammo.Cartridge;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
-import com.coladungeon.utils.GLog;
-import com.coladungeon.utils.EventBus;
-
 import java.util.ArrayList;
 
-/**
- * 手枪 - 一种轻型枪械，具有快速射击能力
- */
 public class HandGun extends Gun {
 
     private static final String AC_QUICKDRAW = "快速射击";
@@ -29,12 +22,7 @@ public class HandGun extends Gun {
         maxAmmo = 12;
         ammo = maxAmmo;
         cartridge = new Cartridge(8);
-    }
-    static {
-        EventBus.register("Hero:created", (data) -> {
-            (new HandGun()).identify().collect();
-            return null;
-        });
+        tier=1;
     }
     @Override
     public ArrayList<String> actions(Hero hero) {
@@ -45,7 +33,7 @@ public class HandGun extends Gun {
 
     @Override
     public boolean canLoad(Ammo ammo) {
-        return ammo.cartridge.cartridgeType==Cartridge.CartridgeType.SMALL;
+        return true||ammo.cartridge.cartridgeType==Cartridge.CartridgeType.SMALL;
     }
 
     @Override
@@ -59,10 +47,8 @@ public class HandGun extends Gun {
     @Override
     public void executeSubAction(Hero hero, String action) {
         if (action.equals(AC_QUICKDRAW)) {
-            // 保存当前攻击武器
             Weapon originalWeapon = (Weapon) hero.belongings.weapon;
 
-            // 将攻击武器设置为当前手枪
             hero.belongings.weapon = this;
 
             GameScene.selectCell(new CellSelector.Listener() {
@@ -71,8 +57,6 @@ public class HandGun extends Gun {
                     if (target != null) {
                         fire(target);
                     }
-
-                    // 将 originalWeapon 加入背包
                     if (originalWeapon != null) {
                         hero.belongings.backpack.items.add(originalWeapon);
                     }
@@ -88,7 +72,7 @@ public class HandGun extends Gun {
 
     @Override
     public int STRReq(int lvl) {
-        return 8 + lvl; // 手枪力量需求较低
+        return 10 + lvl; // 手枪力量需求较低
     }
 
     @Override
@@ -102,6 +86,12 @@ public class HandGun extends Gun {
     }
 
     @Override
+    public float getAmmoPowerMultiplier() {
+        return (float) Math.pow(1.2f + 0.3f * level(),tier);
+    }
+
+
+    @Override
     public String name() {
         return "手枪";
     }
@@ -110,9 +100,8 @@ public class HandGun extends Gun {
     public String desc() {
         StringBuilder desc = new StringBuilder();
         desc.append("一把轻巧的手枪，具有快速射击能力。\n\n");
-
-        desc.append("_快速射击：_\n");
-        desc.append("- 非主武器时可迅速切换为手枪进行射击\n");
+        desc.append("初期伤害相对较高，但后期乏力");
+        desc.append("当前弹药类型：").append(cartridge != null ? cartridge.cartridgeType : "无").append("。\n");
 
         return desc.toString();
     }

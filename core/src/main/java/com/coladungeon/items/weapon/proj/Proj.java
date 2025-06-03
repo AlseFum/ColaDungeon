@@ -98,7 +98,7 @@ public class Proj extends Gun {
     }
     
     @Override
-    protected void fire(int targetPos) {
+    public void fire(int targetPos) {
         if (ammo <= 0) {
             GLog.w("弹药不足！");
             return;

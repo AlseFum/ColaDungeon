@@ -20,6 +20,9 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import java.util.ArrayList;
+import java.util.List;
+import com.coladungeon.actors.Actor;
 public class Shotgun extends Gun {
     //FIXME pellet should depend con cartridge
     private static final float CONE_ANGLE = 60f; // 60度的锥形范围
@@ -46,97 +49,6 @@ public class Shotgun extends Gun {
         return 15 + 5 * lvl;
     }
 
-    @Override
-    protected void fire(int targetPos) {
-        
-        // 计算基础方向
-        PointF baseDirection = new PointF(
-            (targetPos % Dungeon.level.width()) - (curUser.pos % Dungeon.level.width()),
-            (targetPos / Dungeon.level.width()) - (curUser.pos / Dungeon.level.width())
-        ).normalize();
-        
-        // 发射多颗霰弹
-        for (int i = 0; i < PELLET_COUNT; i++) {
-            // 计算偏移角度
-            float angle = Random.Float(-CONE_ANGLE/2, CONE_ANGLE/2);
-            float rad = (float) Math.toRadians(angle);
-            
-            // 计算旋转后的方向
-            PointF direction = new PointF(
-                baseDirection.x * (float)Math.cos(rad) - baseDirection.y * (float)Math.sin(rad),
-                baseDirection.x * (float)Math.sin(rad) + baseDirection.y * (float)Math.cos(rad)
-            );
-            
-            // 计算目标位置
-            int pelletTarget = curUser.pos + 
-                (int)(direction.x * MAX_DISTANCE) + 
-                (int)(direction.y * MAX_DISTANCE) * Dungeon.level.width();
-            
-            // 如果目标超出地图，沿着方向找到最近的有效位置
-            if (!Dungeon.level.insideMap(pelletTarget)) {
-                int x = curUser.pos % Dungeon.level.width();
-                int y = curUser.pos / Dungeon.level.width();
-                int targetX = pelletTarget % Dungeon.level.width();
-                int targetY = pelletTarget / Dungeon.level.width();
-                
-                // 计算方向向量
-                float dx = targetX - x;
-                float dy = targetY - y;
-                float length = (float)Math.sqrt(dx * dx + dy * dy);
-                dx /= length;
-                dy /= length;
-                
-                // 从当前位置开始，沿着方向逐步检查直到找到有效位置
-                float currentX = x;
-                float currentY = y;
-                while (!Dungeon.level.insideMap((int)currentX + (int)currentY * Dungeon.level.width())) {
-                    currentX += dx;
-                    currentY += dy;
-                    // 防止无限循环
-                    if (Math.abs(currentX - x) > MAX_DISTANCE || Math.abs(currentY - y) > MAX_DISTANCE) {
-                        break;
-                    }
-                }
-                pelletTarget = (int)currentX + (int)currentY * Dungeon.level.width();
-            }
-            
-            // 确保目标在地图内
-            if (Dungeon.level.insideMap(pelletTarget)) {
-                ShotResult result = shoot(this, curUser, pelletTarget, cartridge, Ballistica.STOP_CHARS);
-                
-                // 显示霰弹轨迹
-                Emitter emitter = GameScene.emitter();
-                emitter.pos(curUser.pos, pelletTarget);
-                emitter.pour(MagicMissile.MagicParticle.FACTORY, 0.01f);
-                
-                // 如果命中，添加额外效果
-                if (result.hit && result.target != null) {
-                    // 近距离额外效果
-                    if (result.distance <= 2) {
-                        // 击退效果
-                        if (Random.Int(2) == 0) {
-                            // 计算击退轨迹
-                            Ballistica trajectory = new Ballistica(curUser.pos, result.target.pos, Ballistica.STOP_CHARS);
-                            // 将轨迹延伸到目标后方
-                            trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
-                            // 击退目标
-                            WandOfBlastWave.throwChar(result.target, trajectory, 2, true, false, curUser);
-                        }
-                        
-                        if (Random.Float() > 0.75f) {
-                            Buff.affect(result.target, Paralysis.class, 1f);
-                        }
-                    }
-                }
-            }
-        }
-        
-        // 播放音效
-        Sample.INSTANCE.play(Assets.Sounds.BLAST, 0.8f, Random.Float(0.85f, 1.15f));
-                
-        // 让英雄完成动作
-        curUser.spendAndNext(1f);
-    }
 
     @Override
     public String name() {
@@ -155,5 +67,78 @@ public class Shotgun extends Gun {
         desc.append("- 距离越近，命中率和伤害越高\n\n");
         
         return desc.toString();
+    }
+
+    @Override
+    public HitResult[] fire_hits(Char shooter, int targetPos, int projectileType) {
+        // Calculate base direction
+        PointF baseDirection = new PointF(
+            (targetPos % Dungeon.level.width()) - (shooter.pos % Dungeon.level.width()),
+            (targetPos / Dungeon.level.width()) - (shooter.pos / Dungeon.level.width())
+        ).normalize();
+
+        List<HitResult> results = new ArrayList<>();
+
+        // Fire multiple pellets
+        for (int i = 0; i < PELLET_COUNT; i++) {
+            // Calculate offset angle
+            float angle = Random.Float(-CONE_ANGLE / 2, CONE_ANGLE / 2);
+            float rad = (float) Math.toRadians(angle);
+
+            PointF direction = new PointF(
+                baseDirection.x * (float) Math.cos(rad) - baseDirection.y * (float) Math.sin(rad),
+                baseDirection.x * (float) Math.sin(rad) + baseDirection.y * (float) Math.cos(rad)
+            );
+
+            // Calculate target position using Ballistica
+            int pelletTarget = shooter.pos +
+                (int) (direction.x * MAX_DISTANCE) +
+                (int) (direction.y * MAX_DISTANCE) * Dungeon.level.width();
+
+            Ballistica trajectory = new Ballistica(shooter.pos, pelletTarget, projectileType);
+            int collisionPos = trajectory.collisionPos;
+            Char target = Actor.findChar(collisionPos);
+
+            results.add(new HitResult(collisionPos, target));
+        }
+
+        return results.toArray(new HitResult[0]);
+    }
+
+    public static int calculateDistance(int pos1, int pos2) {
+        int x1 = pos1 % Dungeon.level.width();
+        int y1 = pos1 / Dungeon.level.width();
+        int x2 = pos2 % Dungeon.level.width();
+        int y2 = pos2 / Dungeon.level.width();
+
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+        return (int) Math.sqrt(dx * dx + dy * dy);
+    }
+
+    @Override
+    protected int fire_proc(Char shooter, Char target, int damage) {
+        // Calculate distance using the static method
+        int distance = calculateDistance(shooter.pos, target.pos);
+
+        // Apply knockback if close
+        if (distance <= 2) {
+            if (Random.Int(2) == 0) {
+                Ballistica trajectory = new Ballistica(shooter.pos, target.pos, Ballistica.STOP_CHARS);
+                trajectory = new Ballistica(trajectory.collisionPos, trajectory.path.get(trajectory.path.size() - 1), Ballistica.PROJECTILE);
+                WandOfBlastWave.throwChar(target, trajectory, 2, true, false, shooter);
+            }
+
+            if (Random.Float() > 0.75f) {
+                Buff.affect(target, Paralysis.class, 1f);
+            }
+        }
+
+        return super.fire_proc(shooter, target, damage);
+    }
+    @Override
+    public float getAmmoPowerMultiplier() {
+        //针对单颗弹丸
+        return (0.5f + 0.3f * level());
     }
 }

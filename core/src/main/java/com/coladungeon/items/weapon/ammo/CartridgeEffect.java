@@ -9,7 +9,13 @@ import com.coladungeon.effects.particles.BlastParticle;
 import com.watabou.utils.PathFinder;
 
 public enum CartridgeEffect {
-    Normal("标准弹", (hero, pos, power, damage) -> -1),
+    Normal("标准弹", (hero, pos, power, damage) -> {
+        //在命中地区做一些粒子效果
+        CellEmitter.center(pos).burst(BlastParticle.FACTORY, 3);
+        //要新建粒子，更细小
+
+        return -1;
+    }),
     Explosive("爆炸弹", (hero, pos, power, damage) -> {
         //在pos造成微型爆炸
         int explosionDamage = (int) (power * 0.5f);

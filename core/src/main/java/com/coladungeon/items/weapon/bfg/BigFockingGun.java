@@ -106,7 +106,7 @@ public class BigFockingGun extends Gun {
     }
 
     @Override
-    protected void fire(int targetPos) {
+    public void fire(int targetPos) {
         if (loadedWand == null) {
             GLog.w("需要装填法杖才能发射！");
             return;

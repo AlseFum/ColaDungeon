@@ -22,14 +22,10 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
 
 public class SniperGun extends Gun {
-
-    private static final float MAX_CHARGE = 3f; // 最大蓄力时间（秒）
-    private static final float CHARGE_RATE = 0.25f; // 每回合增加的蓄力时间
+    public int MAX_CHARGE = 8;
 
     {
         image = ItemSpriteSheet.CROSSBOW; // 暂时使用十字弩的图标
-        hitSound = Assets.Sounds.RAY;
-        hitSoundPitch = 1.2f;
 
         defaultAction = AC_AIM; // 默认动作为瞄准
 
@@ -98,43 +94,26 @@ public class SniperGun extends Gun {
             GLog.w("弹药不足！");
             return;
         }
-        SniperAim aim = Buff.affect(Dungeon.hero, SniperAim.class, 3f);
+        SniperAim aim = Buff.affect(
+            Dungeon.hero, SniperAim.class, 1
+            );
         aim.target = target;
         ActionIndicator.setAction(new FireAmmo(this,target));
-        GLog.p("锁定目标：" + target.name());
         Dungeon.hero.spendAndNext(0.5f);
     }
-
     @Override
-    protected void fire(int targetPos) {
-        if (ammo <= 0) {
-            GLog.w("弹药不足！");
-            return;
-        }
-
-        SniperAim aim = curUser.buff(SniperAim.class);
-        float multiplier = 1f;
-        if (aim != null) {
-            multiplier = Math.min(1f, aim.charge);
-            GLog.i("狙击蓄力层数: " + aim.charge + " 倍率: " + multiplier);
-        }
-        // 保存原始伤害
-        int originalPower = cartridge.power;
-        // 设置新的伤害
-        cartridge.power = (int)Math.round(originalPower * (1+multiplier*0.8));
-        // 使用 Gun.shoot 进行射击
-        shoot(this, curUser, targetPos, cartridge, Ballistica.PROJECTILE);
-        // 恢复原始伤害
-        cartridge.power = originalPower;
-        // 消耗弹药
-        consumeAmmo(1);
-        // 移除瞄准状态
-        if (aim != null) {
-            Buff.detach(curUser, SniperAim.class);
-        }
-        curUser.spendAndNext(0.5f);
+    protected int fire_proc(Char shooter, Char target, int damage) {
+        // Subtract the target's defense from the damage
+        int defense = target != null && target instanceof Char targetChar ? targetChar.drRoll() : 0;
+        
+        // Get the SniperAim buff from the shooter
+        SniperAim aim = shooter.buff(SniperAim.class);
+        double chargeMultiplier = (aim != null) ? 1+0.5*aim.charge : 1;
+        
+        // Multiply damage by the charge multiplier
+        int actualDamage = Math.max((int)Math.round(damage * chargeMultiplier) - defense, 0);
+        return actualDamage;
     }
-
     @Override
     public int STRReq(int lvl) {
         return 8 + Math.round(lvl * 0.5f); // 降低力量需求
@@ -156,7 +135,7 @@ public class SniperGun extends Gun {
 
         SniperAim aim = owner.buff(SniperAim.class);
         if (aim != null && aim.target == target) {
-            acc *= Math.min(4f, 1f / MAX_CHARGE * 3f);
+            acc *= Math.min(4f, (aim.charge / MAX_CHARGE) * 3f);
         }
 
         return acc;
@@ -167,11 +146,12 @@ public class SniperGun extends Gun {
 
         {
             type = buffType.POSITIVE;
+            
         }
         private Char target = null;
         
         private int charge = 1;
-        public static int MAX_CHARGE = 3;
+        public static int MAX_CHARGE = 8;
 
         @Override
         public String name() {
@@ -185,7 +165,7 @@ public class SniperGun extends Gun {
 
         @Override
         public boolean act() {
-            spend(TICK);
+            spend(0.5f);
             
             // 检查目标是否还存在
             if (target == null || !target.isAlive() ) {

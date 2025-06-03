@@ -33,15 +33,15 @@ public class Gun extends Weapon {
     protected int maxAmmo = 8;
     public CartridgeEffect car_effect = CartridgeEffect.Normal;
     public Cartridge cartridge;
-
+protected float reloadTime = 1f;
+    public int tier=1;
     {
         image = ItemSpriteManager.ByName("gun");
         cartridge = new Cartridge(maxAmmo, car_effect);
         usesTargeting = true;
         defaultAction = AC_FIRE;
     }
-    protected float reloadTime = 1f;
-
+    
     private Gun _this = this;
 
     @Override
@@ -77,8 +77,10 @@ public class Gun extends Weapon {
         }
         GameScene.selectCell(shooter);
     }
-
-    protected void fire(int targetPos) {
+    public void fire(int targetPos){
+        fire(targetPos,true);
+    }
+    public void fire(int targetPos,boolean shouldSpend) {
         HitResult[] hitResults = fire_hits(curUser, targetPos, Ballistica.PROJECTILE);
         for (HitResult hitResult : hitResults) {
             Object target = hitResult.who();
@@ -88,18 +90,25 @@ public class Gun extends Weapon {
                     int baseDamage = fire_damage(curUser, targetChar);
                     int actualDamage = fire_proc(curUser, targetChar, baseDamage);
                     targetChar.damage(actualDamage, this);
+                }else{
                 }
+            }else{
             }
             // Apply the cartridge's effect
             cartridge.onHit.onHit.apply(curUser, hitResult.where(), (int) (cartridge.power * getAmmoPowerMultiplier()), 0);
         }
-        curUser.spendAndNext(1f);
+        if(shouldSpend){
+            curUser.spendAndNext(1f);
+        }
     }
 
     protected int fire_proc(Char shooter, Char target, int damage) {
         // Subtract the target's defense from the damage
         int defense = target != null && target instanceof Char targetChar ? targetChar.drRoll() : 0;
         int actualDamage = Math.max(damage - defense, 0);
+        if(actualDamage<=0){
+            GLog.w("刮痧了Pong友");
+        }
         return actualDamage;
     }
 
@@ -232,7 +241,7 @@ public class Gun extends Weapon {
     }
 
     public int fire_damage(Char hero, Char target) {
-        return (int) (damageRoll(target) + 0.5 * cartridge.power);
+        return (int) (getAmmoPowerMultiplier() * cartridge.power);
     }
 
     public HitResult[] fire_hits(Char shooter, int targetPos, int projectileType) {
@@ -265,12 +274,6 @@ public class Gun extends Weapon {
             this.hitChance = hitChance;
         }
     }
-
-    // public static ShotResult shoot(
-    //         Gun gun, Char shooter, int targetPos, Cartridge cartridge) {
-    //     return shoot(gun, shooter, targetPos, cartridge, Ballistica.PROJECTILE);
-    // }
-
     public static ShotResult shoot(Gun gun, Char shooter, int targetPos, Cartridge cartridge, int projectileType) {
         System.out.println("[Gun]shoot Deprecated!");
         Ballistica shot = new Ballistica(shooter.pos, targetPos, projectileType);

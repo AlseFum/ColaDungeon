@@ -1,6 +1,3 @@
-/*
- * Cola Dungeon
- */
 package com.coladungeon.items.weapon.rifle;
 
 import java.util.ArrayList;
@@ -141,21 +138,15 @@ public class Rifle extends Gun {
             GLog.w("弹药不足！需要%d发子弹。", SHOTS_PER_BURST);
             return;
         }
-
-        consumeAmmo(SHOTS_PER_BURST);
         curUser.sprite.zap(targetPos);
-        Sample.INSTANCE.play(Assets.Sounds.HIT);
-
-        // 发射3发子弹
         for (int i = 0; i < SHOTS_PER_BURST; i++) {
-            shoot(this, curUser, targetPos, cartridge, Ballistica.PROJECTILE);
-            if (i < SHOTS_PER_BURST - 1) {
-                float pitch = 0.8f + Random.Float(0.4f);
-                Sample.INSTANCE.play(Assets.Sounds.HIT, pitch);
+            fire(targetPos, false); // 使用fire而不是shoot，并且不消耗行动点
+            float pitch = 0.8f + Random.Float(0.4f);
+            Sample.INSTANCE.play(Assets.Sounds.HIT, pitch);
+            consumeAmmo(1);
             }
-        }
-
-        curUser.spendAndNext(delayFactor(curUser));
+            curUser.spendAndNext(delayFactor(curUser));
+        
     }
 
     private void spray(int targetPos) {
@@ -164,26 +155,22 @@ public class Rifle extends Gun {
             return;
         }
 
-        consumeAmmo(SHOTS_PER_SPRAY);
         curUser.sprite.zap(targetPos);
-        Sample.INSTANCE.play(Assets.Sounds.HIT);
-
-        // 中心目标必定命中
-        shoot(this, curUser, targetPos, cartridge, Ballistica.PROJECTILE);
-
-        // 周围8格随机命中
-        int[] neighbours = PathFinder.NEIGHBOURS8;
-        for (int i = 0; i < neighbours.length; i++) {
-            int pos = targetPos + neighbours[i];
-            if (Dungeon.level.passable[pos]) {
-                Char enemy = Actor.findChar(pos);
-                if (enemy != null && Random.Float() < SPRAY_CHANCE) {
-                    shoot(this, curUser, pos, cartridge, Ballistica.PROJECTILE);
-                    Sample.INSTANCE.play(Assets.Sounds.HIT, 0.8f + Random.Float(0.4f));
-                }
+        for (int i = 0; i < SHOTS_PER_SPRAY; i++) {
+            // 计算实际射击位置
+            int actualTargetPos = targetPos;
+            if (Random.Float() < SPRAY_CHANCE) { // 30%概率射偏
+                // 获取周围8格的位置
+                int[] neighbors = PathFinder.NEIGHBOURS8;
+                int randomNeighbor = neighbors[Random.Int(neighbors.length)];
+                actualTargetPos = targetPos + randomNeighbor;
             }
+            
+            fire(actualTargetPos, false); // 使用fire而不是shoot，并且不消耗行动点
+            float pitch = 0.8f + Random.Float(0.4f);
+            Sample.INSTANCE.play(Assets.Sounds.HIT, pitch);
+            consumeAmmo(1);
         }
-
         curUser.spendAndNext(delayFactor(curUser));
     }
 
@@ -200,10 +187,5 @@ public class Rifle extends Gun {
     @Override
     public int max(int lvl) {
         return 8 + 4 * lvl; // 较低的单发伤害
-    }
-
-    @Override
-    public String status() {
-        return ammo + "/" + maxAmmo;
     }
 }
