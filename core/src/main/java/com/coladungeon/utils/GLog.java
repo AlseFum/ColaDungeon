@@ -48,7 +48,6 @@ public class GLog {
 		}
 		
 		DeviceCompat.log( TAG, text );
-		System.out.println("nihao,ceshi [你好，测试]");
 		update.dispatch( text );
 	}
 	

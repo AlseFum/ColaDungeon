@@ -17,12 +17,12 @@ import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteManager;
-import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
+import java.util.stream.Collectors;
 
 public class Gun extends Weapon {
 
@@ -31,23 +31,27 @@ public class Gun extends Weapon {
 
     protected int ammo = 8;
     protected int maxAmmo = 8;
-    public CartridgeEffect car_effect=CartridgeEffect.Normal;
-    public Cartridge cartridge ;
+    public CartridgeEffect car_effect = CartridgeEffect.Normal;
+    public Cartridge cartridge;
+
     {
-         image=ItemSpriteManager.ByName("gun");
-         cartridge = new Cartridge(maxAmmo, car_effect);
+        image = ItemSpriteManager.ByName("gun");
+        cartridge = new Cartridge(maxAmmo, car_effect);
+        usesTargeting = true;
+        defaultAction = AC_FIRE;
     }
     protected float reloadTime = 1f;
-    public String hitSound = Assets.Sounds.HIT;
-    public float hitSoundPitch = 1.2f;
-    public boolean usesTargeting = true;
-    public String defaultAction = AC_FIRE;
 
     private Gun _this = this;
 
     @Override
     public String name() {
         return "枪(debug用)";
+    }
+
+    @Override
+    public String status() {
+        return ammo + "/" + maxAmmo;
     }
 
     @Override
@@ -66,8 +70,37 @@ public class Gun extends Weapon {
         return desc.toString();
     }
 
+    protected void execute_ac_fire(Hero hero, String action) {
+        if (ammo <= 0) {
+            GLog.w("弹药不足！");
+            return;
+        }
+        GameScene.selectCell(shooter);
+    }
+
     protected void fire(int targetPos) {
-        shoot(this, curUser, targetPos, cartridge);
+        HitResult[] hitResults = fire_hits(curUser, targetPos, Ballistica.PROJECTILE);
+        for (HitResult hitResult : hitResults) {
+            Object target = hitResult.who();
+            if (target instanceof Char targetChar) {
+                boolean hit = Random.Float() < accuracyFactor(curUser, targetChar);
+                if (hit) {
+                    int baseDamage = fire_damage(curUser, targetChar);
+                    int actualDamage = fire_proc(curUser, targetChar, baseDamage);
+                    targetChar.damage(actualDamage, this);
+                }
+            }
+            // Apply the cartridge's effect
+            cartridge.onHit.onHit.apply(curUser, hitResult.where(), (int) (cartridge.power * getAmmoPowerMultiplier()), 0);
+        }
+        curUser.spendAndNext(1f);
+    }
+
+    protected int fire_proc(Char shooter, Char target, int damage) {
+        // Subtract the target's defense from the damage
+        int defense = target != null && target instanceof Char targetChar ? targetChar.drRoll() : 0;
+        int actualDamage = Math.max(damage - defense, 0);
+        return actualDamage;
     }
 
     protected CellSelector.Listener shooter = new CellSelector.Listener() {
@@ -129,36 +162,35 @@ public class Gun extends Weapon {
         });
     }
 
-    protected void reload(Ammo ammoItem) {
-        cartridge = 
-            ammoItem.cartridge instanceof Cartridge&&
-            ammoItem.cartridge.onHit!=CartridgeEffect.Supply
-            ?ammoItem.cartridge
-            :new Cartridge(maxAmmo, car_effect);
-        ammo = ammoItem.full_reload ? maxAmmo : ammoItem.amount;
-        ammoItem.quantity(ammoItem.quantity() - 1);
-        if (ammoItem.quantity() <= 0) {
-            ammoItem.detach(Dungeon.hero.belongings.backpack);
-        }
-        curUser.spend(reloadTime);
-        curUser.busy();
-        curUser.sprite.attack(curUser.pos);
-        Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
-    }
-
     protected List<Ammo> findAmmo() {
-        List<Ammo> result = new ArrayList<>();
-        // 如果弹药包中没有，再从背包中查找
-        for (Ammo _ammo : Dungeon.hero.belongings.getAllItems(Ammo.class)) {
-            if (canLoad(_ammo)) {
-                result.add(_ammo);
-            }
-        }
-        return result;
+        return Dungeon.hero.belongings.getAllItems(Ammo.class)
+                .stream()
+                .filter(this::canLoad)
+                .collect(Collectors.toList());
     }
 
     public boolean canLoad(Ammo ammo) {
         return true;
+    }
+
+    protected void reload(Ammo ammoItem) {
+        cartridge
+                = ammoItem.cartridge instanceof Cartridge
+                && ammoItem.cartridge.onHit != CartridgeEffect.Supply
+                        ? ammoItem.cartridge
+                        : new Cartridge(maxAmmo, car_effect);
+        ammo = ammoItem.full_reload
+                ? maxAmmo
+                : ammoItem.amount;
+        ammoItem.quantity(ammoItem.quantity() - 1);
+        if (ammoItem.quantity() <= 0) {
+            ammoItem.detach(Dungeon.hero.belongings.backpack);
+        }
+
+        curUser.spend(reloadTime);
+        curUser.busy();
+        curUser.sprite.attack(curUser.pos);
+        Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
     }
 
     public String aiming_prompt() {
@@ -174,38 +206,15 @@ public class Gun extends Weapon {
         return 1.0f + 0.4f * level();
     }
 
-    protected void execute_ac_fire(Hero hero, String action) {
-        if (ammo <= 0) {
-            GLog.w("弹药不足！");
-            return;
-        }
-        GameScene.selectCell(shooter);
-    }
-
     protected void consumeAmmo(int amount) {
         ammo = Math.max(0, ammo - amount);
         if (ammo <= 0) {
             GLog.w("弹药耗尽！");
         }
-        GLog.n("弹药：" + ammo + "/" + maxAmmo);
     }
 
     private static final String AMMO = "ammo";
     private static final String MAX_AMMO = "maxAmmo";
-
-    @Override
-    public void storeInBundle(Bundle bundle) {
-        super.storeInBundle(bundle);
-        bundle.put(AMMO, ammo);
-        bundle.put(MAX_AMMO, maxAmmo);
-    }
-
-    @Override
-    public void restoreFromBundle(Bundle bundle) {
-        super.restoreFromBundle(bundle);
-        ammo = bundle.getInt(AMMO);
-        maxAmmo = bundle.getInt(MAX_AMMO);
-    }
 
     @Override
     public int min(int lvl) {
@@ -220,6 +229,19 @@ public class Gun extends Weapon {
     @Override
     public int STRReq(int lvl) {
         return 8 + lvl;
+    }
+
+    public int fire_damage(Char hero, Char target) {
+        return (int) (damageRoll(target) + 0.5 * cartridge.power);
+    }
+
+    public HitResult[] fire_hits(Char shooter, int targetPos, int projectileType) {
+        Ballistica shot = new Ballistica(shooter.pos, targetPos, projectileType);
+        return new HitResult[]{new HitResult(shot.collisionPos, Actor.findChar(shot.collisionPos))};
+    }
+
+    public static record HitResult(int where, Char who) {
+
     }
 
     public static class ShotResult {
@@ -244,17 +266,13 @@ public class Gun extends Weapon {
         }
     }
 
-    public int fire_damage(Char hero, Char target) {
-        return (int) (damageRoll(target) + 0.5 * cartridge.power);
-    }
-
-    public static ShotResult shoot(
-            Gun gun, Char shooter, int targetPos, Cartridge cartridge) {
-        return shoot(gun, shooter, targetPos, cartridge, Ballistica.PROJECTILE);
-    }
+    // public static ShotResult shoot(
+    //         Gun gun, Char shooter, int targetPos, Cartridge cartridge) {
+    //     return shoot(gun, shooter, targetPos, cartridge, Ballistica.PROJECTILE);
+    // }
 
     public static ShotResult shoot(Gun gun, Char shooter, int targetPos, Cartridge cartridge, int projectileType) {
-
+        System.out.println("[Gun]shoot Deprecated!");
         Ballistica shot = new Ballistica(shooter.pos, targetPos, projectileType);
 
         // 检查是否被阻挡
@@ -283,8 +301,17 @@ public class Gun extends Weapon {
     }
 
     @Override
-    public String status() {
-        return ammo + "/" + maxAmmo;
+    public void storeInBundle(Bundle bundle) {
+        super.storeInBundle(bundle);
+        bundle.put(AMMO, ammo);
+        bundle.put(MAX_AMMO, maxAmmo);
+    }
+
+    @Override
+    public void restoreFromBundle(Bundle bundle) {
+        super.restoreFromBundle(bundle);
+        ammo = bundle.getInt(AMMO);
+        maxAmmo = bundle.getInt(MAX_AMMO);
     }
 
     @Override
@@ -294,19 +321,6 @@ public class Gun extends Weapon {
         actions.add(AC_RELOAD);
         addSubActions(hero, actions);
         return actions;
-    }
-
-    @Override
-    public void execute(Hero hero, String action) {
-        super.execute(hero, action);
-        switch (action) {
-            case AC_FIRE ->
-                execute_ac_fire(hero, action);
-            case AC_RELOAD ->
-                execute_ac_reload(hero, action);
-            default ->
-                executeSubAction(hero, action);
-        }
     }
 
     @Override
@@ -321,6 +335,19 @@ public class Gun extends Weapon {
             return subActionName(action, hero);
         }
         return super.actionName(action, hero);
+    }
+
+    @Override
+    public void execute(Hero hero, String action) {
+        super.execute(hero, action);
+        switch (action) {
+            case AC_FIRE ->
+                execute_ac_fire(hero, action);
+            case AC_RELOAD ->
+                execute_ac_reload(hero, action);
+            default ->
+                executeSubAction(hero, action);
+        }
     }
 
     public String subActionName(String action, Hero hero) {

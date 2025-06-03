@@ -38,9 +38,11 @@ import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfStrength;
 import com.coladungeon.items.scrolls.ScrollOfIdentify;
 import com.coladungeon.items.scrolls.ScrollOfUpgrade;
+import com.coladungeon.items.scrolls.ScrollOfMagicMapping;
 import com.coladungeon.items.stones.StoneOfDeath;
 import com.coladungeon.items.stones.StoneOfDummy;
 import com.coladungeon.items.stones.StoneOfGeneration;
+import com.coladungeon.items.stones.StoneOfDungeonTravel;
 import com.coladungeon.items.supply.Supply;
 import com.coladungeon.items.wands.WandOfMagicMissile;
 import com.coladungeon.items.weapon.SummonerStaff;
@@ -311,9 +313,11 @@ public final class HeroClassSheet {
         EventBus.fire("Hero:created", "hero", hero);
         new BreakingDawn().quantity(3).identify().collect();
         new StoneOfGeneration().quantity(120).identify().collect();
+        new StoneOfDungeonTravel().quantity(120).identify().collect();
         new ScrollOfIdentify().quantity(1200).identify().collect();
         new ScrollOfUpgrade().quantity(1200).identify().collect();
         new StoneOfDummy().quantity(1200).identify().collect();
         new StoneOfDeath().quantity(1200).identify().collect();
+        new ScrollOfMagicMapping().quantity(1200).identify().collect();
     }
 };

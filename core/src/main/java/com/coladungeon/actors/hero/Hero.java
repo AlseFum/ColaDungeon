@@ -2214,7 +2214,7 @@ public class Hero extends Char {
         if (ankh != null || debug) {
             interrupt();
 
-            if (ankh.isBlessed() || debug) {
+            if (ankh != null && ankh.isBlessed() || debug) {
                 System.out.println("[Hero]You're dead, but cause it's debugging, you revived without cost now.");
                 this.HP = HT / 4;
 

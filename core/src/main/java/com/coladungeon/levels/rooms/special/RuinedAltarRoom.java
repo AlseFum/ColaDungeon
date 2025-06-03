@@ -45,28 +45,15 @@ public class RuinedAltarRoom extends Room {
               .setCharMapping('e', Terrain.EMBERS);     // 灰烬
         
         // 基础布局
-        String layout;
-        if (width() <= 7 || height() <= 7) {
-            layout = 
-                "#######\n" +
-                "#.rrr.#\n" +
-                "#rr.rr#\n" +
-                "#.rAr.#\n" +
-                "#rr.rr#\n" +
-                "#.rrr.#\n" +
-                "#######";
-        } else {
-            layout = 
-                "#########\n" +
-                "#...r...#\n" +
-                "#.b.r.b.#\n" +
-                "#r.rer.r#\n" +
-                "#..rAr..#\n" +
-                "#r.rer.r#\n" +
-                "#.b.r.b.#\n" +
-                "#...r...#\n" +
-                "#########";
-        }
+        String layout = """
+            #######
+            #.rrr.#
+            #rr.rr#
+            #.rAr.#
+            #rr.rr#
+            #.rrr.#
+            #######
+            """;
         
         // 应用布局
         weaver.weaveLayout(layout);
