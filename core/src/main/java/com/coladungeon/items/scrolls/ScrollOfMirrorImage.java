@@ -21,6 +21,8 @@
 
 package com.coladungeon.items.scrolls;
 
+import java.util.ArrayList;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
@@ -33,8 +35,6 @@ import com.coladungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
-
-import java.util.ArrayList;
 
 public class ScrollOfMirrorImage extends Scroll {
 
@@ -76,7 +76,7 @@ public class ScrollOfMirrorImage extends Scroll {
 		}
 		
 		int spawned = 0;
-		while (nImages > 0 && respawnPoints.size() > 0) {
+		while (nImages > 0 && !respawnPoints.isEmpty()) {
 			int index = Random.index( respawnPoints );
 			
 			MirrorImage mob = new MirrorImage();

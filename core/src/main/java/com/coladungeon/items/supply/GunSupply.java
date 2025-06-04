@@ -14,30 +14,15 @@ public class GunSupply extends Supply {
     public GunSupply() {
         super();
         this.put_in(Shotgun.class)
-            .put_in(()->{
-                return new SniperGun().identify();
-                
-                })
+            .put_in(SniperGun.class)
+            .put_in(HandGun.class)
             .put_in(Rifle.class)
             .put_in(GrenadeLauncher.class)
             .put_in(Chakram.class)
-            .put_in(HandGun.class)
             .put_in(AmmoHolder.class)
-            .put_in(() -> {
-                Ammo ammo = new Ammo();
-                ammo.quantity(1145);
-                return ammo;
-            })
-            .put_in(() -> {
-                ExplosiveAmmo ammo = new ExplosiveAmmo();
-                ammo.quantity(233);
-                return ammo;
-            })
-            .put_in(() -> {
-                BreakingDawn ammo = new BreakingDawn();
-                ammo.quantity(1145);
-                return ammo;
-            })
+            .put_in(Ammo.class,1145)
+            .put_in(ExplosiveAmmo.class,233)
+            .put_in(BreakingDawn.class,1145)
             .name("枪械补给包")
             .desc("一个装满了枪械的包，可以从中获取到各种枪械。");
     }

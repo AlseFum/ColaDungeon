@@ -1,9 +1,12 @@
 package com.coladungeon.items.weapon.melee.assassin;
 
+import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Char;
+import com.coladungeon.actors.blobs.SmokeScreen;
 import com.coladungeon.actors.buffs.Bleeding;
 import com.coladungeon.actors.buffs.Blindness;
 import com.coladungeon.actors.buffs.Buff;
+import com.coladungeon.actors.buffs.Invisibility;
 import com.coladungeon.actors.buffs.Paralysis;
 import com.coladungeon.actors.buffs.Stunned;
 import com.coladungeon.actors.buffs.Terror;
@@ -11,10 +14,6 @@ import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.actors.mobs.Mob;
 import com.coladungeon.items.weapon.melee.MeleeWeapon;
 import com.coladungeon.utils.GLog;
-import com.coladungeon.actors.buffs.Invisibility;
-import com.coladungeon.Dungeon;
-
-import com.coladungeon.actors.blobs.SmokeScreen;
 
 public abstract class Assassinator extends MeleeWeapon {
 
@@ -31,7 +30,7 @@ public abstract class Assassinator extends MeleeWeapon {
             Char enemy = hero.enemy();
 
             // Calculate ambush level
-            short ambushLevel = calculateAmbushLevel(hero, enemy);
+            short ambushLevel = ambushLevel(hero, enemy);
 
             if ((enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero))) {
                 // Calculate base damage with ambush factor
@@ -53,7 +52,7 @@ public abstract class Assassinator extends MeleeWeapon {
         return super.damageRoll(owner);
     }
 
-    private short calculateAmbushLevel(Char hero, Char enemy) {
+    private static short ambushLevel(Char hero, Char enemy) {
         short level = 0;
         // 敌人状态检查
         if (enemy.buff(Stunned.class) != null || enemy.buff(Paralysis.class) != null) {
@@ -69,12 +68,21 @@ public abstract class Assassinator extends MeleeWeapon {
             level += 2;  // 自身处于阴影中给予更高的伏击等级
         }
         //查询我方是否处于Smokescreen中
-        if (Dungeon.level.blobs.get(SmokeScreen.class).volumeAt(hero.pos, SmokeScreen.class) > 0 || Dungeon.level.blobs.get(SmokeScreen.class).volumeAt(enemy.pos, SmokeScreen.class) > 0) {
-            level += 2;
+        var smokeScreen = Dungeon.level.blobs.get(SmokeScreen.class);
+        if (smokeScreen != null) {
+            boolean heroInSmoke = smokeScreen.volumeAt(hero.pos, SmokeScreen.class) > 0;
+            boolean enemyInSmoke = smokeScreen.volumeAt(enemy.pos, SmokeScreen.class) > 0;
+            if (heroInSmoke || enemyInSmoke) {
+                level += 2;
+            }
         }
 
         if (enemy.buff(Blindness.class) != null) {
             level += 1;  // 敌人处于阴影或失明状态
+        }
+
+        if((enemy instanceof Mob && ((Mob)enemy).surprisedBy(hero))){
+            level += 1;
         }
 
         return level;
@@ -82,25 +90,28 @@ public abstract class Assassinator extends MeleeWeapon {
 
     @Override
     public String desc() {
-        String desc = super.desc();
+        StringBuilder desc = new StringBuilder(super.desc());
         if (isIdentified()) {
-            desc += "\n\n伏击机制："
-                    + "\n- 基础伏击伤害：" + Math.round(BASE_SURPRISE_DMG_FACTOR * 100) + "%最大伤害 到 最大伤害"
-                    + "\n- 每级伏击等级增加：" + Math.round(SURPRISE_DMG_PER_LEVEL * 100) + "%伤害";
+            desc.append("\n\n伏击机制：")
+                .append("\n- 基础伏击伤害：")
+                .append(Math.round(BASE_SURPRISE_DMG_FACTOR * 100))
+                .append("%最大伤害 到 最大伤害")
+                .append("\n- 每级伏击等级增加：")
+                .append(Math.round(SURPRISE_DMG_PER_LEVEL * 100))
+                .append("%伤害");
         }
-        return desc;
+        return desc.toString();
     }
 
     @Override
     public int proc(Char attacker, Char defender, int damage) {
         // 计算伏击等级并应用伤害加成
-        short ambushLevel = calculateAmbushLevel(attacker, defender);
+        short ambushLevel = ambushLevel(attacker, defender);
         if (ambushLevel > 0) {
-            float surpriseBonus = 1f + (ambushLevel * SURPRISE_DMG_PER_LEVEL);
-            damage = Math.round(damage * surpriseBonus);
-            GLog.n("伏击等级 " + ambushLevel + " 造成额外伤害！" + damage);
+            damage = Math.round(damage * 1f + (ambushLevel * SURPRISE_DMG_PER_LEVEL));
+            GLog.n("ambush lv."+ambushLevel+":"+damage+"!");
             if (damage > max() * SE_RATIO) {
-                GLog.n("触发额外效果");
+                GLog.n("Special Effect!");
                 special_effect(attacker, defender, damage);
             }
         }
@@ -111,7 +122,7 @@ public abstract class Assassinator extends MeleeWeapon {
         // Apply bleeding effect with a level based on damage
         Buff.affect(defender, Bleeding.class).set(damage / 10f); // Example level calculation
     }
-
+    @Override
     public int max(int lvl) {
         return 4 * (tier + 1) + lvl * (tier + 1);
     }

@@ -22,13 +22,13 @@
 package com.coladungeon.items.weapon.melee.assassin;
 
 import com.coladungeon.Assets;
+import com.coladungeon.actors.Char;
+import com.coladungeon.actors.buffs.Buff;
+import com.coladungeon.actors.buffs.Speed;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.sprites.ItemSpriteSheet;
-import com.coladungeon.actors.buffs.Buff;
-import com.coladungeon.actors.buffs.Speed;
 import com.coladungeon.utils.GLog;
-import com.coladungeon.actors.Char;
 
 public class Dirk extends Assassinator {
 
@@ -44,7 +44,7 @@ public class Dirk extends Assassinator {
 	public String targetingPrompt() {
 		return Messages.get(this, "prompt");
 	}
-
+	@Override
 	public boolean useTargeting(){
 		return false;
 	}

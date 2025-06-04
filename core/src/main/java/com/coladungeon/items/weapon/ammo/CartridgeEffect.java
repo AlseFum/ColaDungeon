@@ -6,13 +6,31 @@ import com.coladungeon.actors.Char;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.particles.BlastParticle;
+import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.Random;
 
 public enum CartridgeEffect {
     Normal("标准弹", (hero, pos, power, damage) -> {
         //在命中地区做一些粒子效果
-        CellEmitter.center(pos).burst(BlastParticle.FACTORY, 3);
-        //要新建粒子，更细小
+        CellEmitter.center(pos).burst(new Emitter.Factory() {
+            @Override
+            public void emit(Emitter emitter, int index, float x, float y) {
+                BlastParticle p = (BlastParticle) emitter.recycle(BlastParticle.class);
+                p.reset(x, y);
+                // 修改粒子大小
+                p.size (2f);
+                // 修改粒子速度范围
+                p.speed.polar(-Random.Float(3.1415926f), Random.Float(48, 96));
+                // 修改粒子生命周期
+            }
+
+            @Override
+            public boolean lightMode() {
+                return true;
+            }
+            
+        }, 12);
 
         return -1;
     }),

@@ -1,14 +1,15 @@
 package com.coladungeon.levels.themes;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.coladungeon.Dungeon;
-import com.coladungeon.levels.Level;
 import com.coladungeon.levels.DeadEndLevel;
 import com.coladungeon.levels.DebugLevel;
+import com.coladungeon.levels.Level;
+import com.coladungeon.levels.LastLevel;
 import com.watabou.utils.Random;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
 
 public class ThemeManager {
 
@@ -75,6 +76,9 @@ public class ThemeManager {
             Level level = isBoss ? themePack.getBossLevel() : themePack.getNormalLevel();
             System.out.println("[ThemeManager] success create level: " + level.getClass().getSimpleName());
             return level;
+        }
+        if(depth>2){
+            return new LastLevel();
         }
 
         // 备用方案：返回死胡同

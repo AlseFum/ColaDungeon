@@ -43,6 +43,7 @@ import com.coladungeon.items.weapon.melee.MagesStaff;
 import com.coladungeon.items.weapon.melee.WornShortsword;
 import com.coladungeon.items.weapon.missiles.ThrowingStone;
 import com.coladungeon.journal.Catalog;
+import com.coladungeon.items.supply.GloveSupply;
 import com.coladungeon.utils.EventBus;
 
 public final class HeroClassSheet {
@@ -285,7 +286,8 @@ public final class HeroClassSheet {
 
         new GunSupply().identify().collect();
         new DebugSupply().identify().collect();
-        new AssassinSupply().identify().collect();
+            new AssassinSupply().identify().collect();
+        new GloveSupply().identify().collect();
         // 事件通知
         EventBus.fire("Hero:created", "hero", hero);
     }

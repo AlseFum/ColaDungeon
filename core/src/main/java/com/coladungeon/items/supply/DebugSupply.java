@@ -30,7 +30,7 @@ public class DebugSupply extends Supply {
         put_in(StoneOfDeath.class, 3);
         put_in(StoneOfBlast.class, 3);
         put_in(ScrollOfMagicMapping.class, 10);
-        put_in(PotionOfInvisibility.class, 5);
-        put_in(PotionOfShroudingFog.class, 2);
+        put_in(PotionOfInvisibility.class, 500);
+        put_in(PotionOfShroudingFog.class, 20);
     }
 }
