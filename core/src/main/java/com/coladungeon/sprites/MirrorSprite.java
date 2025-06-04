@@ -25,6 +25,7 @@ import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.hero.HeroClass;
 import com.coladungeon.actors.mobs.npcs.MirrorImage;
+import com.coladungeon.items.weapon.melee.assassin.MirrorEdge;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.utils.PointF;
 
@@ -53,7 +54,11 @@ public class MirrorSprite extends MobSprite {
 	}
 
 	public void updateArmor(){
-		updateArmor( ((MirrorImage)ch).armTier );
+		if (ch instanceof MirrorImage) {
+			updateArmor(((MirrorImage) ch).armTier);
+		} else if (ch instanceof MirrorEdge.MirrorReflection) {
+			updateArmor(((MirrorEdge.MirrorReflection) ch).armTier);
+		}
 	}
 	
 	public void updateArmor( int tier ) {

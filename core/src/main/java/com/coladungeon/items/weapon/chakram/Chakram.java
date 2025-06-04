@@ -261,18 +261,20 @@ public class Chakram extends Weapon {
             return true;
         }
     }
+
     //TOBE OVERRIDE
     public void flying_effect(Char target, boolean isPowerThrow) {
         if (target != null && target != Dungeon.hero) {
             chakram_proc(target, target.pos, isPowerThrow);
         }
     }
+
     //TOBE OVERRIDE
     public void still_effect(int pos, boolean isPowerThrow) {
         for (int i : PathFinder.NEIGHBOURS9) {
             int cell = pos + i;
             Char target = Actor.findChar(cell);
-            if (target != null && target != Dungeon.hero) {
+            if (target != null && target != Dungeon.hero && target.isAlive()) {
                 chakram_proc(target, cell, isPowerThrow);
             }
         }
@@ -281,24 +283,23 @@ public class Chakram extends Weapon {
     // 应用飞镖效果
     private void chakram_proc(Char target, int pos, boolean isPowerThrow) {
         // 特效
-        if (target != null && target != Dungeon.hero) { // 只对非英雄单位造成伤害
-            // 计算伤害
-            int dmg = damageRoll(Dungeon.hero);
-            if (isPowerThrow) {
-                dmg = Math.round(dmg * 1.5f);
-            }
 
-            // 造成伤害
-            target.damage(dmg, this);
-
-            // 如果目标还活着，应用减速效果和视觉特效
-            if (target.isAlive()) {
-                // 减速效果
-                Buff.affect(target, Cripple.class, isPowerThrow ? 5f : 3f);
-            }
-            // 命中特效
-            target.sprite.burst(0xCC99FFFF, isPowerThrow ? 10 : 5);
+        int dmg = damageRoll(Dungeon.hero);
+        if (isPowerThrow) {
+            dmg = Math.round(dmg * 1.5f);
         }
+
+        // 造成伤害
+        target.damage(dmg, this);
+
+        // 如果目标还活着，应用减速效果和视觉特效
+        if (target.isAlive()) {
+            // 减速效果
+            Buff.affect(target, Cripple.class, isPowerThrow ? 5f : 3f);
+        }
+        // 命中特效
+        target.sprite.burst(0xCC99FFFF, isPowerThrow ? 10 : 5);
+
         // 场域特效（无论是否命中都会显示）
         if (isPowerThrow) {
             CellEmitter.center(pos).burst(PurpleParticle.BURST, 10);

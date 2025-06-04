@@ -2,7 +2,6 @@ package com.coladungeon.items.weapon.sniper;
 
 import java.util.ArrayList;
 
-import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
@@ -10,7 +9,6 @@ import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.buffs.FlavourBuff;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.weapon.gun.Gun;
-import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.sprites.ItemSpriteSheet;
@@ -98,18 +96,16 @@ public class SniperGun extends Gun {
             Dungeon.hero, SniperAim.class, 1
             );
         aim.target = target;
-        ActionIndicator.setAction(new FireAmmo(this,target));
+        ActionIndicator.setAction(new FireAmmo(this,target,aim));
         Dungeon.hero.spendAndNext(0.5f);
     }
     @Override
     protected int fire_proc(Char shooter, Char target, int damage) {
         // Subtract the target's defense from the damage
         int defense = target != null && target instanceof Char targetChar ? targetChar.drRoll() : 0;
-        
         // Get the SniperAim buff from the shooter
         SniperAim aim = shooter.buff(SniperAim.class);
-        double chargeMultiplier = (aim != null) ? 1+0.5*aim.charge : 1;
-        
+        double chargeMultiplier = (aim != null) ? 1+(0.4+0.2*level()*(1+0.5*tier)+0.1*tier)*aim.charge : 1;
         // Multiply damage by the charge multiplier
         int actualDamage = Math.max((int)Math.round(damage * chargeMultiplier) - defense, 0);
         return actualDamage;
@@ -135,7 +131,7 @@ public class SniperGun extends Gun {
 
         SniperAim aim = owner.buff(SniperAim.class);
         if (aim != null && aim.target == target) {
-            acc *= Math.min(4f, (aim.charge / MAX_CHARGE) * 3f);
+            acc *= Math.min(4f, (aim.charge / MAX_CHARGE) * 3f+1f);
         }
 
         return acc;
@@ -165,7 +161,7 @@ public class SniperGun extends Gun {
 
         @Override
         public boolean act() {
-            spend(0.5f);
+            spend(1f);
             
             // 检查目标是否还存在
             if (target == null || !target.isAlive() ) {
@@ -226,15 +222,20 @@ public class SniperGun extends Gun {
 
         private SniperGun gun;
         public Char target;
-        public FireAmmo(SniperGun gun,Char target) {
+        public SniperAim aim;
+        public FireAmmo(SniperGun gun,Char target,SniperAim aim) {
             this.gun = gun;
             this.target = target;
+            this.aim = aim;
         }
 
         @Override
         public void doAction() {
             if (Dungeon.hero.ready) {
+                gun.consumeAmmo(1);
                 gun.fire(target.pos);
+                aim.detach();
+                GLog.w("should fire and clear");
             }
         }
 

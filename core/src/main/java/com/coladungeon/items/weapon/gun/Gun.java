@@ -310,11 +310,11 @@ public class Gun extends Weapon {
         super.storeInBundle(bundle);
         bundle.put(AMMO, ammo);
         bundle.put(MAX_AMMO, maxAmmo);
-        if (cartridge != null) {
-            bundle.put("cartridgeType", cartridge.cartridgeType);
-            bundle.put("cartridgePower", cartridge.power);
-            // Add more fields if needed
-        }
+        // if (cartridge != null && car) {
+        //     bundle.put("cartridgeEffect", cartridge.onHit.name);
+        //     bundle.put("cartridgePower", cartridge.power);
+        //     // Add more fields if needed
+        // }
     }
 
     @Override
@@ -322,9 +322,10 @@ public class Gun extends Weapon {
         super.restoreFromBundle(bundle);
         ammo = bundle.getInt(AMMO);
         maxAmmo = bundle.getInt(MAX_AMMO);
-        String cartridgeType = bundle.getString("cartridgeType");
-        int cartridgePower = bundle.getInt("cartridgePower");
-        cartridge = new Cartridge(cartridgePower, CartridgeEffect.valueOf(cartridgeType));
+        // Retrieve cartridgeType from cartridgeEffect
+        // String cartridgeType = bundle.getString("cartridgeEffect");
+        // int cartridgePower = bundle.getInt("cartridgePower");
+        // cartridge = new Cartridge(cartridgePower, CartridgeEffect.valueOf(cartridgeType));
         // Initialize more fields if needed
     }
 

@@ -5,7 +5,6 @@ import com.coladungeon.actors.buffs.Bleeding;
 import com.coladungeon.actors.buffs.Blindness;
 import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.buffs.Paralysis;
-import com.coladungeon.actors.buffs.Shadows;
 import com.coladungeon.actors.buffs.Stunned;
 import com.coladungeon.actors.buffs.Terror;
 import com.coladungeon.actors.hero.Hero;
@@ -23,7 +22,7 @@ public abstract class Assassinator extends MeleeWeapon {
     protected static float BASE_SURPRISE_DMG_FACTOR = 0.5f;  // 基础伏击伤害比例
     protected static final float SURPRISE_DMG_PER_LEVEL = 0.5f;    // 每级伏击等级增加的伤害比例
     public static float DMG_AMP_PER_LEVEL = 0.3f;
-    protected static final float SE_RATIO = 1.1f;
+    protected static final float SE_RATIO = 0.95f;
 
     @Override
     public int damageRoll(Char owner) {
