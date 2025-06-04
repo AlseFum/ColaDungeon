@@ -53,7 +53,7 @@ import com.coladungeon.items.scrolls.ScrollOfTeleportation;
 import com.coladungeon.items.wands.Wand;
 import com.coladungeon.items.wands.WandOfLightning;
 import com.coladungeon.journal.Bestiary;
-import com.coladungeon.levels.CityBossLevel;
+import com.coladungeon.levels.themes.city.CityBossLevel;
 import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;

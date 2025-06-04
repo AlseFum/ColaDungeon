@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package com.coladungeon.levels;
+package com.coladungeon.levels.themes.sewer;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
@@ -26,6 +26,9 @@ import com.coladungeon.Statistics;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.actors.mobs.npcs.Ghost;
 import com.coladungeon.effects.Ripple;
+import com.coladungeon.levels.Level;
+import com.coladungeon.levels.RegularLevel;
+import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.features.LevelTransition;
 import com.coladungeon.levels.painters.Painter;
 import com.coladungeon.levels.painters.SewerPainter;

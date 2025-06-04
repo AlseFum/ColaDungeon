@@ -1,4 +1,4 @@
-package com.coladungeon.levels;
+package com.coladungeon.levels.themes.sewer;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Bones;
@@ -9,15 +9,17 @@ import com.coladungeon.actors.mobs.Goo;
 import com.coladungeon.actors.mobs.Mob;
 import com.coladungeon.items.Heap;
 import com.coladungeon.items.Item;
+import com.coladungeon.levels.themes.prison.PrisonLevel;
+import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.builders.Builder;
 import com.coladungeon.levels.builders.FigureEightBuilder;
 import com.coladungeon.levels.painters.Painter;
 import com.coladungeon.levels.painters.SewerPainter;
 import com.coladungeon.levels.rooms.Room;
 import com.coladungeon.levels.rooms.secret.RatKingRoom;
-import com.coladungeon.levels.rooms.sewerboss.GooBossRoom;
-import com.coladungeon.levels.rooms.sewerboss.SewerBossEntranceRoom;
-import com.coladungeon.levels.rooms.sewerboss.SewerBossExitRoom;
+import com.coladungeon.levels.themes.sewer.sewerboss.GooBossRoom;
+import com.coladungeon.levels.themes.sewer.sewerboss.SewerBossEntranceRoom;
+import com.coladungeon.levels.themes.sewer.sewerboss.SewerBossExitRoom;
 import com.coladungeon.levels.rooms.standard.StandardRoom;
 import com.coladungeon.scenes.GameScene;
 import com.watabou.noosa.Game;

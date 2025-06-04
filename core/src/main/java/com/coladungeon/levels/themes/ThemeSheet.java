@@ -1,18 +1,16 @@
 package com.coladungeon.levels.themes;
 
-import com.coladungeon.levels.SewerLevel;
-import com.coladungeon.levels.SewerBossLevel;
-import com.coladungeon.levels.CavesBossLevel;
-import com.coladungeon.levels.CavesLevel;
-import com.coladungeon.levels.CityBossLevel;
-import com.coladungeon.levels.CityLevel;
-import com.coladungeon.levels.HallsBossLevel;
-import com.coladungeon.levels.HallsLevel;
-import com.coladungeon.levels.PrisonBossLevel;
-import com.coladungeon.levels.PrisonLevel;
+import com.coladungeon.levels.themes.sewer.SewerLevel;
+import com.coladungeon.levels.themes.sewer.SewerBossLevel;
+import com.coladungeon.levels.themes.caves.CavesBossLevel;
+import com.coladungeon.levels.themes.caves.CavesLevel;
+import com.coladungeon.levels.themes.city.CityBossLevel;
+import com.coladungeon.levels.themes.city.CityLevel;
+import com.coladungeon.levels.themes.halls.HallsBossLevel;
+import com.coladungeon.levels.themes.halls.HallsLevel;
+import com.coladungeon.levels.themes.prison.PrisonBossLevel;
+import com.coladungeon.levels.themes.prison.PrisonLevel;
 import com.coladungeon.levels.DebugLevel;
-import com.coladungeon.levels.themes.CrystalTempleThemePack.CrystalTempleLevel;
-import com.coladungeon.levels.themes.ShadowForestThemePack.ShadowForestLevel;
 
 import java.util.HashMap;
 import java.util.ArrayList;

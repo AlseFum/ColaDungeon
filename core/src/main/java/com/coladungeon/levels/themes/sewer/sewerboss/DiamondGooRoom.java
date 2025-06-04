@@ -19,40 +19,55 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.coladungeon.levels.rooms.sewerboss;
+package com.coladungeon.levels.themes.sewer.sewerboss;
 
 import com.coladungeon.actors.mobs.Goo;
 import com.coladungeon.levels.Level;
 import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.painters.Painter;
-import com.coladungeon.levels.rooms.connection.PerimeterRoom;
+import com.watabou.utils.Point;
 
-public class ThickPillarsGooRoom extends GooBossRoom {
+public class DiamondGooRoom extends GooBossRoom {
 	
 	@Override
 	public void paint(Level level) {
-		
 		Painter.fill( level, this, Terrain.WALL );
-		Painter.fill( level, this, 1 , Terrain.WATER );
 		
-		int pillarW = (width()-8)/2;
-		int pillarH = (height()-8)/2;
-		
-		Painter.fill(level, left+2, top+2, pillarW+1, pillarH+1, Terrain.WALL);
-		Painter.fill(level, left+2, bottom-2-pillarH, pillarW+1, pillarH+1, Terrain.WALL);
-		Painter.fill(level, right-2-pillarW, top+2, pillarW+1, pillarH+1, Terrain.WALL);
-		Painter.fill(level, right-2-pillarW, bottom-2-pillarH, pillarW+1, pillarH+1, Terrain.WALL);
-		
-		PerimeterRoom.fillPerimiterPaths(level, this, Terrain.EMPTY_SP);
+		Painter.fillDiamond( level, this, 1, Terrain.EMPTY);
 		
 		for (Door door : connected.values()) {
-			door.set(Door.Type.REGULAR);
+			door.set( Door.Type.REGULAR );
+			Point dir;
+			if (door.x == left){
+				dir = new Point(1, 0);
+			} else if (door.y == top){
+				dir = new Point(0, 1);
+			} else if (door.x == right){
+				dir = new Point(-1, 0);
+			} else {
+				dir = new Point(0, -1);
+			}
+			
+			Point curr = new Point(door);
+			do {
+				Painter.set(level, curr, Terrain.EMPTY_SP);
+				curr.x += dir.x;
+				curr.y += dir.y;
+			} while (level.map[level.pointToCell(curr)] == Terrain.WALL);
 		}
+		
+		Painter.fill( level, left + width()/2 - 1, top + height()/2 - 2, 2 + width()%2, 4 + height()%2, Terrain.WATER);
+		Painter.fill( level, left + width()/2 - 2, top + height()/2 - 1, 4 + width()%2, 2 + height()%2, Terrain.WATER);
 		
 		setupGooNest(level);
 		
 		Goo boss = new Goo();
 		boss.pos = level.pointToCell(center());
 		level.mobs.add( boss );
+	}
+	
+	@Override
+	public boolean canPlaceWater(Point p) {
+		return false;
 	}
 }

@@ -33,7 +33,7 @@ import com.coladungeon.actors.buffs.LockedFloor;
 import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.Lightning;
 import com.coladungeon.effects.particles.SparkParticle;
-import com.coladungeon.levels.CavesBossLevel;
+import com.coladungeon.levels.themes.caves.CavesBossLevel;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.sprites.CharSprite;
 import com.coladungeon.sprites.PylonSprite;

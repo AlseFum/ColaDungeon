@@ -19,12 +19,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.coladungeon.levels;
+package com.coladungeon.levels.themes.halls;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.Statistics;
 import com.coladungeon.items.Torch;
+import com.coladungeon.levels.Level;
+import com.coladungeon.levels.RegularLevel;
+import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.painters.HallsPainter;
 import com.coladungeon.levels.painters.Painter;
 import com.coladungeon.levels.rooms.Room;
@@ -187,7 +190,7 @@ public class HallsLevel extends RegularLevel {
 		return visuals;
 	}
 	
-	public static void addHallsVisuals( Level level, Group group ) {
+	public static void addHallsVisuals(Level level, Group group ) {
 		for (int i=0; i < level.length(); i++) {
 			if (level.map[i] == Terrain.WATER) {
 				group.add( new Stream( i ) );

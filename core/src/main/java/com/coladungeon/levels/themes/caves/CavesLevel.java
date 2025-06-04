@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.coladungeon.levels;
+package com.coladungeon.levels.themes.caves;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
@@ -29,6 +29,9 @@ import com.coladungeon.actors.Char;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.actors.mobs.npcs.Blacksmith;
 import com.coladungeon.items.quest.Pickaxe;
+import com.coladungeon.levels.Level;
+import com.coladungeon.levels.RegularLevel;
+import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.features.LevelTransition;
 import com.coladungeon.levels.painters.CavesPainter;
 import com.coladungeon.levels.painters.Painter;
@@ -230,7 +233,7 @@ public class CavesLevel extends RegularLevel {
 		return visuals;
 	}
 
-	public static void addCavesVisuals( Level level, Group group ) {
+	public static void addCavesVisuals(Level level, Group group ) {
 		addCavesVisuals(level, group, false);
 	}
 	

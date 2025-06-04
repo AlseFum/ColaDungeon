@@ -40,7 +40,7 @@ import com.coladungeon.items.armor.ScaleArmor;
 import com.coladungeon.items.trinkets.ParchmentScrap;
 import com.coladungeon.items.weapon.Weapon;
 import com.coladungeon.journal.Notes;
-import com.coladungeon.levels.SewerLevel;
+import com.coladungeon.levels.themes.sewer.SewerLevel;
 import com.coladungeon.levels.rooms.Room;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;

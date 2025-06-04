@@ -29,7 +29,7 @@ import com.coladungeon.levels.Level;
 import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.painters.Painter;
 import com.coladungeon.levels.rooms.Room;
-import com.coladungeon.levels.rooms.sewerboss.SewerBossEntranceRoom;
+import com.coladungeon.levels.themes.sewer.sewerboss.SewerBossEntranceRoom;
 import com.watabou.utils.Random;
 
 public class RatKingRoom extends SecretRoom {

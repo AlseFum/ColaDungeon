@@ -57,7 +57,7 @@ import com.coladungeon.items.artifacts.DriedRose;
 import com.coladungeon.items.artifacts.LloydsBeacon;
 import com.coladungeon.items.bombs.Bomb;
 import com.coladungeon.levels.Level;
-import com.coladungeon.levels.PrisonBossLevel;
+import com.coladungeon.levels.themes.prison.PrisonBossLevel;
 import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.plants.Plant;

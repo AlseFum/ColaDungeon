@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.coladungeon.levels;
+package com.coladungeon.levels.themes.halls;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Bones;
@@ -39,6 +39,9 @@ import com.coladungeon.effects.particles.ShadowParticle;
 import com.coladungeon.items.Amulet;
 import com.coladungeon.items.Heap;
 import com.coladungeon.items.Item;
+import com.coladungeon.levels.Level;
+import com.coladungeon.levels.Patch;
+import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.features.LevelTransition;
 import com.coladungeon.levels.painters.Painter;
 import com.coladungeon.messages.Messages;

@@ -33,7 +33,7 @@ import com.coladungeon.items.Generator;
 import com.coladungeon.items.quest.DwarfToken;
 import com.coladungeon.items.rings.Ring;
 import com.coladungeon.journal.Notes;
-import com.coladungeon.levels.CityLevel;
+import com.coladungeon.levels.themes.city.CityLevel;
 import com.coladungeon.levels.Level;
 import com.coladungeon.levels.Terrain;
 import com.coladungeon.messages.Messages;

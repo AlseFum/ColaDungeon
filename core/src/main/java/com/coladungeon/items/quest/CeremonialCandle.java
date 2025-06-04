@@ -31,7 +31,7 @@ import com.coladungeon.effects.CellEmitter;
 import com.coladungeon.effects.particles.ElmoParticle;
 import com.coladungeon.items.Heap;
 import com.coladungeon.items.Item;
-import com.coladungeon.levels.PrisonLevel;
+import com.coladungeon.levels.themes.prison.PrisonLevel;
 import com.coladungeon.levels.RegularLevel;
 import com.coladungeon.levels.rooms.quest.RitualSiteRoom;
 import com.coladungeon.scenes.GameScene;

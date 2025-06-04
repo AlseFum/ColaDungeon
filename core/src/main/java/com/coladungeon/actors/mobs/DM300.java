@@ -51,7 +51,7 @@ import com.coladungeon.items.artifacts.DriedRose;
 import com.coladungeon.items.artifacts.LloydsBeacon;
 import com.coladungeon.items.quest.MetalShard;
 import com.coladungeon.items.wands.WandOfBlastWave;
-import com.coladungeon.levels.CavesBossLevel;
+import com.coladungeon.levels.themes.caves.CavesBossLevel;
 import com.coladungeon.levels.Level;
 import com.coladungeon.levels.Terrain;
 import com.coladungeon.mechanics.Ballistica;

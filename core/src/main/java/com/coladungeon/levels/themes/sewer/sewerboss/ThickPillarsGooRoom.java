@@ -19,53 +19,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.coladungeon.levels.rooms.sewerboss;
+package com.coladungeon.levels.themes.sewer.sewerboss;
 
 import com.coladungeon.actors.mobs.Goo;
 import com.coladungeon.levels.Level;
 import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.painters.Painter;
-import com.watabou.utils.Point;
+import com.coladungeon.levels.rooms.connection.PerimeterRoom;
 
-public class WalledGooRoom extends GooBossRoom {
+public class ThickPillarsGooRoom extends GooBossRoom {
 	
 	@Override
 	public void paint(Level level) {
+		
 		Painter.fill( level, this, Terrain.WALL );
-		Painter.fill( level, this, 1 , Terrain.EMPTY_SP );
-		Painter.fill( level, this, 2 , Terrain.EMPTY );
-
-		int pillarW = (width()-6)/2;
-		int pillarH = (height()-6)/2;
+		Painter.fill( level, this, 1 , Terrain.WATER );
 		
-		Painter.fill(level, left+2, top+2, pillarW, 1, Terrain.WALL);
-		Painter.fill(level, left+2, top+2, 1, pillarH, Terrain.WALL);
+		int pillarW = (width()-8)/2;
+		int pillarH = (height()-8)/2;
 		
-		Painter.fill(level, left+2, bottom-2, pillarW, 1, Terrain.WALL);
-		Painter.fill(level, left+2, bottom-1-pillarH, 1, pillarH, Terrain.WALL);
+		Painter.fill(level, left+2, top+2, pillarW+1, pillarH+1, Terrain.WALL);
+		Painter.fill(level, left+2, bottom-2-pillarH, pillarW+1, pillarH+1, Terrain.WALL);
+		Painter.fill(level, right-2-pillarW, top+2, pillarW+1, pillarH+1, Terrain.WALL);
+		Painter.fill(level, right-2-pillarW, bottom-2-pillarH, pillarW+1, pillarH+1, Terrain.WALL);
 		
-		Painter.fill(level, right-1-pillarW, top+2, pillarW, 1, Terrain.WALL);
-		Painter.fill(level, right-2, top+2, 1, pillarH, Terrain.WALL);
-		
-		Painter.fill(level, right-1-pillarW, bottom-2, pillarW, 1, Terrain.WALL);
-		Painter.fill(level, right-2, bottom-1-pillarH, 1, pillarH, Terrain.WALL);
+		PerimeterRoom.fillPerimiterPaths(level, this, Terrain.EMPTY_SP);
 		
 		for (Door door : connected.values()) {
 			door.set(Door.Type.REGULAR);
 		}
-		
-		Painter.fill( level, left + width()/2 - 1, top + height()/2 - 2, 2 + width()%2, 4 + height()%2, Terrain.WATER);
-		Painter.fill( level, left + width()/2 - 2, top + height()/2 - 1, 4 + width()%2, 2 + height()%2, Terrain.WATER);
 		
 		setupGooNest(level);
 		
 		Goo boss = new Goo();
 		boss.pos = level.pointToCell(center());
 		level.mobs.add( boss );
-	}
-	
-	@Override
-	public boolean canPlaceWater(Point p) {
-		return false;
 	}
 }

@@ -30,6 +30,7 @@ import com.coladungeon.actors.mobs.Mob;
 import com.coladungeon.items.Amulet;
 import com.coladungeon.levels.features.LevelTransition;
 import com.coladungeon.levels.painters.Painter;
+import com.coladungeon.levels.themes.halls.HallsLevel;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.tiles.CustomTilemap;
 import com.coladungeon.tiles.DungeonTileSheet;

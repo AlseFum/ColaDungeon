@@ -2,8 +2,8 @@ package com.coladungeon.levels.themes;
 
 import com.coladungeon.levels.Level;
 import com.coladungeon.levels.DeadEndLevel;
-import com.coladungeon.levels.SewerLevel;
-import com.coladungeon.levels.SewerBossLevel;
+import com.coladungeon.levels.themes.sewer.SewerLevel;
+import com.coladungeon.levels.themes.sewer.SewerBossLevel;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import java.util.function.BiFunction;

@@ -36,7 +36,7 @@ import com.coladungeon.actors.mobs.npcs.DirectableAlly;
 import com.coladungeon.effects.particles.SmokeParticle;
 import com.coladungeon.items.armor.Armor;
 import com.coladungeon.items.armor.ClassArmor;
-import com.coladungeon.levels.CityLevel;
+import com.coladungeon.levels.themes.city.CityLevel;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.HeroSprite;

@@ -1,9 +1,12 @@
-package com.coladungeon.levels;
+package com.coladungeon.levels.themes.city;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.Statistics;
 import com.coladungeon.actors.mobs.npcs.Imp;
+import com.coladungeon.levels.Level;
+import com.coladungeon.levels.RegularLevel;
+import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.painters.CityPainter;
 import com.coladungeon.levels.painters.Painter;
 import com.coladungeon.levels.traps.BlazingTrap;
@@ -150,7 +153,7 @@ public class CityLevel extends RegularLevel {
 		return visuals;
 	}
 
-	public static void addCityVisuals( Level level, Group group ) {
+	public static void addCityVisuals(Level level, Group group ) {
 		for (int i=0; i < level.length(); i++) {
 			if (level.map[i] == Terrain.WALL_DECO) {
 				group.add( new Smoke( i ) );

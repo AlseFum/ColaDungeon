@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.coladungeon.levels;
+package com.coladungeon.levels.themes.prison;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
@@ -27,6 +27,9 @@ import com.coladungeon.Statistics;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.mobs.npcs.Wandmaker;
 import com.coladungeon.effects.particles.FlameParticle;
+import com.coladungeon.levels.Level;
+import com.coladungeon.levels.RegularLevel;
+import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.painters.Painter;
 import com.coladungeon.levels.painters.PrisonPainter;
 import com.coladungeon.levels.rooms.Room;

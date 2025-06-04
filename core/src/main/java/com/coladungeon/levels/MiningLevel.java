@@ -50,6 +50,7 @@ import com.coladungeon.levels.rooms.quest.MineLargeRoom;
 import com.coladungeon.levels.rooms.quest.MineSecretRoom;
 import com.coladungeon.levels.rooms.quest.MineSmallRoom;
 import com.coladungeon.levels.rooms.standard.StandardRoom;
+import com.coladungeon.levels.themes.caves.CavesLevel;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.BlacksmithSprite;

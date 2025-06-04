@@ -36,6 +36,7 @@ import com.coladungeon.levels.rooms.Room;
 import com.coladungeon.levels.rooms.standard.entrance.EntranceRoom;
 import com.coladungeon.levels.rooms.standard.exit.ExitRoom;
 import com.coladungeon.levels.rooms.standard.ImpShopRoom;
+import com.coladungeon.levels.themes.city.CityLevel;
 import com.coladungeon.messages.Messages;
 import com.watabou.noosa.Group;
 import com.watabou.utils.Point;

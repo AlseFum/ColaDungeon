@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.coladungeon.levels.rooms.sewerboss;
+package com.coladungeon.levels.themes.sewer.sewerboss;
 
 import com.coladungeon.actors.mobs.Goo;
 import com.coladungeon.levels.Level;

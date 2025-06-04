@@ -23,7 +23,7 @@ package com.coladungeon.tiles;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
-import com.coladungeon.levels.HallsBossLevel;
+import com.coladungeon.levels.themes.halls.HallsBossLevel;
 import com.coladungeon.levels.MiningLevel;
 import com.coladungeon.levels.Terrain;
 import com.watabou.noosa.TextureFilm;
