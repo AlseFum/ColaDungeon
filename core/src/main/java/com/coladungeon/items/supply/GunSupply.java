@@ -6,7 +6,7 @@ import com.coladungeon.items.weapon.ammo.BreakingDawn;
 import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
 import com.coladungeon.items.weapon.chakram.Chakram;
 import com.coladungeon.items.weapon.grenade.GrenadeLauncher;
-import com.coladungeon.items.weapon.gun.Gun;
+import com.coladungeon.items.weapon.handgun.HandGun;
 import com.coladungeon.items.weapon.rifle.Rifle;
 import com.coladungeon.items.weapon.shotgun.Shotgun;
 import com.coladungeon.items.weapon.sniper.SniperGun;
@@ -21,7 +21,7 @@ public class GunSupply extends Supply {
             .put_in(Rifle.class)
             .put_in(GrenadeLauncher.class)
             .put_in(Chakram.class)
-            .put_in(Gun.class)
+            .put_in(HandGun.class)
             .put_in(AmmoHolder.class)
             .put_in(() -> {
                 Ammo ammo = new Ammo();

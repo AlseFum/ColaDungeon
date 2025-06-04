@@ -184,7 +184,7 @@ public class Gun extends Weapon {
         return true;
     }
 
-    protected void reload(Ammo ammoItem) {
+    public void reload(Ammo ammoItem) {
         cartridge
                 = ammoItem.cartridge instanceof Cartridge
                 && ammoItem.cartridge.onHit != CartridgeEffect.Supply

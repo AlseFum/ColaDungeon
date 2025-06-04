@@ -4,23 +4,25 @@ import java.util.ArrayList;
 
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.Item;
+import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.windows.WndBag;
 
 public class Ammo extends Item {
-
+    public static final String AC_RELOAD = "重装子弹";
     public static final int DEFAULT_MAX_STACK = 999;
     public static int max_amount = 6;
     
     public            int amount = 0;
     public boolean full_reload= false;
+    private Ammo _this=this;
     //if is full_reload, the amount will be set to gun.max_amount
     public Cartridge cartridge;
     {
         image = ItemSpriteSheet.DARTS;
         stackable = true;
-        defaultAction = AC_THROW;
+        defaultAction = AC_RELOAD;
     }
 
     public Ammo() {
@@ -68,31 +70,29 @@ public class Ammo extends Item {
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
-        actions.add("重装子弹");
+        actions.add(AC_RELOAD);
         return actions;
     }
 
     @Override
     public void execute(Hero hero, String action) {
         super.execute(hero, action);
-        if ("重装子弹".equals(action)) {
+        if (AC_RELOAD.equals(action)) {
             GameScene.selectItem(new WndBag.ItemSelector() {
                     @Override
                     public String textPrompt() {
-                        return "选择要装填子弹的另一个ammo";
+                        return "选择要装填子弹的枪";
                     }
 
                     @Override
                     public boolean itemSelectable(Item item) {
-                        if (!(item instanceof Ammo ammo)) return false;
-                        return ammo.getClass() == Ammo.this.getClass() 
-                            && ammo.cartridge == Ammo.this.cartridge 
-                            && ammo.amount <max_amount;
+                        if (!(item instanceof Gun gun)) return false;
+                        return gun.canLoad(_this);
                     }
 
                     @Override
                     public void onSelect(Item item) {
-                        transfer((Ammo) item);
+                        ((Gun)item).reload(_this);
                     }
                 });
         }

@@ -22,6 +22,7 @@ import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
+import java.util.List;
 //和Gun别无二致，除了对Ammo特别要求为Grenade
 
 public class GrenadeLauncher extends Gun {
@@ -35,6 +36,7 @@ public class GrenadeLauncher extends Gun {
         ammo = maxAmmo; // 初始弹药量
         reloadTime = 2f; // 装弹时间
     }
+    private int bullet = 3; // Number of bullets to fire
 
     @Override
     public String name() {
@@ -79,10 +81,23 @@ public class GrenadeLauncher extends Gun {
     public HitResult[] fire_hits(Char shooter, int targetPos, int projectileType) {
         // Use Ballistica with STOP_TARGET to calculate the trajectory
         Ballistica trajectory = new Ballistica(shooter.pos, targetPos, Ballistica.STOP_TARGET);
-        int collisionPos = trajectory.collisionPos;
-        Char target = Actor.findChar(collisionPos);
-
-        // Return the hit result
-        return new HitResult[] { new HitResult(collisionPos, target) };
+        
+        // Calculate positions for hits
+        List<Integer> path = trajectory.subPath(0, trajectory.dist);
+        int[] positions = path.stream().mapToInt(Integer::intValue).toArray();
+        
+        // Skip the starting position and calculate hits
+        int numHits = Math.min(positions.length - 1, bullet);
+        HitResult[] results = new HitResult[numHits];
+        
+        // Distribute hits evenly along the trajectory, excluding the start position
+        for (int i = 0; i < numHits; i++) {
+            // Add 1 to skip the starting position
+            int pos = positions[1 + i * (positions.length - 2) / (numHits - 1)];
+            Char target = Actor.findChar(pos);
+            results[i] = new HitResult(pos, target);
+        }
+        
+        return results;
     }
 }
