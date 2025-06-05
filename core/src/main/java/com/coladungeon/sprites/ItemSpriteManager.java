@@ -133,6 +133,8 @@ public class ItemSpriteManager {
             .label("shatteringDawn");
         registerTexture("sprites/gun.png",16)
             .label("gun");
+            registerTexture("effects/gunfire.png",16)
+            .label("gunfire");
     }
 
     public static class ImageMapping {

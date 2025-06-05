@@ -174,6 +174,9 @@ public class Dungeon {
 
     public static QuickSlot quickslot = new QuickSlot();
 
+
+    //in the future,there should be stage & relative depth
+    //depth= stage*5+relative depth
     public static int depth;
     //determines path the hero is on. Current uses:
     // 0 is the default path

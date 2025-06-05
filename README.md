@@ -8,12 +8,3 @@
 ## 基于NodeJS的宏系统
 详情可以看script文件夹，现在功能完备但仍未启用
 
-## 重构
-1.把Generator改为Consumer+probability
-2.使用Id+record+template来做物品
-3.重写texture判定
-4.重审楼层
-5.事件总线
-6.职业选择改为开局选择
-
-替身

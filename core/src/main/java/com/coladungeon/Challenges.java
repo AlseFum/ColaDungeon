@@ -1,6 +1,5 @@
 package com.coladungeon;
 
-import com.coladungeon.items.Dewdrop;
 import com.coladungeon.items.Item;
 
 public class Challenges {
@@ -44,9 +43,9 @@ public class Challenges {
 
 	public static boolean isItemBlocked( Item item ){
 
-		if (Dungeon.isChallenged(NO_HERBALISM) && item instanceof Dewdrop){
-			return true;
-		}
+		// if (Dungeon.isChallenged(NO_HERBALISM) && item instanceof Dewdrop){
+		// 	return true;
+		// }
 
 		return false;
 

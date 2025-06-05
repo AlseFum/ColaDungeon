@@ -256,7 +256,7 @@ public class SniperGun extends Gun {
 
         @Override
         public Visual primaryVisual() {
-            ItemSpriteManager.ImageMapping mapping = ItemSpriteManager.getImageMapping("square");
+            ItemSpriteManager.ImageMapping mapping = ItemSpriteManager.getImageMapping("gunfire");
             Image icon = new Image(mapping.texture);
             icon.frame(mapping.rect);
             return icon;
