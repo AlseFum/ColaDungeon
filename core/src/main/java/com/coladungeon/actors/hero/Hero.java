@@ -65,6 +65,7 @@ import com.coladungeon.effects.Speck;
 import com.coladungeon.effects.SpellSprite;
 import com.coladungeon.effects.Splash;
 import com.coladungeon.items.Ankh;
+import com.coladungeon.items.DivineAnkh;
 import com.coladungeon.items.Dewdrop;
 import com.coladungeon.items.EquipableItem;
 import com.coladungeon.items.Heap;
@@ -2203,18 +2204,18 @@ public class Hero extends Char {
         curAction = null;
 
         Ankh ankh = null;
-        Boolean debug = true;
+        //I‘m to create a divine ankh that revive infinite times
         //look for ankhs in player inventory, prioritize ones which are blessed.
         for (Ankh i : belongings.getAllItems(Ankh.class)) {
-            if (ankh == null || i.isBlessed()) {
+            if (ankh == null || i.isBlessed() || i instanceof DivineAnkh) {
                 ankh = i;
             }
         }
 
-        if (ankh != null || debug) {
+        if (ankh != null) {
             interrupt();
 
-            if (ankh != null && ankh.isBlessed() || debug) {
+            if (ankh != null && ankh.isBlessed() || ankh instanceof DivineAnkh) {
                 System.out.println("[Hero]You're dead, but cause it's debugging, you revived without cost now.");
                 this.HP = HT / 4;
 
@@ -2227,11 +2228,10 @@ public class Hero extends Char {
                 GLog.w(Messages.get(this, "revive"));
                 Statistics.ankhsUsed++;
                 Catalog.countUse(Ankh.class);
-
-                if (!debug) {
-                    ankh.detach(belongings.backpack);
+                // 如果使用的是神圣的ankh，则不消耗
+                if (ankh instanceof DivineAnkh) {
+                    return;
                 }
-
                 for (Char ch : Actor.chars()) {
                     if (ch instanceof DriedRose.GhostHero) {
                         ((DriedRose.GhostHero) ch).sayAnhk();

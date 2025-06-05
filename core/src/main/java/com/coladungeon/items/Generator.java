@@ -105,11 +105,9 @@ import com.coladungeon.items.stones.StoneOfBlink;
 import com.coladungeon.items.stones.StoneOfClairvoyance;
 import com.coladungeon.items.stones.StoneOfDeepSleep;
 import com.coladungeon.items.stones.StoneOfDetectMagic;
-import com.coladungeon.items.stones.StoneOfDungeonTravel;
 import com.coladungeon.items.stones.StoneOfEnchantment;
 import com.coladungeon.items.stones.StoneOfFear;
 import com.coladungeon.items.stones.StoneOfFlock;
-import com.coladungeon.items.stones.StoneOfGeneration;
 import com.coladungeon.items.stones.StoneOfIntuition;
 import com.coladungeon.items.stones.StoneOfShock;
 import com.coladungeon.items.trinkets.ExoticCrystals;
@@ -129,12 +127,9 @@ import com.coladungeon.items.wands.WandOfRegrowth;
 import com.coladungeon.items.wands.WandOfTransfusion;
 import com.coladungeon.items.wands.WandOfWarding;
 import com.coladungeon.items.weapon.heavysword.HeavySword;
-import com.coladungeon.items.weapon.melee.assassin.AssassinsBlade;
 import com.coladungeon.items.weapon.melee.BattleAxe;
 import com.coladungeon.items.weapon.melee.Crossbow;
 import com.coladungeon.items.weapon.melee.Cudgel;
-import com.coladungeon.items.weapon.melee.assassin.Dagger;
-import com.coladungeon.items.weapon.melee.assassin.Dirk;
 import com.coladungeon.items.weapon.melee.Flail;
 import com.coladungeon.items.weapon.melee.Gauntlet;
 import com.coladungeon.items.weapon.melee.Glaive;
@@ -162,6 +157,9 @@ import com.coladungeon.items.weapon.melee.WarHammer;
 import com.coladungeon.items.weapon.melee.WarScythe;
 import com.coladungeon.items.weapon.melee.Whip;
 import com.coladungeon.items.weapon.melee.WornShortsword;
+import com.coladungeon.items.weapon.melee.assassin.AssassinsBlade;
+import com.coladungeon.items.weapon.melee.assassin.Dagger;
+import com.coladungeon.items.weapon.melee.assassin.Dirk;
 import com.coladungeon.items.weapon.missiles.Bolas;
 import com.coladungeon.items.weapon.missiles.FishingSpear;
 import com.coladungeon.items.weapon.missiles.ForceCube;
@@ -196,8 +194,6 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
-import com.coladungeon.items.stones.StoneOfDeath;
-import com.coladungeon.items.stones.StoneOfDummy;
 
 
 public class Generator {
@@ -387,8 +383,7 @@ public class Generator {
 		registerItem(Category.STONE, StoneOfBlast.class, 2f);
 		registerItem(Category.STONE, StoneOfFear.class, 2f);
 		registerItem(Category.STONE, StoneOfAugmentation.class, 0f);
-		registerItem(Category.STONE, StoneOfDungeonTravel.class, 1f);
-		registerItem(Category.STONE, StoneOfGeneration.class, 2f);
+
 		
 		// 初始化法杖
 		registerItem(Category.WAND, WandOfMagicMissile.class, 3f);

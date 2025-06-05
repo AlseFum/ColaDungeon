@@ -1,16 +1,16 @@
 package com.coladungeon.items.weapon.melee.assassin;
 
-import java.util.ArrayList;
-
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Char;
+import com.coladungeon.actors.blobs.Blob;
 import com.coladungeon.actors.buffs.Buff;
-import com.coladungeon.actors.buffs.Invisibility;
 import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.effects.BlobEmitter;
+import com.coladungeon.effects.Speck;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.sprites.ItemSpriteSheet;
-import com.coladungeon.utils.GLog;
+import com.watabou.utils.Random;
 
 public class PhantomClaw extends Assassinator {
 
@@ -25,7 +25,7 @@ public class PhantomClaw extends Assassinator {
     public String targetingPrompt() {
         return Messages.get(this, "prompt");
     }
-
+    @Override
     public boolean useTargeting() {
         return false;
     }
@@ -65,41 +65,82 @@ public class PhantomClaw extends Assassinator {
     @Override
     public void special_effect(Char attacker, Char defender, int damage) {
         super.special_effect(attacker, defender, damage);
-        //未来应实现有幻影进行攻击的视觉效果
-        // Update defender's field of view
-        if (defender.fieldOfView == null || defender.fieldOfView.length != Dungeon.level.length()) {
-            defender.fieldOfView = new boolean[Dungeon.level.length()];
-            Dungeon.level.updateFieldOfView(defender, defender.fieldOfView);
-        }
-        
-        // 创建一个临时列表来存储需要处理的怪物
-        ArrayList<Char> targets = new ArrayList<>();
-        
-        // 先收集所有目标
-        for (Char ch : Dungeon.level.mobs) {
-            if (ch != defender && !defender.fieldOfView[ch.pos]) {
-                targets.add(ch);
+        // 1. 在defender脚下生成PhantomBlob
+        PhantomBlob blob = Blob.seed(defender.pos, 1, PhantomBlob.class);
+
+        // 2. 给所有mob添加PhantomMark buff
+        for (Char mob : Dungeon.level.mobs) {
+            if (mob.buff(PhantomMark.class) == null) {
+                Buff.affect(mob, PhantomMark.class)
+                .setBlob(blob).damage= 12;
             }
         }
-        
-        // 然后处理收集到的目标
-        if (!targets.isEmpty()) {
-            // Apply invisibility to attacker
-            Buff.affect(attacker, Invisibility.class, targets.size() * 3f);
-            
-            // Deal damage to characters not in defender's field of view
-            for (Char ch : targets) if(ch.isAlive()){
-                int shadowDamage =(int) Math.round(damage *(charge*0.2+ 0.4f));
-                ch.damage(shadowDamage, attacker);
-                if(!ch.isAlive()){
-                    charge++;
+    }
+
+    // ========== 内部类：PhantomBlob ==========
+    public static class PhantomBlob extends Blob {
+        public int charge = 0;
+        public int size = 1;
+        public java.util.Set<Char> markedMobs = new java.util.HashSet<>();
+
+        public PhantomBlob() {
+            // 必须有无参构造函数供反射用
+        }
+
+        public void onMobDeath(Char mob) {
+            charge++;
+            size++;
+            // 可以在这里增强伏击伤害或效果
+        }
+
+        @Override
+        public void use(BlobEmitter emitter) {
+            super.use(emitter);
+            emitter.pour(Speck.factory(Speck.SMOKE), 3f);
+        }
+
+        @Override
+        public String tileDesc() {
+            return Messages.get(this, "desc");
+        }
+    }
+
+    // ========== 内部类：PhantomMark ==========
+    public static class PhantomMark extends Buff {
+        private PhantomBlob blob;
+        private int tick = 0;
+        public int damage=5;
+        public PhantomMark setBlob(PhantomBlob blob) {
+            this.blob = blob;
+            blob.markedMobs.add(target);
+            return this;
+        }
+
+        @Override
+        public boolean act() {
+            tick++;
+            if (Random.Float() < 0.2f || tick % 5 == 0) { // 不定时伏击
+                int _dam = damage+blob.size * 3;
+                // Use the weapon as the source of damage
+                PhantomClaw weapon = Dungeon.hero.belongings.weapon instanceof PhantomClaw ? 
+                    (PhantomClaw)Dungeon.hero.belongings.weapon : null;
+                if (weapon != null) {
+                    target.damage(_dam, weapon);
+                } else {
+                    target.damage(_dam, Dungeon.hero);
                 }
-                GLog.n("Shadow attack!");
-            }else{
-                charge++;
+                com.coladungeon.utils.GLog.n("Phantom ambush!");
             }
-        } else {
-            GLog.n("No shadows to attack!");
+            spend(TICK);
+            return true;
+        }
+
+        @Override
+        public void detach() {
+            super.detach();
+            if (!target.isAlive() && blob != null) {
+                blob.onMobDeath(target);
+            }
         }
     }
 }

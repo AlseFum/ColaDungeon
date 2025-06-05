@@ -21,6 +21,8 @@
 
 package com.coladungeon.items.rings;
 
+import java.util.ArrayList;
+
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.Buff;
@@ -34,8 +36,6 @@ import com.coladungeon.ui.AttackIndicator;
 import com.coladungeon.ui.BuffIndicator;
 import com.coladungeon.utils.GLog;
 import com.watabou.utils.Bundle;
-
-import java.util.ArrayList;
 
 public class RingOfForce extends Ring {
 

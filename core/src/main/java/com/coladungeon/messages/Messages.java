@@ -119,7 +119,6 @@ public class Messages {
 			}
 		}
 	}
-
 	private static String getFromBundle(String key){
 		String result;
 		for (I18NBundle b : bundles){

@@ -22,13 +22,17 @@
 package com.coladungeon.items.weapon.melee.assassin;
 
 import com.coladungeon.Assets;
+import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.Buff;
+import com.coladungeon.actors.buffs.FlavourBuff;
 import com.coladungeon.actors.buffs.Invisibility;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.ui.BuffIndicator;
 import com.coladungeon.utils.GLog;
-import com.coladungeon.actors.Char;
+import com.watabou.noosa.Image;
+import com.watabou.utils.Bundle;
 
 public class AssassinsBlade extends Assassinator {
 
@@ -81,9 +85,60 @@ public class AssassinsBlade extends Assassinator {
 	public void special_effect(Char attacker, Char defender, int damage) {
 		super.special_effect(attacker, defender, damage);
 		if (attacker instanceof Hero) {
-			Buff.affect(attacker, Invisibility.class, 6f); // Apply invisibility for 3 turns
+			Buff.affect(attacker, AssassinCloak.class, 0f);
 			GLog.i("The Assassin's Blade shrouds you in shadows!");
 		}
 	}
 
+	public static class AssassinCloak extends FlavourBuff {
+		{
+			type = Buff.buffType.POSITIVE;
+		}
+			public float last=10f;	
+		@Override
+		public boolean act() {
+			if (target.isAlive() && last>0f) {
+				Buff.prolong(target, Invisibility.class, 2f);
+				last-=TICK;
+				spend(TICK);
+			} else {
+				detach();
+			}
+			return true;
+		}
+
+		@Override
+		public int icon() {
+			return BuffIndicator.INVISIBLE;
+		}
+
+		@Override
+		public void tintIcon(Image icon) {
+			icon.hardlight(0.5f, 0.5f, 0.5f);
+		}
+
+		@Override
+		public String toString() {
+			return "Assassin's Cloak";
+		}
+		@Override
+		public String name(){
+			return "Assassin's Cloak";
+		}
+		@Override
+		public String desc() {
+			return "The shadows of the assassin's blade continuously shroud you in invisibility.Last for "+last+" rounds.";
+		}
+		@Override
+		public void storeInBundle(Bundle bundle) {
+			super.storeInBundle(bundle);
+			bundle.put("last", last);
+		}
+		@Override
+		public void restoreFromBundle(Bundle bundle) {
+			super.restoreFromBundle(bundle);
+			last = bundle.getFloat("last");
+		}
+		
+	}
 }

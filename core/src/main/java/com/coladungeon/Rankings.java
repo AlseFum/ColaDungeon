@@ -551,7 +551,7 @@ public enum Rankings {
 			bundle.put( SEED, customSeed );
 			bundle.put( DAILY, daily );
 
-			bundle.put( CLASS, heroClass.id() );
+			bundle.put( CLASS, Dungeon.hero.heroClass.id() );
 			bundle.put( TIER, armorTier );
 			bundle.put( LEVEL, herolevel );
 			bundle.put( DEPTH, depth );

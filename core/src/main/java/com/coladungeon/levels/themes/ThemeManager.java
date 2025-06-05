@@ -2,13 +2,12 @@ package com.coladungeon.levels.themes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.coladungeon.Dungeon;
 import com.coladungeon.levels.DeadEndLevel;
 import com.coladungeon.levels.DebugLevel;
-import com.coladungeon.levels.Level;
 import com.coladungeon.levels.LastLevel;
+import com.coladungeon.levels.Level;
 import com.watabou.utils.Random;
 
 public class ThemeManager {
@@ -34,15 +33,17 @@ public class ThemeManager {
         if (depth < -5) {
             return new DeadEndLevel();
         }
-        if(depth> -5 && depth < 0){
+        if (depth > -5 && depth < 0) {
             return new DebugLevel();
         }
-
+        if (depth >= 26) {
+            return new LastLevel();
+        }
         // 一次遍历找到最高权重并收集对应主题
         short maxWeight = 0;
         List<String> topThemes = new ArrayList<>();
 
-        for (Map.Entry<String, ThemePack> entry : ThemeSheet.themePacks.entrySet()) {
+        for (var entry : ThemeSheet.themePacks.entrySet()) {
             String themeName = entry.getKey();
             ThemePack themePack = entry.getValue();
             short weight = themePack.getWeight(depth, branch);
@@ -66,23 +67,19 @@ public class ThemeManager {
 
         // 从最高权重主题中随机选择
         String selectedTheme = Random.element(topThemes);
-        System.out.println("[ThemeManager] select Theme: " + selectedTheme + " (by weight: " + maxWeight + ")");
+        // System.out.println("[ThemeManager] select Theme: " + selectedTheme + " (by weight: " + maxWeight + ")");
 
         setCurrentTheme(selectedTheme);
         ThemePack themePack = getCurrentTheme();
-
-        if (themePack != null) {
-            boolean isBoss = Dungeon.bossLevel(depth);
-            Level level = isBoss ? themePack.getBossLevel() : themePack.getNormalLevel();
-            System.out.println("[ThemeManager] success create level: " + level.getClass().getSimpleName());
-            return level;
+        if (themePack == null) {
+            return new DeadEndLevel();
         }
-        if(depth>2){
-            return new LastLevel();
-        }
-
-        // 备用方案：返回死胡同
-        return new DeadEndLevel();
+        boolean isBoss = Dungeon.bossLevel(depth);
+        Level level = isBoss
+                ? themePack.getBossLevel()
+                : themePack.getNormalLevel();
+        // System.out.println("[ThemeManager] success create level: " + level.getClass().getSimpleName());
+        return level;
     }
 
     public static void registerTheme(String themeName, ThemePack themePack) {
@@ -97,8 +94,9 @@ public class ThemeManager {
     }
 
     public static ThemePack getCurrentTheme() {
+        // Default to Sewer theme
         ThemePack theme = ThemeSheet.getThemePack(currentTheme);
-        return theme != null ? theme : ThemeSheet.SewerTheme; // Default to Sewer theme
+        return theme != null ? theme : ThemeSheet.SewerTheme; 
     }
 
     public static List<String> getAvailableThemeNames() {

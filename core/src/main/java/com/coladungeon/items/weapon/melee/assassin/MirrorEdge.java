@@ -1,10 +1,8 @@
 package com.coladungeon.items.weapon.melee.assassin;
 
+import java.util.ArrayList;
+
 import com.coladungeon.Assets;
-import com.coladungeon.actors.hero.Hero;
-import com.coladungeon.messages.Messages;
-import com.coladungeon.sprites.ItemSpriteSheet;
-import com.coladungeon.actors.Char;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
@@ -16,35 +14,28 @@ import com.coladungeon.actors.buffs.Burning;
 import com.coladungeon.actors.buffs.Invisibility;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.actors.mobs.Mob;
+import com.coladungeon.actors.mobs.npcs.NPC;
 import com.coladungeon.items.rings.RingOfAccuracy;
 import com.coladungeon.items.rings.RingOfEvasion;
-import com.coladungeon.messages.Messages;
 import com.coladungeon.items.scrolls.ScrollOfTeleportation;
-import com.coladungeon.sprites.CharSprite;
-import com.coladungeon.sprites.MirrorSprite;
-import com.coladungeon.actors.mobs.npcs.NPC;
+import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;
+import com.coladungeon.sprites.CharSprite;
+import com.coladungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.sprites.MirrorSprite;
 import com.coladungeon.ui.BuffIndicator;
 import com.coladungeon.utils.GLog;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Random;
-import com.coladungeon.Assets;
-import com.coladungeon.Dungeon;
-import com.coladungeon.actors.Actor;
-import com.coladungeon.actors.hero.Hero;
-import com.coladungeon.actors.mobs.npcs.MirrorImage;
-import com.coladungeon.messages.Messages;
-import com.coladungeon.scenes.GameScene;
-import com.coladungeon.sprites.ItemSpriteSheet;
-import com.coladungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 
-import java.util.ArrayList;
-
 public class MirrorEdge extends Assassinator {
-
+//实现这么个效果，special effect时会充能，
+//然后召唤一个镜像攻击敌人
+//镜像被攻击时直接扣除充能（有最大扣除值）
+//然后消失
+//充能越大，special effect所需阈值越低
+//
     {
         image = ItemSpriteSheet.DAGGER; // Placeholder image
         hitSound = Assets.Sounds.HIT_STAB;
@@ -56,7 +47,7 @@ public class MirrorEdge extends Assassinator {
     public String targetingPrompt() {
         return Messages.get(this, "prompt");
     }
-
+    @Override
     public boolean useTargeting() {
         return false;
     }
@@ -90,11 +81,43 @@ public class MirrorEdge extends Assassinator {
         return "A weapon of tier 3, designed for skilled assassins. It offers a balance of power and precision.";
     }
 
+    private float charge = 0;
+    private static final float MAX_CHARGE = 10f;
+    private static final float CHARGE_PER_HIT = 2f;
+    private static final float MIN_CHARGE_TO_SPAWN = 3f;
+
     @Override
     public void special_effect(Char attacker, Char defender, int damage) {
-        //创建一个镜像，镜像会在攻击的同时尝试走到敌人视野之外，
-        //玩家可以随时无损耗与镜像切换位置
-        spawnImages((Hero) attacker, defender, defender.pos, 1);
+        // 增加充能
+        charge = Math.min(charge + CHARGE_PER_HIT, MAX_CHARGE);
+        
+        // 只有当充能达到阈值时才召唤镜像
+        if (charge >= MIN_CHARGE_TO_SPAWN) {
+            float chargeToUse = charge;
+            charge = 0;  // 重置充能
+            
+            // 召唤镜像
+            MirrorReflection mirror = new MirrorReflection();
+            mirror.setCharge(chargeToUse);  // 将充能传递给镜像
+            mirror.duplicate((Hero) attacker);
+            mirror.enemy = defender;  // 设置目标
+            
+            // 在敌人周围找位置放置镜像
+            ArrayList<Integer> respawnPoints = new ArrayList<>();
+            for (int i = 0; i < PathFinder.NEIGHBOURS9.length; i++) {
+                int p = defender.pos + PathFinder.NEIGHBOURS9[i];
+                if (Actor.findChar(p) == null && Dungeon.level.passable[p]) {
+                    respawnPoints.add(p);
+                }
+            }
+            
+            if (!respawnPoints.isEmpty()) {
+                int index = Random.index(respawnPoints);
+                GameScene.add(mirror);
+                ScrollOfTeleportation.appear(mirror, respawnPoints.get(index));
+                GLog.p("Mirror appears! (Charge: " + (int)chargeToUse + ")");
+            }
+        }
     }
 
     //returns the number of images spawned
@@ -110,7 +133,7 @@ public class MirrorEdge extends Assassinator {
         }
 
         int spawned = 0;
-        while (nImages > 0 && respawnPoints.size() > 0) {
+        while (nImages > 0 && !respawnPoints.isEmpty()) {
             int index = Random.index(respawnPoints);
 
             MirrorReflection mob = new MirrorReflection();
@@ -134,6 +157,10 @@ public class MirrorEdge extends Assassinator {
 
     public static class MirrorReflection extends NPC {
 
+        private float charge;      // 当前充能值
+        private static final float MAX_CHARGE = 10f;  // 最大充能值
+        private static final float CHARGE_LOSS_CAP = 5f;  // 最大扣除值
+
         {
             spriteClass = MirrorSprite.class;
 
@@ -154,7 +181,6 @@ public class MirrorEdge extends Assassinator {
 
         @Override
         protected boolean act() {
-
             if (hero == null) {
                 hero = (Hero) Actor.findById(heroID);
                 if (hero == null) {
@@ -166,14 +192,35 @@ public class MirrorEdge extends Assassinator {
 
             if (enemy != null) {
                 moveToBlindSpot();
-            }
-
-            if (hero.tier() != armTier) {
-                armTier = hero.tier();
-                ((MirrorSprite) sprite).updateArmor(armTier);
+                if (enemy instanceof Mob) {
+                    ((Mob)enemy).aggro(this);
+                }
             }
 
             return super.act();
+        }
+
+        @Override
+        public int defenseProc(Char enemy, int damage) {
+            // 受到伤害时扣除充能
+            float chargeLoss = Math.min(damage, CHARGE_LOSS_CAP);
+            charge -= chargeLoss;
+            
+            // 如果充能耗尽，镜像消失
+            if (charge <= 0) {
+                die(null);
+                sprite.killAndErase();
+            }
+            
+            return super.defenseProc(enemy, damage);
+        }
+
+        public void setCharge(float charge) {
+            this.charge = Math.min(charge, MAX_CHARGE);
+        }
+
+        public float getCharge() {
+            return charge;
         }
 
         private void moveToBlindSpot() {
@@ -201,18 +248,18 @@ public class MirrorEdge extends Assassinator {
             }
         }
 
-        private static final String HEROID = "hero_id";
+        private static final String CHARGE = "charge";
 
         @Override
         public void storeInBundle(Bundle bundle) {
             super.storeInBundle(bundle);
-            bundle.put(HEROID, heroID);
+            bundle.put(CHARGE, charge);
         }
 
         @Override
         public void restoreFromBundle(Bundle bundle) {
             super.restoreFromBundle(bundle);
-            heroID = bundle.getInt(HEROID);
+            charge = bundle.getFloat(CHARGE);
         }
 
         public void duplicate(Hero hero) {
@@ -291,7 +338,7 @@ public class MirrorEdge extends Assassinator {
             }
             if (hero.belongings.weapon() != null) {
                 damage = hero.belongings.weapon().proc(this, enemy, damage);
-                if (!enemy.isAlive() && enemy == Dungeon.hero) {
+                if (enemy!=null && !enemy.isAlive() && enemy == Dungeon.hero) {
                     Dungeon.fail(this);
                     GLog.n(Messages.capitalize(Messages.get(Char.class, "kill", name())));
                 }

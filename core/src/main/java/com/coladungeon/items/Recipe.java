@@ -21,6 +21,8 @@
 
 package com.coladungeon.items;
 
+import java.util.ArrayList;
+
 import com.coladungeon.ColaDungeon;
 import com.coladungeon.items.bombs.Bomb;
 import com.coladungeon.items.food.Blandfruit;
@@ -60,8 +62,6 @@ import com.coladungeon.items.trinkets.TrinketCatalyst;
 import com.coladungeon.items.wands.Wand;
 import com.coladungeon.items.weapon.missiles.MissileWeapon;
 import com.watabou.utils.Reflection;
-
-import java.util.ArrayList;
 
 public abstract class Recipe {
 	

@@ -33,19 +33,33 @@ import com.coladungeon.items.bags.PotionBandolier;
 import com.coladungeon.items.bags.VelvetPouch;
 import com.coladungeon.items.food.Food;
 import com.coladungeon.items.potions.PotionOfHealing;
+import com.coladungeon.items.potions.PotionOfInvisibility;
+import com.coladungeon.items.potions.PotionOfLiquidFlame;
+import com.coladungeon.items.potions.PotionOfMindVision;
+import com.coladungeon.items.potions.PotionOfPurity;
 import com.coladungeon.items.potions.PotionOfStrength;
+import com.coladungeon.items.scrolls.ScrollOfLullaby;
+import com.coladungeon.items.scrolls.ScrollOfMagicMapping;
+import com.coladungeon.items.scrolls.ScrollOfMirrorImage;
+import com.coladungeon.items.scrolls.ScrollOfRage;
+import com.coladungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.coladungeon.items.scrolls.ScrollOfUpgrade;
 import com.coladungeon.items.supply.AssassinSupply;
 import com.coladungeon.items.supply.DebugSupply;
 import com.coladungeon.items.supply.GunSupply;
 import com.coladungeon.items.wands.WandOfMagicMissile;
+import com.coladungeon.items.weapon.SpiritBow;
+import com.coladungeon.items.weapon.melee.Cudgel;
+import com.coladungeon.items.weapon.melee.Gloves;
 import com.coladungeon.items.weapon.melee.MagesStaff;
+import com.coladungeon.items.weapon.melee.Rapier;
 import com.coladungeon.items.weapon.melee.WornShortsword;
+import com.coladungeon.items.weapon.melee.assassin.Dagger;
+import com.coladungeon.items.weapon.missiles.ThrowingKnife;
+import com.coladungeon.items.weapon.missiles.ThrowingSpike;
 import com.coladungeon.items.weapon.missiles.ThrowingStone;
 import com.coladungeon.journal.Catalog;
-import com.coladungeon.items.supply.GloveSupply;
 import com.coladungeon.utils.EventBus;
-
 public final class HeroClassSheet {
 
     private static final Map<String, HeroClass> registeredClasses = new LinkedHashMap<>();
@@ -81,7 +95,7 @@ public final class HeroClassSheet {
 
                 // 自动识别
                 new PotionOfHealing().identify();
-                new ScrollOfUpgrade().identify();
+                new ScrollOfRage().identify();
             })
             .register();
 
@@ -109,7 +123,7 @@ public final class HeroClassSheet {
 
                 // 自动识别
                 new ScrollOfUpgrade().identify();
-                new PotionOfStrength().identify();
+                new PotionOfLiquidFlame().identify();
             })
             .register();
 
@@ -128,15 +142,24 @@ public final class HeroClassSheet {
                 initCommon(hero);
 
                 // 基础武器
-                (hero.belongings.weapon = new WornShortsword()).identify();
+                (hero.belongings.weapon = new Dagger()).identify();
 
                 // 隐身斗篷
                 CloakOfShadows cloak = new CloakOfShadows();
                 (hero.belongings.artifact = cloak).identify();
                 hero.belongings.artifact.activate(hero);
 
+                // 投掷飞刀
+                ThrowingKnife knives = new ThrowingKnife();
+                knives.quantity(3).collect();
+
                 // 快捷栏
                 Dungeon.quickslot.setSlot(0, cloak);
+                Dungeon.quickslot.setSlot(1, knives);
+
+                // 自动识别
+                new ScrollOfMagicMapping().identify();
+                new PotionOfInvisibility().identify();
             })
             .register();
 
@@ -153,7 +176,20 @@ public final class HeroClassSheet {
             .initializer(hero -> {
                 hero.heroClass = HeroClass.HUNTRESS;
                 initCommon(hero);
-                // TODO: 实现猎人初始化
+
+                // 基础武器
+                (hero.belongings.weapon = new Gloves()).identify();
+
+                // 灵魂弓
+                SpiritBow bow = new SpiritBow();
+                bow.identify().collect();
+
+                // 快捷栏
+                Dungeon.quickslot.setSlot(0, bow);
+
+                // 自动识别
+                new PotionOfMindVision().identify();
+                new ScrollOfLullaby().identify();
             })
             .register();
 
@@ -184,7 +220,22 @@ public final class HeroClassSheet {
             .initializer(hero -> {
                 hero.heroClass = HeroClass.DUELIST;
                 initCommon(hero);
-                // TODO: 实现决斗者初始化
+
+                // 基础武器
+                (hero.belongings.weapon = new Rapier()).identify();
+                hero.belongings.weapon.activate(hero);
+
+                // 投掷尖刺
+                ThrowingSpike spikes = new ThrowingSpike();
+                spikes.quantity(2).collect();
+
+                // 快捷栏
+                Dungeon.quickslot.setSlot(0, hero.belongings.weapon);
+                Dungeon.quickslot.setSlot(1, spikes);
+
+                // 自动识别
+                new PotionOfStrength().identify();
+                new ScrollOfMirrorImage().identify();
             })
             .register();
 
@@ -203,7 +254,8 @@ public final class HeroClassSheet {
                 initCommon(hero);
 
                 // 基础武器
-                (hero.belongings.weapon = new WornShortsword()).identify();
+                (hero.belongings.weapon = new Cudgel()).identify();
+                hero.belongings.weapon.activate(hero);
 
                 // 圣典
                 HolyTome tome = new HolyTome();
@@ -212,6 +264,10 @@ public final class HeroClassSheet {
 
                 // 快捷栏
                 Dungeon.quickslot.setSlot(0, tome);
+
+                // 自动识别
+                new PotionOfPurity().identify();
+                new ScrollOfRemoveCurse().identify();
             })
             .register();
 
@@ -287,7 +343,6 @@ public final class HeroClassSheet {
         new GunSupply().identify().collect();
         new DebugSupply().identify().collect();
             new AssassinSupply().identify().collect();
-        new GloveSupply().identify().collect();
         // 事件通知
         EventBus.fire("Hero:created", "hero", hero);
     }

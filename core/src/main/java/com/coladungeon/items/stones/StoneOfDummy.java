@@ -24,6 +24,8 @@ public class StoneOfDummy extends Runestone {
         };
         rat.pos = cell;
         rat.state = rat.PASSIVE;
+        rat.HT=114514;
+        rat.HP=114514;
         //FIXME
         // Dungeon.level.mobs.add(golem);
         // Actor.add(golem);
