@@ -61,6 +61,7 @@ import com.coladungeon.items.trinkets.Trinket;
 import com.coladungeon.items.trinkets.TrinketCatalyst;
 import com.coladungeon.items.wands.Wand;
 import com.coladungeon.items.weapon.missiles.MissileWeapon;
+import com.coladungeon.items.weapon.ammo.ExplosiveAmmoRecipe;
 import com.watabou.utils.Reflection;
 
 public abstract class Recipe {
@@ -196,7 +197,7 @@ public abstract class Recipe {
 		new Trinket.UpgradeTrinket()
 	};
 	
-	private static Recipe[] twoIngredientRecipes = new Recipe[]{
+	private static final Recipe[] twoIngredientRecipes = new Recipe[]{
 		new Blandfruit.CookFruit(),
 		new Bomb.EnhanceBomb(),
 		new UnstableBrew.Recipe(),
@@ -209,7 +210,8 @@ public abstract class Recipe {
 		new CurseInfusion.Recipe(),
 		new ReclaimTrap.Recipe(),
 		new WildEnergy.Recipe(),
-		new StewedMeat.twoMeat()
+		new StewedMeat.twoMeat(),
+		new ExplosiveAmmoRecipe()
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{

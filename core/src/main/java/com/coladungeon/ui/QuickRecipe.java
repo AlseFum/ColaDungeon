@@ -28,6 +28,7 @@ import com.coladungeon.items.Generator;
 import com.coladungeon.items.Item;
 import com.coladungeon.items.LiquidMetal;
 import com.coladungeon.items.Recipe;
+import com.coladungeon.items.Torch;
 import com.coladungeon.items.bombs.Bomb;
 import com.coladungeon.items.food.Blandfruit;
 import com.coladungeon.items.food.Food;
@@ -65,8 +66,15 @@ import com.coladungeon.items.spells.TelekineticGrab;
 import com.coladungeon.items.spells.UnstableSpell;
 import com.coladungeon.items.spells.WildEnergy;
 import com.coladungeon.items.stones.Runestone;
+
+
+import com.coladungeon.items.trinkets.Trinket;
+import com.coladungeon.items.trinkets.TrinketCatalyst;
 import com.coladungeon.items.wands.Wand;
 import com.coladungeon.items.weapon.missiles.MissileWeapon;
+import com.coladungeon.items.weapon.ammo.Ammo;
+import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
+import com.coladungeon.items.weapon.ammo.ExplosiveAmmoRecipe;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.plants.Plant;
 import com.coladungeon.scenes.AlchemyScene;
@@ -356,6 +364,9 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe( new ArcaneResin.Recipe(),
 						new ArrayList<Item>(Arrays.asList(new Wand.PlaceHolder())),
 						new ArcaneResin()));
+				result.add(new QuickRecipe( new ExplosiveAmmoRecipe(),
+						new ArrayList<Item>(Arrays.asList(new Ammo(), new Torch())),
+						new ExplosiveAmmo()));
 				return result;
 			case 7:
 				result.add(new QuickRecipe(new UnstableBrew.Recipe(), new ArrayList<>(Arrays.asList(new Potion.PlaceHolder(), new  Plant.Seed.PlaceHolder())), new UnstableBrew()));
@@ -376,7 +387,11 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new ElixirOfMight.Recipe()));
 				return result;
 			case 8:
-				result.add(new QuickRecipe(new UnstableSpell.Recipe(), new ArrayList<>(Arrays.asList(new Scroll.PlaceHolder(), new  Runestone.PlaceHolder())), new UnstableSpell()));
+				result.add(new QuickRecipe(
+					new UnstableSpell.Recipe(), 
+					new ArrayList<>(Arrays.asList(
+						new Scroll.PlaceHolder(), 
+						new  Runestone.PlaceHolder())), new UnstableSpell()));
 				result.add(new QuickRecipe(new WildEnergy.Recipe()));
 				result.add(new QuickRecipe(new TelekineticGrab.Recipe()));
 				result.add(new QuickRecipe(new PhaseShift.Recipe()));

@@ -6,13 +6,13 @@ import com.coladungeon.actors.Char;
 import com.coladungeon.actors.mobs.Mob;
 import com.coladungeon.levels.features.LevelTransition;
 import com.coladungeon.levels.rooms.Room;
-import com.coladungeon.levels.rooms.special.RuinedAltarRoom;
+import com.coladungeon.levels.rooms.special.LaboratoryRoom;
 import com.watabou.utils.Point;
 
 public class DeadEndLevel extends Level {
 
     private static final int SIZE = 9;
-    private RuinedAltarRoom altarRoom;
+    private LaboratoryRoom laboratoryRoom;
 
     {
         color1 = 0x534f3e;
@@ -38,52 +38,52 @@ public class DeadEndLevel extends Level {
             map[i] = Terrain.WALL;
         }
 
-        // 创建中心区域
-        altarRoom = new RuinedAltarRoom();
-        altarRoom.setSize();
-        altarRoom.set(3, 3, 3 + SIZE - 1, 3 + SIZE - 1);
-        altarRoom.connected.put(null, new Room.Door(altarRoom.left + SIZE / 2, altarRoom.top)); // 上门
-        altarRoom.connected.put(null, new Room.Door(altarRoom.left + SIZE / 2, altarRoom.bottom)); // 下门
-        altarRoom.paint(this);
+        // 创建中心区域（炼金室）
+        laboratoryRoom = new LaboratoryRoom();
+        laboratoryRoom.setSize();
+        laboratoryRoom.set(3, 3, 3 + SIZE - 1, 3 + SIZE - 1);
+        laboratoryRoom.connected.put(null, new Room.Door(laboratoryRoom.left + SIZE / 2, laboratoryRoom.top)); // 上门
+        laboratoryRoom.connected.put(null, new Room.Door(laboratoryRoom.left + SIZE / 2, laboratoryRoom.bottom)); // 下门
+        laboratoryRoom.paint(this);
 
         // 入口（向上）
         int _entrance = (SIZE + 6) * (SIZE + 3) + (SIZE + 6) / 2;
 
         transitions.add(
-			new LevelTransition(this,
-								 _entrance,
-								  LevelTransition.Type.REGULAR_ENTRANCE));
+            new LevelTransition(this,
+                                 _entrance,
+                                  LevelTransition.Type.REGULAR_ENTRANCE));
 
         // 出口（向下）
         int _exit = (SIZE + 6) * 3 + (SIZE + 6) / 2;
 
         transitions.add(
-			new LevelTransition(this,
-								 _exit,
-								  LevelTransition.Type.REGULAR_EXIT));
+            new LevelTransition(this,
+                                 _exit,
+                                  LevelTransition.Type.REGULAR_EXIT));
 
         // 创建通道
         Point entrancePoint = cellToPoint(_entrance);
         Point exitPoint = cellToPoint(_exit);
 
-        // // 连接入口到祭坛房间
-        for (int y = altarRoom.top; y < entrancePoint.y; y++) {
+        // 连接入口到炼金室
+        for (int y = laboratoryRoom.top; y < entrancePoint.y; y++) {
             map[y * width() + entrancePoint.x] = Terrain.EMPTY;
         }
 
-        // 连接祭坛房间到出口
-        for (int y = exitPoint.y + 1; y <= altarRoom.bottom; y++) {
+        // 连接炼金室到出口
+        for (int y = exitPoint.y + 1; y <= laboratoryRoom.bottom; y++) {
             map[y * width() + exitPoint.x] = Terrain.EMPTY;
         }
 
         // 在通道两侧添加水
-        for (int y = altarRoom.top; y < entrancePoint.y; y++) {
+        for (int y = laboratoryRoom.top; y < entrancePoint.y; y++) {
             if (map[y * width() + entrancePoint.x] == Terrain.EMPTY) {
                 map[y * width() + entrancePoint.x - 1] = Terrain.WATER;
                 map[y * width() + entrancePoint.x + 1] = Terrain.WATER;
             }
         }
-        for (int y = exitPoint.y + 1; y <= altarRoom.bottom; y++) {
+        for (int y = exitPoint.y + 1; y <= laboratoryRoom.bottom; y++) {
             if (map[y * width() + exitPoint.x] == Terrain.EMPTY) {
                 map[y * width() + exitPoint.x - 1] = Terrain.WATER;
                 map[y * width() + exitPoint.x + 1] = Terrain.WATER;

@@ -1,6 +1,8 @@
 package com.coladungeon.items.supply;
 
 import com.coladungeon.items.DivineAnkh;
+import com.coladungeon.items.Torch;
+import com.coladungeon.items.EnergyCrystal;
 import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfInvisibility;
 import com.coladungeon.items.potions.PotionOfStrength;
@@ -29,5 +31,7 @@ public class DebugSupply extends Supply {
         put_in(PotionOfInvisibility.class, 500);
         put_in(PotionOfShroudingFog.class, 200);
         put_in(DivineAnkh.class, 1);
+        put_in(Torch.class, 100);
+        put_in(EnergyCrystal.class, 100);
     }
 }
