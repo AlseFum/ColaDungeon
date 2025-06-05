@@ -21,8 +21,10 @@
 
 package com.coladungeon.windows;
 
-import com.coladungeon.Dungeon;
+import java.text.NumberFormat;
+
 import com.coladungeon.ColaDungeon;
+import com.coladungeon.Dungeon;
 import com.coladungeon.Statistics;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.PixelScene;
@@ -30,8 +32,6 @@ import com.coladungeon.ui.Icons;
 import com.coladungeon.ui.RenderedTextBlock;
 import com.coladungeon.ui.Window;
 import com.watabou.noosa.Group;
-
-import java.text.NumberFormat;
 
 public class WndScoreBreakdown extends Window {
 
@@ -48,30 +48,32 @@ public class WndScoreBreakdown extends Window {
 		float pos = title.bottom()+2;
 
 		NumberFormat num = NumberFormat.getInstance(Messages.locale());
-		if (Dungeon.initialVersion > ColaDungeon.older_scorer_version) {
-			pos = statSlot(this, Messages.get(this, "progress_title"),
-					num.format(Statistics.progressScore), pos, Statistics.progressScore >= 50_000);
-			pos = addInfo(this, Messages.get(this, "progress_desc"), pos);
-			pos = statSlot(this, Messages.get(this, "treasure_title"),
-					num.format(Statistics.treasureScore), pos, Statistics.treasureScore >= 20_000);
-			pos = addInfo(this, Messages.get(this, "treasure_desc"), pos);
-			pos = statSlot(this, Messages.get(this, "explore_title"),
-					num.format(Statistics.exploreScore), pos, Statistics.exploreScore >= 20_000);
-			pos = addInfo(this, Messages.get(this, "explore_desc"), pos);
-			pos = statSlot(this, Messages.get(this, "bosses_title"),
-					num.format(Statistics.totalBossScore), pos, Statistics.totalBossScore >= 15_000);
-			pos = addInfo(this, Messages.get(this, "bosses_desc"), pos);
-			pos = statSlot(this, Messages.get(this, "quests_title"),
-					num.format(Statistics.totalQuestScore), pos, Statistics.totalQuestScore >= 10_000);
-			pos = addInfo(this, Messages.get(this, "quests_desc"), pos);
-		} else {
-			pos = statSlot(this, Messages.get(this, "progress_title"),
+		// if (Dungeon.initialVersion > ColaDungeon.older_scorer_version) {
+		// 	pos = statSlot(this, Messages.get(this, "progress_title"),
+		// 			num.format(Statistics.progressScore), pos, Statistics.progressScore >= 50_000);
+		// 	pos = addInfo(this, Messages.get(this, "progress_desc"), pos);
+		// 	pos = statSlot(this, Messages.get(this, "treasure_title"),
+		// 			num.format(Statistics.treasureScore), pos, Statistics.treasureScore >= 20_000);
+		// 	pos = addInfo(this, Messages.get(this, "treasure_desc"), pos);
+		// 	pos = statSlot(this, Messages.get(this, "explore_title"),
+		// 			num.format(Statistics.exploreScore), pos, Statistics.exploreScore >= 20_000);
+		// 	pos = addInfo(this, Messages.get(this, "explore_desc"), pos);
+		// 	pos = statSlot(this, Messages.get(this, "bosses_title"),
+		// 			num.format(Statistics.totalBossScore), pos, Statistics.totalBossScore >= 15_000);
+		// 	pos = addInfo(this, Messages.get(this, "bosses_desc"), pos);
+		// 	pos = statSlot(this, Messages.get(this, "quests_title"),
+		// 			num.format(Statistics.totalQuestScore), pos, Statistics.totalQuestScore >= 10_000);
+		// 	pos = addInfo(this, Messages.get(this, "quests_desc"), pos);
+		// } else {
+			
+		// }
+
+		pos = statSlot(this, Messages.get(this, "progress_title"),
 					num.format(Statistics.progressScore), pos, Statistics.progressScore >= 78_000);
 			pos = addInfo(this, Messages.get(this, "progress_desc"), pos);
 			pos = statSlot(this, Messages.get(this, "treasure_title"),
 					num.format(Statistics.treasureScore), pos, Statistics.treasureScore >= 30_000);
 			pos = addInfo(this, Messages.get(this, "treasure_desc_old"), pos);
-		}
 
 		if (Statistics.winMultiplier > 1) {
 			pos = statSlot(this, Messages.get(this, "win_multiplier"), Messages.decimalFormat("#.##", Statistics.winMultiplier) + "x", pos, false);
@@ -81,9 +83,9 @@ public class WndScoreBreakdown extends Window {
 		}
 		pos = statSlot(this, Messages.get(this, "total"), num.format(Statistics.totalScore), pos, false);
 
-		if (Dungeon.initialVersion <= ColaDungeon.older_scorer_version){
-			pos = addInfo(this, Messages.get(this, "old_score_desc"), pos);
-		}
+		// if (Dungeon.initialVersion <= ColaDungeon.older_scorer_version){
+		// 	pos = addInfo(this, Messages.get(this, "old_score_desc"), pos);
+		// }
 
 		resize(WIDTH, (int)pos);
 

@@ -22,7 +22,7 @@ task debug(type: JavaExec) {
     mainClass = appMainClass
     systemProperty 'Specification-Title', appName
     systemProperty 'Implementation-Title', appPackageName
-    systemProperty 'Specification-Version', appVersionName + "-INDEV"
+    systemProperty 'Specification-Version', appVersionName + "-cola-INDEV"
     systemProperty 'Implementation-Version', appVersionCode
 
     if (osName.contains('mac')) {

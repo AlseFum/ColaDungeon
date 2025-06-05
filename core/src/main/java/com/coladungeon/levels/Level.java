@@ -361,9 +361,9 @@ public abstract class Level implements Bundlable {
 		version = bundle.getInt( VERSION );
 		
 		//saves from before v2.3.2 are not supported
-		if (version < ColaDungeon.oldest_compatiable_version){
-			throw new RuntimeException("old save");
-		}
+		// if (version < ColaDungeon.oldest_compatiable_version){
+		// 	throw new RuntimeException("old save");
+		// }
 
 		setSize( bundle.getInt(WIDTH), bundle.getInt(HEIGHT));
 		

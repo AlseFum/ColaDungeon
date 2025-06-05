@@ -112,14 +112,9 @@ public class GamesInProgress {
 				
 				Bundle bundle = FileUtils.bundleFromFile(gameFile(slot));
 
-				if (bundle.getInt( "version" ) < ColaDungeon.oldest_compatiable_version) {
-					info = null;
-				} else {
-
-					info = new Info();
+				info = new Info();
 					info.slot = slot;
 					Dungeon.preview(info, bundle);
-				}
 
 			} catch (IOException e) {
 				info = null;

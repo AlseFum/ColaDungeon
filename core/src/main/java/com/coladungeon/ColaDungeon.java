@@ -33,14 +33,14 @@ import com.watabou.utils.PlatformSupport;
 public class ColaDungeon extends Game {
 
 	//rankings from v1.2.3 and older use a different score formula, so this reference is kept
-	public static final int older_scorer_version = 628;
+	// public static final int older_scorer_version = 1;
 
 	//savegames from versions older than v2.3.2 are no longer supported, and data from them is ignored
-	public static final int oldest_compatiable_version = 768;
-	public static final int v2_4_2 = 782;
-	public static final int v2_5_4 = 802;
+	// public static final int oldest_compatiable_version = 1;
+	// public static final int v2_4_2 = 1;
+	// public static final int v2_5_4 = 1;
 
-	public static final int v3_0_0 = 831;
+	public static final int v_latest = 1;
 	
 	public ColaDungeon(PlatformSupport platform ) {
 		super( sceneClass == null ? WelcomeScene.class : sceneClass, platform );
@@ -82,8 +82,8 @@ public class ColaDungeon extends Game {
 	}
 	
 	public static void seamlessResetScene(SceneChangeCallback callback) {
-		if (scene() instanceof PixelScene){
-			((PixelScene) scene()).saveWindows();
+		if (scene() instanceof PixelScene _scene){
+			_scene.saveWindows();
 			
 			switchNoFade((Class<? extends PixelScene>) sceneClass, callback );
 		} else {
@@ -98,8 +98,8 @@ public class ColaDungeon extends Game {
 	@Override
 	protected void switchScene() {
 		super.switchScene();
-		if (scene instanceof PixelScene){
-			((PixelScene) scene).restoreWindows();
+		if (scene instanceof PixelScene _scene){
+			_scene.restoreWindows();
 		}
 	}
 	
@@ -109,10 +109,10 @@ public class ColaDungeon extends Game {
 			return;
 		}
 
-		if (scene instanceof PixelScene &&
+		if (scene instanceof PixelScene _scene &&
 				(height != Game.height || width != Game.width)) {
 			PixelScene.noFade = true;
-			((PixelScene) scene).saveWindows();
+			_scene.saveWindows();
 		}
 
 		super.resize( width, height );
