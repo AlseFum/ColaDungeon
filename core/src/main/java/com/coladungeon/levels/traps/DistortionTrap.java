@@ -42,6 +42,7 @@ import com.coladungeon.actors.mobs.Wraith;
 import com.coladungeon.actors.mobs.npcs.RatKing;
 import com.coladungeon.items.scrolls.ScrollOfTeleportation;
 import com.coladungeon.journal.Bestiary;
+import com.coladungeon.levels.themes.ThemeManager;
 import com.coladungeon.scenes.GameScene;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -111,7 +112,7 @@ public class DistortionTrap extends Trap{
 					int floor;
 					do {
 						floor = Random.Int(25);
-					} while( Dungeon.bossLevel(floor));
+					} while( ThemeManager.bossLevel(floor));
 					mob = Reflection.newInstance(MobSpawner.getMobRotation(floor).get(0));
 					break;
 				case 2:

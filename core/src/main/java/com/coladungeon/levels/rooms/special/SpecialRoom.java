@@ -31,6 +31,8 @@ import com.watabou.utils.Reflection;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.coladungeon.levels.themes.ThemeManager;
+
 public abstract class SpecialRoom extends Room {
 	
 	@Override
@@ -169,7 +171,7 @@ public abstract class SpecialRoom extends Room {
 		
 		} else {
 			
-			if (Dungeon.bossLevel(Dungeon.depth + 1)){
+			if (ThemeManager.bossLevel(Dungeon.depth + 1)){
 				floorSpecials.remove(WeakFloorRoom.class);
 			}
 

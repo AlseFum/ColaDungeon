@@ -74,14 +74,22 @@ public class ThemeManager {
         if (themePack == null) {
             return new DeadEndLevel();
         }
-        boolean isBoss = Dungeon.bossLevel(depth);
+        boolean isBoss = ThemeManager.bossLevel(depth);
         Level level = isBoss
                 ? themePack.getBossLevel()
                 : themePack.getNormalLevel();
         // System.out.println("[ThemeManager] success create level: " + level.getClass().getSimpleName());
         return level;
     }
-
+    public static boolean bossLevel(int depth){
+        return depth == 5 || depth == 10 || depth == 15 || depth == 20 || depth == 25;
+    }
+    public static boolean shopOnLevel(){
+        return shopOnLevel(Dungeon.depth);
+    }
+    public static boolean shopOnLevel(int depth){
+         return depth == 6 || depth == 11 || depth == 16;
+    }
     public static void registerTheme(String themeName, ThemePack themePack) {
         // Delegate to ThemeSheet
         ThemeSheet.registerThemePack(themeName, themePack);

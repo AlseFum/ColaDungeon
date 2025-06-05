@@ -345,17 +345,18 @@ public class Dungeon {
         return result;
     }
 
-    public static boolean shopOnLevel() {
-        return depth == 6 || depth == 11 || depth == 16;
-    }
+    // public static boolean shopOnLevel() {
+    //    return ThemeManager.shopOnLevel(depth);
+    // }
 
     public static boolean bossLevel() {
-        return bossLevel(depth);
+        return ThemeManager.bossLevel(depth);
     }
 
-    public static boolean bossLevel(int depth) {
-        return depth == 5 || depth == 10 || depth == 15 || depth == 20 || depth == 25;
-    }
+    // public static boolean bossLevel(int depth) {
+    //     return ThemeManager.bossLevel(depth);
+    //     // return depth == 5 || depth == 10 || depth == 15 || depth == 20 || depth == 25;
+    // }
 
     //value used for scaling of damage values and other effects.
     //is usually the dungeon depth, but can be set to 26 when ascending

@@ -59,6 +59,7 @@ import com.coladungeon.levels.traps.FrostTrap;
 import com.coladungeon.levels.traps.PitfallTrap;
 import com.coladungeon.levels.traps.Trap;
 import com.coladungeon.levels.traps.WornDartTrap;
+import com.coladungeon.levels.themes.ThemeManager;
 import com.coladungeon.mechanics.ShadowCaster;
 import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
@@ -115,7 +116,7 @@ public abstract class RegularLevel extends Level {
 			initRooms.add(s);
 		}
 		
-		if (Dungeon.shopOnLevel())
+		if (ThemeManager.shopOnLevel())
 			initRooms.add(new ShopRoom());
 
 		//force max special rooms and add one more for large levels

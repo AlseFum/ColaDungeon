@@ -26,19 +26,16 @@ public class StoneOfDummy extends Runestone {
         rat.state = rat.PASSIVE;
         rat.HT=114514;
         rat.HP=114514;
-        //FIXME
-        // Dungeon.level.mobs.add(golem);
-        // Actor.add(golem);
         GameScene.add(rat);
     }
     
     @Override
     public String name() {
-        return Messages.get(this, "name");
+        return "Dummy魔石";
     }
     
     @Override
     public String desc() {
-        return Messages.get(this, "desc");
+        return "这块石头会生成一个血量为114514的老鼠，它什么都不会做";
     }
 } 
