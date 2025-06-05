@@ -427,7 +427,7 @@ public enum Talent {
 	int maxPoints;
 
 	// tiers 1/2/3/4 start at levels 2/7/13/21
-	public static int[] tierLevelThresholds = new int[]{0, 2, 7, 13, 21, 31};
+	public static int[] tierLevelThresholds = new int[]{0, 0, 0, 0, 0, 0};
 
 	Talent( int icon ){
 		this(icon, 2);
@@ -969,6 +969,8 @@ public enum Talent {
 				Collections.addAll(tierTalents, STRENGTHENING_MEAL, ADVENTURERS_INTUITION, PATIENT_STRIKE, AGGRESSIVE_BARRIER);
 		} else if (cls == HeroClass.CLERIC) {
 				Collections.addAll(tierTalents, SATIATED_SPELLS, HOLY_INTUITION, SEARING_LIGHT, SHIELD_OF_LIGHT);
+		} else if(cls.classTalentsTier1!=null&&!cls.classTalentsTier1.isEmpty()){
+			Collections.addAll(tierTalents, cls.classTalentsTier1.toArray(new Talent[0]));
 		} else {
 			// Default to warrior
 			Collections.addAll(tierTalents, HEARTY_MEAL, VETERANS_INTUITION, PROVOKED_ANGER, IRON_WILL);
@@ -995,6 +997,8 @@ public enum Talent {
 				Collections.addAll(tierTalents, FOCUSED_MEAL, LIQUID_AGILITY, WEAPON_RECHARGING, LETHAL_HASTE, SWIFT_EQUIP);
 		} else if (cls == HeroClass.CLERIC) {
 				Collections.addAll(tierTalents, ENLIGHTENING_MEAL, RECALL_INSCRIPTION, SUNRAY, DIVINE_SENSE, BLESS);
+		} else if(cls.classTalentsTier2!=null&&!cls.classTalentsTier2.isEmpty()){
+			Collections.addAll(tierTalents, cls.classTalentsTier2.toArray(new Talent[0]));
 		} else {
 			// Default to warrior
 			Collections.addAll(tierTalents, IRON_STOMACH, LIQUID_WILLPOWER, RUNIC_TRANSFERENCE, LETHAL_MOMENTUM, IMPROVISED_PROJECTILES);
@@ -1009,6 +1013,7 @@ public enum Talent {
 		tierTalents.clear();
 
 		//tier 3
+		//??where
 		if (cls == HeroClass.WARRIOR) {
 				Collections.addAll(tierTalents, HOLD_FAST, STRONGMAN);
 		} else if (cls == HeroClass.MAGE) {

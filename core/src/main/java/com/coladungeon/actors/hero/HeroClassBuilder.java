@@ -50,9 +50,10 @@ public class HeroClassBuilder {
     private Supplier<ArmorAbility[]> abilities = () -> new ArmorAbility[0];
     private Supplier<Badges.Badge> masteryBadge = () -> null;
     private Consumer<Hero> initializer;
-    public ArrayList<Talent> classTalents = new ArrayList<>();
-    public ArrayList<Talent> subclassTalents = new ArrayList<>();
-    public ArrayList<Talent> armorTalents = new ArrayList<>();
+    public ArrayList<Talent> classTalentsTier1 = new ArrayList<>();
+    public ArrayList<Talent> classTalentsTier2 = new ArrayList<>();
+    // public ArrayList<Talent> subclassTalents = new ArrayList<>();
+    // public ArrayList<Talent> armorTalents = new ArrayList<>();
 
     public HeroClassBuilder(String id) {
         this.id = id;
@@ -154,20 +155,25 @@ public class HeroClassBuilder {
         return this;
     }
 
-    public HeroClassBuilder classTalents(Talent... talents) {
-        Collections.addAll(this.classTalents, talents);
+    public HeroClassBuilder classTalentsTier1(Talent... talents) {
+        Collections.addAll(this.classTalentsTier1, talents);
         return this;
     }
 
-    public HeroClassBuilder subclassTalents(Talent... talents) {
-        Collections.addAll(this.subclassTalents, talents);
+    public HeroClassBuilder classTalentsTier2(Talent... talents) {
+        Collections.addAll(this.classTalentsTier2, talents);
         return this;
     }
+
+    // public HeroClassBuilder subclassTalents(Talent... talents) {
+    //     Collections.addAll(this.subclassTalents, talents);
+    //     return this;
+    // }
     
-    public HeroClassBuilder armorTalents(Talent... talents) {
-        Collections.addAll(this.armorTalents, talents);
-        return this;
-    }
+    // public HeroClassBuilder armorTalents(Talent... talents) {
+    //     Collections.addAll(this.armorTalents, talents);
+    //     return this;
+    // }
 
     public HeroClass build() {
         HeroClass heroClass = new HeroClass(id);
@@ -182,9 +188,10 @@ public class HeroClassBuilder {
         heroClass.armorAbilitiesSupplier = abilities;
         heroClass.masteryBadgeSupplier = masteryBadge;
         heroClass.initializer = initializer;
-        heroClass.classTalents = classTalents;
-        heroClass.subclassTalents = subclassTalents;
-        heroClass.armorTalents = armorTalents;
+        heroClass.classTalentsTier1 = classTalentsTier1;
+        heroClass.classTalentsTier2 = classTalentsTier2;
+        // heroClass.subclassTalents = subclassTalents;
+        // heroClass.armorTalents = armorTalents;
         return heroClass;
     }
 

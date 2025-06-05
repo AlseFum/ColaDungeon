@@ -33,9 +33,10 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 	public Supplier<ArmorAbility[]> armorAbilitiesSupplier;
 	public Supplier<Badges.Badge> masteryBadgeSupplier;
 	public Consumer<Hero> initializer;
-	public ArrayList<Talent> classTalents;
-	public ArrayList<Talent> subclassTalents;  // 子职业天赋
-	public ArrayList<Talent> armorTalents;     // 护甲天赋
+	public ArrayList<Talent> classTalentsTier1;
+	public ArrayList<Talent> classTalentsTier2;
+	// public ArrayList<Talent> subclassTalents;  // 子职业天赋
+	// public ArrayList<Talent> armorTalents;     // 护甲天赋
 
 	// 包级别访问权限的构造函数
 	public HeroClass(String id) {

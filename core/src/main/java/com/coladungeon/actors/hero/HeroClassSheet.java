@@ -60,6 +60,7 @@ import com.coladungeon.items.weapon.missiles.ThrowingSpike;
 import com.coladungeon.items.weapon.missiles.ThrowingStone;
 import com.coladungeon.journal.Catalog;
 import com.coladungeon.utils.EventBus;
+
 public final class HeroClassSheet {
 
     private static final Map<String, HeroClass> registeredClasses = new LinkedHashMap<>();
@@ -278,7 +279,7 @@ public final class HeroClassSheet {
             hero.heroClass = registeredClasses.get("Peter");
             initCommon(hero);
 
-        }).classTalents(Talent.HEARTY_MEAL,Talent.FOLLOWUP_STRIKE)
+        }).classTalentsTier1(Talent.HEARTY_MEAL, Talent.FOLLOWUP_STRIKE)
                 .register();
     }
 
@@ -342,7 +343,7 @@ public final class HeroClassSheet {
 
         new GunSupply().identify().collect();
         new DebugSupply().identify().collect();
-            new AssassinSupply().identify().collect();
+        new AssassinSupply().identify().collect();
         // 事件通知
         EventBus.fire("Hero:created", "hero", hero);
     }
