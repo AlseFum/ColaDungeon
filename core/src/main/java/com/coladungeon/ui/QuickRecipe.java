@@ -407,6 +407,13 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new SummonElemental.Recipe()));
 				result.add(new QuickRecipe(new BeaconOfReturning.Recipe()));
 				return result;
+			case 9:
+				// 自定义配方页面
+				result.add(new QuickRecipe(new ExplosiveAmmoRecipe(),
+						new ArrayList<Item>(Arrays.asList(new Ammo(), new Torch())),
+						new ExplosiveAmmo()));
+				// 在这里添加更多自定义配方
+				return result;
 		}
 	}
 	
