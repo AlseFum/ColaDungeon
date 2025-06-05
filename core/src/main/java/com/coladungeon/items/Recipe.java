@@ -194,7 +194,8 @@ public abstract class Recipe {
 		new SummonElemental.Recipe(),
 		new StewedMeat.oneMeat(),
 		new TrinketCatalyst.Recipe(),
-		new Trinket.UpgradeTrinket()
+		new Trinket.UpgradeTrinket(),
+		new com.coladungeon.items.weapon.ammo.LiquidMetalToAmmoRecipe()
 	};
 	
 	private static final Recipe[] twoIngredientRecipes = new Recipe[]{

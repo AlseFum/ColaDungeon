@@ -75,6 +75,7 @@ import com.coladungeon.items.weapon.missiles.MissileWeapon;
 import com.coladungeon.items.weapon.ammo.Ammo;
 import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
 import com.coladungeon.items.weapon.ammo.ExplosiveAmmoRecipe;
+import com.coladungeon.items.weapon.ammo.LiquidMetalToAmmoRecipe;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.plants.Plant;
 import com.coladungeon.scenes.AlchemyScene;
@@ -408,11 +409,23 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new BeaconOfReturning.Recipe()));
 				return result;
 			case 9:
-				// 自定义配方页面
-				result.add(new QuickRecipe(new ExplosiveAmmoRecipe(),
-						new ArrayList<Item>(Arrays.asList(new Ammo(), new Torch())),
-						new ExplosiveAmmo()));
-				// 在这里添加更多自定义配方
+				// 爆炸弹药
+				result.add(new QuickRecipe(
+						new com.coladungeon.items.weapon.ammo.ExplosiveAmmoRecipe(),
+						new ArrayList<>(java.util.Arrays.asList(
+								new com.coladungeon.items.weapon.ammo.Ammo(),
+								new com.coladungeon.items.Torch()
+						)),
+						new com.coladungeon.items.weapon.ammo.ExplosiveAmmo()
+				));
+				// 液态金属 → 普通弹药
+				result.add(new QuickRecipe(
+						new com.coladungeon.items.weapon.ammo.LiquidMetalToAmmoRecipe(),
+						new ArrayList<>(java.util.Arrays.asList(
+								new com.coladungeon.items.LiquidMetal()
+						)),
+						new com.coladungeon.items.weapon.ammo.Ammo()
+				));
 				return result;
 		}
 	}
