@@ -7,6 +7,7 @@ import com.coladungeon.Badges;
 import com.coladungeon.actors.hero.abilities.ArmorAbility;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
+import java.util.ArrayList;
 
 public class HeroClass implements Comparable<HeroClass>, Bundlable {
 
@@ -20,21 +21,24 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 	// public static final HeroClass HEAVY_SQUAD = HeroClassSheet.HEAVY_SQUAD;
 
 	// 职业属性
-	String id;
-	HeroSubClass[] subClasses;
-	Supplier<String> titleSupplier;
-	Supplier<String> descSupplier;
-	Supplier<String> shortDescSupplier;
-	Supplier<String> unlockMsgSupplier;
-	Supplier<Boolean> unlockedSupplier;
-	Supplier<String> spritesheetSupplier;
-	Supplier<String> splashArtSupplier;
-	Supplier<ArmorAbility[]> armorAbilitiesSupplier;
-	Supplier<Badges.Badge> masteryBadgeSupplier;
-	Consumer<Hero> initializer;
+	public String id;
+	public HeroSubClass[] subClasses;
+	public Supplier<String> titleSupplier;
+	public Supplier<String> descSupplier;
+	public Supplier<String> shortDescSupplier;
+	public Supplier<String> unlockMsgSupplier;
+	public Supplier<Boolean> unlockedSupplier;
+	public Supplier<String> spritesheetSupplier;
+	public Supplier<String> splashArtSupplier;
+	public Supplier<ArmorAbility[]> armorAbilitiesSupplier;
+	public Supplier<Badges.Badge> masteryBadgeSupplier;
+	public Consumer<Hero> initializer;
+	public ArrayList<Talent> classTalents;
+	public ArrayList<Talent> subclassTalents;  // 子职业天赋
+	public ArrayList<Talent> armorTalents;     // 护甲天赋
 
 	// 包级别访问权限的构造函数
-	HeroClass(String id) {
+	public HeroClass(String id) {
 		this.id = id;
 	}
 

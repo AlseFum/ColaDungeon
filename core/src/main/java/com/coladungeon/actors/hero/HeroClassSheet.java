@@ -278,7 +278,7 @@ public final class HeroClassSheet {
             hero.heroClass = registeredClasses.get("Peter");
             initCommon(hero);
 
-        })
+        }).classTalents(Talent.HEARTY_MEAL,Talent.FOLLOWUP_STRIKE)
                 .register();
     }
 

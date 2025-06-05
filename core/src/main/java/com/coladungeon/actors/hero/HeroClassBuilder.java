@@ -27,6 +27,9 @@ import com.coladungeon.actors.hero.abilities.ArmorAbility;
 import com.coladungeon.messages.Messages;
 import com.watabou.utils.DeviceCompat;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -47,6 +50,9 @@ public class HeroClassBuilder {
     private Supplier<ArmorAbility[]> abilities = () -> new ArmorAbility[0];
     private Supplier<Badges.Badge> masteryBadge = () -> null;
     private Consumer<Hero> initializer;
+    public ArrayList<Talent> classTalents = new ArrayList<>();
+    public ArrayList<Talent> subclassTalents = new ArrayList<>();
+    public ArrayList<Talent> armorTalents = new ArrayList<>();
 
     public HeroClassBuilder(String id) {
         this.id = id;
@@ -148,6 +154,21 @@ public class HeroClassBuilder {
         return this;
     }
 
+    public HeroClassBuilder classTalents(Talent... talents) {
+        Collections.addAll(this.classTalents, talents);
+        return this;
+    }
+
+    public HeroClassBuilder subclassTalents(Talent... talents) {
+        Collections.addAll(this.subclassTalents, talents);
+        return this;
+    }
+    
+    public HeroClassBuilder armorTalents(Talent... talents) {
+        Collections.addAll(this.armorTalents, talents);
+        return this;
+    }
+
     public HeroClass build() {
         HeroClass heroClass = new HeroClass(id);
         heroClass.subClasses = subClasses;
@@ -161,7 +182,9 @@ public class HeroClassBuilder {
         heroClass.armorAbilitiesSupplier = abilities;
         heroClass.masteryBadgeSupplier = masteryBadge;
         heroClass.initializer = initializer;
-        
+        heroClass.classTalents = classTalents;
+        heroClass.subclassTalents = subclassTalents;
+        heroClass.armorTalents = armorTalents;
         return heroClass;
     }
 
