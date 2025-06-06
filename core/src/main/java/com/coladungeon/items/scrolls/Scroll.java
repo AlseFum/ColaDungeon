@@ -226,7 +226,7 @@ public abstract class Scroll extends Item {
             }
 			//FIXME check on this
             image = handler.image(this) ;
-			System.out.println("image: " + image);
+			// System.out.println("image: " + image);
             rune = handler.label(this);
 			//FIXME
         }

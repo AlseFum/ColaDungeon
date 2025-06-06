@@ -219,11 +219,12 @@ public class Hero extends Char {
 
     private ArrayList<Mob> visibleEnemies;
 
-    //This list is maintained so that some logic checks can be skipped
-    // for enemies we know we aren't seeing normally, resulting in better performance
+    // This list is maintained so that some logic checks can be skipped
+    // for enemies we know we aren't seeing normally, resulting in better
+    // performance
     public ArrayList<Mob> mindVisionEnemies = new ArrayList<>();
 
-    public Hero() {
+    public Hero(HeroClass _heroClass) {
         super();
 
         HP = HT = 20;
@@ -238,8 +239,13 @@ public class Hero extends Char {
         for (int i = 0; i < Talent.MAX_TALENT_TIERS; i++) {
             talents.add(new LinkedHashMap<>());
         }
+        heroClass = _heroClass;
         Talent.initClassTalents(this);
     }
+
+    // public Hero() {
+    //     Hero(HeroClass.ROGUE);
+    // }
 
     public void updateHT(boolean boostHP) {
         int curHT = HT;
@@ -432,7 +438,8 @@ public class Hero extends Char {
                 || (tier == 4 && armorAbility == null)) {
             return 0;
         } else if (lvl >= Talent.tierLevelThresholds[tier + 1]) {
-            return Talent.tierLevelThresholds[tier + 1] - Talent.tierLevelThresholds[tier] - talentPointsSpent(tier) + bonusTalentPoints(tier);
+            return Talent.tierLevelThresholds[tier + 1] - Talent.tierLevelThresholds[tier] - talentPointsSpent(tier)
+                    + bonusTalentPoints(tier);
         } else {
             return 1 + lvl - Talent.tierLevelThresholds[tier] - talentPointsSpent(tier) + bonusTalentPoints(tier);
         }
@@ -469,7 +476,7 @@ public class Hero extends Char {
         if (!RingOfForce.fightingUnarmed(this)) {
             belongings.attackingWeapon().hitSound(pitch);
         } else if (RingOfForce.getBuffedBonus(this, RingOfForce.Force.class) > 0) {
-            //pitch deepens by 2.5% (additive) per point of strength, down to 75%
+            // pitch deepens by 2.5% (additive) per point of strength, down to 75%
             super.hitSound(pitch * GameMath.gate(0.75f, 1.25f - 0.025f * STR(), 1f));
         } else {
             super.hitSound(pitch * 1.1f);
@@ -512,8 +519,8 @@ public class Hero extends Char {
         boolean wasEnemy = enemy.alignment == Alignment.ENEMY
                 || (enemy instanceof Mimic && enemy.alignment == Alignment.NEUTRAL);
 
-        //temporarily set the hero's weapon to the missile weapon being used
-        //TODO improve this!
+        // temporarily set the hero's weapon to the missile weapon being used
+        // TODO improve this!
         belongings.thrownWeapon = wep;
         boolean hit = attack(enemy);
         Invisibility.dispel();
@@ -543,22 +550,23 @@ public class Hero extends Char {
             } else {
                 accuracy *= 1.5f;
             }
-            //precise assault and liquid agility
+            // precise assault and liquid agility
         } else {
             if ((hasTalent(Talent.PRECISE_ASSAULT) || hasTalent(Talent.LIQUID_AGILITY))
-                    //does not trigger on ability attacks
-                    && belongings.abilityWeapon != wep && buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) == null) {
+                    // does not trigger on ability attacks
+                    && belongings.abilityWeapon != wep
+                    && buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) == null) {
 
-                //non-duelist benefit for precise assault, can stack with liquid agility
+                // non-duelist benefit for precise assault, can stack with liquid agility
                 if (heroClass != HeroClass.DUELIST) {
-                    //persistent +10%/20%/30% ACC for other heroes
+                    // persistent +10%/20%/30% ACC for other heroes
                     accuracy *= 1f + 0.1f * pointsInTalent(Talent.PRECISE_ASSAULT);
                 }
 
                 if (wep instanceof Flail && buff(Flail.SpinAbilityTracker.class) != null) {
-                    //do nothing, this is not a regular attack so don't consume talent fx
+                    // do nothing, this is not a regular attack so don't consume talent fx
                 } else if (wep instanceof Crossbow && buff(Crossbow.ChargedShot.class) != null) {
-                    //do nothing, this is not a regular attack so don't consume talent fx
+                    // do nothing, this is not a regular attack so don't consume talent fx
                 } else if (buff(Talent.PreciseAssaultTracker.class) != null) {
                     // 2x/5x/inf. ACC for duelist if she just used a weapon ability
                     switch (pointsInTalent(Talent.PRECISE_ASSAULT)) {
@@ -737,7 +745,7 @@ public class Hero extends Char {
         return dmg;
     }
 
-    //damage rolls that come from the hero can have their RNG influenced by clover
+    // damage rolls that come from the hero can have their RNG influenced by clover
     public static int heroDamageIntRange(int min, int max) {
         if (Random.Float() < ThirteenLeafClover.alterHeroDamageChance()) {
             return ThirteenLeafClover.alterDamageRoll(min, max);
@@ -800,7 +808,7 @@ public class Hero extends Char {
             return false;
         }
 
-        //can always attack adjacent enemies
+        // can always attack adjacent enemies
         if (Dungeon.level.adjacent(pos, enemy.pos)) {
             return true;
         }
@@ -838,17 +846,18 @@ public class Hero extends Char {
             return delay * belongings.attackingWeapon().delayFactor(this);
 
         } else {
-            //Normally putting furor speed on unarmed attacks would be unnecessary
-            //But there's going to be that one guy who gets a furor+force ring combo
-            //This is for that one guy, you shall get your fists of fury!
+            // Normally putting furor speed on unarmed attacks would be unnecessary
+            // But there's going to be that one guy who gets a furor+force ring combo
+            // This is for that one guy, you shall get your fists of fury!
             float speed = RingOfFuror.attackSpeedMultiplier(this);
 
-            //ditto for furor + sword dance!
+            // ditto for furor + sword dance!
             if (buff(Scimitar.SwordDance.class) != null) {
                 speed += 0.6f;
             }
 
-            //and augments + brawler's stance! My goodness, so many options now compared to 2014!
+            // and augments + brawler's stance! My goodness, so many options now compared to
+            // 2014!
             if (RingOfForce.unarmedGetsWeaponAugment(this)) {
                 delay = ((Weapon) belongings.weapon).augment.delayFactor(delay);
             }
@@ -883,7 +892,7 @@ public class Hero extends Char {
     @Override
     public boolean act() {
 
-        //calls to dungeon.observe will also update hero's local FOV.
+        // calls to dungeon.observe will also update hero's local FOV.
         fieldOfView = Dungeon.level.heroFOV;
 
         if (buff(Endure.EndureTracker.class) != null) {
@@ -891,11 +900,11 @@ public class Hero extends Char {
         }
 
         if (!ready) {
-            //do a full observe (including fog update) if not resting.
+            // do a full observe (including fog update) if not resting.
             if (!resting || buff(MindVision.class) != null || buff(Awareness.class) != null) {
                 Dungeon.observe();
             } else {
-                //otherwise just directly re-calculate FOV
+                // otherwise just directly re-calculate FOV
                 Dungeon.level.updateFieldOfView(this, fieldOfView);
             }
         }
@@ -922,7 +931,8 @@ public class Hero extends Char {
                 ready();
             }
 
-            //if we just loaded into a level and have a search buff, make sure to process them
+            // if we just loaded into a level and have a search buff, make sure to process
+            // them
             if (Actor.now() == 0) {
                 if (buff(Foresight.class) != null) {
                     search(false);
@@ -1003,7 +1013,7 @@ public class Hero extends Char {
     public void interrupt() {
         if (isAlive() && curAction != null
                 && ((curAction instanceof HeroAction.Move && curAction.dst != pos)
-                || (curAction instanceof HeroAction.LvlTransition))) {
+                        || (curAction instanceof HeroAction.LvlTransition))) {
             lastAction = curAction;
         }
         curAction = null;
@@ -1022,12 +1032,12 @@ public class Hero extends Char {
 
     public boolean canSelfTrample() {
         return canSelfTrample && !rooted && !flying
-                && //standing in high grass
+                && // standing in high grass
                 (Dungeon.level.map[pos] == Terrain.HIGH_GRASS
-                || //standing in furrowed grass and not huntress
-                (heroClass != HeroClass.HUNTRESS && Dungeon.level.map[pos] == Terrain.FURROWED_GRASS)
-                || //standing on a plant
-                Dungeon.level.plants.get(pos) != null);
+                        || // standing in furrowed grass and not huntress
+                        (heroClass != HeroClass.HUNTRESS && Dungeon.level.map[pos] == Terrain.FURROWED_GRASS)
+                        || // standing on a plant
+                        Dungeon.level.plants.get(pos) != null);
     }
 
     private boolean actMove(HeroAction.Move action) {
@@ -1036,7 +1046,7 @@ public class Hero extends Char {
             canSelfTrample = false;
             return true;
 
-            //Hero moves in place if there is grass to trample
+            // Hero moves in place if there is grass to trample
         } else if (pos == action.dst && canSelfTrample()) {
             canSelfTrample = false;
             Dungeon.level.pressCell(pos);
@@ -1126,7 +1136,7 @@ public class Hero extends Char {
         }
     }
 
-    //used to keep track if the wait/pickup action was used
+    // used to keep track if the wait/pickup action was used
     // so that the hero spends a turn even if the fail to pick up an item
     public boolean waitOrPickup = false;
 
@@ -1145,7 +1155,7 @@ public class Hero extends Char {
                             || item instanceof DriedRose.Petal
                             || item instanceof Key
                             || item instanceof Guidebook) {
-                        //Do Nothing
+                        // Do Nothing
                     } else if (item instanceof DarkGold) {
                         DarkGold existing = belongings.getItem(DarkGold.class);
                         if (existing != null) {
@@ -1157,7 +1167,7 @@ public class Hero extends Char {
                         }
                     } else {
 
-                        //TODO make all unique items important? or just POS / SOU?
+                        // TODO make all unique items important? or just POS / SOU?
                         boolean important = item.unique && item.isIdentified()
                                 && (item instanceof Scroll || item instanceof Potion);
                         if (important) {
@@ -1174,7 +1184,7 @@ public class Hero extends Char {
                         spendAndNextConstant(TIME_TO_REST);
                     }
 
-                    //allow the hero to move between levels even if they can't collect the item
+                    // allow the hero to move between levels even if they can't collect the item
                     if (Dungeon.level.getTransition(pos) != null) {
                         throwItems();
                     } else {
@@ -1185,7 +1195,7 @@ public class Hero extends Char {
                             || item instanceof TimekeepersHourglass.sandBag
                             || item instanceof DriedRose.Petal
                             || item instanceof Key) {
-                        //Do Nothing
+                        // Do Nothing
                     } else {
                         GLog.newLine();
                         GLog.n(Messages.capitalize(Messages.get(this, "you_cant_have", item.name())));
@@ -1324,7 +1334,7 @@ public class Hero extends Char {
                             }
                         }
 
-                        //1 hunger spent total
+                        // 1 hunger spent total
                         if (Dungeon.level.map[action.dst] == Terrain.WALL_DECO) {
                             DarkGold gold = new DarkGold();
                             if (gold.doPickUp(Dungeon.hero)) {
@@ -1336,7 +1346,7 @@ public class Hero extends Char {
                                         GLog.i(Messages.get(DarkGold.class, "you_now_have", existing.quantity()));
                                     }
                                 }
-                                spend(-Actor.TICK); //picking up the gold doesn't spend a turn here
+                                spend(-Actor.TICK); // picking up the gold doesn't spend a turn here
                             } else {
                                 Dungeon.level.drop(gold, pos).sprite.drop();
                             }
@@ -1345,10 +1355,10 @@ public class Hero extends Char {
                             Sample.INSTANCE.play(Assets.Sounds.EVOKE);
                             Level.set(action.dst, Terrain.EMPTY_DECO);
 
-                            //mining gold doesn't break crystals
+                            // mining gold doesn't break crystals
                             crystalAdjacent = false;
 
-                            //4 hunger spent total
+                            // 4 hunger spent total
                         } else if (Dungeon.level.map[action.dst] == Terrain.WALL) {
                             buff(Hunger.class).affectHunger(-3);
                             PixelScene.shake(0.5f, 0.5f);
@@ -1356,13 +1366,13 @@ public class Hero extends Char {
                             Sample.INSTANCE.play(Assets.Sounds.MINE);
                             Level.set(action.dst, Terrain.EMPTY_DECO);
 
-                            //1 hunger spent total
+                            // 1 hunger spent total
                         } else if (Dungeon.level.map[action.dst] == Terrain.MINE_CRYSTAL) {
                             Splash.at(action.dst, 0xFFFFFF, 5);
                             Sample.INSTANCE.play(Assets.Sounds.SHATTER);
                             Level.set(action.dst, Terrain.EMPTY);
 
-                            //1 hunger spent total
+                            // 1 hunger spent total
                         } else if (Dungeon.level.map[action.dst] == Terrain.MINE_BOULDER) {
                             Splash.at(action.dst, 0x555555, 5);
                             Sample.INSTANCE.play(Assets.Sounds.MINE, 0.6f);
@@ -1424,7 +1434,7 @@ public class Hero extends Char {
     private boolean actTransition(HeroAction.LvlTransition action) {
         int stairs = action.dst;
         LevelTransition transition = Dungeon.level.getTransition(stairs);
-		System.out.println("[Hero::actTransition]Got "+transition);
+        System.out.println("[Hero::actTransition]Got " + transition);
         if (rooted) {
             PixelScene.shake(1, 1f);
             ready();
@@ -1535,7 +1545,8 @@ public class Hero extends Char {
             if (!wasEnemy || enemy.alignment == Alignment.ENEMY) {
                 if (buff(HolyWeapon.HolyWepBuff.class) != null) {
                     int dmg = subClass == HeroSubClass.PALADIN ? 6 : 2;
-                    enemy.damage(Math.round(dmg * Weapon.Enchantment.genericProcChanceMultiplier(this)), HolyWeapon.INSTANCE);
+                    enemy.damage(Math.round(dmg * Weapon.Enchantment.genericProcChanceMultiplier(this)),
+                            HolyWeapon.INSTANCE);
                 }
                 if (buff(Smite.SmiteTracker.class) != null) {
                     enemy.damage(Smite.bonusDmg(this, enemy), Smite.INSTANCE);
@@ -1558,8 +1569,10 @@ public class Hero extends Char {
                                 if (hasTalent(Talent.SHARED_UPGRADES)) {
                                     int bonusTurns = wep.buffedLvl();
                                     // bonus dmg is 2.5% x talent lvl x weapon level x weapon tier
-                                    float bonusDmg = wep.buffedLvl() * ((MissileWeapon) wep).tier * pointsInTalent(Talent.SHARED_UPGRADES) * 0.025f;
-                                    Buff.prolong(Hero.this, SnipersMark.class, SnipersMark.DURATION + bonusTurns).set(enemy.id(), bonusDmg);
+                                    float bonusDmg = wep.buffedLvl() * ((MissileWeapon) wep).tier
+                                            * pointsInTalent(Talent.SHARED_UPGRADES) * 0.025f;
+                                    Buff.prolong(Hero.this, SnipersMark.class, SnipersMark.DURATION + bonusTurns)
+                                            .set(enemy.id(), bonusDmg);
                                 } else {
                                     Buff.prolong(Hero.this, SnipersMark.class, SnipersMark.DURATION).set(enemy.id(), 0);
                                 }
@@ -1625,8 +1638,10 @@ public class Hero extends Char {
             return;
         }
 
-        //regular damage interrupt, triggers on any damage except specific mild DOT effects
-        // unless the player recently hit 'continue moving', in which case this is ignored
+        // regular damage interrupt, triggers on any damage except specific mild DOT
+        // effects
+        // unless the player recently hit 'continue moving', in which case this is
+        // ignored
         if (!(src instanceof Hunger || src instanceof Viscosity.DeferedDamage) && damageInterrupt) {
             interrupt();
         }
@@ -1636,26 +1651,27 @@ public class Hero extends Char {
             GLog.w(Messages.get(this, "pain_resist"));
         }
 
-        //temporarily assign to a float to avoid rounding a bunch
+        // temporarily assign to a float to avoid rounding a bunch
         float damage = dmg;
 
         Endure.EndureTracker endure = buff(Endure.EndureTracker.class);
         if (!(src instanceof Char)) {
-            //reduce damage here if it isn't coming from a character (if it is we already reduced it)
+            // reduce damage here if it isn't coming from a character (if it is we already
+            // reduced it)
             if (endure != null) {
                 damage = endure.adjustDamageTaken(dmg);
             }
-            //the same also applies to challenge scroll damage reduction
+            // the same also applies to challenge scroll damage reduction
             if (buff(ScrollOfChallenge.ChallengeArena.class) != null) {
                 damage *= 0.67f;
             }
-            //and to monk meditate damage reduction
+            // and to monk meditate damage reduction
             if (buff(MonkEnergy.MonkAbility.Meditate.MeditateResistance.class) != null) {
                 damage *= 0.2f;
             }
         }
 
-        //unused, could be removed
+        // unused, could be removed
         CapeOfThorns.Thorns thorns = buff(CapeOfThorns.Thorns.class);
         if (thorns != null) {
             damage = thorns.proc((int) damage, (src instanceof Char ? (Char) src : null), this);
@@ -1663,15 +1679,16 @@ public class Hero extends Char {
 
         if (buff(Talent.WarriorFoodImmunity.class) != null) {
             if (pointsInTalent(Talent.IRON_STOMACH) == 1) {
-                damage /= 4f; 
-            }else if (pointsInTalent(Talent.IRON_STOMACH) == 2) {
+                damage /= 4f;
+            } else if (pointsInTalent(Talent.IRON_STOMACH) == 2) {
                 damage = 0;
             }
         }
 
         dmg = Math.round(damage);
 
-        //we ceil this one to avoid letting the player easily take 0 dmg from tenacity early
+        // we ceil this one to avoid letting the player easily take 0 dmg from tenacity
+        // early
         dmg = (int) Math.ceil(dmg * RingOfTenacity.damageMultiplier(this));
 
         int preHP = HP + shielding();
@@ -1703,14 +1720,15 @@ public class Hero extends Char {
             buff(Challenge.DuelParticipant.class).addDamage(effectiveDamage);
         }
 
-        //flash red when hit for serious damage.
-        float percentDMG = effectiveDamage / (float) preHP; //percent of current HP that was taken
-        float percentHP = 1 - ((HT - postHP) / (float) HT); //percent health after damage was taken
-        // The flash intensity increases primarily based on damage taken and secondarily on missing HP.
+        // flash red when hit for serious damage.
+        float percentDMG = effectiveDamage / (float) preHP; // percent of current HP that was taken
+        float percentHP = 1 - ((HT - postHP) / (float) HT); // percent health after damage was taken
+        // The flash intensity increases primarily based on damage taken and secondarily
+        // on missing HP.
         float flashIntensity = 0.25f * (percentDMG * percentDMG) / percentHP;
-        //if the intensity is very low don't flash at all
+        // if the intensity is very low don't flash at all
         if (flashIntensity >= 0.05f) {
-            flashIntensity = Math.min(1 / 3f, flashIntensity); //cap intensity at 1/3
+            flashIntensity = Math.min(1 / 3f, flashIntensity); // cap intensity at 1/3
             GameScene.flash((int) (0xFF * flashIntensity) << 16);
             if (isAlive()) {
                 if (flashIntensity >= 1 / 6f) {
@@ -1718,7 +1736,8 @@ public class Hero extends Char {
                 } else {
                     Sample.INSTANCE.play(Assets.Sounds.HEALTH_WARN, 1 / 3f + flashIntensity * 4f);
                 }
-                //hero gets interrupted on taking serious damage, regardless of any other factor
+                // hero gets interrupted on taking serious damage, regardless of any other
+                // factor
                 interrupt();
                 damageInterrupt = true;
             }
@@ -1742,9 +1761,10 @@ public class Hero extends Char {
                     newMob = true;
                 }
 
-                //only do a simple check for mind visioned enemies, better performance
+                // only do a simple check for mind visioned enemies, better performance
                 if ((!mindVisionEnemies.contains(m) && QuickSlotButton.autoAim(m) != -1)
-                        || (mindVisionEnemies.contains(m) && new Ballistica(pos, m.pos, Ballistica.PROJECTILE).collisionPos == m.pos)) {
+                        || (mindVisionEnemies.contains(m)
+                                && new Ballistica(pos, m.pos, Ballistica.PROJECTILE).collisionPos == m.pos)) {
                     if (target == null) {
                         target = m;
                     } else if (distance(target) > distance(m)) {
@@ -1753,7 +1773,7 @@ public class Hero extends Char {
                     if (m instanceof Snake && Dungeon.level.distance(m.pos, pos) <= 4
                             && !Document.ADVENTURERS_GUIDE.isPageRead(Document.GUIDE_EXAMINING)) {
                         GameScene.flashForDocument(Document.ADVENTURERS_GUIDE, Document.GUIDE_EXAMINING);
-                        //we set to read here to prevent this message popping up a bunch
+                        // we set to read here to prevent this message popping up a bunch
                         Document.ADVENTURERS_GUIDE.readPage(Document.GUIDE_EXAMINING);
                     }
                 }
@@ -1777,12 +1797,12 @@ public class Hero extends Char {
 
         visibleEnemies = visible;
 
-        //we also scan for blob landmarks here
+        // we also scan for blob landmarks here
         for (Blob b : Dungeon.level.blobs.values().toArray(new Blob[0])) {
             if (b.volume > 0 && b.landmark() != null && !Notes.contains(b.landmark())) {
                 int cell;
                 boolean found = false;
-                //if a single cell within the blob is visible, we add the landmark
+                // if a single cell within the blob is visible, we add the landmark
                 for (int i = b.area.top; i < b.area.bottom; i++) {
                     for (int j = b.area.left; j < b.area.right; j++) {
                         cell = j + i * Dungeon.level.width();
@@ -1797,7 +1817,7 @@ public class Hero extends Char {
                     }
                 }
 
-                //Clear blobs that only exist for landmarks.
+                // Clear blobs that only exist for landmarks.
                 // Might want to make this a properly if it's used more
                 if (found && b instanceof WeakFloorRoom.WellID) {
                     b.fullyClear();
@@ -1820,8 +1840,9 @@ public class Hero extends Char {
 
     private boolean walkingToVisibleTrapInFog = false;
 
-    //FIXME this is a fairly crude way to track this, really it would be nice to have a short
-    //history of hero actions
+    // FIXME this is a fairly crude way to track this, really it would be nice to
+    // have a short
+    // history of hero actions
     public boolean justMoved = false;
 
     private boolean getCloser(final int target) {
@@ -1857,10 +1878,10 @@ public class Hero extends Char {
 
             boolean newPath = false;
             if (path == null || path.isEmpty() || !Dungeon.level.adjacent(pos, path.getFirst())) {
-                newPath = true; 
-            }else if (path.getLast() != target) {
-                newPath = true; 
-            }else {
+                newPath = true;
+            } else if (path.getLast() != target) {
+                newPath = true;
+            } else {
                 if (!Dungeon.level.passable[path.get(0)] || Actor.findChar(path.get(0)) != null) {
                     newPath = true;
                 }
@@ -1901,13 +1922,14 @@ public class Hero extends Char {
             }
 
             if (Dungeon.level.pit[step] && !Dungeon.level.solid[step]
-                    && (!flying || buff(Levitation.class) != null && buff(Levitation.class).detachesWithinDelay(delay))) {
+                    && (!flying
+                            || buff(Levitation.class) != null && buff(Levitation.class).detachesWithinDelay(delay))) {
                 if (!Chasm.jumpConfirmed) {
                     Chasm.heroJump(this);
                     interrupt();
                 } else {
                     flying = false;
-                    remove(buff(Levitation.class)); //directly remove to prevent cell pressing
+                    remove(buff(Levitation.class)); // directly remove to prevent cell pressing
                     Chasm.heroFall(target);
                 }
                 canSelfTrample = false;
@@ -1983,21 +2005,21 @@ public class Hero extends Char {
                 curAction = new HeroAction.Attack(ch);
             }
 
-            //TODO perhaps only trigger this if hero is already adjacent? reducing mistaps
+            // TODO perhaps only trigger this if hero is already adjacent? reducing mistaps
         } else if (Dungeon.level instanceof MiningLevel
                 && belongings.getItem(Pickaxe.class) != null
                 && (Dungeon.level.map[cell] == Terrain.WALL
-                || Dungeon.level.map[cell] == Terrain.WALL_DECO
-                || Dungeon.level.map[cell] == Terrain.MINE_CRYSTAL
-                || Dungeon.level.map[cell] == Terrain.MINE_BOULDER)) {
+                        || Dungeon.level.map[cell] == Terrain.WALL_DECO
+                        || Dungeon.level.map[cell] == Terrain.MINE_CRYSTAL
+                        || Dungeon.level.map[cell] == Terrain.MINE_BOULDER)) {
 
             curAction = new HeroAction.Mine(cell);
 
         } else if (heap != null
-                //moving to an item doesn't auto-pickup when enemies are near...
+                // moving to an item doesn't auto-pickup when enemies are near...
                 && (visibleEnemies.size() == 0 || cell == pos
-                || //...but only for standard heaps. Chests and similar open as normal.
-                (heap.type != Type.HEAP && heap.type != Type.FOR_SALE))) {
+                        || // ...but only for standard heaps. Chests and similar open as normal.
+                        (heap.type != Type.HEAP && heap.type != Type.FOR_SALE))) {
 
             switch (heap.type) {
                 case HEAP:
@@ -2012,16 +2034,18 @@ public class Hero extends Char {
                     curAction = new HeroAction.OpenChest(cell);
             }
 
-        } else if (Dungeon.level.map[cell] == Terrain.LOCKED_DOOR || Dungeon.level.map[cell] == Terrain.CRYSTAL_DOOR || Dungeon.level.map[cell] == Terrain.LOCKED_EXIT) {
+        } else if (Dungeon.level.map[cell] == Terrain.LOCKED_DOOR || Dungeon.level.map[cell] == Terrain.CRYSTAL_DOOR
+                || Dungeon.level.map[cell] == Terrain.LOCKED_EXIT) {
 
             curAction = new HeroAction.Unlock(cell);
 
         } else if (Dungeon.level.getTransition(cell) != null
-                //moving to a transition doesn't automatically trigger it when enemies are near
+                // moving to a transition doesn't automatically trigger it when enemies are near
                 && (visibleEnemies.size() == 0 || cell == pos)
                 && !Dungeon.level.locked
                 && !Dungeon.level.plants.containsKey(cell)
-                && (Dungeon.depth < 26 || Dungeon.level.getTransition(cell).type == LevelTransition.Type.REGULAR_ENTRANCE)) {
+                && (Dungeon.depth < 26
+                        || Dungeon.level.getTransition(cell).type == LevelTransition.Type.REGULAR_ENTRANCE)) {
 
             curAction = new HeroAction.LvlTransition(cell);
 
@@ -2037,7 +2061,7 @@ public class Hero extends Char {
 
     public void earnExp(int exp, Class source) {
 
-        //xp granted by ascension challenge is only for on-exp gain effects
+        // xp granted by ascension challenge is only for on-exp gain effects
         if (source != AscensionChallenge.class) {
             this.exp += exp;
         }
@@ -2204,8 +2228,8 @@ public class Hero extends Char {
         curAction = null;
 
         Ankh ankh = null;
-        //I‘m to create a divine ankh that revive infinite times
-        //look for ankhs in player inventory, prioritize ones which are blessed.
+        // I‘m to create a divine ankh that revive infinite times
+        // look for ankhs in player inventory, prioritize ones which are blessed.
         for (Ankh i : belongings.getAllItems(Ankh.class)) {
             if (ankh == null || i.isBlessed() || i instanceof DivineAnkh) {
                 ankh = i;
@@ -2216,7 +2240,6 @@ public class Hero extends Char {
             interrupt();
 
             if (ankh != null && ankh.isBlessed() || ankh instanceof DivineAnkh) {
-                System.out.println("[Hero]You're dead, but cause it's debugging, you revived without cost now.");
                 this.HP = HT / 4;
 
                 PotionOfHealing.cure(this);
@@ -2240,10 +2263,11 @@ public class Hero extends Char {
                 }
             } else {
 
-                //this is hacky, basically we want to declare that a wndResurrect exists before
-                //it actually gets created. This is important so that the game knows to not
-                //delete the run or submit it to rankings, because a WndResurrect is about to exist
-                //this is needed because the actual creation of the window is delayed here
+                // this is hacky, basically we want to declare that a wndResurrect exists before
+                // it actually gets created. This is important so that the game knows to not
+                // delete the run or submit it to rankings, because a WndResurrect is about to
+                // exist
+                // this is needed because the actual creation of the window is delayed here
                 WndResurrect.instance = new Object();
                 Ankh finalAnkh = ankh;
                 Game.runOnRenderThread(new Callback() {
@@ -2341,9 +2365,11 @@ public class Hero extends Char {
         Dungeon.deleteGame(GamesInProgress.curSlot, true);
     }
 
-    //effectively cache this buff to prevent having to call buff(...) a bunch.
-    //This is relevant because we call isAlive during drawing, which has both performance
-    //and thread coordination implications if that method calls buff(...) frequently
+    // effectively cache this buff to prevent having to call buff(...) a bunch.
+    // This is relevant because we call isAlive during drawing, which has both
+    // performance
+    // and thread coordination implications if that method calls buff(...)
+    // frequently
     private Berserk berserk;
 
     @Override
@@ -2569,32 +2595,32 @@ public class Hero extends Char {
                         Trap trap = Dungeon.level.traps.get(curr);
                         float chance;
 
-                        //searches aided by foresight always succeed, even if trap isn't searchable
+                        // searches aided by foresight always succeed, even if trap isn't searchable
                         if (foresight) {
                             chance = 1f;
 
-                            //otherwise if the trap isn't searchable, searching always fails
+                            // otherwise if the trap isn't searchable, searching always fails
                         } else if (trap != null && !trap.canBeSearched) {
                             chance = 0f;
 
-                            //intentional searches always succeed against regular traps and doors
+                            // intentional searches always succeed against regular traps and doors
                         } else if (intentional) {
                             chance = 1f;
 
-                            //unintentional searches always fail with a cursed talisman
+                            // unintentional searches always fail with a cursed talisman
                         } else if (cursed) {
                             chance = 0f;
 
-                            //unintentional trap detection scales from 40% at floor 0 to 30% at floor 25
+                            // unintentional trap detection scales from 40% at floor 0 to 30% at floor 25
                         } else if (Dungeon.level.map[curr] == Terrain.SECRET_TRAP) {
                             chance = 0.4f - (Dungeon.depth / 250f);
 
-                            //unintentional door detection scales from 20% at floor 0 to 0% at floor 20
+                            // unintentional door detection scales from 20% at floor 0 to 0% at floor 20
                         } else {
                             chance = 0.2f - (Dungeon.depth / 100f);
                         }
 
-                        //don't want to let the player search though hidden doors in tutorial
+                        // don't want to let the player search though hidden doors in tutorial
                         if (CDSettings.intro()) {
                             chance = 0;
                         }
@@ -2666,10 +2692,10 @@ public class Hero extends Char {
 
         Buff.affect(this, LostInventory.class);
         Buff.affect(this, Invisibility.class, 3f);
-        //lost inventory is dropped in interlevelscene
+        // lost inventory is dropped in interlevelscene
 
-        //activate items that persist after lost inventory
-        //FIXME this is very messy, maybe it would be better to just have one buff that
+        // activate items that persist after lost inventory
+        // FIXME this is very messy, maybe it would be better to just have one buff that
         // handled all items that recharge over time?
         for (Item i : belongings) {
             if (i instanceof EquipableItem && i.isEquipped(this)) {

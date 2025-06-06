@@ -1,22 +1,12 @@
 package com.coladungeon.items.material;
 
+import com.coladungeon.items.Item;
 import java.util.ArrayList;
 import java.util.HashMap;
-public class Material {
-    public String id;
-    public String name;
-    public String desc;
+public class Material extends Item{
+
     public static record AspectEntry(Aspect aspect, int level){}
-    public ArrayList<AspectEntry> aspects;
-    public Material(String id, String name, String desc, Aspect aspect) {
-        this.id = id;
-        this.name = name;
-        this.desc = desc;
-        this.aspects = new ArrayList<>();
-    }
-    public Material(String id, String name, String desc) {
-        this(id, name, desc, null);
-    }
+    public ArrayList<AspectEntry> aspects=new ArrayList<>();
     public void addAspect(Aspect aspect, int level){
         aspects.add(new AspectEntry(aspect, level));
     }

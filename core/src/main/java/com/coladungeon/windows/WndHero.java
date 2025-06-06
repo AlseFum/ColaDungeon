@@ -1,8 +1,11 @@
 package com.coladungeon.windows;
 
-import com.coladungeon.Dungeon;
+import java.util.ArrayList;
+import java.util.Locale;
+
 import com.coladungeon.CDAction;
 import com.coladungeon.ColaDungeon;
+import com.coladungeon.Dungeon;
 import com.coladungeon.Statistics;
 import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.hero.Hero;
@@ -27,9 +30,6 @@ import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
-
-import java.util.ArrayList;
-import java.util.Locale;
 
 public class WndHero extends WndTabbed {
 	
@@ -220,16 +220,12 @@ public class WndHero extends WndTabbed {
 		TalentsPane pane;
 		public TalentsTab(){
 			super();
-			System.out.println("[WndHero::TalentsTab]");
 		}
 		@Override
 		protected void createChildren() {
 			super.createChildren();
 			pane = new TalentsPane(TalentButton.Mode.UPGRADE);
 			add(pane);
-			System.out.println(
-				"[WndHero::TalentsTab::createChildren]:"+
-				pane.toString());
 		}
 
 		@Override

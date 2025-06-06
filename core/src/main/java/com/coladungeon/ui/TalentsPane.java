@@ -2,7 +2,7 @@ package com.coladungeon.ui;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Map;
+
 import com.coladungeon.Badges;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.hero.HeroSubClass;
@@ -29,13 +29,13 @@ public class TalentsPane extends ScrollPane {
         this(mode, Dungeon.hero.talents);
         for (int tier = 0; tier < Dungeon.hero.talents.size(); tier++) {
             LinkedHashMap<Talent, Integer> tierTalents = Dungeon.hero.talents.get(tier);
-            System.out.println("Tier " + (tier + 1) + " Talents:");
-			if(tierTalents.entrySet().size()<=0)System.out.println("(Empty)");
-            for (Map.Entry<Talent, Integer> entry : tierTalents.entrySet()) {
-                Talent talent = entry.getKey();
-                Integer points = entry.getValue();
-                System.out.println("- " + talent + ": " + points + " points");
-            }
+            // System.out.println("Tier " + (tier + 1) + " Talents:");
+			// if(tierTalents.entrySet().size()<=0)System.out.println("(Empty)");
+            // for (Map.Entry<Talent, Integer> entry : tierTalents.entrySet()) {
+            //     Talent talent = entry.getKey();
+            //     Integer points = entry.getValue();
+            //     System.out.println("- " + talent + ": " + points + " points");
+            // }
         }
     }
 
@@ -68,10 +68,10 @@ public class TalentsPane extends ScrollPane {
         }
 
         tiersAvailable = Math.min(tiersAvailable, talents.size());
-        System.out.println("[TalentsPane]tiersAvailable: " + tiersAvailable + " talents.size() " + talents.size());
+        // System.out.println("[TalentsPane]tiersAvailable: " + tiersAvailable + " talents.size() " + talents.size());
         for (int i = 0; i < Math.min(tiersAvailable, talents.size()); i++) {
             if (talents.get(i).isEmpty()) {
-                System.out.println("[TalentsPane]talents.get(" + i + ") is empty");
+                // System.out.println("[TalentsPane]talents.get(" + i + ") is empty");
                 continue;
             }
             System.out.println(talents.get(i).toString());

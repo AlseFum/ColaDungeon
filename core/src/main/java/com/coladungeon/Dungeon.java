@@ -267,11 +267,14 @@ public class Dungeon {
         Blacksmith.Quest.reset();
         Imp.Quest.reset();
 
-        hero = new Hero();
+        hero = new Hero(GamesInProgress.selectedClass);
+        System.out.println("[Dungeon::init]hero class: "+hero.heroClass.name());
+        System.out.println("        ::selectedClass: "+GamesInProgress.selectedClass.name());
+        GamesInProgress.selectedClass.initHero(hero);
         hero.live();
 
         Badges.reset();
-        GamesInProgress.selectedClass.initHero(hero);
+        
 
     }
 

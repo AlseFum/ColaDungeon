@@ -21,10 +21,16 @@
 
 package com.coladungeon.actors.hero;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+
 import com.coladungeon.Assets;
+import com.coladungeon.ColaDungeon;
 import com.coladungeon.Dungeon;
 import com.coladungeon.GamesInProgress;
-import com.coladungeon.ColaDungeon;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.ArtifactRecharge;
@@ -85,12 +91,6 @@ import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 
 public enum Talent {
 
@@ -950,12 +950,12 @@ public enum Talent {
 	}
 
 	public static void initClassTalents( HeroClass cls, ArrayList<LinkedHashMap<Talent, Integer>> talents, LinkedHashMap<Talent, Talent> replacements ){
+		
 		while (talents.size() < MAX_TALENT_TIERS){
 			talents.add(new LinkedHashMap<>());
 		}
-
 		ArrayList<Talent> tierTalents = new ArrayList<>();
-
+		System.out.println("[Talent::initClassTalents]cls: "+cls.name());
 		//tier 1
 		if (cls == HeroClass.WARRIOR) {
 				Collections.addAll(tierTalents, HEARTY_MEAL, VETERANS_INTUITION, PROVOKED_ANGER, IRON_WILL);

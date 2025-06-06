@@ -21,16 +21,21 @@
 
 package com.coladungeon.scenes;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Chrome;
+import com.coladungeon.ColaDungeon;
 import com.coladungeon.Dungeon;
 import com.coladungeon.GamesInProgress;
-import com.coladungeon.ColaDungeon;
 import com.coladungeon.Statistics;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.mobs.Mob;
 import com.coladungeon.effects.ShadowBox;
+import com.coladungeon.items.Generator;
 import com.coladungeon.items.Item;
 import com.coladungeon.items.LostBackpack;
 import com.coladungeon.journal.Document;
@@ -45,8 +50,6 @@ import com.coladungeon.ui.IconButton;
 import com.coladungeon.ui.Icons;
 import com.coladungeon.ui.RenderedTextBlock;
 import com.coladungeon.ui.StyledButton;
-import com.coladungeon.utils.GLog;
-import com.coladungeon.items.Generator;
 import com.coladungeon.windows.WndError;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.input.KeyEvent;
@@ -59,12 +62,6 @@ import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 import com.watabou.utils.Signal;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import com.coladungeon.items.Generator;
 
 public class InterlevelScene extends PixelScene {
 	
@@ -408,10 +405,8 @@ public class InterlevelScene extends PixelScene {
 					try {
 
 						Actor.fixTime();
-						System.out.println("[InterlevelScene::create]mode: "+mode);
 						switch (mode) {
 							case DESCEND:
-								System.out.println("[InterlevelScene::create]descend");
 								descend();
 								break;
 							case ASCEND:
@@ -610,8 +605,9 @@ public class InterlevelScene extends PixelScene {
 		if (Dungeon.hero == null) {
 			System.out.println("[InterlevelScene]Dungeon.hero is null");
 			Mob.clearHeldAllies();
+			System.out.println("[InterlevelScene]Dungeon.init start");
 			Dungeon.init();
-			System.out.println("[InterlevelScene]descend finished");
+			System.out.println("[InterlevelScene]Dungeon.init finished");
 			GameLog.wipe();
 
 			//When debugging, we may start a game at a later depth to quickly test something
