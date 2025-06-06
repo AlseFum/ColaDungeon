@@ -48,6 +48,7 @@ import com.coladungeon.items.supply.AssassinSupply;
 import com.coladungeon.items.supply.DebugSupply;
 import com.coladungeon.items.supply.GunSupply;
 import com.coladungeon.items.supply.testitem;
+import com.coladungeon.items.bags.DebugBag;
 import com.coladungeon.items.wands.WandOfMagicMissile;
 import com.coladungeon.items.weapon.SpiritBow;
 import com.coladungeon.items.weapon.melee.Cudgel;
@@ -345,8 +346,8 @@ public final class HeroClassSheet {
         new GunSupply().identify().collect();
         new DebugSupply().identify().collect();
         new AssassinSupply().identify().collect();
-
         new testitem().identify().collect();
+        new DebugBag().identify().collect();
         // 事件通知
         EventBus.fire("Hero:created", "hero", hero);
     }
