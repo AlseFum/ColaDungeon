@@ -51,24 +51,39 @@ public class ItemRemover extends Item {
                         return;
                     }
                     if (item.quantity > 5) {
-                        GameScene.show(new WndOptions("删除物品",
-                                "要删除多少？",
-                                "1份",
-                                "5分之一("+(item.quantity-(int)item.quantity*4/5)+")",
-                                "全部") {
-                            @Override
-                            protected void onSelect(int index) {
-                                item.quantity = switch (index) {
-                                    case 0 -> item.quantity - 1;
-                                    case 1 -> (int) item.quantity * 4 / 5;
-                                    default -> {
-                                        item.detach(hero.belongings.backpack);
-                                        yield item.quantity;
-                                    }
-                                };
-                                InventoryPane.refresh();
-                            }
-                        });
+                        GameScene.show(WndOptions.make()
+                        .title("删除物品")
+                        .message("要删除多少？")
+                        .option("1份",(Object o)->{
+                            item.quantity = item.quantity - 1;
+                        })
+                        .option("5分之一("+(item.quantity-(int)item.quantity*4/5)+")",(Object o)->{
+                            item.quantity = (int)item.quantity*4/5;
+                        })
+                        .option("全部",(Object o)->{
+                            item.quantity=1;
+                            item.detach(hero.belongings.backpack);
+                            InventoryPane.refresh();
+                        })
+                        .build());
+                        // GameScene.show(new WndOptions("删除物品",
+                        //         "要删除多少？",
+                        //         "1份",
+                        //         "5分之一("+(item.quantity-(int)item.quantity*4/5)+")",
+                        //         "全部") {
+                        //     @Override
+                        //     protected void onSelect(int index) {
+                        //         item.quantity = switch (index) {
+                        //             case 0 -> item.quantity - 1;
+                        //             case 1 -> (int) item.quantity * 4 / 5;
+                        //             default -> {
+                        //                 item.detach(hero.belongings.backpack);
+                        //                 yield item.quantity;
+                        //             }
+                        //         };
+                        //         InventoryPane.refresh();
+                        //     }
+                        // });
                     } else {
                         item.detach(hero.belongings.backpack);
                         InventoryPane.refresh();

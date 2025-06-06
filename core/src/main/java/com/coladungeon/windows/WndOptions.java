@@ -28,6 +28,8 @@ import com.coladungeon.ui.RedButton;
 import com.coladungeon.ui.RenderedTextBlock;
 import com.coladungeon.ui.Window;
 import com.watabou.noosa.Image;
+import java.util.function.Consumer;
+
 
 public class WndOptions extends Window {
 
@@ -53,7 +55,7 @@ public class WndOptions extends Window {
 
 		layoutBody(pos, message, options);
 	}
-	
+
 	public WndOptions( String title, String message, String... options ) {
 		super();
 
@@ -134,5 +136,51 @@ public class WndOptions extends Window {
 
 	protected Image getIcon( int index ) {
 		return null;
+	}
+	//below is builder
+	public static Builder make(){
+		return new Builder();
+	}
+	public static class Builder{
+		private String title;
+		private String message;
+		private String[] options = new String[10];
+		private Consumer<Object>[] onSelect = new Consumer[10];
+		private int index = 0;
+		public Builder title(String title){
+			this.title = title;
+			return this;
+		}
+		public Builder message(String message){
+			this.message = message;
+			return this;
+		}
+		public Builder option(String option, Consumer<Object> callback){
+			if (index >= options.length) {
+				throw new IllegalStateException(
+					"选项数量超过限制（当前限制为" + options.length + "个）。" +
+					"请修改 WndOptions.Builder 类中的数组初始化大小。"
+				);
+			}
+			options[index] = option;
+			onSelect[index] = callback;
+			index++;
+			return this;
+		}
+		public WndOptions build(){
+			String[] finalOptions = new String[index];
+			Consumer<Object>[] finalCallbacks = new Consumer[index];
+			System.arraycopy(options, 0, finalOptions, 0, index);
+			System.arraycopy(onSelect, 0, finalCallbacks, 0, index);
+
+			return new WndOptions(title, message, finalOptions){
+				@Override
+				protected void onSelect(int index) {
+					if (finalCallbacks[index] != null) {
+						finalCallbacks[index].accept(null);
+					}
+				}
+			};
+		}
 	}
 }

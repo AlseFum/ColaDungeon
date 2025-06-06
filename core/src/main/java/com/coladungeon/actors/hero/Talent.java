@@ -419,7 +419,9 @@ public enum Talent {
 		public int icon() {
 			return BuffIndicator.TIME;
 		}
+		@Override
 		public void tintIcon(Image icon) { icon.hardlight(0f, 0f, 1f); }
+		@Override
 		public float iconFadePercent() { return Math.max(0, visualcooldown() / 20); }
 	}
 
