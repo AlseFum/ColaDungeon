@@ -74,7 +74,7 @@ public class TalentsPane extends ScrollPane {
                 // System.out.println("[TalentsPane]talents.get(" + i + ") is empty");
                 continue;
             }
-            System.out.println(talents.get(i).toString());
+            // System.out.println(talents.get(i).toString());
             TalentTierPane pane = new TalentTierPane(talents.get(i), i + 1, mode);
             panes.add(pane);
             content.add(pane);

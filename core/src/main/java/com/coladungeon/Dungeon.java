@@ -268,8 +268,6 @@ public class Dungeon {
         Imp.Quest.reset();
 
         hero = new Hero(GamesInProgress.selectedClass);
-        System.out.println("[Dungeon::init]hero class: "+hero.heroClass.name());
-        System.out.println("        ::selectedClass: "+GamesInProgress.selectedClass.name());
         GamesInProgress.selectedClass.initHero(hero);
         hero.live();
 

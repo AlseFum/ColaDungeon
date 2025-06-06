@@ -243,9 +243,9 @@ public class Hero extends Char {
         Talent.initClassTalents(this);
     }
 
-    // public Hero() {
-    //     Hero(HeroClass.ROGUE);
-    // }
+    public Hero() {
+        this(HeroClass.ROGUE);
+    }
 
     public void updateHT(boolean boostHP) {
         int curHT = HT;

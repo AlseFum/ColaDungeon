@@ -14,6 +14,9 @@ import com.coladungeon.items.stones.StoneOfDummy;
 import com.coladungeon.items.stones.StoneOfDungeonTravel;
 import com.coladungeon.items.stones.StoneOfGeneration;
 import com.coladungeon.items.weapon.SummonerStaff;
+
+import com.coladungeon.items.ItemRemover;
+
 public class DebugSupply extends Supply {
     public DebugSupply() {
         super();
@@ -33,5 +36,6 @@ public class DebugSupply extends Supply {
         put_in(DivineAnkh.class, 1);
         put_in(Torch.class, 100);
         put_in(EnergyCrystal.class, 100);
+        put_in(ItemRemover.class);
     }
 }

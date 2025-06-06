@@ -1453,7 +1453,7 @@ public class GameScene extends PixelScene {
 		selectCell(new CellSelector.Listener(){
 			@Override
 			public void onSelect(Integer cell){
-				listener.onSelect(cell);
+				if(cell !=null)listener.onSelect(cell);
 			}
 			@Override
 			public String prompt() {

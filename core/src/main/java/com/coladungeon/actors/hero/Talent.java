@@ -427,7 +427,7 @@ public enum Talent {
 	int maxPoints;
 
 	// tiers 1/2/3/4 start at levels 2/7/13/21
-	public static int[] tierLevelThresholds = new int[]{0, 0, 0, 0, 0, 0};
+	public static int[] tierLevelThresholds = new int[]{0,2, 7, 13, 21, 31};
 
 	Talent( int icon ){
 		this(icon, 2);
@@ -950,12 +950,14 @@ public enum Talent {
 	}
 
 	public static void initClassTalents( HeroClass cls, ArrayList<LinkedHashMap<Talent, Integer>> talents, LinkedHashMap<Talent, Talent> replacements ){
+		// 清空现有天赋
+		talents.clear();
 		
 		while (talents.size() < MAX_TALENT_TIERS){
 			talents.add(new LinkedHashMap<>());
 		}
 		ArrayList<Talent> tierTalents = new ArrayList<>();
-		System.out.println("[Talent::initClassTalents]cls: "+cls.name());
+
 		//tier 1
 		if (cls == HeroClass.WARRIOR) {
 				Collections.addAll(tierTalents, HEARTY_MEAL, VETERANS_INTUITION, PROVOKED_ANGER, IRON_WILL);
