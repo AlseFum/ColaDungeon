@@ -1,15 +1,16 @@
 package com.coladungeon.windows;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.coladungeon.Chrome;
 import com.coladungeon.scenes.PixelScene;
+import com.coladungeon.ui.Icons;
 import com.coladungeon.ui.RedButton;
 import com.coladungeon.ui.RenderedTextBlock;
 import com.coladungeon.ui.StyledButton;
 import com.coladungeon.ui.Window;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.ui.Component;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WndIconGrid extends Window {
     
@@ -147,6 +148,9 @@ public class WndIconGrid extends Window {
         confirmBtn.setRect(MARGIN, message.bottom() + GAP, width - MARGIN * 2, BUTTON_HEIGHT);
         add(confirmBtn);
         
+        Image icon = Icons.get(Icons.SKULL);
+        add(icon);
+
         // 根据实际内容调整窗口大小
         resize(width, (int)(confirmBtn.bottom() + MARGIN));
     }

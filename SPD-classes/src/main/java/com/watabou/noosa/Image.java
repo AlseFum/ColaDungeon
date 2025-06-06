@@ -65,7 +65,11 @@ public class Image extends Visual {
 		this( tx );
 		frame( texture.uvRect( left,  top,  left + width, top + height ) );
 	}
-	
+	public Image (Object tx,RectF frame) {
+		this();
+		texture( tx );
+		frame( frame );
+	}
 	public void texture( Object tx ) {
 		texture = tx instanceof SmartTexture ? (SmartTexture)tx : TextureCache.get( tx );
 		frame( new RectF( 0, 0, 1, 1 ) );
