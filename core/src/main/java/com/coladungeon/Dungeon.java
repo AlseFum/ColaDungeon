@@ -269,7 +269,11 @@ public class Dungeon {
 
         hero = new Hero(GamesInProgress.selectedClass);
         GamesInProgress.selectedClass.initHero(hero);
+        System.out.println("[Dungeon::init] hero set " + hero);
+        System.out.println("[Dungeon::init] hero.heroClass set " + hero.heroClass);
         hero.live();
+        // Dungeon.hero = hero;
+        
 
         Badges.reset();
         

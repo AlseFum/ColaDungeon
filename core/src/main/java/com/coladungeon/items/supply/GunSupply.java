@@ -2,7 +2,6 @@ package com.coladungeon.items.supply;
 
 import com.coladungeon.items.bags.AmmoHolder;
 import com.coladungeon.items.weapon.ammo.Ammo;
-import com.coladungeon.items.weapon.ammo.BreakingDawn;
 import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
 import com.coladungeon.items.weapon.chakram.Chakram;
 import com.coladungeon.items.weapon.grenade.GrenadeLauncher;
@@ -22,7 +21,6 @@ public class GunSupply extends Supply {
             .put_in(AmmoHolder.class)
             .put_in(Ammo.class,1145)
             .put_in(ExplosiveAmmo.class,233)
-            .put_in(BreakingDawn.class,1145)
             .name("枪械补给包")
             .desc("一个装满了枪械的包，可以从中获取到各种枪械。");
     }

@@ -65,7 +65,7 @@ import com.coladungeon.utils.EventBus;
 
 public final class HeroClassSheet {
 
-    private static final Map<String, HeroClass> registeredClasses = new LinkedHashMap<>();
+    public static final Map<String, HeroClass> registeredClasses = new LinkedHashMap<>();
 
     // 标准职业
     public static final HeroClass WARRIOR = registerStandardClass("warrior")
@@ -79,8 +79,6 @@ public final class HeroClassSheet {
             .masteryBadge(Badges.Badge.MASTERY_WARRIOR)
             .unlocked(true)
             .initializer(hero -> {
-                hero.heroClass = HeroClass.WARRIOR;
-                initCommon(hero);
 
                 // 基础武器
                 (hero.belongings.weapon = new WornShortsword()).identify();
@@ -113,8 +111,6 @@ public final class HeroClassSheet {
             .masteryBadge(Badges.Badge.MASTERY_MAGE)
             .unlocked(() -> Badges.isUnlocked(Badges.Badge.UNLOCK_MAGE))
             .initializer(hero -> {
-                hero.heroClass = HeroClass.MAGE;
-                initCommon(hero);
 
                 // 法师法杖
                 MagesStaff staff = new MagesStaff(new WandOfMagicMissile());
@@ -141,8 +137,6 @@ public final class HeroClassSheet {
             .masteryBadge(Badges.Badge.MASTERY_ROGUE)
             .unlocked(() -> Badges.isUnlocked(Badges.Badge.UNLOCK_ROGUE))
             .initializer(hero -> {
-                hero.heroClass = HeroClass.ROGUE;
-                initCommon(hero);
 
                 // 基础武器
                 (hero.belongings.weapon = new Dagger()).identify();
@@ -177,8 +171,6 @@ public final class HeroClassSheet {
             .masteryBadge(Badges.Badge.MASTERY_HUNTRESS)
             .unlocked(() -> Badges.isUnlocked(Badges.Badge.UNLOCK_HUNTRESS))
             .initializer(hero -> {
-                hero.heroClass = HeroClass.HUNTRESS;
-                initCommon(hero);
 
                 // 基础武器
                 (hero.belongings.weapon = new Gloves()).identify();
@@ -221,8 +213,6 @@ public final class HeroClassSheet {
                 return false;
             })
             .initializer(hero -> {
-                hero.heroClass = HeroClass.DUELIST;
-                initCommon(hero);
 
                 // 基础武器
                 (hero.belongings.weapon = new Rapier()).identify();
@@ -253,8 +243,6 @@ public final class HeroClassSheet {
             .masteryBadge(Badges.Badge.MASTERY_CLERIC)
             .unlocked(() -> Badges.isUnlocked(Badges.Badge.UNLOCK_CLERIC))
             .initializer(hero -> {
-                hero.heroClass = HeroClass.CLERIC;
-                initCommon(hero);
 
                 // 基础武器
                 (hero.belongings.weapon = new Cudgel()).identify();
@@ -307,7 +295,7 @@ public final class HeroClassSheet {
      * @param id 职业ID
      * @return 职业构建器
      */
-    private static HeroClassBuilder registerStandardClass(String id) {
+    public static HeroClassBuilder registerStandardClass(String id) {
         return HeroClass.builder(id);
     }
 
@@ -331,7 +319,7 @@ public final class HeroClassSheet {
     }
 
     // 通用初始化
-    private static void initCommon(Hero hero) {
+    public static void initCommon(Hero hero) {
         // 基础装备
         (hero.belongings.armor = new ClothArmor()).identify();
         new Food().identify().collect();

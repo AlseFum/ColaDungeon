@@ -150,8 +150,12 @@ public class HeroClassBuilder {
         return this;
     }
 
-    public HeroClassBuilder initializer(Consumer<Hero> initializer) {
-        this.initializer = initializer;
+    public HeroClassBuilder initializer(Consumer<Hero> _initializer) {
+        this.initializer =(hero)->{
+            HeroClassSheet.initCommon(hero);
+            _initializer.accept(hero);
+            hero.heroClass=HeroClassSheet.registeredClasses.get(id);
+        };
         return this;
     }
 

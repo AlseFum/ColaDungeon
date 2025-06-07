@@ -129,8 +129,8 @@ public class ItemSpriteManager {
             .label("square")
             .label("cross")
             .label("slash");
-        registerTexture("arknights/shatteringDawn.png", 16)
-            .label("shatteringDawn");
+        // registerTexture("arknights/shatteringDawn.png", 16)
+        //     .label("shatteringDawn");
         registerTexture("sprites/gun.png",16)
             .label("gun");
             registerTexture("effects/gunfire.png",16)

@@ -32,7 +32,9 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 	public Supplier<String> splashArtSupplier;
 	public Supplier<ArmorAbility[]> armorAbilitiesSupplier;
 	public Supplier<Badges.Badge> masteryBadgeSupplier;
-	public Consumer<Hero> initializer;
+	public Consumer<Hero> initializer=(hero)->{
+		hero.heroClass=this;
+	};
 	public ArrayList<Talent> classTalentsTier1;
 	public ArrayList<Talent> classTalentsTier2;
 	// public ArrayList<Talent> subclassTalents;  // 子职业天赋
@@ -66,9 +68,11 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 	// 初始化英雄
 	public void initHero(Hero hero) {
 		hero.heroClass = this;
+		System.out.println("[HeroClass::initHero] hero.heroClass set " + hero.heroClass);
 		if (initializer != null) {
 			initializer.accept(hero);
 		}
+		System.out.println("[HeroClass::initHero] after initializer" + hero.heroClass);
 	}
 
 	/**

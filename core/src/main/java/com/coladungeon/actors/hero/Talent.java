@@ -1,24 +1,3 @@
-/*
- * Pixel Dungeon
- * Copyright (C) 2012-2015 Oleg Dolya
- *
- * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
-
 package com.coladungeon.actors.hero;
 
 import java.util.ArrayList;
@@ -94,7 +73,9 @@ import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
 public class Talent implements Bundlable {
-
+	//#region contents
+	private static final HashMap<String, Talent> talentRegistry = new HashMap<>();
+	
 	//Warrior T1
 	public static final Talent HEARTY_MEAL = new Talent(0,3,"HEARTY_MEAL");
 	public static final Talent VETERANS_INTUITION = new Talent(1,3,"VETERANS_INTUITION");
@@ -535,54 +516,38 @@ public class Talent implements Bundlable {
 		@Override
 		public float iconFadePercent() { return Math.max(0, visualcooldown() / 20); }
 	}
-
+	//#endregion
+    //#region BasicClass
 	public  int icon;
 	public  int maxPoints;
 	public  String name;
 
 	// tiers 1/2/3/4 start at levels 2/7/13/21
-	public static int[] tierLevelThresholds = new int[]{0,2, 7, 13, 21, 31};
+	public static int[] tierLevelThresholds = new int[]
+		{0,2, 7, 13, 21, 31};
 
 	Talent(int icon) {
 		this(icon, 2);
 	}
-	Talent(int icon, int maxPoints, String _name){
-		this(icon,maxPoints);
-		name=_name;
-	}
 	Talent(int icon, int maxPoints) {
+		this(icon, 2,"UnknownYet");
+	}
+	Talent(int icon, int maxPoints, String _name){
 		this.icon = icon;
 		this.maxPoints = maxPoints;
-		this.name="UNKNOWN_yet";
-		// String fieldName = "UNKNOWN";
-		// // 使用StackTrace来获取调用者的字段名
-		// StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-		// for (StackTraceElement element : stackTrace) {
-		// 	if (element.getClassName().equals(Talent.class.getName())) {
-		// 		String methodName = element.getMethodName();
-		// 		if (methodName.equals("<clinit>")) {
-		// 			// 在静态初始化块中，我们需要通过反射获取字段名
-		// 			try {
-		// 				for (java.lang.reflect.Field field : Talent.class.getDeclaredFields()) {
-		// 					if (field.get(null) == this) {
-		// 						fieldName = field.getName();
-		// 						break;
-		// 					}
-		// 				}
-		// 			} catch (Exception e) {
-		// 				ColaDungeon.reportException(e);
-		// 			}
-		// 		}
-		// 	}
-		// }
+		this.name=_name;
+		registerTalent(this);
 	}
+	
 
 	public int icon(){
 		if (this == HEROIC_ENERGY){
 			if (Ratmogrify.useRatroicEnergy){
 				return 218;
 			}
-			HeroClass cls = Dungeon.hero != null ? Dungeon.hero.heroClass : GamesInProgress.selectedClass;
+			HeroClass cls = Dungeon.hero != null 
+				? Dungeon.hero.heroClass 
+				: GamesInProgress.selectedClass;
 			if (cls == HeroClass.WARRIOR) {
 					return 26;
 			} else if (cls == HeroClass.MAGE) {
@@ -633,11 +598,15 @@ public class Talent implements Bundlable {
 	}
 
 	public static Talent valueOf(String name) {
-		try {
-			return (Talent) Talent.class.getField(name).get(null);
-		} catch (Exception e) {
+		Talent talent = talentRegistry.get(name);
+		if (talent == null) {
 			throw new IllegalArgumentException("No talent constant with name " + name);
 		}
+		return talent;
+	}
+
+	private static void registerTalent(Talent talent) {
+		talentRegistry.put(talent.name(), talent);
 	}
 
 	public static void onTalentUpgraded( Hero hero, Talent talent ){

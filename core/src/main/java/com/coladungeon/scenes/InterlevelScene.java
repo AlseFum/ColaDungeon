@@ -603,11 +603,8 @@ public class InterlevelScene extends PixelScene {
 	private void descend() throws IOException {
 
 		if (Dungeon.hero == null) {
-			System.out.println("[InterlevelScene]Dungeon.hero is null");
 			Mob.clearHeldAllies();
-			System.out.println("[InterlevelScene]Dungeon.init start");
 			Dungeon.init();
-			System.out.println("[InterlevelScene]Dungeon.init finished");
 			GameLog.wipe();
 
 			//When debugging, we may start a game at a later depth to quickly test something
