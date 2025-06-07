@@ -86,120 +86,231 @@ import com.coladungeon.ui.BuffIndicator;
 import com.coladungeon.utils.GLog;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
-public enum Talent {
+public class Talent implements Bundlable {
 
 	//Warrior T1
-	HEARTY_MEAL(0), VETERANS_INTUITION(1), PROVOKED_ANGER(2), IRON_WILL(3),
+	public static final Talent HEARTY_MEAL = new Talent(0,3,"HEARTY_MEAL");
+	public static final Talent VETERANS_INTUITION = new Talent(1,3,"VETERANS_INTUITION");
+	public static final Talent PROVOKED_ANGER = new Talent(2,2,"PROVOKED_ANGER");
+	public static final Talent IRON_WILL = new Talent(3,2,"IRON_WILL");
 	//Warrior T2
-	IRON_STOMACH(4), LIQUID_WILLPOWER(5), RUNIC_TRANSFERENCE(6), LETHAL_MOMENTUM(7), IMPROVISED_PROJECTILES(8),
+	public static final Talent IRON_STOMACH = new Talent(4,2,"IRON_STOMACH");
+	public static final Talent LIQUID_WILLPOWER = new Talent(5,2,"LIQUID_WILLPOWER");
+	public static final Talent RUNIC_TRANSFERENCE = new Talent(6,2,"RUNIC_TRANSFERENCE");
+	public static final Talent LETHAL_MOMENTUM = new Talent(7,2,"LETHAL_MOMENTUM");
+	public static final Talent IMPROVISED_PROJECTILES = new Talent(8,2,"IMPROVISED_PROJECTILES");
 	//Warrior T3
-	HOLD_FAST(9, 3), STRONGMAN(10, 3),
+	public static final Talent HOLD_FAST = new Talent(9, 3,"HOLD_FAST");
+	public static final Talent STRONGMAN = new Talent(10, 3,"STRONGMAN");
 	//Berserker T3
-	ENDLESS_RAGE(11, 3), DEATHLESS_FURY(12, 3), ENRAGED_CATALYST(13, 3),
+	public static final Talent ENDLESS_RAGE = new Talent(11, 3,"ENDLESS_RAGE");
+	public static final Talent DEATHLESS_FURY = new Talent(12, 3,"DEATHLESS_FURY");
+	public static final Talent ENRAGED_CATALYST = new Talent(13, 3,"ENRAGED_CATALYST");
 	//Gladiator T3
-	CLEAVE(14, 3), LETHAL_DEFENSE(15, 3), ENHANCED_COMBO(16, 3),
+	public static final Talent CLEAVE = new Talent(14, 3,"CLEAVE");
+	public static final Talent LETHAL_DEFENSE = new Talent(15, 3,"LETHAL_DEFENSE");
+	public static final Talent ENHANCED_COMBO = new Talent(16, 3,"ENHANCED_COMBO");
 	//Heroic Leap T4
-	BODY_SLAM(17, 4), IMPACT_WAVE(18, 4), DOUBLE_JUMP(19, 4),
+	public static final Talent BODY_SLAM = new Talent(17, 4,"BODY_SLAM");
+	public static final Talent IMPACT_WAVE = new Talent(18, 4,"IMPACT_WAVE");
+	public static final Talent DOUBLE_JUMP = new Talent(19, 4,"DOUBLE_JUMP");
 	//Shockwave T4
-	EXPANDING_WAVE(20, 4), STRIKING_WAVE(21, 4), SHOCK_FORCE(22, 4),
+	public static final Talent EXPANDING_WAVE = new Talent(20, 4,"EXPANDING_WAVE");
+	public static final Talent STRIKING_WAVE = new Talent(21, 4,"STRIKING_WAVE");
+	public static final Talent SHOCK_FORCE = new Talent(22, 4,"SHOCK_FORCE");
 	//Endure T4
-	SUSTAINED_RETRIBUTION(23, 4), SHRUG_IT_OFF(24, 4), EVEN_THE_ODDS(25, 4),
+	public static final Talent SUSTAINED_RETRIBUTION = new Talent(23, 4,"SUSTAINED_RETRIBUTION");
+	public static final Talent SHRUG_IT_OFF = new Talent(24, 4,"SHRUG_IT_OFF");
+	public static final Talent EVEN_THE_ODDS = new Talent(25, 4,"EVEN_THE_ODDS");
 
 	//Mage T1
-	EMPOWERING_MEAL(32), SCHOLARS_INTUITION(33), LINGERING_MAGIC(34), BACKUP_BARRIER(35),
+	public static final Talent EMPOWERING_MEAL = new Talent(32,2,"EMPOWERING_MEAL");
+	public static final Talent SCHOLARS_INTUITION = new Talent(33,2,"SCHOLARS_INTUITION");
+	public static final Talent LINGERING_MAGIC = new Talent(34,2,"LINGERING_MAGIC");
+	public static final Talent BACKUP_BARRIER = new Talent(35,2,"BACKUP_BARRIER");
 	//Mage T2
-	ENERGIZING_MEAL(36), INSCRIBED_POWER(37), WAND_PRESERVATION(38), ARCANE_VISION(39), SHIELD_BATTERY(40),
+	public static final Talent ENERGIZING_MEAL = new Talent(36,2,"ENERGIZING_MEAL");
+	public static final Talent INSCRIBED_POWER = new Talent(37,2,"INSCRIBED_POWER");
+	public static final Talent WAND_PRESERVATION = new Talent(38,2,"WAND_PRESERVATION");
+	public static final Talent ARCANE_VISION = new Talent(39,2,"ARCANE_VISION");
+	public static final Talent SHIELD_BATTERY = new Talent(40,2,"SHIELD_BATTERY");
 	//Mage T3
-	DESPERATE_POWER(41, 3), ALLY_WARP(42, 3),
+	public static final Talent DESPERATE_POWER = new Talent(41, 3,"DESPERATE_POWER");
+	public static final Talent ALLY_WARP = new Talent(42, 3,"ALLY_WARP");
 	//Battlemage T3
-	EMPOWERED_STRIKE(43, 3), MYSTICAL_CHARGE(44, 3), EXCESS_CHARGE(45, 3),
+	public static final Talent EMPOWERED_STRIKE = new Talent(43, 3,"EMPOWERED_STRIKE");
+	public static final Talent MYSTICAL_CHARGE = new Talent(44, 3,"MYSTICAL_CHARGE");
+	public static final Talent EXCESS_CHARGE = new Talent(45, 3,"EXCESS_CHARGE");
 	//Warlock T3
-	SOUL_EATER(46, 3), SOUL_SIPHON(47, 3), NECROMANCERS_MINIONS(48, 3),
+	public static final Talent SOUL_EATER = new Talent(46, 3,"SOUL_EATER");
+	public static final Talent SOUL_SIPHON = new Talent(47, 3,"SOUL_SIPHON");
+	public static final Talent NECROMANCERS_MINIONS = new Talent(48, 3,"NECROMANCERS_MINIONS");
 	//Elemental Blast T4
-	BLAST_RADIUS(49, 4), ELEMENTAL_POWER(50, 4), REACTIVE_BARRIER(51, 4),
+	public static final Talent BLAST_RADIUS = new Talent(49, 4,"BLAST_RADIUS");
+	public static final Talent ELEMENTAL_POWER = new Talent(50, 4,"ELEMENTAL_POWER");
+	public static final Talent REACTIVE_BARRIER = new Talent(51, 4,"REACTIVE_BARRIER");
 	//Wild Magic T4
-	WILD_POWER(52, 4), FIRE_EVERYTHING(53, 4), CONSERVED_MAGIC(54, 4),
+	public static final Talent WILD_POWER = new Talent(52, 4,"WILD_POWER");
+	public static final Talent FIRE_EVERYTHING = new Talent(53, 4,"FIRE_EVERYTHING");
+	public static final Talent CONSERVED_MAGIC = new Talent(54, 4,"CONSERVED_MAGIC");
 	//Warp Beacon T4
-	TELEFRAG(55, 4), REMOTE_BEACON(56, 4), LONGRANGE_WARP(57, 4),
+	public static final Talent TELEFRAG = new Talent(55, 4,"TELEFRAG");
+	public static final Talent REMOTE_BEACON = new Talent(56, 4,"REMOTE_BEACON");
+	public static final Talent LONGRANGE_WARP = new Talent(57, 4,"LONGRANGE_WARP");
 
 	//Rogue T1
-	CACHED_RATIONS(64), THIEFS_INTUITION(65), SUCKER_PUNCH(66), PROTECTIVE_SHADOWS(67),
+	public static final Talent CACHED_RATIONS = new Talent(64,2,"CACHED_RATIONS");
+	public static final Talent THIEFS_INTUITION = new Talent(65,2,"THIEFS_INTUITION");
+	public static final Talent SUCKER_PUNCH = new Talent(66,2,"SUCKER_PUNCH");
+	public static final Talent PROTECTIVE_SHADOWS = new Talent(67,2,"PROTECTIVE_SHADOWS");
 	//Rogue T2
-	MYSTICAL_MEAL(68), INSCRIBED_STEALTH(69), WIDE_SEARCH(70), SILENT_STEPS(71), ROGUES_FORESIGHT(72),
+	public static final Talent MYSTICAL_MEAL = new Talent(68,2,"MYSTICAL_MEAL");
+	public static final Talent INSCRIBED_STEALTH = new Talent(69,2,"INSCRIBED_STEALTH");
+	public static final Talent WIDE_SEARCH = new Talent(70,2,"WIDE_SEARCH");
+	public static final Talent SILENT_STEPS = new Talent(71,2,"SILENT_STEPS");
+	public static final Talent ROGUES_FORESIGHT = new Talent(72,2,"ROGUES_FORESIGHT");
 	//Rogue T3
-	ENHANCED_RINGS(73, 3), LIGHT_CLOAK(74, 3),
+	public static final Talent ENHANCED_RINGS = new Talent(73, 3,"ENHANCED_RINGS");
+	public static final Talent LIGHT_CLOAK = new Talent(74, 3,"LIGHT_CLOAK");
 	//Assassin T3
-	ENHANCED_LETHALITY(75, 3), ASSASSINS_REACH(76, 3), BOUNTY_HUNTER(77, 3),
+	public static final Talent ENHANCED_LETHALITY = new Talent(75, 3,"ENHANCED_LETHALITY");
+	public static final Talent ASSASSINS_REACH = new Talent(76, 3,"ASSASSINS_REACH");
+	public static final Talent BOUNTY_HUNTER = new Talent(77, 3,"BOUNTY_HUNTER");
 	//Freerunner T3
-	EVASIVE_ARMOR(78, 3), PROJECTILE_MOMENTUM(79, 3), SPEEDY_STEALTH(80, 3),
+	public static final Talent EVASIVE_ARMOR = new Talent(78, 3,"EVASIVE_ARMOR");
+	public static final Talent PROJECTILE_MOMENTUM = new Talent(79, 3,"PROJECTILE_MOMENTUM");
+	public static final Talent SPEEDY_STEALTH = new Talent(80, 3,"SPEEDY_STEALTH");
 	//Smoke Bomb T4
-	HASTY_RETREAT(81, 4), BODY_REPLACEMENT(82, 4), SHADOW_STEP(83, 4),
+	public static final Talent HASTY_RETREAT = new Talent(81, 4,"HASTY_RETREAT");
+	public static final Talent BODY_REPLACEMENT = new Talent(82, 4,"BODY_REPLACEMENT");
+	public static final Talent SHADOW_STEP = new Talent(83, 4,"SHADOW_STEP");
 	//Death Mark T4
-	FEAR_THE_REAPER(84, 4), DEATHLY_DURABILITY(85, 4), DOUBLE_MARK(86, 4),
+	public static final Talent FEAR_THE_REAPER = new Talent(84, 4,"FEAR_THE_REAPER");
+	public static final Talent DEATHLY_DURABILITY = new Talent(85, 4,"DEATHLY_DURABILITY");
+	public static final Talent DOUBLE_MARK = new Talent(86, 4,"DOUBLE_MARK");
 	//Shadow Clone T4
-	SHADOW_BLADE(87, 4), CLONED_ARMOR(88, 4), PERFECT_COPY(89, 4),
+	public static final Talent SHADOW_BLADE = new Talent(87, 4,"SHADOW_BLADE");
+	public static final Talent CLONED_ARMOR = new Talent(88, 4,"CLONED_ARMOR");
+	public static final Talent PERFECT_COPY = new Talent(89, 4,"PERFECT_COPY");
 
 	//Huntress T1
-	NATURES_BOUNTY(96), SURVIVALISTS_INTUITION(97), FOLLOWUP_STRIKE(98), NATURES_AID(99),
+	public static final Talent NATURES_BOUNTY = new Talent(96,2,"NATURES_BOUNTY");
+	public static final Talent SURVIVALISTS_INTUITION = new Talent(97,2,"SURVIVALISTS_INTUITION");
+	public static final Talent FOLLOWUP_STRIKE = new Talent(98,2,"FOLLOWUP_STRIKE");
+	public static final Talent NATURES_AID = new Talent(99,2,"NATURES_AID");
 	//Huntress T2
-	INVIGORATING_MEAL(100), LIQUID_NATURE(101), REJUVENATING_STEPS(102), HEIGHTENED_SENSES(103), DURABLE_PROJECTILES(104),
+	public static final Talent INVIGORATING_MEAL = new Talent(100,2,"INVIGORATING_MEAL");
+	public static final Talent LIQUID_NATURE = new Talent(101,2,"LIQUID_NATURE");
+	public static final Talent REJUVENATING_STEPS = new Talent(102,2,"REJUVENATING_STEPS");
+	public static final Talent HEIGHTENED_SENSES = new Talent(103,2,"HEIGHTENED_SENSES");
+	public static final Talent DURABLE_PROJECTILES = new Talent(104,2,"DURABLE_PROJECTILES");
 	//Huntress T3
-	POINT_BLANK(105, 3), SEER_SHOT(106, 3),
+	public static final Talent POINT_BLANK = new Talent(105, 3,"POINT_BLANK");
+	public static final Talent SEER_SHOT = new Talent(106, 3,"SEER_SHOT");
 	//Sniper T3
-	FARSIGHT(107, 3), SHARED_ENCHANTMENT(108, 3), SHARED_UPGRADES(109, 3),
+	public static final Talent FARSIGHT = new Talent(107, 3,"FARSIGHT");
+	public static final Talent SHARED_ENCHANTMENT = new Talent(108, 3,"SHARED_ENCHANTMENT");
+	public static final Talent SHARED_UPGRADES = new Talent(109, 3,"SHARED_UPGRADES");
 	//Warden T3
-	DURABLE_TIPS(110, 3), BARKSKIN(111, 3), SHIELDING_DEW(112, 3),
+	public static final Talent DURABLE_TIPS = new Talent(110, 3,"DURABLE_TIPS");
+	public static final Talent BARKSKIN = new Talent(111, 3,"BARKSKIN");
+	public static final Talent SHIELDING_DEW = new Talent(112, 3,"SHIELDING_DEW");
 	//Spectral Blades T4
-	FAN_OF_BLADES(113, 4), PROJECTING_BLADES(114, 4), SPIRIT_BLADES(115, 4),
+	public static final Talent FAN_OF_BLADES = new Talent(113, 4,"FAN_OF_BLADES");
+	public static final Talent PROJECTING_BLADES = new Talent(114, 4,"PROJECTING_BLADES");
+	public static final Talent SPIRIT_BLADES = new Talent(115, 4,"SPIRIT_BLADES");
 	//Natures Power T4
-	GROWING_POWER(116, 4), NATURES_WRATH(117, 4), WILD_MOMENTUM(118, 4),
+	public static final Talent GROWING_POWER = new Talent(116, 4,"GROWING_POWER");
+	public static final Talent NATURES_WRATH = new Talent(117, 4,"NATURES_WRATH");
+	public static final Talent WILD_MOMENTUM = new Talent(118, 4,"WILD_MOMENTUM");
 	//Spirit Hawk T4
-	EAGLE_EYE(119, 4), GO_FOR_THE_EYES(120, 4), SWIFT_SPIRIT(121, 4),
+	public static final Talent EAGLE_EYE = new Talent(119, 4,"EAGLE_EYE");
+	public static final Talent GO_FOR_THE_EYES = new Talent(120, 4,"GO_FOR_THE_EYES");
+	public static final Talent SWIFT_SPIRIT = new Talent(121, 4,"SWIFT_SPIRIT");
 
 	//Duelist T1
-	STRENGTHENING_MEAL(128), ADVENTURERS_INTUITION(129), PATIENT_STRIKE(130), AGGRESSIVE_BARRIER(131),
+	public static final Talent STRENGTHENING_MEAL = new Talent(128,2,"STRENGTHENING_MEAL");
+	public static final Talent ADVENTURERS_INTUITION = new Talent(129,2,"ADVENTURERS_INTUITION");
+	public static final Talent PATIENT_STRIKE = new Talent(130,2,"PATIENT_STRIKE");
+	public static final Talent AGGRESSIVE_BARRIER = new Talent(131,2,"AGGRESSIVE_BARRIER");
 	//Duelist T2
-	FOCUSED_MEAL(132), LIQUID_AGILITY(133), WEAPON_RECHARGING(134), LETHAL_HASTE(135), SWIFT_EQUIP(136),
+	public static final Talent FOCUSED_MEAL = new Talent(132,2,"FOCUSED_MEAL");
+	public static final Talent LIQUID_AGILITY = new Talent(133,2,"LIQUID_AGILITY");
+	public static final Talent WEAPON_RECHARGING = new Talent(134,2,"WEAPON_RECHARGING");
+	public static final Talent LETHAL_HASTE = new Talent(135,2,"LETHAL_HASTE");
+	public static final Talent SWIFT_EQUIP = new Talent(136,2,"SWIFT_EQUIP");
 	//Duelist T3
-	PRECISE_ASSAULT(137, 3), DEADLY_FOLLOWUP(138, 3),
+	public static final Talent PRECISE_ASSAULT = new Talent(137, 3,"PRECISE_ASSAULT");
+	public static final Talent DEADLY_FOLLOWUP = new Talent(138, 3,"DEADLY_FOLLOWUP");
 	//Champion T3
-	VARIED_CHARGE(139, 3), TWIN_UPGRADES(140, 3), COMBINED_LETHALITY(141, 3),
+	public static final Talent VARIED_CHARGE = new Talent(139, 3,"VARIED_CHARGE");
+	public static final Talent TWIN_UPGRADES = new Talent(140, 3,"TWIN_UPGRADES");
+	public static final Talent COMBINED_LETHALITY = new Talent(141, 3,"COMBINED_LETHALITY");
 	//Monk T3
-	UNENCUMBERED_SPIRIT(142, 3), MONASTIC_VIGOR(143, 3), COMBINED_ENERGY(144, 3),
+	public static final Talent UNENCUMBERED_SPIRIT = new Talent(142, 3,"UNENCUMBERED_SPIRIT");
+	public static final Talent MONASTIC_VIGOR = new Talent(143, 3,"MONASTIC_VIGOR");
+	public static final Talent COMBINED_ENERGY = new Talent(144, 3,"COMBINED_ENERGY");
 	//Challenge T4
-	CLOSE_THE_GAP(145, 4), INVIGORATING_VICTORY(146, 4), ELIMINATION_MATCH(147, 4),
+	public static final Talent CLOSE_THE_GAP = new Talent(145, 4,"CLOSE_THE_GAP");
+	public static final Talent INVIGORATING_VICTORY = new Talent(146, 4,"INVIGORATING_VICTORY");
+	public static final Talent ELIMINATION_MATCH = new Talent(147, 4,"ELIMINATION_MATCH");
 	//Elemental Strike T4
-	ELEMENTAL_REACH(148, 4), STRIKING_FORCE(149, 4), DIRECTED_POWER(150, 4),
+	public static final Talent ELEMENTAL_REACH = new Talent(148, 4,"ELEMENTAL_REACH");
+	public static final Talent STRIKING_FORCE = new Talent(149, 4,"STRIKING_FORCE");
+	public static final Talent DIRECTED_POWER = new Talent(150, 4,"DIRECTED_POWER");
 	//Feint T4
-	FEIGNED_RETREAT(151, 4), EXPOSE_WEAKNESS(152, 4), COUNTER_ABILITY(153, 4),
+	public static final Talent FEIGNED_RETREAT = new Talent(151, 4,"FEIGNED_RETREAT");
+	public static final Talent EXPOSE_WEAKNESS = new Talent(152, 4,"EXPOSE_WEAKNESS");
+	public static final Talent COUNTER_ABILITY = new Talent(153, 4,"COUNTER_ABILITY");
 
 	//Cleric T1
-	SATIATED_SPELLS(160), HOLY_INTUITION(161), SEARING_LIGHT(162), SHIELD_OF_LIGHT(163),
+	public static final Talent SATIATED_SPELLS = new Talent(160,2,"SATIATED_SPELLS");
+	public static final Talent HOLY_INTUITION = new Talent(161,2,"HOLY_INTUITION");
+	public static final Talent SEARING_LIGHT = new Talent(162,2,"SEARING_LIGHT");
+	public static final Talent SHIELD_OF_LIGHT = new Talent(163,2,"SHIELD_OF_LIGHT");
 	//Cleric T2
-	ENLIGHTENING_MEAL(164), RECALL_INSCRIPTION(165), SUNRAY(166), DIVINE_SENSE(167), BLESS(168),
+	public static final Talent ENLIGHTENING_MEAL = new Talent(164,2,"ENLIGHTENING_MEAL");
+	public static final Talent RECALL_INSCRIPTION = new Talent(165,2,"RECALL_INSCRIPTION");
+	public static final Talent SUNRAY = new Talent(166,2,"SUNRAY");
+	public static final Talent DIVINE_SENSE = new Talent(167,2,"DIVINE_SENSE");
+	public static final Talent BLESS = new Talent(168,2,"BLESS");
 	//Cleric T3
-	CLEANSE(169, 3), LIGHT_READING(170, 3),
+	public static final Talent CLEANSE = new Talent(169, 3,"CLEANSE");
+	public static final Talent LIGHT_READING = new Talent(170, 3,"LIGHT_READING");
 	//Priest T3
-	HOLY_LANCE(171, 3), HALLOWED_GROUND(172, 3), MNEMONIC_PRAYER(173, 3),
+	public static final Talent HOLY_LANCE = new Talent(171, 3,"HOLY_LANCE");
+	public static final Talent HALLOWED_GROUND = new Talent(172, 3,"HALLOWED_GROUND");
+	public static final Talent MNEMONIC_PRAYER = new Talent(173, 3,"MNEMONIC_PRAYER");
 	//Paladin T3
-	LAY_ON_HANDS(174, 3), AURA_OF_PROTECTION(175, 3), WALL_OF_LIGHT(176, 3),
+	public static final Talent LAY_ON_HANDS = new Talent(174, 3,"LAY_ON_HANDS");
+	public static final Talent AURA_OF_PROTECTION = new Talent(175, 3,"AURA_OF_PROTECTION");
+	public static final Talent WALL_OF_LIGHT = new Talent(176, 3,"WALL_OF_LIGHT");
 	//Ascended Form T4
-	DIVINE_INTERVENTION(177, 4), JUDGEMENT(178, 4), FLASH(179, 4),
+	public static final Talent DIVINE_INTERVENTION = new Talent(177, 4,"DIVINE_INTERVENTION");
+	public static final Talent JUDGEMENT = new Talent(178, 4,"JUDGEMENT");
+	public static final Talent FLASH = new Talent(179, 4,"FLASH");
 	//Trinity T4
-	BODY_FORM(180, 4), MIND_FORM(181, 4), SPIRIT_FORM(182, 4),
+	public static final Talent BODY_FORM = new Talent(180, 4,"BODY_FORM");
+	public static final Talent MIND_FORM = new Talent(181, 4,"MIND_FORM");
+	public static final Talent SPIRIT_FORM = new Talent(182, 4,"SPIRIT_FORM");
 	//Power of Many T4
-	BEAMING_RAY(183, 4), LIFE_LINK(184, 4), STASIS(185, 4),
+	public static final Talent BEAMING_RAY = new Talent(183, 4,"BEAMING_RAY");
+	public static final Talent LIFE_LINK = new Talent(184, 4,"LIFE_LINK");
+	public static final Talent STASIS = new Talent(185, 4,"STASIS");
 
 	//universal T4
-	HEROIC_ENERGY(26, 4), //See icon() and title() for special logic for this one
+	public static final Talent HEROIC_ENERGY = new Talent(26, 4,"HEROIC_ENERGY"); //See icon() and title() for special logic for this one
 	//Ratmogrify T4
-	RATSISTANCE(215, 4), RATLOMACY(216, 4), RATFORCEMENTS(217, 4);
+	public static final Talent RATSISTANCE = new Talent(215, 4,"RATSISTANCE");
+	public static final Talent RATLOMACY = new Talent(216, 4,"RATLOMACY");
+	public static final Talent RATFORCEMENTS = new Talent(217, 4,"RATFORCEMENTS");
 
 	public static class ImprovisedProjectileCooldown extends FlavourBuff{
 		public int icon() { return BuffIndicator.TIME; }
@@ -425,19 +536,45 @@ public enum Talent {
 		public float iconFadePercent() { return Math.max(0, visualcooldown() / 20); }
 	}
 
-	int icon;
-	int maxPoints;
+	public  int icon;
+	public  int maxPoints;
+	public  String name;
 
 	// tiers 1/2/3/4 start at levels 2/7/13/21
 	public static int[] tierLevelThresholds = new int[]{0,2, 7, 13, 21, 31};
 
-	Talent( int icon ){
+	Talent(int icon) {
 		this(icon, 2);
 	}
-
-	Talent( int icon, int maxPoints ){
+	Talent(int icon, int maxPoints, String _name){
+		this(icon,maxPoints);
+		name=_name;
+	}
+	Talent(int icon, int maxPoints) {
 		this.icon = icon;
 		this.maxPoints = maxPoints;
+		this.name="UNKNOWN_yet";
+		// String fieldName = "UNKNOWN";
+		// // 使用StackTrace来获取调用者的字段名
+		// StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		// for (StackTraceElement element : stackTrace) {
+		// 	if (element.getClassName().equals(Talent.class.getName())) {
+		// 		String methodName = element.getMethodName();
+		// 		if (methodName.equals("<clinit>")) {
+		// 			// 在静态初始化块中，我们需要通过反射获取字段名
+		// 			try {
+		// 				for (java.lang.reflect.Field field : Talent.class.getDeclaredFields()) {
+		// 					if (field.get(null) == this) {
+		// 						fieldName = field.getName();
+		// 						break;
+		// 					}
+		// 				}
+		// 			} catch (Exception e) {
+		// 				ColaDungeon.reportException(e);
+		// 			}
+		// 		}
+		// 	}
+		// }
 	}
 
 	public int icon(){
@@ -489,6 +626,18 @@ public enum Talent {
 			}
 		}
 		return Messages.get(this, name() + ".desc");
+	}
+
+	public String name() {
+		return name;
+	}
+
+	public static Talent valueOf(String name) {
+		try {
+			return (Talent) Talent.class.getField(name).get(null);
+		} catch (Exception e) {
+			throw new IllegalArgumentException("No talent constant with name " + name);
+		}
 	}
 
 	public static void onTalentUpgraded( Hero hero, Talent talent ){
@@ -1194,6 +1343,16 @@ public enum Talent {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void storeInBundle(Bundle bundle) {
+		bundle.put("name", name);
+	}
+
+	@Override
+	public void restoreFromBundle(Bundle bundle) {
+		// 由于Talent是不可变的，这个方法实际上不会被调用
 	}
 
 }

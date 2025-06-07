@@ -2,32 +2,28 @@ package com.coladungeon.items;
 
 import java.util.ArrayList;
 
-import com.coladungeon.actors.hero.Hero;
-import com.coladungeon.items.Item;
-import com.coladungeon.scenes.GameScene;
-import com.coladungeon.sprites.ItemSprite;
-import com.coladungeon.sprites.ItemSpriteSheet;
-import com.coladungeon.ui.Icons;
-import com.watabou.noosa.Image;
 import com.coladungeon.Assets;
-import com.coladungeon.messages.Messages;
-import com.coladungeon.scenes.CellSelector;
-
-import com.coladungeon.utils.GLog;
-import com.coladungeon.windows.WndIconGrid;
-import com.coladungeon.items.potions.PotionOfStrength;
-import com.coladungeon.items.potions.PotionOfHealing;
-import com.coladungeon.items.potions.PotionOfMindVision;
+import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.items.potions.Potion;
+import com.coladungeon.items.potions.PotionOfExperience;
 import com.coladungeon.items.potions.PotionOfFrost;
-import com.coladungeon.items.potions.PotionOfLiquidFlame;
-import com.coladungeon.items.potions.PotionOfToxicGas;
 import com.coladungeon.items.potions.PotionOfHaste;
+import com.coladungeon.items.potions.PotionOfHealing;
 import com.coladungeon.items.potions.PotionOfInvisibility;
 import com.coladungeon.items.potions.PotionOfLevitation;
+import com.coladungeon.items.potions.PotionOfLiquidFlame;
+import com.coladungeon.items.potions.PotionOfMindVision;
 import com.coladungeon.items.potions.PotionOfParalyticGas;
 import com.coladungeon.items.potions.PotionOfPurity;
-import com.coladungeon.items.potions.PotionOfExperience;
-import com.coladungeon.items.potions.Potion;
+import com.coladungeon.items.potions.PotionOfStrength;
+import com.coladungeon.items.potions.PotionOfToxicGas;
+import com.coladungeon.messages.Messages;
+import com.coladungeon.scenes.CellSelector;
+import com.coladungeon.scenes.GameScene;
+import com.coladungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.utils.GLog;
+import com.coladungeon.windows.WndIconGrid;
+import com.watabou.noosa.Image;
 import com.watabou.utils.Reflection;
 
 public class Panacea extends Item {

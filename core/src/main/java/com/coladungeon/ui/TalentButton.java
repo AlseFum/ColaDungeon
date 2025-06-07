@@ -21,9 +21,11 @@
 
 package com.coladungeon.ui;
 
+import java.util.LinkedHashMap;
+
 import com.coladungeon.Assets;
-import com.coladungeon.Dungeon;
 import com.coladungeon.ColaDungeon;
+import com.coladungeon.Dungeon;
 import com.coladungeon.actors.hero.Talent;
 import com.coladungeon.effects.Speck;
 import com.coladungeon.items.scrolls.exotic.ScrollOfMetamorphosis;
@@ -36,8 +38,6 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.PointerArea;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
-
-import java.util.LinkedHashMap;
 
 public class TalentButton extends Button {
 
