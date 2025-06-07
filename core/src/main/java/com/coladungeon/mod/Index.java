@@ -20,7 +20,13 @@ public class Index {
 
     public static void setup() {
         for (Mod mod : mods) {
-            mod.setup();
+            try {
+                mod.setup();
+            } catch (Exception e) {
+                System.out.println("[MOD] Error in mod "+mod.namespace+"@"+mod.author+" :\n\t"+e);
+
+            }
+            
         }
     }
 
