@@ -2,10 +2,11 @@ package com.coladungeon.mod;
 
 import java.util.ArrayList;
 
+import com.coladungeon.mod.ArknightsMod.ArknightsMod;
 public class Index {
 
     public static void init() {
-        load(new mymy());
+        load(new ArknightsMod());
     }
 
     public static class Mod {
@@ -16,6 +17,7 @@ public class Index {
         public void setup() {
         }
     }
+    //Below is the code for the mod loader
     public static ArrayList<Mod> mods = new ArrayList<>();
 
     public static void setup() {

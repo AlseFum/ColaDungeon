@@ -110,8 +110,22 @@ import com.coladungeon.items.stones.StoneOfFear;
 import com.coladungeon.items.stones.StoneOfFlock;
 import com.coladungeon.items.stones.StoneOfIntuition;
 import com.coladungeon.items.stones.StoneOfShock;
+import com.coladungeon.items.trinkets.ChaoticCenser;
+import com.coladungeon.items.trinkets.DimensionalSundial;
 import com.coladungeon.items.trinkets.ExoticCrystals;
+import com.coladungeon.items.trinkets.EyeOfNewt;
+import com.coladungeon.items.trinkets.MimicTooth;
+import com.coladungeon.items.trinkets.MossyClump;
+import com.coladungeon.items.trinkets.ParchmentScrap;
+import com.coladungeon.items.trinkets.PetrifiedSeed;
+import com.coladungeon.items.trinkets.RatSkull;
+import com.coladungeon.items.trinkets.SaltCube;
+import com.coladungeon.items.trinkets.ShardOfOblivion;
+import com.coladungeon.items.trinkets.ThirteenLeafClover;
+import com.coladungeon.items.trinkets.TrapMechanism;
 import com.coladungeon.items.trinkets.Trinket;
+import com.coladungeon.items.trinkets.VialOfBlood;
+import com.coladungeon.items.trinkets.WondrousResin;
 import com.coladungeon.items.wands.Wand;
 import com.coladungeon.items.wands.WandOfBlastWave;
 import com.coladungeon.items.wands.WandOfCorrosion;
@@ -519,20 +533,20 @@ public class Generator {
 		
 		// 初始化饰品
 		registerItem(Category.TRINKET, ExoticCrystals.class, 1f);
-		// registerItem(Category.TRINKET, RatSkull.class, 1f);
-		// registerItem(Category.TRINKET, ParchmentScrap.class, 1f);
-		// registerItem(Category.TRINKET, PetrifiedSeed.class, 1f);
-		// registerItem(Category.TRINKET, MossyClump.class, 1f);
-		// registerItem(Category.TRINKET, DimensionalSundial.class, 1f);
-		// registerItem(Category.TRINKET, ThirteenLeafClover.class, 1f);
-		// registerItem(Category.TRINKET, TrapMechanism.class, 1f);
-		// registerItem(Category.TRINKET, MimicTooth.class, 1f);
-		// registerItem(Category.TRINKET, WondrousResin.class, 1f);
-		// registerItem(Category.TRINKET, EyeOfNewt.class, 1f);
-		// registerItem(Category.TRINKET, SaltCube.class, 1f);
-		// registerItem(Category.TRINKET, VialOfBlood.class, 1f);
-		// registerItem(Category.TRINKET, ShardOfOblivion.class, 1f);
-		// registerItem(Category.TRINKET, ChaoticCenser.class, 1f);
+		registerItem(Category.TRINKET, RatSkull.class, 1f);
+		registerItem(Category.TRINKET, ParchmentScrap.class, 1f);
+		registerItem(Category.TRINKET, PetrifiedSeed.class, 1f);
+		registerItem(Category.TRINKET, MossyClump.class, 1f);
+		registerItem(Category.TRINKET, DimensionalSundial.class, 1f);
+		registerItem(Category.TRINKET, ThirteenLeafClover.class, 1f);
+		registerItem(Category.TRINKET, TrapMechanism.class, 1f);
+		registerItem(Category.TRINKET, MimicTooth.class, 1f);
+		registerItem(Category.TRINKET, WondrousResin.class, 1f);
+		registerItem(Category.TRINKET, EyeOfNewt.class, 1f);
+		registerItem(Category.TRINKET, SaltCube.class, 1f);
+		registerItem(Category.TRINKET, VialOfBlood.class, 1f);
+		registerItem(Category.TRINKET, ShardOfOblivion.class, 1f);
+		registerItem(Category.TRINKET, ChaoticCenser.class, 1f);
 		
 		// 初始化自定义物品类别
 		// 注意：自定义物品已经在 CustomItem 类的静态初始化块中注册了

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.Item;
+import com.coladungeon.utils.GLog;
+
 
 public class testitem extends Item {
     public static final String AC_USE = "USE";
@@ -11,10 +13,11 @@ public class testitem extends Item {
     {
         defaultAction = AC_USE;
     }
-
     @Override
     public void execute(Hero hero, String action) {
-        if (action.equals(AC_USE)) {hero.sprite.showStatus(0xFF0000, "%d", 12);  // 红色显示伤害数值
+      
+        if (action.equals(AC_USE)) {
+            hero.sprite.showStatus(0xFF0000, "%d", 12);  // 红色显示伤害数值
         }
     }
 

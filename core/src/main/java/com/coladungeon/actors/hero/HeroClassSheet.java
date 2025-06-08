@@ -29,6 +29,7 @@ import com.coladungeon.items.Waterskin;
 import com.coladungeon.items.armor.ClothArmor;
 import com.coladungeon.items.artifacts.CloakOfShadows;
 import com.coladungeon.items.artifacts.HolyTome;
+import com.coladungeon.items.bags.DebugBag;
 import com.coladungeon.items.bags.PotionBandolier;
 import com.coladungeon.items.bags.VelvetPouch;
 import com.coladungeon.items.food.Food;
@@ -48,7 +49,6 @@ import com.coladungeon.items.supply.AssassinSupply;
 import com.coladungeon.items.supply.DebugSupply;
 import com.coladungeon.items.supply.GunSupply;
 import com.coladungeon.items.supply.testitem;
-import com.coladungeon.items.bags.DebugBag;
 import com.coladungeon.items.wands.WandOfMagicMissile;
 import com.coladungeon.items.weapon.SpiritBow;
 import com.coladungeon.items.weapon.melee.Cudgel;
@@ -261,17 +261,6 @@ public final class HeroClassSheet {
                 new ScrollOfRemoveCurse().identify();
             })
             .register();
-
-    static {
-        registerStandardClass("Peter")
-                .title("Peter")
-                .desc("from family guy").initializer(hero -> {
-            hero.heroClass = registeredClasses.get("Peter");
-            initCommon(hero);
-
-        }).classTalentsTier1(Talent.HEARTY_MEAL, Talent.FOLLOWUP_STRIKE)
-                .register();
-    }
 
     // 私有构造函数，防止实例化
     private HeroClassSheet() {
