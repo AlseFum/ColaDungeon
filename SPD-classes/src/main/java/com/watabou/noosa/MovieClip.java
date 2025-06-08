@@ -98,6 +98,10 @@ public class MovieClip extends Image {
 			return;
 		}
 		
+		if (curAnim != null) {
+			curAnim.restoreOriginalTexture(this);
+		}
+		
 		curAnim = anim;
 		curFrame = 0;
 		finished = false;
@@ -105,6 +109,10 @@ public class MovieClip extends Image {
 		frameTimer = 0;
 		
 		if (anim != null) {
+			anim.saveOriginalTexture(this);
+			if (anim.texture != null) {
+				texture(anim.texture);
+			}
 			frame( anim.frames[curFrame] );
 		}
 	}
@@ -114,6 +122,9 @@ public class MovieClip extends Image {
 		public float delay;
 		public RectF[] frames;
 		public boolean looped;
+		public TextureFilm film;
+		public Object texture;
+		private Object originalTexture;
 		
 		public Animation( int fps, boolean looped ) {
 			this.delay = 1f / fps;
@@ -134,11 +145,37 @@ public class MovieClip extends Image {
 		}
 		
 		public Animation clone() {
-			return new Animation( Math.round( 1 / delay ), looped ).frames( frames );
+			return new Animation( Math.round( 1 / delay ), looped ).frames( frames ).texture(texture);
+		}
+
+		public Animation texture(Object texture) {
+			this.texture = texture;
+			return this;
+		}
+
+		public void saveOriginalTexture(MovieClip sprite) {
+			this.originalTexture = sprite.texture;
+		}
+
+		public void restoreOriginalTexture(MovieClip sprite) {
+			if (originalTexture != null) {
+				sprite.texture(originalTexture);
+			}
 		}
 	}
 	
+	@FunctionalInterface
 	public interface Listener {
 		void onComplete( Animation anim );
+	}
+
+	public synchronized void onComplete( Animation anim ) {
+		if (anim != null) {
+			anim.restoreOriginalTexture(this);
+		}
+		
+		if (listener != null) {
+			listener.onComplete( anim );
+		}
 	}
 }

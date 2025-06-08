@@ -21,6 +21,9 @@
 
 package com.coladungeon.sprites;
 
+import java.nio.Buffer;
+import java.util.HashSet;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Char;
@@ -28,8 +31,8 @@ import com.coladungeon.effects.DarkBlock;
 import com.coladungeon.effects.EmoIcon;
 import com.coladungeon.effects.Flare;
 import com.coladungeon.effects.FloatingText;
-import com.coladungeon.effects.IceBlock;
 import com.coladungeon.effects.GlowBlock;
+import com.coladungeon.effects.IceBlock;
 import com.coladungeon.effects.ShieldHalo;
 import com.coladungeon.effects.Speck;
 import com.coladungeon.effects.Splash;
@@ -57,9 +60,6 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
-import java.nio.Buffer;
-import java.util.HashSet;
-
 public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip.Listener {
 	
 	// Color constants for floating text
@@ -69,9 +69,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public static final int WARNING		= 0xFF8800;
 	public static final int NEUTRAL		= 0xFFFF00;
 	
-	public static final float DEFAULT_MOVE_INTERVAL = 0.1f;
+	public static final float DEFAULT_MOVE_INTERVAL = 0.05f;
 	private static float moveInterval = DEFAULT_MOVE_INTERVAL;
-	private static final float FLASH_INTERVAL	= 0.05f;
+	private static final float FLASH_INTERVAL	= 0.01f;
 
 	//the amount the sprite is raised from flat when viewed in a raised perspective
 	protected float perspectiveRaise    = 6 / 16f; //6 pixels
@@ -140,7 +140,34 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 			super.play(anim);
 		}
 	}
-	
+	public void play(String anim_id) {
+		switch (anim_id) {
+			case "idle":
+				play(idle);
+				break;
+			case "run":
+				play(run);
+				break;
+			case "attack":
+				play(attack);
+				break;
+			case "operate":
+				play(operate);
+				break;
+			case "zap":
+				play(zap);
+				break;
+			case "die":
+				play(die);
+				break;
+			default:
+				playCustomAnimation(anim_id);
+				break;
+		}
+	}
+	public void playCustomAnimation(String anim_id) {
+		play(idle);
+	}
 	//intended to be used for placing a character in the game world
 	public void link( Char ch ) {
 		linkVisuals( ch );
