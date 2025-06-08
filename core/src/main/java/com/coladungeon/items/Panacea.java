@@ -28,10 +28,11 @@ import com.watabou.utils.Reflection;
 
 public class Panacea extends Item {
 
-    private Class<? extends Potion> selectedPotion;
+    public Class<? extends Potion> selectedPotion;
     public static final String AC_TEST = "TEST";
     public static final String AC_DRINK = "DRINK";
     public static final String AC_THROW = Item.AC_THROW;
+
     {
         image = ItemSpriteSheet.POTION_HOLDER;
         defaultAction = AC_TEST;
@@ -45,102 +46,86 @@ public class Panacea extends Item {
             // 使用Builder模式创建图标网格窗口
             WndIconGrid.Builder builder = new WndIconGrid.Builder()
                     .setTitle("选择药水")
-                    .setColumns(4);
-            // 添加所有药水图标，每个图标都有自己的点击处理逻辑
-            builder.addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_STRENGTH)),
-                    "力量药水：增加力量",
-                    () -> {
-                        selectedPotion = PotionOfStrength.class;
-                        GLog.i("已选择力量药水");
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_HEALING)),
-                    "治疗药水：恢复生命值",
-                    () -> {
-                        selectedPotion = PotionOfHealing.class;
-                        GLog.i("已选择治疗药水");
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_MINDVIS)),
-                    "心灵视觉药水：显示周围生物",
-                    () -> {
-                        selectedPotion = PotionOfMindVision.class;
-                        GLog.i("已选择心灵视觉药水");
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_FROST)),
-                    "冰冻药水：冻结目标",
-                    () -> {
-                        selectedPotion = PotionOfFrost.class;
-                        GLog.i("已选择冰冻药水");
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_LIQFLAME)),
-                    "液态火焰药水：燃烧目标",
-                    () -> {
-                        selectedPotion = PotionOfLiquidFlame.class;
-                        GLog.i("已选择液态火焰药水");
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_TOXICGAS)),
-                    "毒气药水：使目标中毒",
-                    () -> {
-                        selectedPotion = PotionOfToxicGas.class;
-                        GLog.i("已选择毒气药水");
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_HASTE)),
-                    "加速药水：提高移动速度",
-                    () -> {
-                        selectedPotion = PotionOfHaste.class;
-                        GLog.i("已选择加速药水");
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_INVIS)),
-                    "隐身药水：暂时隐身",
-                    () -> {
-                        selectedPotion = PotionOfInvisibility.class;
-                        GLog.i("已选择隐身药水");
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_LEVITATE)),
-                    "漂浮药水：可以漂浮",
-                    () -> {
-                        selectedPotion = PotionOfLevitation.class;
-                        GLog.i("已选择漂浮药水");
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_PARAGAS)),
-                    "麻痹药水：使目标麻痹",
-                    () -> {
-                        selectedPotion = PotionOfParalyticGas.class;
-                        GLog.i("已选择麻痹药水");
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_PURITY)),
-                    "净化药水：清除负面效果",
-                    () -> {
-                        selectedPotion = PotionOfPurity.class;
-                        GLog.i("已选择净化药水");
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_EXP)),
-                    "经验药水：获得经验值",
-                    () -> {
-                        selectedPotion = PotionOfExperience.class;
-                        GLog.i("已选择经验药水");
-                    }
-            );
-
-            // 显示窗口
+                    .setColumns(4)
+                    .addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_STRENGTH)),
+                            "力量药水：增加力量",
+                            () -> {
+                                selectedPotion = PotionOfStrength.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_HEALING)),
+                            "治疗药水：恢复生命值",
+                            () -> {
+                                selectedPotion = PotionOfHealing.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_MINDVIS)),
+                            "心灵视觉药水：显示周围生物",
+                            () -> {
+                                selectedPotion = PotionOfMindVision.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_FROST)),
+                            "冰冻药水：冻结目标",
+                            () -> {
+                                selectedPotion = PotionOfFrost.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_LIQFLAME)),
+                            "液态火焰药水：燃烧目标",
+                            () -> {
+                                selectedPotion = PotionOfLiquidFlame.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_TOXICGAS)),
+                            "毒气药水：使目标中毒",
+                            () -> {
+                                selectedPotion = PotionOfToxicGas.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_HASTE)),
+                            "加速药水：提高移动速度",
+                            () -> {
+                                selectedPotion = PotionOfHaste.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_INVIS)),
+                            "隐身药水：暂时隐身",
+                            () -> {
+                                selectedPotion = PotionOfInvisibility.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_LEVITATE)),
+                            "漂浮药水：可以漂浮",
+                            () -> {
+                                selectedPotion = PotionOfLevitation.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_PARAGAS)),
+                            "麻痹药水：使目标麻痹",
+                            () -> {
+                                selectedPotion = PotionOfParalyticGas.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_PURITY)),
+                            "净化药水：清除负面效果",
+                            () -> {
+                                selectedPotion = PotionOfPurity.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.POTION_EXP)),
+                            "经验药水：获得经验值",
+                            () -> {
+                                selectedPotion = PotionOfExperience.class;
+                            }
+                    );
             GameScene.show(builder.build());
         } else if (action.equals(AC_DRINK)) {
             if (selectedPotion != null) {
                 Potion potion = Reflection.newInstance(selectedPotion);
                 potion.apply(hero);
                 defaultAction = AC_DRINK;
-                GLog.i("喝下了" + potion.name());
             } else {
                 GLog.w("还没有选择药水！");
             }
@@ -187,13 +172,6 @@ public class Panacea extends Item {
             return "扔出药水";
         }
         return super.actionName(action, hero);
-    }
-
-    public Panacea() {
-        super();
-        image = ItemSpriteSheet.SOMETHING;
-        stackable = true;
-        defaultAction = AC_TEST;
     }
 
     @Override

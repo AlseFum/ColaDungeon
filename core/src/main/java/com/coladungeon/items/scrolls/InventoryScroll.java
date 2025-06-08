@@ -27,6 +27,7 @@ import com.coladungeon.items.bags.Bag;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSprite;
+import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndBag;
 import com.coladungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
@@ -45,7 +46,6 @@ public abstract class InventoryScroll extends Scroll {
 		} else {
 			identifiedByUse = false;
 		}
-		
 		GameScene.selectItem( itemSelector );
 	}
 	

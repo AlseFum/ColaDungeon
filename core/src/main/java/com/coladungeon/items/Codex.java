@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.coladungeon.Assets;
 import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.items.scrolls.InventoryScroll;
 import com.coladungeon.items.scrolls.Scroll;
 import com.coladungeon.items.scrolls.ScrollOfIdentify;
 import com.coladungeon.items.scrolls.ScrollOfLullaby;
@@ -29,9 +30,10 @@ public class Codex extends Item {
     private Class<? extends Scroll> selectedScroll;
     public static final String AC_SELECT = "SELECT";
     public static final String AC_READ = "READ";
+
     {
         image = ItemSpriteSheet.SCROLL_HOLDER;
-        defaultAction = AC_SELECT;
+        defaultAction = AC_READ;
     }
 
     @Override
@@ -42,93 +44,80 @@ public class Codex extends Item {
             // 使用Builder模式创建图标网格窗口
             WndIconGrid.Builder builder = new WndIconGrid.Builder()
                     .setTitle("选择卷轴")
-                    .setColumns(4);
-            // 添加所有卷轴图标，每个图标都有自己的点击处理逻辑
-            builder.addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_IDENTIFY)),
-                    "鉴定卷轴：鉴定物品",
-                    () -> {
-                        selectedScroll = ScrollOfIdentify.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_UPGRADE)),
-                    "升级卷轴：升级物品",
-                    () -> {
-                        selectedScroll = ScrollOfUpgrade.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_TELEPORT)),
-                    "传送卷轴：传送到随机位置",
-                    () -> {
-                        selectedScroll = ScrollOfTeleportation.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_RAGE)),
-                    "狂暴卷轴：激怒周围敌人",
-                    () -> {
-                        selectedScroll = ScrollOfRage.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_RECHARGE)),
-                    "充能卷轴：为法杖充能",
-                    () -> {
-                        selectedScroll = ScrollOfRecharging.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_TRANSMUTE)),
-                    "变形卷轴：改变物品",
-                    () -> {
-                        selectedScroll = ScrollOfTransmutation.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_MIRRORIMG)),
-                    "镜像卷轴：创造分身",
-                    () -> {
-                        selectedScroll = ScrollOfMirrorImage.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_MAGICMAP)),
-                    "魔法地图卷轴：显示地图",
-                    () -> {
-                        selectedScroll = ScrollOfMagicMapping.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_LULLABY)),
-                    "催眠卷轴：催眠敌人",
-                    () -> {
-                        selectedScroll = ScrollOfLullaby.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_REMCURSE)),
-                    "移除诅咒卷轴：移除诅咒",
-                    () -> {
-                        selectedScroll = ScrollOfRemoveCurse.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_RETRIB)),
-                    "惩戒卷轴：对敌人造成伤害",
-                    () -> {
-                        selectedScroll = ScrollOfRetribution.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            ).addItem(
-                    new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_TERROR)),
-                    "恐惧卷轴：使敌人逃跑",
-                    () -> {
-                        selectedScroll = ScrollOfTerror.class;
-                        GLog.i("选择了" + Reflection.newInstance(selectedScroll).name());
-                    }
-            );
+                    .setColumns(4)
+                    .addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_IDENTIFY)),
+                            "鉴定卷轴：鉴定物品",
+                            () -> {
+                                selectedScroll = ScrollOfIdentify.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_UPGRADE)),
+                            "升级卷轴：升级物品",
+                            () -> {
+                                selectedScroll = ScrollOfUpgrade.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_TELEPORT)),
+                            "传送卷轴：传送到随机位置",
+                            () -> {
+                                selectedScroll = ScrollOfTeleportation.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_RAGE)),
+                            "狂暴卷轴：激怒周围敌人",
+                            () -> {
+                                selectedScroll = ScrollOfRage.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_RECHARGE)),
+                            "充能卷轴：为法杖充能",
+                            () -> {
+                                selectedScroll = ScrollOfRecharging.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_TRANSMUTE)),
+                            "嬗变卷轴：改变物品",
+                            () -> {
+                                selectedScroll = ScrollOfTransmutation.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_MIRRORIMG)),
+                            "镜像卷轴：创造分身",
+                            () -> {
+                                selectedScroll = ScrollOfMirrorImage.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_MAGICMAP)),
+                            "魔法地图卷轴：显示地图",
+                            () -> {
+                                selectedScroll = ScrollOfMagicMapping.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_LULLABY)),
+                            "催眠卷轴：催眠敌人",
+                            () -> {
+                                selectedScroll = ScrollOfLullaby.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_REMCURSE)),
+                            "移除诅咒卷轴：移除诅咒",
+                            () -> {
+                                selectedScroll = ScrollOfRemoveCurse.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_RETRIB)),
+                            "惩戒卷轴：对敌人造成伤害",
+                            () -> {
+                                selectedScroll = ScrollOfRetribution.class;
+                            }
+                    ).addItem(
+                            new Image(Assets.Sprites.ITEM_ICONS, ItemSpriteSheet.Icons.film.get(ItemSpriteSheet.Icons.SCROLL_TERROR)),
+                            "恐惧卷轴：使敌人逃跑",
+                            () -> {
+                                selectedScroll = ScrollOfTerror.class;
+                            }
+                    );
 
             // 显示窗口
             GameScene.show(builder.build());
@@ -138,8 +127,29 @@ public class Codex extends Item {
             } else {
                 Scroll scroll = Reflection.newInstance(selectedScroll);
                 scroll.curUser = hero;
-                if (scroll instanceof ScrollOfUpgrade) {
-                    ((ScrollOfUpgrade)scroll).reShowSelector(false);
+                if (scroll instanceof ScrollOfIdentify) {
+                    // 鉴定卷轴特殊处理
+                    if (scroll instanceof InventoryScroll) {
+                        ((InventoryScroll)scroll).doRead();
+                    } else {
+                        scroll.doRead();
+                    }
+                } else if (scroll instanceof ScrollOfUpgrade) {
+                    // 升级卷轴特殊处理
+                    if (scroll instanceof InventoryScroll) {
+                        ((InventoryScroll)scroll).doRead();
+                    } else {
+                        scroll.doRead();
+                    }
+                } else if (scroll instanceof ScrollOfTransmutation) {
+                    // 嬗变卷轴特殊处理
+                    if (scroll instanceof InventoryScroll) {
+                        ((InventoryScroll)scroll).doRead();
+                    } else {
+                        scroll.doRead();
+                    }
+                } else if (scroll instanceof InventoryScroll) {
+                    ((InventoryScroll)scroll).doRead();
                 } else {
                     scroll.doRead();
                 }
@@ -167,9 +177,6 @@ public class Codex extends Item {
 
     public Codex() {
         super();
-        
-        stackable = true;
-        defaultAction = AC_SELECT;
     }
 
     @Override

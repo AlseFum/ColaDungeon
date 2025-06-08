@@ -46,7 +46,7 @@ public class Supply extends Item {
     }
 
     public ArrayList<Supplier<Item>> supplies = new ArrayList<>();
-
+    public Supplier<Void> onOpen = null;
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
@@ -72,6 +72,9 @@ public class Supply extends Item {
     public void open(Hero hero) {
         for (Supplier<Item> supply : supplies) {
             supply.get().identify().collect();
+        }
+        if (onOpen != null) {
+            onOpen.get();
         }
         this.detach(hero.belongings.backpack);
     }
