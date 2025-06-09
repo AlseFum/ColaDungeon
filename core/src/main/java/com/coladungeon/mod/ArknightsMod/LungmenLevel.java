@@ -3,14 +3,15 @@ package com.coladungeon.mod.ArknightsMod;
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.Statistics;
+import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.actors.mobs.npcs.Ghost;
 import com.coladungeon.effects.Ripple;
 import com.coladungeon.levels.Level;
 import com.coladungeon.levels.RegularLevel;
 import com.coladungeon.levels.Terrain;
+import com.coladungeon.levels.features.LevelTransition;
 import com.coladungeon.levels.painters.Painter;
 import com.coladungeon.levels.painters.SewerPainter;
-import com.coladungeon.levels.themes.sewer.SewerLevel;
 import com.coladungeon.levels.traps.AlarmTrap;
 import com.coladungeon.levels.traps.ChillingTrap;
 import com.coladungeon.levels.traps.ConfusionTrap;
@@ -24,6 +25,7 @@ import com.coladungeon.levels.traps.ToxicTrap;
 import com.coladungeon.levels.traps.WornDartTrap;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;
+import com.coladungeon.scenes.InterlevelScene;
 import com.coladungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -34,8 +36,7 @@ import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
-
-public class LungmenLevel extends RegularLevel {
+    public class LungmenLevel extends RegularLevel {
 
     {
         color1 = 0x48763c;
@@ -91,7 +92,7 @@ public class LungmenLevel extends RegularLevel {
 
     @Override
     public String tilesTex() {
-        return Assets.Environment.TILES_SEWERS;
+        return "cola/tiles_lungmen.png";
     }
 
     @Override
@@ -121,6 +122,34 @@ public class LungmenLevel extends RegularLevel {
 
     @Override
     protected void createMobs() {
+        super.createMobs();
+        
+        // 在起始位置创建三个训练假人
+        int startPos = entrance();
+        dummy d1 = new dummy();
+        dummy d2 = new dummy();
+        dummy d3 = new dummy();
+        
+        d1.pos = startPos + 1;
+        d2.pos = startPos + width();
+        d3.pos = startPos + width() + 1;
+        
+        mobs.add(d1);
+        mobs.add(d2);
+        mobs.add(d3);
+    }
+
+    @Override
+    public boolean activateTransition(Hero hero, LevelTransition transition) {
+        Boolean en=false;
+        if (en&transition.type == LevelTransition.Type.REGULAR_ENTRANCE && transition.destDepth == 0) {
+            Dungeon.depth = 0;
+            InterlevelScene.mode = InterlevelScene.Mode.ASCEND;
+            Game.switchScene(InterlevelScene.class);
+            return true;
+        } else {
+            return super.activateTransition(hero, transition);
+        }
     }
 
     @Override
@@ -141,7 +170,7 @@ public class LungmenLevel extends RegularLevel {
     @Override
     public String tileName(int tile) {
         return switch (tile) {
-            case Terrain.WATER -> Messages.get(SewerLevel.class, "water_name");
+            case Terrain.WATER -> "water";
             default -> super.tileName(tile);
         };
     }
@@ -150,9 +179,9 @@ public class LungmenLevel extends RegularLevel {
     public String tileDesc(int tile) {
         switch (tile) {
             case Terrain.EMPTY_DECO:
-                return Messages.get(SewerLevel.class, "empty_deco_desc");
+                return "nothing";
             case Terrain.BOOKSHELF:
-                return Messages.get(SewerLevel.class, "bookshelf_desc");
+                return "nothing";
             default:
                 return super.tileDesc(tile);
         }

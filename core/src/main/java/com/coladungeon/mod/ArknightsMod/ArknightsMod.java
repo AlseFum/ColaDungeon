@@ -23,7 +23,7 @@ public class ArknightsMod extends Index.Mod {
          new ThemePack(
             LungmenLevel.class,
             LungmenLevel.class, 
-            (depth, branch) -> (branch == 0 && depth >= 1 && depth <= 5) ? (short) 0 : (short) 0));
+            (depth, branch) -> (branch == 0 && depth >= 1 && depth <= 5) ? (short) 2 : (short) 0));
         throw new RuntimeException("mymy");
     }
 }
