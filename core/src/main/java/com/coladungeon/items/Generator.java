@@ -140,7 +140,6 @@ import com.coladungeon.items.wands.WandOfPrismaticLight;
 import com.coladungeon.items.wands.WandOfRegrowth;
 import com.coladungeon.items.wands.WandOfTransfusion;
 import com.coladungeon.items.wands.WandOfWarding;
-import com.coladungeon.items.weapon.heavysword.HeavySword;
 import com.coladungeon.items.weapon.melee.BattleAxe;
 import com.coladungeon.items.weapon.melee.Crossbow;
 import com.coladungeon.items.weapon.melee.Cudgel;
@@ -448,7 +447,6 @@ public class Generator {
 		registerTieredItem(Category.WEP_T4, AssassinsBlade.class, 2f);
 		registerTieredItem(Category.WEP_T4, Crossbow.class, 2f);
 		registerTieredItem(Category.WEP_T4, Katana.class, 2f);
-		registerTieredItem(Category.WEP_T4, HeavySword.class, 2f);
 		
 		// 初始化T5武器
 		registerTieredItem(Category.WEP_T5, Greatsword.class, 2f);
