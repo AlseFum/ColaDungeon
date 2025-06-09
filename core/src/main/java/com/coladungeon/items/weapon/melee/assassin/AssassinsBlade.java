@@ -81,14 +81,14 @@ public class AssassinsBlade extends Assassinator {
 		return "A masterfully crafted blade designed specifically for assassins. Its deadly precision and balanced weight make it perfect for swift, lethal strikes.";
 	}
 
-	@Override
-	public void special_effect(Char attacker, Char defender, int damage) {
-		super.special_effect(attacker, defender, damage);
-		if (attacker instanceof Hero) {
-			Buff.affect(attacker, AssassinCloak.class, 0f);
-			GLog.i("The Assassin's Blade shrouds you in shadows!");
-		}
-	}
+	// @Override
+	// public void special_effect(Char attacker, Char defender, int damage) {
+	// 	super.special_effect(attacker, defender, damage);
+	// 	if (attacker instanceof Hero) {
+	// 		Buff.affect(attacker, AssassinCloak.class, 0f);
+	// 		GLog.i("The Assassin's Blade shrouds you in shadows!");
+	// 	}
+	// }
 
 	public static class AssassinCloak extends FlavourBuff {
 		{

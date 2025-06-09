@@ -78,13 +78,13 @@ public class Dirk extends Assassinator {
 		return "A slender, double-edged dagger that's longer than a typical dagger. Its extended reach and sharp edges make it particularly effective for surprise attacks.";
 	}
 
-	@Override
-	public void special_effect(Char attacker, Char defender, int damage) {
-		super.special_effect(attacker, defender, damage);
-		if (attacker instanceof Hero) {
-			Buff.affect(attacker, Speed.class, 5f); // Apply speed boost for 5 seconds
-			GLog.i("The Dirk grants you a burst of speed!");
-		}
-	}
+	// @Override
+	// public void special_effect(Char attacker, Char defender, int damage) {
+	// 	super.special_effect(attacker, defender, damage);
+	// 	if (attacker instanceof Hero) {
+	// 		Buff.affect(attacker, Speed.class, 5f); // Apply speed boost for 5 seconds
+	// 		GLog.i("The Dirk grants you a burst of speed!");
+	// 	}
+	// }
 
 }

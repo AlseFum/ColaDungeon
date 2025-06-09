@@ -160,7 +160,7 @@ public abstract class Char extends Actor {
 		ENEMY,
 		NEUTRAL,
 		ALLY,
-		//YeahTodoHere
+		YeahTodoHere
 	}
 	public Alignment alignment;
 	

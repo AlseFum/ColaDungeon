@@ -110,10 +110,10 @@ public abstract class Assassinator extends MeleeWeapon {
         if (ambushLevel > 0) {
             damage = Math.round(damage * 1f + (ambushLevel * SURPRISE_DMG_PER_LEVEL));
             GLog.n("ambush lv."+ambushLevel+":"+damage+"!");
-            if (damage > max() * SE_RATIO) {
-                GLog.n("Special Effect!");
-                special_effect(attacker, defender, damage);
-            }
+            // if (damage > max() * SE_RATIO) {
+            //     GLog.n("Special Effect!");
+            //     special_effect(attacker, defender, damage);
+            // }
         }
         return super.proc(attacker, defender, damage);
     }
