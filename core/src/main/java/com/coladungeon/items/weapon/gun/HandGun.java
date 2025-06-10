@@ -1,8 +1,7 @@
-package com.coladungeon.items.weapon.handgun;
+package com.coladungeon.items.weapon.gun;
 
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.weapon.Weapon;
-import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.items.weapon.ammo.Ammo;
 import com.coladungeon.items.weapon.ammo.Cartridge;
 import com.coladungeon.scenes.CellSelector;

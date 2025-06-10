@@ -1,14 +1,9 @@
-package com.coladungeon.items.weapon.rifle;
+package com.coladungeon.items.weapon.gun;
 
 import java.util.ArrayList;
 
 import com.coladungeon.Assets;
-import com.coladungeon.Dungeon;
-import com.coladungeon.actors.Actor;
-import com.coladungeon.actors.Char;
 import com.coladungeon.actors.hero.Hero;
-import com.coladungeon.items.weapon.gun.Gun;
-import com.coladungeon.mechanics.Ballistica;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;

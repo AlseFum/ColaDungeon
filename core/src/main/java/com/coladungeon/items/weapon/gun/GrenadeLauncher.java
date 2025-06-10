@@ -1,27 +1,11 @@
-package com.coladungeon.items.weapon.grenade;
+package com.coladungeon.items.weapon.gun;
 
-import com.coladungeon.Assets;
-import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
-import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.items.weapon.ammo.Ammo;
-import com.coladungeon.actors.buffs.Paralysis;
-import com.coladungeon.actors.buffs.Vertigo;
-import com.coladungeon.actors.hero.Hero;
-import com.coladungeon.effects.CellEmitter;
-import com.coladungeon.effects.particles.BlastParticle;
-import com.coladungeon.effects.particles.SmokeParticle;
-import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.mechanics.Ballistica;
-import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
-import com.coladungeon.utils.EventBus;
-import com.coladungeon.utils.GLog;
-import com.watabou.noosa.Camera;
-import com.watabou.noosa.audio.Sample;
-import com.watabou.utils.PathFinder;
-import com.watabou.utils.Random;
+
 import java.util.List;
 //和Gun别无二致，除了对Ammo特别要求为Grenade
 

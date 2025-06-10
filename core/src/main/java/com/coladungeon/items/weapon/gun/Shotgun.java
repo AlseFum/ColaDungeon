@@ -2,22 +2,14 @@
  * Cola Dungeon
  */
 
-package com.coladungeon.items.weapon.shotgun;
+package com.coladungeon.items.weapon.gun;
 
-import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.buffs.Paralysis;
-import com.coladungeon.effects.MagicMissile;
 import com.coladungeon.items.wands.WandOfBlastWave;
-import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.mechanics.Ballistica;
-import com.coladungeon.scenes.GameScene;
-import com.coladungeon.sprites.ItemSpriteSheet;
-import com.coladungeon.utils.EventBus;
-import com.watabou.noosa.audio.Sample;
-import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.coladungeon.items.weapon.sniper;
+package com.coladungeon.items.weapon.gun;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,6 @@ import com.coladungeon.actors.Char;
 import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.buffs.FlavourBuff;
 import com.coladungeon.actors.hero.Hero;
-import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.sprites.ItemSpriteSheet;

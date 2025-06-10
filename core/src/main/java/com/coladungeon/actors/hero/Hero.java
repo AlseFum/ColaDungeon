@@ -115,6 +115,7 @@ import com.coladungeon.items.wands.Wand;
 import com.coladungeon.items.wands.WandOfLivingEarth;
 import com.coladungeon.items.weapon.SpiritBow;
 import com.coladungeon.items.weapon.Weapon;
+import com.coladungeon.items.weapon.gun.SniperGun;
 import com.coladungeon.items.weapon.melee.Crossbow;
 import com.coladungeon.items.weapon.melee.Flail;
 import com.coladungeon.items.weapon.melee.MagesStaff;
@@ -1969,7 +1970,7 @@ public class Hero extends Char {
         }
 
         // 检查是否在瞄准状态下，如果是则不能移动
-        if (buff(com.coladungeon.items.weapon.sniper.SniperGun.SniperAim.class) != null) {
+        if (buff(SniperGun.SniperAim.class) != null) {
             if (cell != pos) {
                 GLog.w("瞄准时无法移动！");
                 return false;

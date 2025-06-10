@@ -4,11 +4,11 @@ import com.coladungeon.items.bags.AmmoHolder;
 import com.coladungeon.items.weapon.ammo.Ammo;
 import com.coladungeon.items.weapon.ammo.ExplosiveAmmo;
 import com.coladungeon.items.weapon.chakram.Chakram;
-import com.coladungeon.items.weapon.grenade.GrenadeLauncher;
-import com.coladungeon.items.weapon.handgun.HandGun;
-import com.coladungeon.items.weapon.rifle.Rifle;
-import com.coladungeon.items.weapon.shotgun.Shotgun;
-import com.coladungeon.items.weapon.sniper.SniperGun;
+import com.coladungeon.items.weapon.gun.GrenadeLauncher;
+import com.coladungeon.items.weapon.gun.HandGun;
+import com.coladungeon.items.weapon.gun.Rifle;
+import com.coladungeon.items.weapon.gun.Shotgun;
+import com.coladungeon.items.weapon.gun.SniperGun;
 public class GunSupply extends Supply {
     public GunSupply() {
         super();
