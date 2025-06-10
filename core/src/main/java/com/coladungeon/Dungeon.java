@@ -795,6 +795,42 @@ public class Dungeon {
         GamesInProgress.delete(save);
     }
 
+    public static void copyGame(int save) {
+        int newSlot = GamesInProgress.firstEmpty();
+        if (newSlot == -1) return;
+
+        try {
+            // 加载原存档
+            loadGame(save, true);
+            
+            // 保存到新存档
+            saveGame(newSlot);
+            
+            // 复制所有深度的存档
+            for (int d : generatedLevels) {
+                // 复制主分支的存档
+                if (FileUtils.fileExists(GamesInProgress.depthFile(save, d, 0))) {
+                    Bundle bundle = FileUtils.bundleFromFile(GamesInProgress.depthFile(save, d, 0));
+                    FileUtils.bundleToFile(GamesInProgress.depthFile(newSlot, d, 0), bundle);
+                }
+                
+                // 复制其他分支的存档
+                for (int b = 1; b <= 4; b++) {
+                    if (FileUtils.fileExists(GamesInProgress.depthFile(save, d, b))) {
+                        Bundle bundle = FileUtils.bundleFromFile(GamesInProgress.depthFile(save, d, b));
+                        FileUtils.bundleToFile(GamesInProgress.depthFile(newSlot, d, b), bundle);
+                    }
+                }
+            }
+            
+            // 更新新存档的信息
+            GamesInProgress.set(newSlot);
+            
+        } catch (IOException e) {
+            ColaDungeon.reportException(e);
+        }
+    }
+
     public static void preview(GamesInProgress.Info info, Bundle bundle) {
         info.depth = bundle.getInt(DEPTH);
         info.version = bundle.getInt(VERSION);

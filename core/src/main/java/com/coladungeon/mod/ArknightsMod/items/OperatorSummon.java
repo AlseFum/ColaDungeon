@@ -1,17 +1,16 @@
 package com.coladungeon.mod.ArknightsMod.items;
 
+import java.util.ArrayList;
+
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.Item;
 import com.coladungeon.messages.Messages;
-import com.coladungeon.mod.ArknightsMod.Operator;
+import com.coladungeon.mod.ArknightsMod.operator.Operator;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.utils.GLog;
 import com.watabou.utils.PathFinder;
-import com.watabou.utils.Random;
-
-import java.util.ArrayList;
 
 public class OperatorSummon extends Item {
 

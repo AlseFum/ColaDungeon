@@ -128,6 +128,27 @@ public class WndGameInProgress extends Window {
 			}
 		};
 		
+		RedButton copy = new RedButton(Messages.get(this, "copy")){
+			@Override
+			protected void onClick() {
+				super.onClick();
+				
+				ColaDungeon.scene().add(new WndOptions(Icons.get(Icons.WARNING),
+						Messages.get(WndGameInProgress.class, "copy_warn_title"),
+						Messages.get(WndGameInProgress.class, "copy_warn_body"),
+						Messages.get(WndGameInProgress.class, "copy_warn_yes"),
+						Messages.get(WndGameInProgress.class, "copy_warn_no") ) {
+					@Override
+					protected void onSelect( int index ) {
+						if (index == 0) {
+							Dungeon.copyGame(slot);
+							ColaDungeon.switchNoFade(StartScene.class);
+						}
+					}
+				} );
+			}
+		};
+		
 		RedButton erase = new RedButton( Messages.get(this, "erase")){
 			@Override
 			protected void onClick() {
@@ -150,11 +171,15 @@ public class WndGameInProgress extends Window {
 		};
 
 		cont.icon(Icons.get(Icons.ENTER));
-		cont.setRect(0, pos, WIDTH/2 -1, 20);
+		cont.setRect(0, pos, WIDTH/3 -1, 20);
 		add(cont);
 
+		copy.icon(Icons.get(Icons.COPY));
+		copy.setRect(WIDTH/3 + 1, pos, WIDTH/3 - 1, 20);
+		add(copy);
+
 		erase.icon(Icons.get(Icons.CLOSE));
-		erase.setRect(WIDTH/2 + 1, pos, WIDTH/2 - 1, 20);
+		erase.setRect(2*WIDTH/3 + 1, pos, WIDTH/3 - 1, 20);
 		add(erase);
 		
 		resize(WIDTH, (int)cont.bottom()+1);

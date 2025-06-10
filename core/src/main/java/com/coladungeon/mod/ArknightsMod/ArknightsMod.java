@@ -6,6 +6,7 @@ import com.coladungeon.levels.themes.ThemeSheet;
 import com.coladungeon.mod.Index;
 import com.coladungeon.utils.EventBus;
 import com.coladungeon.mod.ArknightsMod.items.OperatorSummon;
+import com.coladungeon.mod.ArknightsMod.items.RhodesStandardSword;
 public class ArknightsMod extends Index.Mod {
 
     {
@@ -21,6 +22,7 @@ public class ArknightsMod extends Index.Mod {
                 .desc("zoot进行的模拟")
                 .shortDesc("来玩zoot的")
                 .splashArt("cola/doctor_splashart.jpg")
+                .initializer((hero)->{})
                 .register();
 
         ThemeSheet.registerThemePack("lungmen",
@@ -30,6 +32,7 @@ public class ArknightsMod extends Index.Mod {
                         (depth, branch) -> (branch == 0 && depth >= 1 && depth <= 5) ? (short) 2 : (short) 0));
         EventBus.register("Hero:created",(data)->{
             new OperatorSummon().identify().collect();
+            new RhodesStandardSword().identify().collect();
             return null;
         });
         throw new RuntimeException("mymy");

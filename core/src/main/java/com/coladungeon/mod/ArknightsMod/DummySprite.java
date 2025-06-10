@@ -1,11 +1,10 @@
 package com.coladungeon.mod.ArknightsMod;
 
-import com.coladungeon.Assets;
 import com.coladungeon.sprites.MobSprite;
 import com.watabou.noosa.TextureFilm;
 
 public class DummySprite extends MobSprite {
-
+//这个sprite是特殊的占位符
 	public DummySprite() {
 		super();
 

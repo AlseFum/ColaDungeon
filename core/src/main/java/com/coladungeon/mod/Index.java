@@ -3,11 +3,14 @@ package com.coladungeon.mod;
 import java.util.ArrayList;
 
 import com.coladungeon.mod.ArknightsMod.ArknightsMod;
+import com.coladungeon.mod.ColaMisc.ColaMisc;
+
 public class Index {
 
     public static void init() {
         load(new ArknightsMod());
-    }
+        load(new ColaMisc());
+        }
 
     public static class Mod {
 
@@ -38,7 +41,6 @@ public class Index {
 
     @FunctionalInterface
     public interface SetupFn {
-
         void setup();
     }
 
