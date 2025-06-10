@@ -2,14 +2,10 @@ package com.coladungeon.mod.ArknightsMod.operator;
 
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Char;
-import com.coladungeon.actors.buffs.Buff;
-import com.coladungeon.actors.buffs.Haste;
-import com.coladungeon.actors.buffs.Invisibility;
 import com.coladungeon.actors.mobs.npcs.NPC;
 import com.coladungeon.mod.ArknightsMod.DummySprite;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
-
 public class Operator extends NPC {
 
     {
@@ -21,7 +17,19 @@ public class Operator extends NPC {
         // 干员默认是盟友
         alignment = Alignment.ALLY;
     }
-    
+    public Branch branch=Branch.None;
+    public Rarity rarity=Rarity.SExtra;
+    public int cost=99;
+    public static enum Rarity{
+        //SX means X-stars. S1 means 1-star.
+        //SExtra means Extra rarity. don't get it.
+        S1(0),S2(0),S3(0),S4(2),S5(3),S6(6),SExtra(0);
+        public int hope_cost;
+        Rarity(int hopcost){
+            this.hope_cost = hopcost;
+        }
+    }
+    public String arrange = "Idle";
     @Override
     public String name() {
         return "干员";
@@ -33,15 +41,21 @@ public class Operator extends NPC {
     }
     
     @Override
-    protected boolean act() {
-        // 干员会跟随玩家，但保持一定距离
-        if (Dungeon.hero != null) {
-            int target = Dungeon.hero.pos;
-            if (distance(Dungeon.hero) > 2) {
-                getCloser(target);
-            }
+    public String info() {
+        String desc = super.info();
+        
+        // 添加arrange的描述
+        desc += "\n\n当前任务：";
+        switch (arrange) {
+            case "Follow":
+                desc += "跟随玩家";
+                break;
+            default:
+                desc += "自由游荡";
+                break;
         }
-        return super.act();
+        
+        return desc;
     }
     
     @Override
@@ -58,13 +72,7 @@ public class Operator extends NPC {
     public int drRoll() {
         return Random.NormalIntRange(0, 5);
     }
-    
-    // 干员特殊技能
-    public void useSkill() {
-        // 使用技能，例如加速
-        Buff.affect(this, Haste.class, 5f);
-        Buff.affect(this, Invisibility.class, 3f);
-    }
+ 
     
     // 保存和加载状态
     private static final String STATE = "state";
@@ -73,6 +81,7 @@ public class Operator extends NPC {
     @Override
     public void storeInBundle(Bundle bundle) {
         super.storeInBundle(bundle);
+        bundle.put("arrange", arrange);
         if (state == SLEEPING) {
             bundle.put(STATE, "SLEEPING");
         } else if (state == WANDERING) {
@@ -90,6 +99,7 @@ public class Operator extends NPC {
     @Override
     public void restoreFromBundle(Bundle bundle) {
         super.restoreFromBundle(bundle);
+        arrange = bundle.getString("arrange");
         String stateStr = bundle.getString(STATE);
         if (stateStr.equals("SLEEPING")) {
             state = SLEEPING;
@@ -114,4 +124,36 @@ public class Operator extends NPC {
         }
         return super.interact(c);
     }
-} 
+    public static enum Role{
+        Vanguard,
+        Supporter,
+        Caster,
+        Defender,
+        Guard,
+        Medic,
+        Sniper,
+        Specialist,
+        None;
+    }
+    public static enum Branch{
+        Core(Role.Caster),
+        Splash(Role.Caster),
+        Blast(Role.Caster),
+        Chain(Role.Caster),
+        MechAccord(Role.Caster),
+        Phalanx(Role.Caster),
+        Mystic(Role.Caster),
+        None(Role.None),
+        Pioneer(Role.Vanguard);
+
+        public final Role r;
+        Branch(){
+            this.r = Role.None;
+        }
+        Branch(Role r){
+            this.r = r;
+        }
+    }
+    
+    
+}

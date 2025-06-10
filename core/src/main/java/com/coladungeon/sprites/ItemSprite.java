@@ -232,7 +232,10 @@ public class ItemSprite extends MovieClip {
 					perspectiveRaise = (5 + 8 - _height) / 16f;
 				}
 				if (map.size != 16) {
-					scale.set( 16f/ Math.max(map.size,1) );
+					//attention
+					//if it‘s too small，set it to 20px
+					scale.set(18f / Math.max(map.size, 1));
+					origin.set(width / 2f, height / 2f);
 				}
 				return;
 			}

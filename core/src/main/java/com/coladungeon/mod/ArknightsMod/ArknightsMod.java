@@ -7,6 +7,7 @@ import com.coladungeon.mod.Index;
 import com.coladungeon.utils.EventBus;
 import com.coladungeon.mod.ArknightsMod.items.OperatorSummon;
 import com.coladungeon.mod.ArknightsMod.items.RhodesStandardSword;
+import com.coladungeon.mod.ArknightsMod.themes.LungmenLevel;
 public class ArknightsMod extends Index.Mod {
 
     {
@@ -29,7 +30,7 @@ public class ArknightsMod extends Index.Mod {
                 new ThemePack(
                         LungmenLevel.class,
                         LungmenLevel.class,
-                        (depth, branch) -> (branch == 0 && depth >= 1 && depth <= 5) ? (short) 2 : (short) 0));
+                        (depth, branch) -> (branch == 0 && depth >= 1 && depth <= 5) ? (short) 0 : (short) 0));
         EventBus.register("Hero:created",(data)->{
             new OperatorSummon().identify().collect();
             new RhodesStandardSword().identify().collect();

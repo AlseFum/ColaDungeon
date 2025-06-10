@@ -1,4 +1,4 @@
-package com.coladungeon.mod.ArknightsMod;
+package com.coladungeon.mod.ArknightsMod.themes;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
@@ -23,7 +23,6 @@ import com.coladungeon.levels.traps.SummoningTrap;
 import com.coladungeon.levels.traps.TeleportationTrap;
 import com.coladungeon.levels.traps.ToxicTrap;
 import com.coladungeon.levels.traps.WornDartTrap;
-import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.scenes.InterlevelScene;
 import com.coladungeon.tiles.DungeonTilemap;
@@ -35,6 +34,7 @@ import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+import com.coladungeon.mod.ArknightsMod.dummy;
 
     public class LungmenLevel extends RegularLevel {
 

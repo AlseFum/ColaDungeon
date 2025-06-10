@@ -21,6 +21,9 @@
 
 package com.coladungeon.items.weapon;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.coladungeon.Badges;
 import com.coladungeon.Dungeon;
 import com.coladungeon.Statistics;
@@ -75,9 +78,6 @@ import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 abstract public class Weapon extends KindOfWeapon {
 
@@ -335,7 +335,9 @@ abstract public class Weapon extends KindOfWeapon {
 		return STRReq(level());
 	}
 
-	public abstract int STRReq(int lvl);
+	public int STRReq(int lvl){
+		return STRReq(0, lvl);
+	}
 
 	protected static int STRReq(int tier, int lvl){
 		lvl = Math.max(0, lvl);
