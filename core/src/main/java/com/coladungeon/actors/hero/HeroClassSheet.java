@@ -56,7 +56,7 @@ import com.coladungeon.items.weapon.melee.Gloves;
 import com.coladungeon.items.weapon.melee.MagesStaff;
 import com.coladungeon.items.weapon.melee.Rapier;
 import com.coladungeon.items.weapon.melee.WornShortsword;
-import com.coladungeon.items.weapon.melee.assassin.Dagger;
+import com.coladungeon.items.weapon.melee.Dagger;
 import com.coladungeon.items.weapon.missiles.ThrowingKnife;
 import com.coladungeon.items.weapon.missiles.ThrowingSpike;
 import com.coladungeon.items.weapon.missiles.ThrowingStone;

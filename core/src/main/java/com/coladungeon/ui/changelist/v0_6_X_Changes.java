@@ -47,7 +47,7 @@ import com.coladungeon.items.wands.WandOfCorrosion;
 import com.coladungeon.items.wands.WandOfCorruption;
 import com.coladungeon.items.weapon.curses.Wayward;
 import com.coladungeon.items.weapon.enchantments.Lucky;
-import com.coladungeon.items.weapon.melee.assassin.Dagger;
+import com.coladungeon.items.weapon.melee.Dagger;
 import com.coladungeon.items.weapon.melee.Flail;
 import com.coladungeon.items.weapon.melee.Greataxe;
 import com.coladungeon.messages.Messages;

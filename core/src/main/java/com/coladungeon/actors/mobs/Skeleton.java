@@ -36,6 +36,7 @@ import com.coladungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
+import com.coladungeon.utils.EventBus;
 
 public class Skeleton extends Mob {
 	
@@ -64,7 +65,6 @@ public class Skeleton extends Mob {
 	public void die( Object cause ) {
 		
 		super.die( cause );
-		
 		if (cause == Chasm.class) return;
 		
 		boolean heroKilled = false;
@@ -73,9 +73,6 @@ public class Skeleton extends Mob {
 			if (ch != null && ch.isAlive()) {
 				int damage = Math.round(Random.NormalIntRange(6, 12));
 				damage = Math.round( damage * AscensionChallenge.statModifier(this));
-
-				//all sources of DR are 2x effective vs. bone explosion
-				//this does not consume extra uses of rock armor and earthroot armor
 
 				WandOfLivingEarth.RockArmor rockArmor = ch.buff(WandOfLivingEarth.RockArmor.class);
 				if (rockArmor != null) {

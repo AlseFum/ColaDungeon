@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
+ * Copyright (C) 2014-2025 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,39 +19,64 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.coladungeon.items.weapon.melee.assassin;
+package com.coladungeon.items.weapon.melee;
 
 import com.coladungeon.Assets;
 import com.coladungeon.actors.Char;
-import com.coladungeon.actors.buffs.Buff;
-import com.coladungeon.actors.buffs.Speed;
 import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.actors.mobs.Mob;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.sprites.ItemSpriteSheet;
-import com.coladungeon.utils.GLog;
 
-public class Dirk extends Assassinator {
+public class AssassinsBlade extends MeleeWeapon {
 
 	{
-		image = ItemSpriteSheet.DIRK;
+		image = ItemSpriteSheet.ASSASSINS_BLADE;
 		hitSound = Assets.Sounds.HIT_STAB;
-		hitSoundPitch = 1f;
+		hitSoundPitch = 0.9f;
 
-		tier = 2;
+		tier = 4;
+	}
+
+	@Override
+	public int max(int lvl) {
+		return  4*(tier+1) +    //20 base, down from 25
+				lvl*(tier+1);   //scaling unchanged
+	}
+
+	@Override
+	public int damageRoll(Char owner) {
+		if (owner instanceof Hero) {
+			Hero hero = (Hero)owner;
+			Char enemy = hero.enemy();
+			if (enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)) {
+				//deals 50% toward max to max on surprise, instead of min to max.
+				int diff = max() - min();
+				int damage = augment.damageFactor(Hero.heroDamageIntRange(
+						min() + Math.round(diff*0.50f),
+						max()));
+				int exStr = hero.STR() - STRReq();
+				if (exStr > 0) {
+					damage += Hero.heroDamageIntRange(0, exStr);
+				}
+				return damage;
+			}
+		}
+		return super.damageRoll(owner);
 	}
 
 	@Override
 	public String targetingPrompt() {
 		return Messages.get(this, "prompt");
 	}
-	@Override
+
 	public boolean useTargeting(){
 		return false;
 	}
 
 	@Override
 	protected void duelistAbility(Hero hero, Integer target) {
-		Dagger.sneakAbility(hero, target, 4, 2+buffedLvl(), this);
+		Dagger.sneakAbility(hero, target, 3, 2+buffedLvl(), this);
 	}
 
 	@Override
@@ -67,24 +92,5 @@ public class Dirk extends Assassinator {
 	public String upgradeAbilityStat(int level) {
 		return Integer.toString(2+level);
 	}
-
-	@Override
-	public String name() {
-		return "Dirk";
-	}
-
-	@Override
-	public String desc() {
-		return "A slender, double-edged dagger that's longer than a typical dagger. Its extended reach and sharp edges make it particularly effective for surprise attacks.";
-	}
-
-	// @Override
-	// public void special_effect(Char attacker, Char defender, int damage) {
-	// 	super.special_effect(attacker, defender, damage);
-	// 	if (attacker instanceof Hero) {
-	// 		Buff.affect(attacker, Speed.class, 5f); // Apply speed boost for 5 seconds
-	// 		GLog.i("The Dirk grants you a burst of speed!");
-	// 	}
-	// }
 
 }
