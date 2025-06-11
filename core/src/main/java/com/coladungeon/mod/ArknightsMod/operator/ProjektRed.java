@@ -5,6 +5,7 @@ import com.coladungeon.actors.Char;
 import com.coladungeon.actors.mobs.npcs.NPC;
 import com.coladungeon.mod.ArknightsMod.DummySprite;
 import com.watabou.utils.Bundle;
+import com.coladungeon.items.weapon.Weapon;
 import com.watabou.utils.Random;
 
 public class ProjektRed extends Operator {
@@ -30,7 +31,7 @@ public class ProjektRed extends Operator {
     
     @Override
     public String description() {
-        return "罗德岛精英干员，代号"红"。擅长隐秘行动和快速突袭。";
+        return "罗德岛精英干员，代号\"红\"。擅长隐秘行动和快速突袭。";
     }
     
     @Override
@@ -58,10 +59,5 @@ public class ProjektRed extends Operator {
     @Override
     public int drRoll() {
         return Random.NormalIntRange(5, 15);
-    }
-    public static class RedKnife extends Weapon{
-        {
-            RCH=1;
-        }
     }
 }

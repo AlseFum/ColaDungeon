@@ -68,6 +68,7 @@ import com.coladungeon.plants.Swiftthistle;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.CharSprite;
 import com.coladungeon.utils.GLog;
+import com.coladungeon.mechanics.Damage.DamageAugment;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
@@ -689,7 +690,12 @@ public abstract class Mob extends Char {
 			Statistics.thrownAttacks++;
 			Badges.validateHuntressUnlock();
 		}
-		
+		damage=DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+                "Mob:defenseProc:beforeTalent",
+                "mob", this,
+                "enemy", enemy,
+                "damage", damage
+            ),damage);
 		if (surprisedBy(enemy)) {
 			Statistics.sneakAttacks++;
 			Badges.validateRogueUnlock();
@@ -718,7 +724,12 @@ public abstract class Mob extends Char {
 				recentlyAttackedBy.add(enemy);
 			}
 		}
-
+		damage=DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+                "Mob:defenseProc:afterTalent",
+                "mob", this,
+                "enemy", enemy,
+                "damage", damage
+            ),damage);
 		if (buff(SoulMark.class) != null) {
 			int restoration = Math.min(damage, HP+shielding());
 			

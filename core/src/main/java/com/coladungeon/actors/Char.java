@@ -1,5 +1,10 @@
 package com.coladungeon.actors;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Badges;
 import com.coladungeon.Dungeon;
@@ -126,17 +131,13 @@ import com.coladungeon.sprites.CharSprite;
 import com.coladungeon.sprites.MobSprite;
 import com.coladungeon.ui.TargetHealthIndicator;
 import com.coladungeon.utils.GLog;
+import com.coladungeon.mechanics.Damage;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.BArray;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 
 public abstract class Char extends Actor {
 	
@@ -347,237 +348,7 @@ public abstract class Char extends Actor {
 	
 	public boolean attack( Char enemy, float dmgMulti, float dmgBonus, float accMulti ) {
 
-		if (enemy == null) return false;
-		
-		boolean visibleFight = Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[enemy.pos];
-
-		if (enemy.isInvulnerable(getClass())) {
-
-			if (visibleFight) {
-				enemy.sprite.showStatus( CharSprite.POSITIVE, Messages.get(this, "invulnerable") );
-
-				Sample.INSTANCE.play(Assets.Sounds.HIT_PARRY, 1f, Random.Float(0.96f, 1.05f));
-			}
-
-			return false;
-
-		} else if (hit( this, enemy, accMulti, false )) {
-			
-			int dr = Math.round(enemy.drRoll() * AscensionChallenge.statModifier(enemy));
-			
-			if (this instanceof Hero){
-				Hero h = (Hero)this;
-				if (h.belongings.attackingWeapon() instanceof MissileWeapon
-						&& h.subClass == HeroSubClass.SNIPER
-						&& !Dungeon.level.adjacent(h.pos, enemy.pos)){
-					dr = 0;
-				}
-
-				if (h.buff(MonkEnergy.MonkAbility.UnarmedAbilityTracker.class) != null){
-					dr = 0;
-				}
-			}
-
-			//we use a float here briefly so that we don't have to constantly round while
-			// potentially applying various multiplier effects
-			float dmg;
-			Preparation prep = buff(Preparation.class);
-			if (prep != null){
-				dmg = prep.damageRoll(this);
-				if (this == Dungeon.hero && Dungeon.hero.hasTalent(Talent.BOUNTY_HUNTER)) {
-					Buff.affect(Dungeon.hero, Talent.BountyHunterTracker.class, 0.0f);
-				}
-			} else {
-				dmg = damageRoll();
-			}
-
-			dmg = dmg*dmgMulti;
-
-			//flat damage bonus is affected by multipliers
-			dmg += dmgBonus;
-
-			if (enemy.buff(GuidingLight.Illuminated.class) != null){
-				enemy.buff(GuidingLight.Illuminated.class).detach();
-				if (this == Dungeon.hero && Dungeon.hero.hasTalent(Talent.SEARING_LIGHT)){
-					dmg += 2 + 2*Dungeon.hero.pointsInTalent(Talent.SEARING_LIGHT);
-				}
-				if (this != Dungeon.hero && Dungeon.hero.subClass == HeroSubClass.PRIEST){
-					enemy.damage(Dungeon.hero.lvl, GuidingLight.INSTANCE);
-				}
-			}
-
-			Berserk berserk = buff(Berserk.class);
-			if (berserk != null) dmg = berserk.damageFactor(dmg);
-
-			if (buff( Fury.class ) != null) {
-				dmg *= 1.5f;
-			}
-
-			if (buff( PowerOfMany.PowerBuff.class) != null){
-				if (buff( BeamingRay.BeamingRayBoost.class) != null
-					&& buff( BeamingRay.BeamingRayBoost.class).object == enemy.id()){
-					dmg *= 1.3f + 0.05f*Dungeon.hero.pointsInTalent(Talent.BEAMING_RAY);
-				} else {
-					dmg *= 1.25f;
-				}
-			}
-
-			for (ChampionEnemy buff : buffs(ChampionEnemy.class)){
-				dmg *= buff.meleeDamageFactor();
-			}
-
-			dmg *= AscensionChallenge.statModifier(this);
-
-			//friendly endure
-			Endure.EndureTracker endure = buff(Endure.EndureTracker.class);
-			if (endure != null) dmg = endure.damageFactor(dmg);
-
-			//enemy endure
-			endure = enemy.buff(Endure.EndureTracker.class);
-			if (endure != null){
-				dmg = endure.adjustDamageTaken(dmg);
-			}
-
-			if (enemy.buff(ScrollOfChallenge.ChallengeArena.class) != null){
-				dmg *= 0.67f;
-			}
-
-			if (Dungeon.hero.alignment == enemy.alignment
-					&& Dungeon.hero.buff(AuraOfProtection.AuraBuff.class) != null
-					&& (Dungeon.level.distance(enemy.pos, Dungeon.hero.pos) <= 2 || enemy.buff(LifeLinkSpell.LifeLinkSpellBuff.class) != null)){
-				dmg *= 0.925f - 0.075f*Dungeon.hero.pointsInTalent(Talent.AURA_OF_PROTECTION);
-			}
-
-			if (enemy.buff(MonkEnergy.MonkAbility.Meditate.MeditateResistance.class) != null){
-				dmg *= 0.2f;
-			}
-
-			if ( buff(Weakness.class) != null ){
-				dmg *= 0.67f;
-			}
-
-			//characters influenced by aggression deal 1/2 damage to bosses
-			if ( enemy.buff(StoneOfAggression.Aggression.class) != null
-					&& enemy.alignment == alignment
-					&& (Char.hasProp(enemy, Property.BOSS) || Char.hasProp(enemy, Property.MINIBOSS))){
-				dmg *= 0.5f;
-				//yog-dzewa specifically takes 1/4 damage
-				if (enemy instanceof YogDzewa){
-					dmg *= 0.5f;
-				}
-			}
-			
-			int effectiveDamage = enemy.defenseProc( this, Math.round(dmg) );
-			//do not trigger on-hit logic if defenseProc returned a negative value
-			if (effectiveDamage >= 0) {
-				effectiveDamage = Math.max(effectiveDamage - dr, 0);
-
-				if (enemy.buff(Viscosity.ViscosityTracker.class) != null) {
-					effectiveDamage = enemy.buff(Viscosity.ViscosityTracker.class).deferDamage(effectiveDamage);
-					enemy.buff(Viscosity.ViscosityTracker.class).detach();
-				}
-
-				//vulnerable specifically applies after armor reductions
-				if (enemy.buff(Vulnerable.class) != null) {
-					effectiveDamage *= 1.33f;
-				}
-
-				effectiveDamage = attackProc(enemy, effectiveDamage);
-			}
-			if (visibleFight) {
-				if (effectiveDamage > 0 || !enemy.blockSound(Random.Float(0.96f, 1.05f))) {
-					hitSound(Random.Float(0.87f, 1.15f));
-				}
-			}
-
-			// If the enemy is already dead, interrupt the attack.
-			// This matters as defence procs can sometimes inflict self-damage, such as armor glyphs.
-			if (!enemy.isAlive()){
-				return true;
-			}
-
-			enemy.damage( effectiveDamage, this );
-
-			if (buff(FireImbue.class) != null)  buff(FireImbue.class).proc(enemy);
-			if (buff(FrostImbue.class) != null) buff(FrostImbue.class).proc(enemy);
-
-			if (enemy.isAlive() && enemy.alignment != alignment && prep != null && prep.canKO(enemy)){
-				enemy.HP = 0;
-				if (enemy.buff(Brute.BruteRage.class) != null){
-					enemy.buff(Brute.BruteRage.class).detach();
-				}
-				if (!enemy.isAlive()) {
-					enemy.die(this);
-				} else {
-					//helps with triggering any on-damage effects that need to activate
-					enemy.damage(-1, this);
-					DeathMark.processFearTheReaper(enemy);
-				}
-				if (enemy.sprite != null) {
-					enemy.sprite.showStatus(CharSprite.NEGATIVE, Messages.get(Preparation.class, "assassinated"));
-				}
-			}
-
-			Talent.CombinedLethalityAbilityTracker combinedLethality = buff(Talent.CombinedLethalityAbilityTracker.class);
-			if (combinedLethality != null && this instanceof Hero && ((Hero) this).belongings.attackingWeapon() instanceof MeleeWeapon && combinedLethality.weapon != ((Hero) this).belongings.attackingWeapon()){
-				if ( enemy.isAlive() && enemy.alignment != alignment && !Char.hasProp(enemy, Property.BOSS)
-						&& !Char.hasProp(enemy, Property.MINIBOSS) &&
-						(enemy.HP/(float)enemy.HT) <= 0.4f*((Hero)this).pointsInTalent(Talent.COMBINED_LETHALITY)/3f) {
-					enemy.HP = 0;
-					if (enemy.buff(Brute.BruteRage.class) != null){
-						enemy.buff(Brute.BruteRage.class).detach();
-					}
-					if (!enemy.isAlive()) {
-						enemy.die(this);
-					} else {
-						//helps with triggering any on-damage effects that need to activate
-						enemy.damage(-1, this);
-						DeathMark.processFearTheReaper(enemy);
-					}
-					if (enemy.sprite != null) {
-						enemy.sprite.showStatus(CharSprite.NEGATIVE, Messages.get(Talent.CombinedLethalityAbilityTracker.class, "executed"));
-					}
-				}
-				combinedLethality.detach();
-			}
-
-			if (enemy.sprite != null) {
-				enemy.sprite.bloodBurstA(sprite.center(), effectiveDamage);
-				enemy.sprite.flash();
-			}
-
-			if (!enemy.isAlive() && visibleFight) {
-				if (enemy == Dungeon.hero) {
-					
-					if (this == Dungeon.hero) {
-						return true;
-					}
-
-					if (this instanceof WandOfLivingEarth.EarthGuardian
-							|| this instanceof MirrorImage || this instanceof PrismaticImage){
-						Badges.validateDeathFromFriendlyMagic();
-					}
-					Dungeon.fail( this );
-					GLog.n( Messages.capitalize(Messages.get(Char.class, "kill", name())) );
-					
-				} else if (this == Dungeon.hero) {
-					GLog.i( Messages.capitalize(Messages.get(Char.class, "defeat", enemy.name())) );
-				}
-			}
-			
-			return true;
-			
-		} else {
-
-			enemy.sprite.showStatus( CharSprite.NEUTRAL, enemy.defenseVerb() );
-			if (visibleFight) {
-				//TODO enemy.defenseSound? currently miss plays for monks/crab even when they parry
-				Sample.INSTANCE.play(Assets.Sounds.MISS);
-			}
-			
-			return false;
-			
-		}
+		return Damage.physical(this, enemy, dmgMulti, dmgBonus, accMulti).result;
 	}
 
 	public static int INFINITE_ACCURACY = 1_000_000;

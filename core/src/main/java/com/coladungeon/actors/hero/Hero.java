@@ -151,6 +151,7 @@ import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndHero;
 import com.coladungeon.windows.WndResurrect;
 import com.coladungeon.windows.WndTradeItem;
+import com.coladungeon.mechanics.Damage.DamageAugment;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.Delayer;
@@ -1522,6 +1523,26 @@ public class Hero extends Char {
         resting = fullRest;
     }
 
+    /**
+     * 处理英雄的攻击后修正流程。
+     * <br>
+     * 功能：
+     * <ul>
+     *   <li>在攻击命中后，依次应用天赋、武器、buff等对伤害的修正。</li>
+     *   <li>通过事件总线（EventBus）在关键节点触发事件，允许外部模块动态调整伤害。</li>
+     *   <li>支持多种修正方式（加法、乘法、管道），便于扩展和mod接入。</li>
+     * </ul>
+     * <br>
+     * 事件说明：
+     * <ul>
+     *   <li><b>Hero:attackProc:afterTalent</b>：天赋修正后触发，允许外部进一步修正伤害。</li>
+     *   <li><b>Hero:attackProc:afterWeapon</b>：武器修正后触发，允许外部进一步修正伤害。</li>
+     *   <li>事件参数包含：hero（当前英雄）、enemy（目标）、damage（当前伤害）、wep（武器类型）。</li>
+     *   <li>监听者可返回DamageAugment对象，主流程依次处理所有修正。</li>
+     * </ul>
+     * <br>
+     * 返回：最终修正后的伤害值。
+     */
     @Override
     public int attackProc(final Char enemy, int damage) {
         damage = super.attackProc(enemy, damage);
@@ -1535,8 +1556,27 @@ public class Hero extends Char {
 
         damage = Talent.onAttackProc(this, enemy, damage);
 
+        // 1.5 Talent后事件
+            damage = DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+                "Hero:attackProc:afterTalent",
+                "hero", this,
+                "enemy", enemy,
+                "damage", damage,
+                "wep", wep != null ? wep.getClass().getSimpleName() : "Unarmed"
+            ),damage);
+
         if (wep != null) {
             damage = wep.proc(this, enemy, damage);
+
+            // 2. 武器修正后事件
+            damage = DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+                    "Hero:attackProc:afterWeapon",
+                    "hero", this,
+                    "enemy", enemy,
+                    "damage", damage,
+                    "wep", wep.getClass().getSimpleName()
+                ), damage);
+
         } else {
             boolean wasEnemy = enemy.alignment == Alignment.ENEMY;
             if (buff(BodyForm.BodyFormBuff.class) != null
@@ -1592,6 +1632,12 @@ public class Hero extends Char {
 
     @Override
     public int defenseProc(Char enemy, int damage) {
+        damage = DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+                "Hero:defenseProc:beforeTalent",
+                "hero", this,
+                "enemy", enemy,
+                "damage", damage
+            ),damage);
 
         if (damage > 0 && subClass == HeroSubClass.BERSERKER) {
             Berserk berserk = Buff.affect(this, Berserk.class);
@@ -1615,7 +1661,12 @@ public class Hero extends Char {
         if (rockArmor != null) {
             damage = rockArmor.absorb(damage);
         }
-
+        damage = DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+                "Hero:defenseProc:afterTalent",
+                "hero", this,
+                "enemy", enemy,
+                "damage", damage
+            ),damage);
         return super.defenseProc(enemy, damage);
     }
 
