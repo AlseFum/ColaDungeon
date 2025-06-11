@@ -1,4 +1,4 @@
-package com.coladungeon.mod.ArknightsMod;
+package com.coladungeon.mod.ColaMisc;
 
 import com.coladungeon.sprites.MobSprite;
 import com.watabou.noosa.TextureFilm;

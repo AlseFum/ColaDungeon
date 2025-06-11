@@ -34,7 +34,7 @@ import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.utils.ColorMath;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
-import com.coladungeon.mod.ArknightsMod.dummy;
+import com.coladungeon.mod.ArknightsMod.NPC.Dummy;
 
     public class LungmenLevel extends RegularLevel {
 
@@ -126,9 +126,9 @@ import com.coladungeon.mod.ArknightsMod.dummy;
         
         // 在起始位置创建三个训练假人
         int startPos = entrance();
-        dummy d1 = new dummy();
-        dummy d2 = new dummy();
-        dummy d3 = new dummy();
+        Dummy d1 = new Dummy();
+        Dummy d2 = new Dummy();
+        Dummy d3 = new Dummy();
         
         d1.pos = startPos + 1;
         d2.pos = startPos + width();

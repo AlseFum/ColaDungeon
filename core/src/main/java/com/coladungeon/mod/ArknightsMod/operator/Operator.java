@@ -3,13 +3,13 @@ package com.coladungeon.mod.ArknightsMod.operator;
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.mobs.npcs.NPC;
-import com.coladungeon.mod.ArknightsMod.DummySprite;
+import com.coladungeon.mod.ArknightsMod.NPC.Dummy;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 public class Operator extends NPC {
 
     {
-        spriteClass = DummySprite.class;
+        spriteClass = Dummy.DummySprite.class;
         
         HP = HT = 100;
         defenseSkill = 20;

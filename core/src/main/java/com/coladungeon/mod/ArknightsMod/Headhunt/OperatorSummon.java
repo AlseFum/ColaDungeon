@@ -1,4 +1,4 @@
-package com.coladungeon.mod.ArknightsMod.items;
+package com.coladungeon.mod.ArknightsMod.Headhunt;
 
 import java.util.ArrayList;
 

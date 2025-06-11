@@ -44,7 +44,7 @@ import com.watabou.utils.Random;
  * 伤害类型系统 这个类用于处理游戏中所有可能的伤害类型
  *
  * 1. 物理伤害类型： - 普通攻击伤害 (Normal Attack) - 武器伤害 (Weapon Damage) - 徒手攻击伤害 (Unarmed
- * Attack) - 远程武器伤害 (Ranged Weapon) - 重击伤害 (Critical Hit) - 连击伤害 (Combo Attack)
+ * Attack) - 远程武器伤害 (Ranged Weapon)
  *
  * 2. 元素伤害类型： - 火焰伤害 (Fire) - 冰冻伤害 (Frost) - 闪电伤害 (Lightning) - 酸液伤害 (Acid) -
  * 毒素伤害 (Poison) - 神圣伤害 (Holy) - 暗影伤害 (Shadow) - 奥术伤害 (Arcane)
@@ -204,6 +204,7 @@ public class Damage {
         }
 
         if (!Char.hit(attacker, defender, accMulti, false)) {
+            defender.sprite.showStatus(CharSprite.NEUTRAL, "miss");
             return new PhysicalResult(false, 0, Interrupt.Dodge, visibleFight);
         }
         //check hit or not --finished

@@ -1,4 +1,4 @@
-package com.coladungeon.mod.ArknightsMod.items;
+package com.coladungeon.mod.ArknightsMod.items.weapon;
 
 import com.coladungeon.Assets;
 import com.coladungeon.actors.Char;

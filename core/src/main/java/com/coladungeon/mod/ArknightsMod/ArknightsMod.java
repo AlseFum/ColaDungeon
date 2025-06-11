@@ -5,12 +5,13 @@ import com.coladungeon.levels.themes.ThemePack;
 import com.coladungeon.levels.themes.ThemeSheet;
 import com.coladungeon.mod.Index;
 import com.coladungeon.utils.EventBus;
-import com.coladungeon.mod.ArknightsMod.items.OperatorSummon;
-import com.coladungeon.mod.ArknightsMod.items.RhodesStandardSword;
+import com.coladungeon.mod.ArknightsMod.Headhunt.OperatorSummon;
+import com.coladungeon.mod.ArknightsMod.items.weapon.RhodesStandardSword;
 import com.coladungeon.mod.ArknightsMod.themes.LungmenLevel;
+import com.coladungeon.mod.ArknightsMod.operator.ProjektRed.RedKnife;
 public class ArknightsMod extends Index.Mod {
-
     {
+        
         author = "alsecola";
         namespace = "arknights-parody";
     }
@@ -34,8 +35,11 @@ public class ArknightsMod extends Index.Mod {
         EventBus.register("Hero:created",(data)->{
             new OperatorSummon().identify().collect();
             new RhodesStandardSword().identify().collect();
+            RedKnife redknife=new RedKnife();
+            redknife.identify().collect();
+            System.out.println(redknife.image);
+            System.out.println(redknife.name());
             return null;
         });
-        throw new RuntimeException("mymy");
     }
 }
