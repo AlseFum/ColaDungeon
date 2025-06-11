@@ -82,9 +82,13 @@ public class Chakram extends Weapon {
             case AVAILABLE -> {
                 switch (action) {
                     case "投掷" ->
-                        GameScene.selectCell(thrower);
+                        {GameScene.selectCell(thrower);
+                        defaultAction = AC_THROW;}
                     case "蓄力投掷" ->
-                        GameScene.selectCell(powerThrower);
+                        {GameScene.selectCell(powerThrower);
+                        defaultAction=AC_POWER_THROW;
+                        }
+                        
                     default ->
                         super.execute(hero, action);
                 }
@@ -100,7 +104,7 @@ public class Chakram extends Weapon {
         }
     }
 
-    private CellSelector.Listener thrower = new CellSelector.Listener() {
+    public CellSelector.Listener thrower = new CellSelector.Listener() {
         @Override
         public void onSelect(Integer target) {
             if (target != null) {
