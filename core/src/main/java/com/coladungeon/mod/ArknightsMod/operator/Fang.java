@@ -1,6 +1,8 @@
 package com.coladungeon.mod.ArknightsMod.operator;
 
 import com.coladungeon.items.weapon.Weapon;
+import com.coladungeon.mod.ArknightsMod.Operator;
+
 public class Fang extends Operator {
     {
         rarity=Rarity.S1;

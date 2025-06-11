@@ -6,7 +6,7 @@ import com.coladungeon.Dungeon;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.Item;
 import com.coladungeon.messages.Messages;
-import com.coladungeon.mod.ArknightsMod.operator.Operator;
+import com.coladungeon.mod.ArknightsMod.Operator;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.utils.GLog;

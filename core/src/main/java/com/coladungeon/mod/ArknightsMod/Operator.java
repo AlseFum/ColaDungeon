@@ -1,4 +1,4 @@
-package com.coladungeon.mod.ArknightsMod.operator;
+package com.coladungeon.mod.ArknightsMod;
 
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Char;

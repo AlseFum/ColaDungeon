@@ -124,7 +124,7 @@ public class Damage {
 
         boolean visibleFight = Dungeon.level.heroFOV[attacker.pos]
                 || Dungeon.level.heroFOV[defender.pos];
-        Interrupt reason = null;
+        // Interrupt reason = null;
         if (defender.isInvulnerable(attacker.getClass())) {
             if (visibleFight) {
                 defender.sprite.showStatus(CharSprite.POSITIVE,
@@ -142,8 +142,7 @@ public class Damage {
         //
         int dr = Math.round(defender.drRoll() * AscensionChallenge.statModifier(defender));
 
-        if (attacker instanceof Hero) {
-            Hero h = (Hero) attacker;
+        if (attacker instanceof Hero h) {
             if (h.belongings.attackingWeapon() instanceof MissileWeapon
                     && h.subClass == HeroSubClass.SNIPER
                     && !Dungeon.level.adjacent(h.pos, defender.pos)) {
@@ -270,38 +269,20 @@ public class Damage {
         for (Map.Entry<Short, ArrayList<Augment>> entry : priorityGroups.entrySet()) {
             if (entry.getKey() > 0) {
                 for (Augment augment : entry.getValue()) {
-                    switch (augment.type) {
-                        case add:
-                            dmg += augment.value;
-                            break;
-                        case mul:
-                            dmg *= augment.value;
-                            break;
-                        case pipe:
-                            dmg = augment.pipe.pipe(dmg);
-                            break;
-                    }
+                    dmg = switch (augment.type) {
+                        case add -> dmg + augment.value;
+                        case mul -> dmg * augment.value;
+                        case pipe -> augment.pipe.pipe(dmg);
+                    };
                 }
             }
         }
 
         int effectiveDamage = defender.defenseProc(attacker, Math.round(dmg));
-        int finalEffectiveDamage = EventBus.fire("PhysicalDamage:afterDefense", "attacker", attacker, "defender", defender, "effectiveDamage", effectiveDamage)
-                .stream()
-                .filter(handler -> handler instanceof Augment)
-                .map(handler -> (Augment) handler)
-                .reduce(effectiveDamage, (ed, augment) -> {
-                    switch (augment.type) {
-                        case add:
-                            return ed + (int) augment.value;
-                        case mul:
-                            return (int) (ed * augment.value);
-                        case pipe:
-                            return (int) augment.pipe.pipe(ed);
-                        default:
-                            return ed;
-                    }
-                }, (a, b) -> b);
+        int finalEffectiveDamage = Augment.process(
+            EventBus.fire("PhysicalDamage:afterDefense", "attacker", attacker, "defender", defender, "effectiveDamage", effectiveDamage),
+            effectiveDamage
+        );
         if (finalEffectiveDamage >= 0) {
             finalEffectiveDamage = Math.max(finalEffectiveDamage - dr, 0);
 

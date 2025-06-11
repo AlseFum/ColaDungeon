@@ -37,8 +37,6 @@ public class ArknightsMod extends Index.Mod {
             new RhodesStandardSword().identify().collect();
             RedKnife redknife=new RedKnife();
             redknife.identify().collect();
-            System.out.println(redknife.image);
-            System.out.println(redknife.name());
             return null;
         });
     }

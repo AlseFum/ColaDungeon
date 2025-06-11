@@ -2,6 +2,7 @@ package com.coladungeon.mod.ArknightsMod.operator;
 
 import com.coladungeon.actors.Char;
 import com.coladungeon.mod.ArknightsMod.NPC.Dummy;
+import com.coladungeon.mod.ArknightsMod.Operator;
 import com.watabou.utils.Random;
 import com.coladungeon.actors.buffs.Paralysis;
 import com.coladungeon.actors.buffs.Buff;
