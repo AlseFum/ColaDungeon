@@ -36,6 +36,7 @@ import com.coladungeon.items.weapon.melee.MeleeWeapon;
 import com.coladungeon.items.weapon.missiles.MissileWeapon;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.sprites.CharSprite;
+import com.coladungeon.utils.Augment;
 import com.coladungeon.utils.EventBus;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
@@ -75,76 +76,6 @@ public class Damage {
         Dodge,
         NotFound,
         Else;
-    }
-
-    public static class DamageAugment {
-
-        public short priority;
-        public Type type;
-        public float value;
-        public Pipe pipe = null;
-
-        public static enum Type {
-            add,
-            mul,
-            pipe
-        }
-
-        @FunctionalInterface
-        public interface Pipe {
-
-            float pipe(float value);
-        }
-
-        public static DamageAugment Add(int v) {
-            return new DamageAugment(Type.add, v, null);
-        }
-
-        public static DamageAugment Mul(int v) {
-            return new DamageAugment(Type.mul, v, null);
-        }
-
-        public static DamageAugment Pipe(Pipe p) {
-            return new DamageAugment(Type.pipe, 0, p);
-        }
-
-        public DamageAugment(Type t, int v) {
-            this(t, v, null);
-        }
-
-        public DamageAugment(Type t, int v, Pipe p) {
-            this(t, v, p, (short) 0);
-        }
-
-        public DamageAugment(Type t, int v, Pipe p, short priority) {
-            this.type = t;
-            this.priority = priority;
-            this.value = v;
-            this.pipe = p;
-        }
-
-        public static int process(ArrayList<Object> augments, int _dmg) {
-            return augments.stream()
-                    .filter(r -> r instanceof DamageAugment)
-                    .map(r -> (DamageAugment) r)
-                    .reduce(_dmg, (dmg, augment) -> {
-                        switch (augment.type) {
-                            case add -> {
-                                return dmg + (int) augment.value;
-                            }
-                            case mul -> {
-                                return (int) (dmg * augment.value);
-                            }
-                            case pipe -> {
-                                return (int) augment.pipe.pipe(dmg);
-                            }
-                            default -> {
-                                return dmg;
-                            }
-                        }
-                    }, (a, b) -> b);
-        }
-
     }
 
     public static class PhysicalResult {
@@ -235,20 +166,20 @@ public class Damage {
             dmg = attacker.damageRoll();
         }
         //here to collect eventresults from eventbus
-        Map<Short, ArrayList<DamageAugment>> priorityGroups = EventBus.fire("PhysicalDamage", "attacker", attacker, "defender", defender)
+        Map<Short, ArrayList<Augment>> priorityGroups = EventBus.fire("PhysicalDamage", "attacker", attacker, "defender", defender)
                 .stream()
-                .filter(r -> r instanceof DamageAugment)
-                .map(r -> (DamageAugment) r)
+                .filter(r -> r instanceof Augment)
+                .map(r -> (Augment) r)
                 .collect(Collectors.groupingBy(
                         augment -> augment.priority,
                         Collectors.toCollection(ArrayList::new)
                 ));
         dmg *= dmgMulti;
         // 处理priority 0的乘法修正
-        ArrayList<DamageAugment> priority0Augments = priorityGroups.get((short) 0);
+        ArrayList<Augment> priority0Augments = priorityGroups.get((short) 0);
         if (priority0Augments != null) {
-            for (DamageAugment augment : priority0Augments) {
-                if (augment.type == DamageAugment.Type.mul) {
+            for (Augment augment : priority0Augments) {
+                if (augment.type == Augment.Type.mul) {
                     dmg *= augment.value;
                 }
             }
@@ -257,8 +188,8 @@ public class Damage {
         dmg += dmgBonus;
         // 处理priority 0的加法修正
         if (priority0Augments != null) {
-            for (DamageAugment augment : priority0Augments) {
-                if (augment.type == DamageAugment.Type.add) {
+            for (Augment augment : priority0Augments) {
+                if (augment.type == Augment.Type.add) {
                     dmg += augment.value;
                 }
             }
@@ -336,9 +267,9 @@ public class Damage {
         }
 
         // 处理priority > 0的修正
-        for (Map.Entry<Short, ArrayList<DamageAugment>> entry : priorityGroups.entrySet()) {
+        for (Map.Entry<Short, ArrayList<Augment>> entry : priorityGroups.entrySet()) {
             if (entry.getKey() > 0) {
-                for (DamageAugment augment : entry.getValue()) {
+                for (Augment augment : entry.getValue()) {
                     switch (augment.type) {
                         case add:
                             dmg += augment.value;
@@ -357,8 +288,8 @@ public class Damage {
         int effectiveDamage = defender.defenseProc(attacker, Math.round(dmg));
         int finalEffectiveDamage = EventBus.fire("PhysicalDamage:afterDefense", "attacker", attacker, "defender", defender, "effectiveDamage", effectiveDamage)
                 .stream()
-                .filter(handler -> handler instanceof DamageAugment)
-                .map(handler -> (DamageAugment) handler)
+                .filter(handler -> handler instanceof Augment)
+                .map(handler -> (Augment) handler)
                 .reduce(effectiveDamage, (ed, augment) -> {
                     switch (augment.type) {
                         case add:

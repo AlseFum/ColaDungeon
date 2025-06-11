@@ -68,12 +68,12 @@ import com.coladungeon.plants.Swiftthistle;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.CharSprite;
 import com.coladungeon.utils.GLog;
-import com.coladungeon.mechanics.Damage.DamageAugment;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
+import com.coladungeon.utils.Augment;
 // import com.coladungeon.actors.traits.MobTraitGenerator;
 // import com.coladungeon.actors.traits.Trait;
 
@@ -690,7 +690,7 @@ public abstract class Mob extends Char {
 			Statistics.thrownAttacks++;
 			Badges.validateHuntressUnlock();
 		}
-		damage=DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+		damage = Augment.process(com.coladungeon.utils.EventBus.fire(
                 "Mob:defenseProc:beforeTalent",
                 "mob", this,
                 "enemy", enemy,
@@ -724,7 +724,7 @@ public abstract class Mob extends Char {
 				recentlyAttackedBy.add(enemy);
 			}
 		}
-		damage=DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+		damage = Augment.process(com.coladungeon.utils.EventBus.fire(
                 "Mob:defenseProc:afterTalent",
                 "mob", this,
                 "enemy", enemy,

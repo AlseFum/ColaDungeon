@@ -151,7 +151,7 @@ import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndHero;
 import com.coladungeon.windows.WndResurrect;
 import com.coladungeon.windows.WndTradeItem;
-import com.coladungeon.mechanics.Damage.DamageAugment;
+import com.coladungeon.utils.Augment;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.Delayer;
@@ -1557,7 +1557,7 @@ public class Hero extends Char {
         damage = Talent.onAttackProc(this, enemy, damage);
 
         // 1.5 Talent后事件
-            damage = DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+            damage = Augment.process(com.coladungeon.utils.EventBus.fire(
                 "Hero:attackProc:afterTalent",
                 "hero", this,
                 "enemy", enemy,
@@ -1569,7 +1569,7 @@ public class Hero extends Char {
             damage = wep.proc(this, enemy, damage);
 
             // 2. 武器修正后事件
-            damage = DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+            damage = Augment.process(com.coladungeon.utils.EventBus.fire(
                     "Hero:attackProc:afterWeapon",
                     "hero", this,
                     "enemy", enemy,
@@ -1632,7 +1632,7 @@ public class Hero extends Char {
 
     @Override
     public int defenseProc(Char enemy, int damage) {
-        damage = DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+        damage = Augment.process(com.coladungeon.utils.EventBus.fire(
                 "Hero:defenseProc:beforeTalent",
                 "hero", this,
                 "enemy", enemy,
@@ -1661,7 +1661,7 @@ public class Hero extends Char {
         if (rockArmor != null) {
             damage = rockArmor.absorb(damage);
         }
-        damage = DamageAugment.process(com.coladungeon.utils.EventBus.fire(
+        damage = Augment.process(com.coladungeon.utils.EventBus.fire(
                 "Hero:defenseProc:afterTalent",
                 "hero", this,
                 "enemy", enemy,
@@ -2280,7 +2280,7 @@ public class Hero extends Char {
         curAction = null;
 
         Ankh ankh = null;
-        // I‘m to create a divine ankh that revive infinite times
+        // I'm to create a divine ankh that revive infinite times
         // look for ankhs in player inventory, prioritize ones which are blessed.
         for (Ankh i : belongings.getAllItems(Ankh.class)) {
             if (ankh == null || i.isBlessed() || i instanceof DivineAnkh) {
