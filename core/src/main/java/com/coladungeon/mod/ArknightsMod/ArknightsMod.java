@@ -3,12 +3,14 @@ package com.coladungeon.mod.ArknightsMod;
 import com.coladungeon.actors.hero.HeroClassSheet;
 import com.coladungeon.levels.themes.ThemePack;
 import com.coladungeon.levels.themes.ThemeSheet;
+import com.coladungeon.mod.ArknightsMod.Headhunt.OperatorSummon;
+import com.coladungeon.mod.ArknightsMod.items.weapon.CommandTerminal;
+import com.coladungeon.mod.ArknightsMod.items.weapon.RhodesStandardSword;
+import com.coladungeon.mod.ArknightsMod.operator.ProjektRed.RedKnife;
+import com.coladungeon.mod.ArknightsMod.themes.LungmenLevel;
 import com.coladungeon.mod.Index;
 import com.coladungeon.utils.EventBus;
-import com.coladungeon.mod.ArknightsMod.Headhunt.OperatorSummon;
-import com.coladungeon.mod.ArknightsMod.items.weapon.RhodesStandardSword;
-import com.coladungeon.mod.ArknightsMod.themes.LungmenLevel;
-import com.coladungeon.mod.ArknightsMod.operator.ProjektRed.RedKnife;
+
 public class ArknightsMod extends Index.Mod {
     {
         
@@ -37,6 +39,7 @@ public class ArknightsMod extends Index.Mod {
             new RhodesStandardSword().identify().collect();
             RedKnife redknife=new RedKnife();
             redknife.identify().collect();
+            new CommandTerminal().identify().collect();
             return null;
         });
     }

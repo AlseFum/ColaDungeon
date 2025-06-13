@@ -32,16 +32,15 @@ public class ExecutorWeapon extends MeleeWeapon {
 					damage += Hero.heroDamageIntRange(0, exStr);
 				}
 				_damage=damage;
-			}
-		}else{
+			}else{
             _damage=super.damageRoll(owner);
-
         }
+		}
 		return _damage;
     }
     @Override
     public int min(int lvl) {
-        return 1;
+        return 1+tier+lvl;
     }
     @Override
 	public int max(int lvl) {
@@ -92,7 +91,7 @@ public class ExecutorWeapon extends MeleeWeapon {
     }
     @Override
     public String info(){
-        return "这件武器在你伏击时能提升最小伤害。造成的伤害足够大时会触发额外效果。";
+        return "这件武器在你伏击时能提升最小伤害。造成的伤害足够大时会触发额外效果。<min,max>:<"+min()+","+max()+">";
     }
 
 }

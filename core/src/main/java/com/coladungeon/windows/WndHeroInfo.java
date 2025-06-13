@@ -21,6 +21,9 @@
 
 package com.coladungeon.windows;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 import com.coladungeon.Badges;
 import com.coladungeon.actors.hero.HeroClass;
 import com.coladungeon.actors.hero.HeroSubClass;
@@ -39,9 +42,6 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.DeviceCompat;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 public class WndHeroInfo extends WndTabbed {
 

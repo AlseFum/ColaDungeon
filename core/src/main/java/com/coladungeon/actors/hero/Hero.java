@@ -246,7 +246,7 @@ public class Hero extends Char {
     }
 
     public Hero() {
-        this(HeroClass.ROGUE);
+        this(HeroClass.WARRIOR);
     }
 
     public void updateHT(boolean boostHP) {
@@ -339,7 +339,7 @@ public class Hero extends Char {
             if (bundle.contains(CLASS)) {
                 String heroClassStr = bundle.getString(CLASS);
                 // 尝试通过 valueOf 获取 HeroClass
-                heroClass = HeroClass.valueOf(heroClassStr);
+                heroClass = HeroClassSheet.valueOf(heroClassStr);
                 // 如果为 null，则使用默认 WARRIOR
                 if (heroClass == null) {
                     heroClass = HeroClass.WARRIOR;

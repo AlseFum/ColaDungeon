@@ -41,6 +41,7 @@ import com.coladungeon.actors.buffs.MindVision;
 import com.coladungeon.actors.buffs.RevealedArea;
 import com.coladungeon.actors.buffs.Terror;
 import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.actors.hero.HeroClassSheet;
 import com.coladungeon.actors.hero.Talent;
 import com.coladungeon.actors.hero.abilities.cleric.PowerOfMany;
 import com.coladungeon.actors.hero.abilities.huntress.SpiritHawk;
@@ -266,13 +267,13 @@ public class Dungeon {
         Wandmaker.Quest.reset();
         Blacksmith.Quest.reset();
         Imp.Quest.reset();
-
+ 
         hero = new Hero(GamesInProgress.selectedClass);
+        
         GamesInProgress.selectedClass.initHero(hero);
-        System.out.println("[Dungeon::init] hero set " + hero);
-        System.out.println("[Dungeon::init] hero.heroClass set " + hero.heroClass);
+
+        
         hero.live();
-        // Dungeon.hero = hero;
         
 
         Badges.reset();

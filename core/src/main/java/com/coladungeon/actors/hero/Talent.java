@@ -548,17 +548,17 @@ public class Talent implements Bundlable {
 			HeroClass cls = Dungeon.hero != null 
 				? Dungeon.hero.heroClass 
 				: GamesInProgress.selectedClass;
-			if (cls == HeroClass.WARRIOR) {
+			if (cls == HeroClassSheet.WARRIOR) {
 					return 26;
-			} else if (cls == HeroClass.MAGE) {
+			} else if (cls == HeroClassSheet.MAGE) {
 					return 58;
-			} else if (cls == HeroClass.ROGUE) {
+			} else if (cls == HeroClassSheet.ROGUE) {
 					return 90;
-			} else if (cls == HeroClass.HUNTRESS) {
+			} else if (cls == HeroClassSheet.HUNTRESS) {
 					return 122;
-			} else if (cls == HeroClass.DUELIST) {
+			} else if (cls == HeroClassSheet.DUELIST) {
 					return 154;
-			} else if (cls == HeroClass.CLERIC) {
+			} else if (cls == HeroClassSheet.CLERIC) {
 					return 186;
 			} else {
 				return 26; // default to warrior
@@ -611,7 +611,7 @@ public class Talent implements Bundlable {
 
 	public static void onTalentUpgraded( Hero hero, Talent talent ){
 		//for metamorphosis
-		if (talent == IRON_WILL && hero.heroClass != HeroClass.WARRIOR){
+		if (talent == IRON_WILL && hero.heroClass != HeroClassSheet.WARRIOR){
 			Buff.affect(hero, BrokenSeal.WarriorShield.class);
 		}
 
@@ -647,7 +647,7 @@ public class Talent implements Bundlable {
 			Buff.affect(hero, Talent.ProtectiveShadowsTracker.class);
 		}
 
-		if (talent == LIGHT_CLOAK && hero.heroClass == HeroClass.ROGUE){
+		if (talent == LIGHT_CLOAK && hero.heroClass == HeroClassSheet.ROGUE){
 			for (Item item : Dungeon.hero.belongings.backpack){
 				if (item instanceof CloakOfShadows){
 					if (!hero.belongings.lostInventory() || item.keptThroughLostInventory()) {
@@ -677,7 +677,7 @@ public class Talent implements Bundlable {
 			}
 		}
 
-		if (talent == LIGHT_READING && hero.heroClass == HeroClass.CLERIC){
+		if (talent == LIGHT_READING && hero.heroClass == HeroClassSheet.CLERIC){
 			for (Item item : Dungeon.hero.belongings.backpack){
 				if (item instanceof HolyTome){
 					if (!hero.belongings.lostInventory() || item.keptThroughLostInventory()) {
@@ -740,7 +740,7 @@ public class Talent implements Bundlable {
 			Buff.affect( hero, PhysicalEmpower.class).set(3, 1 + hero.pointsInTalent(STRENGTHENING_MEAL));
 		}
 		if (hero.hasTalent(FOCUSED_MEAL)){
-			if (hero.heroClass == HeroClass.DUELIST){
+			if (hero.heroClass == HeroClassSheet.DUELIST){
 				//0.67/1 charge for the duelist
 				Buff.affect( hero, MeleeWeapon.Charger.class ).gainCharge((hero.pointsInTalent(FOCUSED_MEAL)+1)/3f);
 				ScrollOfRecharging.charge( hero );
@@ -750,7 +750,7 @@ public class Talent implements Bundlable {
 			}
 		}
 		if (hero.hasTalent(SATIATED_SPELLS)){
-			if (hero.heroClass == HeroClass.CLERIC) {
+			if (hero.heroClass == HeroClassSheet.CLERIC) {
 				Buff.affect(hero, SatiatedSpellsTracker.class);
 			} else {
 				//3/5 shielding, delayed up to 10 turns
@@ -763,7 +763,7 @@ public class Talent implements Bundlable {
 			}
 		}
 		if (hero.hasTalent(ENLIGHTENING_MEAL)){
-			if (hero.heroClass == HeroClass.CLERIC) {
+			if (hero.heroClass == HeroClassSheet.CLERIC) {
 				HolyTome tome = hero.belongings.getItem(HolyTome.class);
 				if (tome != null) {
 					tome.directCharge( 0.5f * (1+hero.pointsInTalent(ENLIGHTENING_MEAL)));
@@ -813,7 +813,7 @@ public class Talent implements Bundlable {
 
 	public static void onPotionUsed( Hero hero, int cell, float factor ){
 		if (hero.hasTalent(LIQUID_WILLPOWER)){
-			if (hero.heroClass == HeroClass.WARRIOR) {
+			if (hero.heroClass == HeroClassSheet.WARRIOR) {
 				BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
 				if (shield != null) {
 					// 50/75% of total shield
@@ -883,7 +883,7 @@ public class Talent implements Bundlable {
 			Sample.INSTANCE.play( Assets.Sounds.MELD );
 		}
 		if (hero.hasTalent(RECALL_INSCRIPTION) && Scroll.class.isAssignableFrom(cls) && cls != ScrollOfUpgrade.class){
-			if (hero.heroClass == HeroClass.CLERIC){
+			if (hero.heroClass == HeroClassSheet.CLERIC){
 				Buff.prolong(hero, RecallInscription.UsedItemTracker.class, hero.pointsInTalent(RECALL_INSCRIPTION) == 2 ? 300 : 10).item = cls;
 			} else {
 				// 10/15%
@@ -897,7 +897,7 @@ public class Talent implements Bundlable {
 
 	public static void onRunestoneUsed( Hero hero, int pos, Class<?extends Item> cls ){
 		if (hero.hasTalent(RECALL_INSCRIPTION) && Runestone.class.isAssignableFrom(cls)){
-			if (hero.heroClass == HeroClass.CLERIC){
+			if (hero.heroClass == HeroClassSheet.CLERIC){
 				Buff.prolong(hero, RecallInscription.UsedItemTracker.class, hero.pointsInTalent(RECALL_INSCRIPTION) == 2 ? 300 : 10).item = cls;
 			} else {
 
@@ -919,13 +919,13 @@ public class Talent implements Bundlable {
 			Buff.prolong(hero, EnhancedRings.class, 3f*hero.pointsInTalent(ENHANCED_RINGS));
 		}
 
-		if (Dungeon.hero.heroClass != HeroClass.CLERIC
+		if (Dungeon.hero.heroClass != HeroClassSheet.CLERIC
 				&& Dungeon.hero.hasTalent(Talent.DIVINE_SENSE)){
 			Buff.prolong(Dungeon.hero, DivineSense.DivineSenseTracker.class, Dungeon.hero.cooldown()+1);
 		}
 
 		// 10/20/30%
-		if (Dungeon.hero.heroClass != HeroClass.CLERIC
+		if (Dungeon.hero.heroClass != HeroClassSheet.CLERIC
 				&& Dungeon.hero.hasTalent(Talent.CLEANSE)
 				&& Random.Int(10) < Dungeon.hero.pointsInTalent(Talent.CLEANSE)){
 			boolean removed = false;
@@ -1077,23 +1077,26 @@ public class Talent implements Bundlable {
 			talents.add(new LinkedHashMap<>());
 		}
 		ArrayList<Talent> tierTalents = new ArrayList<>();
-
 		//tier 1
-		if (cls == HeroClass.WARRIOR) {
+			   if (cls == HeroClassSheet.WARRIOR) {
 				Collections.addAll(tierTalents, HEARTY_MEAL, VETERANS_INTUITION, PROVOKED_ANGER, IRON_WILL);
-		} else if (cls == HeroClass.MAGE) {
+		} else if (cls == HeroClassSheet.MAGE) {
 				Collections.addAll(tierTalents, EMPOWERING_MEAL, SCHOLARS_INTUITION, LINGERING_MAGIC, BACKUP_BARRIER);
-		} else if (cls == HeroClass.ROGUE) {
+		} else if (cls == HeroClassSheet.ROGUE) {
 				Collections.addAll(tierTalents, CACHED_RATIONS, THIEFS_INTUITION, SUCKER_PUNCH, PROTECTIVE_SHADOWS);
-		} else if (cls == HeroClass.HUNTRESS) {
+		} else if (cls == HeroClassSheet.HUNTRESS) {
 				Collections.addAll(tierTalents, NATURES_BOUNTY, SURVIVALISTS_INTUITION, FOLLOWUP_STRIKE, NATURES_AID);
-		} else if (cls == HeroClass.DUELIST) {
+		} else if (cls == HeroClassSheet.DUELIST) {
 				Collections.addAll(tierTalents, STRENGTHENING_MEAL, ADVENTURERS_INTUITION, PATIENT_STRIKE, AGGRESSIVE_BARRIER);
-		} else if (cls == HeroClass.CLERIC) {
+		} else if (cls == HeroClassSheet.CLERIC) {
 				Collections.addAll(tierTalents, SATIATED_SPELLS, HOLY_INTUITION, SEARING_LIGHT, SHIELD_OF_LIGHT);
-		} else if(cls.classTalentsTier1!=null&&!cls.classTalentsTier1.isEmpty()){
+		} else if(
+			cls!=null&&
+			cls.classTalentsTier1!=null
+			&&!cls.classTalentsTier1.isEmpty()){
 			Collections.addAll(tierTalents, cls.classTalentsTier1.toArray(new Talent[0]));
 		} else {
+			System.out.println("[Talent::initClassTalents] cls don't hit any branch");
 			// Default to warrior
 			Collections.addAll(tierTalents, HEARTY_MEAL, VETERANS_INTUITION, PROVOKED_ANGER, IRON_WILL);
 		}
@@ -1107,19 +1110,19 @@ public class Talent implements Bundlable {
 		tierTalents.clear();
 
 		//tier 2
-		if (cls == HeroClass.WARRIOR) {
+		if (cls == HeroClassSheet.WARRIOR) {
 				Collections.addAll(tierTalents, IRON_STOMACH, LIQUID_WILLPOWER, RUNIC_TRANSFERENCE, LETHAL_MOMENTUM, IMPROVISED_PROJECTILES);
-		} else if (cls == HeroClass.MAGE) {
+		} else if (cls == HeroClassSheet.MAGE) {
 				Collections.addAll(tierTalents, ENERGIZING_MEAL, INSCRIBED_POWER, WAND_PRESERVATION, ARCANE_VISION, SHIELD_BATTERY);
-		} else if (cls == HeroClass.ROGUE) {
+		} else if (cls == HeroClassSheet.ROGUE) {
 				Collections.addAll(tierTalents, MYSTICAL_MEAL, INSCRIBED_STEALTH, WIDE_SEARCH, SILENT_STEPS, ROGUES_FORESIGHT);
-		} else if (cls == HeroClass.HUNTRESS) {
+		} else if (cls == HeroClassSheet.HUNTRESS) {
 				Collections.addAll(tierTalents, INVIGORATING_MEAL, LIQUID_NATURE, REJUVENATING_STEPS, HEIGHTENED_SENSES, DURABLE_PROJECTILES);
-		} else if (cls == HeroClass.DUELIST) {
+		} else if (cls == HeroClassSheet.DUELIST) {
 				Collections.addAll(tierTalents, FOCUSED_MEAL, LIQUID_AGILITY, WEAPON_RECHARGING, LETHAL_HASTE, SWIFT_EQUIP);
-		} else if (cls == HeroClass.CLERIC) {
+		} else if (cls == HeroClassSheet.CLERIC) {
 				Collections.addAll(tierTalents, ENLIGHTENING_MEAL, RECALL_INSCRIPTION, SUNRAY, DIVINE_SENSE, BLESS);
-		} else if(cls.classTalentsTier2!=null&&!cls.classTalentsTier2.isEmpty()){
+		} else if(cls!=null&&cls.classTalentsTier2!=null&&!cls.classTalentsTier2.isEmpty()){
 			Collections.addAll(tierTalents, cls.classTalentsTier2.toArray(new Talent[0]));
 		} else {
 			// Default to warrior
@@ -1136,17 +1139,17 @@ public class Talent implements Bundlable {
 
 		//tier 3
 		//??where
-		if (cls == HeroClass.WARRIOR) {
+		if (cls == HeroClassSheet.WARRIOR) {
 				Collections.addAll(tierTalents, HOLD_FAST, STRONGMAN);
-		} else if (cls == HeroClass.MAGE) {
+		} else if (cls == HeroClassSheet.MAGE) {
 				Collections.addAll(tierTalents, DESPERATE_POWER, ALLY_WARP);
-		} else if (cls == HeroClass.ROGUE) {
+		} else if (cls == HeroClassSheet.ROGUE) {
 				Collections.addAll(tierTalents, ENHANCED_RINGS, LIGHT_CLOAK);
-		} else if (cls == HeroClass.HUNTRESS) {
+		} else if (cls == HeroClassSheet.HUNTRESS) {
 				Collections.addAll(tierTalents, POINT_BLANK, SEER_SHOT);
-		} else if (cls == HeroClass.DUELIST) {
+		} else if (cls == HeroClassSheet.DUELIST) {
 				Collections.addAll(tierTalents, PRECISE_ASSAULT, DEADLY_FOLLOWUP);
-		} else if (cls == HeroClass.CLERIC) {
+		} else if (cls == HeroClassSheet.CLERIC) {
 				Collections.addAll(tierTalents, CLEANSE, LIGHT_READING);
 		} else {
 			// Default to warrior

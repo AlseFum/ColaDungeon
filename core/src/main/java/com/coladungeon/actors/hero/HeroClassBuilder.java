@@ -1,24 +1,3 @@
-/*
- * Pixel Dungeon
- * Copyright (C) 2012-2015 Oleg Dolya
- *
- * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
-
 package com.coladungeon.actors.hero;
 
 import com.coladungeon.Assets;
@@ -28,7 +7,6 @@ import com.coladungeon.messages.Messages;
 import com.watabou.utils.DeviceCompat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -151,10 +129,20 @@ public class HeroClassBuilder {
     }
 
     public HeroClassBuilder initializer(Consumer<Hero> _initializer) {
-        this.initializer =(hero)->{
+        this.initializer = (hero) -> {
+            hero.heroClass = HeroClassSheet.registeredClasses.get(id);
             HeroClassSheet.initCommon(hero);
             _initializer.accept(hero);
-            hero.heroClass=HeroClassSheet.registeredClasses.get(id);
+            
+            System.out.println("Class is "+ HeroClassSheet.registeredClasses.get(id));
+
+            for (var t : hero.talents) {
+                for (var n : t.entrySet()) {
+                    System.out.println(n.getKey().name);
+                }
+                System.out.println("\n");
+            }
+            System.out.println("[HeroClassBuilder::initializer]");
         };
         return this;
     }
@@ -170,13 +158,13 @@ public class HeroClassBuilder {
     }
 
     // public HeroClassBuilder subclassTalents(Talent... talents) {
-    //     Collections.addAll(this.subclassTalents, talents);
-    //     return this;
+    // Collections.addAll(this.subclassTalents, talents);
+    // return this;
     // }
-    
+
     // public HeroClassBuilder armorTalents(Talent... talents) {
-    //     Collections.addAll(this.armorTalents, talents);
-    //     return this;
+    // Collections.addAll(this.armorTalents, talents);
+    // return this;
     // }
 
     public HeroClass build() {
@@ -204,4 +192,4 @@ public class HeroClassBuilder {
         HeroClassSheet.register(heroClass);
         return heroClass;
     }
-} 
+}

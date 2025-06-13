@@ -65,13 +65,9 @@ public class ProjektRed extends Operator {
 
     public static class RedKnife extends ExecutorWeapon {
 
-        static {
-            ItemSpriteManager.registerTexture("cola/redknife.png", 32)
-            .label("redknife");
-        }
 
         {
-            image = ItemSpriteManager.ByName("redknife");
+            image = ItemSpriteManager.registerTexture("cola/redknife.png",32).label("redknife").getByName("redknife");
         }
         @Override
         public String name(){

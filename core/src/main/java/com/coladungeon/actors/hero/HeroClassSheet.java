@@ -52,11 +52,11 @@ import com.coladungeon.items.supply.testitem;
 import com.coladungeon.items.wands.WandOfMagicMissile;
 import com.coladungeon.items.weapon.SpiritBow;
 import com.coladungeon.items.weapon.melee.Cudgel;
+import com.coladungeon.items.weapon.melee.Dagger;
 import com.coladungeon.items.weapon.melee.Gloves;
 import com.coladungeon.items.weapon.melee.MagesStaff;
 import com.coladungeon.items.weapon.melee.Rapier;
 import com.coladungeon.items.weapon.melee.WornShortsword;
-import com.coladungeon.items.weapon.melee.Dagger;
 import com.coladungeon.items.weapon.missiles.ThrowingKnife;
 import com.coladungeon.items.weapon.missiles.ThrowingSpike;
 import com.coladungeon.items.weapon.missiles.ThrowingStone;
@@ -213,7 +213,6 @@ public final class HeroClassSheet {
                 return false;
             })
             .initializer(hero -> {
-
                 // 基础武器
                 (hero.belongings.weapon = new Rapier()).identify();
                 hero.belongings.weapon.activate(hero);

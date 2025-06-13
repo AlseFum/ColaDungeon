@@ -1,5 +1,6 @@
 package com.coladungeon.actors.hero;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -7,7 +8,6 @@ import com.coladungeon.Badges;
 import com.coladungeon.actors.hero.abilities.ArmorAbility;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
-import java.util.ArrayList;
 
 public class HeroClass implements Comparable<HeroClass>, Bundlable {
 
@@ -16,7 +16,10 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 	public static final HeroClass MAGE = HeroClassSheet.MAGE;
 	public static final HeroClass ROGUE = HeroClassSheet.ROGUE;
 	public static final HeroClass HUNTRESS = HeroClassSheet.HUNTRESS;
-	public static final HeroClass DUELIST = HeroClassSheet.DUELIST;
+	static {
+		System.out.println("[HeroClass::static] WARN:static reference seemed malfunctioned. use another way");
+	}
+	public static final HeroClass DUELIST = HeroClassSheet.valueOf("duelist");
 	public static final HeroClass CLERIC = HeroClassSheet.CLERIC;
 	// public static final HeroClass HEAVY_SQUAD = HeroClassSheet.HEAVY_SQUAD;
 
@@ -68,11 +71,9 @@ public class HeroClass implements Comparable<HeroClass>, Bundlable {
 	// 初始化英雄
 	public void initHero(Hero hero) {
 		hero.heroClass = this;
-		System.out.println("[HeroClass::initHero] hero.heroClass set " + hero.heroClass);
 		if (initializer != null) {
 			initializer.accept(hero);
 		}
-		System.out.println("[HeroClass::initHero] after initializer" + hero.heroClass);
 	}
 
 	/**

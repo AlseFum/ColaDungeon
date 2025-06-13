@@ -1,9 +1,8 @@
 package com.coladungeon.mod.ColaMisc;
 
+import com.coladungeon.mod.ColaMisc.items.food.Cola;
 import com.coladungeon.mod.Index;
 import com.coladungeon.utils.EventBus;
-import com.coladungeon.utils.EventBus.EventData;
-import com.coladungeon.Dungeon;
 public class ColaMisc extends Index.Mod {
 
     {
@@ -22,5 +21,10 @@ public class ColaMisc extends Index.Mod {
         //     }
         //     else return null;
         // });
+        // 在游戏开始时给玩家一个可乐
+        EventBus.register("Hero:created", (data) -> {
+            new Cola().identify().collect();
+            return null;
+        });
     }
 }

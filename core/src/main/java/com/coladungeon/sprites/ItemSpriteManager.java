@@ -28,6 +28,9 @@ public class ItemSpriteManager {
     public static int ByName(String name) {
         return texture_id_map.get(name);
     }
+    public int getByName(String name){
+        return ItemSpriteManager.ByName(name);
+    }
 
     public static Segment registerTexture(String texture, int size) {
         Segment s = new Segment(texture, latestLocation, size);
@@ -109,7 +112,9 @@ public class ItemSpriteManager {
         public ImageMapping get(String label) {
             return get(texture_id_map.get(label));
         }
-
+        public static int getByName(String name){
+            return ItemSpriteManager.ByName(name);
+        }
     }
 
     /**
