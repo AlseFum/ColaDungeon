@@ -3,6 +3,7 @@ package com.coladungeon.mod.ArknightsMod.operator;
 import com.coladungeon.actors.Char;
 import com.coladungeon.mod.ArknightsMod.NPC.Dummy;
 import com.coladungeon.mod.ArknightsMod.Operator;
+import com.coladungeon.mod.ArknightsMod.category.OperatorConst;
 import com.watabou.utils.Random;
 import com.coladungeon.actors.buffs.Paralysis;
 import com.coladungeon.actors.buffs.Buff;
@@ -21,8 +22,8 @@ public class ProjektRed extends Operator {
         alignment = Alignment.ALLY;
 
         // 设置干员特有属性
-        branch = Branch.Core;
-        rarity = Rarity.S6;
+        branch = OperatorConst.Branch.Core;
+        rarity = OperatorConst.Rarity.S6;
         cost = 19;
     }
 

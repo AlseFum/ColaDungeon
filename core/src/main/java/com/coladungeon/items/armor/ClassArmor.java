@@ -21,6 +21,8 @@
 
 package com.coladungeon.items.armor;
 
+import java.util.ArrayList;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Badges;
 import com.coladungeon.Dungeon;
@@ -30,8 +32,7 @@ import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.buffs.Regeneration;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.actors.hero.HeroClass;
-import com.coladungeon.actors.hero.abilities.ArmorAbility;
-import com.coladungeon.actors.hero.abilities.cleric.Trinity;
+import com.coladungeon.actors.hero.HeroClassSheet;
 import com.coladungeon.effects.Speck;
 import com.coladungeon.items.Item;
 import com.coladungeon.items.rings.RingOfEnergy;
@@ -46,8 +47,6 @@ import com.coladungeon.windows.WndChooseAbility;
 import com.coladungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
-
-import java.util.ArrayList;
 
 abstract public class ClassArmor extends Armor {
 
@@ -107,17 +106,20 @@ abstract public class ClassArmor extends Armor {
 		
 		if (owner.heroClass == HeroClass.WARRIOR) {
 				classArmor = new WarriorArmor();
-		} else if (owner.heroClass == HeroClass.ROGUE) {
+		} else if (owner.heroClass == HeroClassSheet.ROGUE) {
 				classArmor = new RogueArmor();
-		} else if (owner.heroClass == HeroClass.MAGE) {
+		} else if (owner.heroClass == HeroClassSheet.MAGE) {
 				classArmor = new MageArmor();
-		} else if (owner.heroClass == HeroClass.HUNTRESS) {
+		} else if (owner.heroClass == HeroClassSheet.HUNTRESS) {
 				classArmor = new HuntressArmor();
-		} else if (owner.heroClass == HeroClass.DUELIST) {
+		} else if (owner.heroClass == HeroClassSheet.DUELIST) {
 				classArmor = new DuelistArmor();
-		} else if (owner.heroClass == HeroClass.CLERIC) {
+		} else if (owner.heroClass == HeroClassSheet.CLERIC) {
 				classArmor = new ClericArmor();
-		} 
+		} else{
+			System.out.println("[ClassArmor::upgrade]Unknown hero class: " + owner.heroClass);
+			classArmor = new WarriorArmor();
+		}
 		
 		classArmor.level(armor.trueLevel());
 		classArmor.tier = armor.tier;

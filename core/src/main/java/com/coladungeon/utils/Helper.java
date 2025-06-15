@@ -1,11 +1,16 @@
 package com.coladungeon.utils;
 
+import java.util.function.Function;
+
 import com.coladungeon.effects.MagicMissile;
 import com.coladungeon.effects.particles.SparkParticle;
 import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.utils.Random;
 
 public class Helper{
+    public static void println(Object... objs){
+        log(objs);
+    }
     public static void log(Object... objs){
         for(var o :objs){
             System.out.println(o);
@@ -70,6 +75,38 @@ public class Helper{
             MagicMissile.MagicParticle particle = new MagicMissile.MagicParticle();
             particle.reset(x, y);
             return particle;
+        }
+    }
+    public static class Result<T> {
+        private T value;
+        private boolean ok;
+
+        private Result() {
+            this.ok = false;
+        }
+
+        public static <T> Result<T> ok(T value) {
+            Result<T> result = new Result<>();
+            result.value = value;
+            result.ok = true;
+            return result;
+        }
+
+        public static <T> Result<T> no() {
+            return new Result<>();
+        }
+
+        public boolean isOk() {
+            return ok;
+        }
+        public T unwrap(){
+            return value;
+        }
+        public T unwrap(T defaultValue){
+            return ok ? value : defaultValue;
+        }
+        public <U> Result<U> then(Function<T, Result<U>> function){
+            return ok ? function.apply(value) : Result.no();
         }
     }
 }

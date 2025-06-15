@@ -699,7 +699,7 @@ public class GameScene extends PixelScene {
 
 	//the actor thread processes at a maximum of 60 times a second
 	//this caps the speed of resting for higher refresh rate displays
-	private float notifyDelay = 1/60f;
+	private float notifyDelay = 1/120f;
 
 	public static boolean updateItemDisplays = false;
 

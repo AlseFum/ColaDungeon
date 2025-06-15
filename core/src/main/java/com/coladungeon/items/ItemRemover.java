@@ -17,6 +17,7 @@ public class ItemRemover extends Item {
         image = ItemSpriteSheet.TORCH;
         stackable = false;
         unique = true;
+        defaultAction=AC_REMOVE;
     }
 
     public static final String AC_REMOVE = "REMOVE";

@@ -55,6 +55,14 @@ public class OperatorSummon extends Item {
     }
 
     @Override
+    public String actionName(String action, Hero hero) {
+        if (action.equals(AC_SUMMON)) {
+            return "召唤干员";
+        }
+        return super.actionName(action, hero);
+    }
+
+    @Override
     public void execute(Hero hero, String action) {
         super.execute(hero, action);
         if (action.equals(AC_SUMMON)) {

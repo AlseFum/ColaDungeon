@@ -2019,7 +2019,7 @@ public class Hero extends Char {
         if (cell == -1) {
             return false;
         }
-
+        //TODO attention here
         // 检查是否在瞄准状态下，如果是则不能移动
         if (buff(SniperGun.SniperAim.class) != null) {
             if (cell != pos) {

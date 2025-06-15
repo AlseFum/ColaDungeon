@@ -4,9 +4,14 @@ import com.coladungeon.actors.hero.HeroClassSheet;
 import com.coladungeon.levels.themes.ThemePack;
 import com.coladungeon.levels.themes.ThemeSheet;
 import com.coladungeon.mod.ArknightsMod.Headhunt.OperatorSummon;
+import com.coladungeon.mod.ArknightsMod.items.ArkSupply;
 import com.coladungeon.mod.ArknightsMod.items.weapon.CommandTerminal;
+import com.coladungeon.mod.ArknightsMod.items.weapon.RefinedCloak;
 import com.coladungeon.mod.ArknightsMod.items.weapon.RhodesStandardSword;
 import com.coladungeon.mod.ArknightsMod.operator.ProjektRed.RedKnife;
+import com.coladungeon.mod.ArknightsMod.operator.Phantom.PhantomWeapon;
+import com.coladungeon.mod.ArknightsMod.operator.TexasTheOmertosa.TexasWeapon;
+import com.coladungeon.mod.ArknightsMod.items.weapon.FlagBearerWeapon;
 import com.coladungeon.mod.ArknightsMod.themes.LungmenLevel;
 import com.coladungeon.mod.Index;
 import com.coladungeon.utils.EventBus;
@@ -35,11 +40,8 @@ public class ArknightsMod extends Index.Mod {
                         LungmenLevel.class,
                         (depth, branch) -> (branch == 0 && depth >= 1 && depth <= 5) ? (short) 0 : (short) 0));
         EventBus.register("Hero:created",(data)->{
-            new OperatorSummon().identify().collect();
-            new RhodesStandardSword().identify().collect();
-            RedKnife redknife=new RedKnife();
-            redknife.identify().collect();
-            new CommandTerminal().identify().collect();
+            new ArkSupply().identify().collect();
+
             return null;
         });
     }

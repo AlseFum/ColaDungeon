@@ -29,9 +29,11 @@ import com.coladungeon.actors.hero.spells.GuidingLight;
 import com.coladungeon.actors.hero.spells.LifeLinkSpell;
 import com.coladungeon.actors.mobs.Brute;
 import com.coladungeon.actors.mobs.YogDzewa;
+import com.coladungeon.items.KindOfWeapon;
 import com.coladungeon.items.armor.glyphs.Viscosity;
 import com.coladungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.coladungeon.items.stones.StoneOfAggression;
+import com.coladungeon.items.weapon.Weapon;
 import com.coladungeon.items.weapon.melee.MeleeWeapon;
 import com.coladungeon.items.weapon.missiles.MissileWeapon;
 import com.coladungeon.messages.Messages;
@@ -117,14 +119,13 @@ public class Damage {
          * 返回：DamageAugment - 用途：用于进一步修正attackProc后的伤害
          *
          */
-        //here to evoke prepare time
+        //#region hitOrNot
         if (defender == null) {
             return new PhysicalResult(false, 0, Interrupt.NotFound, false);
         }
 
         boolean visibleFight = Dungeon.level.heroFOV[attacker.pos]
                 || Dungeon.level.heroFOV[defender.pos];
-        // Interrupt reason = null;
         if (defender.isInvulnerable(attacker.getClass())) {
             if (visibleFight) {
                 defender.sprite.showStatus(CharSprite.POSITIVE,
@@ -138,8 +139,8 @@ public class Damage {
             defender.sprite.showStatus(CharSprite.NEUTRAL, "miss");
             return new PhysicalResult(false, 0, Interrupt.Dodge, visibleFight);
         }
-        //check hit or not --finished
-        //
+        //#endregion
+        //#region basic dr and dmg
         int dr = Math.round(defender.drRoll() * AscensionChallenge.statModifier(defender));
 
         if (attacker instanceof Hero h) {
@@ -153,7 +154,6 @@ public class Damage {
                 dr = 0;
             }
         }
-        //dmg;
         float dmg;
         Preparation prep = attacker.buff(Preparation.class);
         if (prep != null) {
@@ -164,7 +164,8 @@ public class Damage {
         } else {
             dmg = attacker.damageRoll();
         }
-        //here to collect eventresults from eventbus
+        //#endregion
+        //#region dmgAmplification
         Map<Short, ArrayList<Augment>> priorityGroups = EventBus.fire("PhysicalDamage", "attacker", attacker, "defender", defender)
                 .stream()
                 .filter(r -> r instanceof Augment)
@@ -277,12 +278,14 @@ public class Damage {
                 }
             }
         }
-
+        //#endregion
+        //#region effectiveDamageAfterDefenseProc
         int effectiveDamage = defender.defenseProc(attacker, Math.round(dmg));
         int finalEffectiveDamage = Augment.process(
             EventBus.fire("PhysicalDamage:afterDefense", "attacker", attacker, "defender", defender, "effectiveDamage", effectiveDamage),
             effectiveDamage
         );
+        //#endregion
         if (finalEffectiveDamage >= 0) {
             finalEffectiveDamage = Math.max(finalEffectiveDamage - dr, 0);
 
@@ -317,7 +320,12 @@ public class Damage {
             attacker.buff(FireImbue.class).proc(defender);
         }
         // if (attacker.buff(FrostImbue.class) != null) attacker.buff(FrostImbue.class).proc(defender);
-
+        if (!defender.isAlive() && attacker instanceof Hero h) {
+            KindOfWeapon weapon = h.belongings.attackingWeapon();
+            if (weapon != null && weapon instanceof Weapon) {
+                ((Weapon) weapon).onTargetDied(h, defender, finalEffectiveDamage);
+            }
+        }
         if (defender.isAlive() && defender.alignment != attacker.alignment && prep != null && prep.canKO(defender)) {
             defender.HP = 0;
             if (defender.buff(Brute.BruteRage.class) != null) {

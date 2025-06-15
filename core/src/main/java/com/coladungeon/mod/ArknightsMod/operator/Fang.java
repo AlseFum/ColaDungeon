@@ -2,11 +2,12 @@ package com.coladungeon.mod.ArknightsMod.operator;
 
 import com.coladungeon.items.weapon.Weapon;
 import com.coladungeon.mod.ArknightsMod.Operator;
+import com.coladungeon.mod.ArknightsMod.category.OperatorConst;
 
 public class Fang extends Operator {
     {
-        rarity=Rarity.S1;
-        branch=Branch.Pioneer;
+        rarity= OperatorConst.Rarity.S1;
+        branch= OperatorConst.Branch.Pioneer;
         cost=13;
     }
     public Fang() {

@@ -25,6 +25,8 @@ import com.coladungeon.actors.hero.abilities.warrior.Endure;
 import com.coladungeon.actors.hero.abilities.warrior.HeroicLeap;
 import com.coladungeon.actors.hero.abilities.warrior.Shockwave;
 import com.coladungeon.items.BrokenSeal;
+import com.coladungeon.items.KingsCrown;
+import com.coladungeon.items.TengusMask;
 import com.coladungeon.items.Waterskin;
 import com.coladungeon.items.armor.ClothArmor;
 import com.coladungeon.items.artifacts.CloakOfShadows;
@@ -48,7 +50,6 @@ import com.coladungeon.items.scrolls.ScrollOfUpgrade;
 import com.coladungeon.items.supply.AssassinSupply;
 import com.coladungeon.items.supply.DebugSupply;
 import com.coladungeon.items.supply.GunSupply;
-import com.coladungeon.items.supply.testitem;
 import com.coladungeon.items.wands.WandOfMagicMissile;
 import com.coladungeon.items.weapon.SpiritBow;
 import com.coladungeon.items.weapon.melee.Cudgel;
@@ -322,8 +323,11 @@ public final class HeroClassSheet {
         new GunSupply().identify().collect();
         new DebugSupply().identify().collect();
         new AssassinSupply().identify().collect();
-        new testitem().identify().collect();
+        //new testitem().identify().collect();
         new DebugBag().identify().collect();
+
+        new TengusMask().identify().collect();
+        new KingsCrown().identify().collect();
         // 事件通知
         EventBus.fire("Hero:created", "hero", hero);
     }

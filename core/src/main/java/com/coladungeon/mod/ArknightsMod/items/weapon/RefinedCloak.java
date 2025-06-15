@@ -18,29 +18,29 @@ public class RefinedCloak extends CloakOfShadows {
 
     {
         image = ItemSpriteSheet.ARTIFACT_CLOAK;
-        defaultAction = AC_ACTIVATE;
+        defaultAction = AC_STEALTH;
         unique = true;
+        chargeCap=12;
     }
 
     private static final String AC_ACTIVATE = "ACTIVATE";
     private static final String AC_CHARGE = "CHARGE";
 
-    private int charge = 0;
-    private static final int MAX_CHARGE = 3;
-
     @Override
     public String name() {
-        return "精制暗影斗篷";
+        return "罗德岛精制潜行斗篷";
     }
 
     @Override
     public String desc() {
         String desc = "这是一件经过罗德岛工程部改良的暗影斗篷，可以通过充能来获得更强的隐身效果。\n\n";
-        desc += "当前充能：" + charge + "/" + MAX_CHARGE + "\n\n";
+        desc += "当前充能：" + charge + "/" + chargeCap + "\n\n";
         desc += "效果说明：\n";
         desc += "1点充能：隐身5回合\n";
         desc += "2点充能：隐身8回合并提升移动速度\n";
-        desc += "3点充能：隐身12回合，提升移动速度并恢复生命";
+        desc += "3点充能：隐身12回合，提升移动速度并恢复生命\n\n";
+        desc += "特性：\n";
+        desc += "- 每回合自动恢复1点充能";
         return desc;
     }
 
@@ -53,11 +53,22 @@ public class RefinedCloak extends CloakOfShadows {
     }
 
     @Override
+    public String actionName(String action, Hero hero) {
+        if (action.equals(AC_ACTIVATE)) {
+            return "激活";
+        } else if (action.equals(AC_CHARGE)) {
+            return "充能";
+        } else {
+            return super.actionName(action, hero);
+        }
+    }
+
+    @Override
     public void execute(Hero hero, String action) {
         if (action.equals(AC_ACTIVATE)) {
             if (charge > 0) {
                 GameScene.show(new WndOptions(
-                        "精制暗影斗篷",
+                        "罗德岛精制暗影斗篷",
                         "选择要使用的充能点数：",
                         "1点充能 - 基础隐身",
                         "2点充能 - 隐身并加速",
@@ -77,9 +88,9 @@ public class RefinedCloak extends CloakOfShadows {
                 GLog.w("充能不足！");
             }
         } else if (action.equals(AC_CHARGE)) {
-            if (charge < MAX_CHARGE) {
+            if (charge < chargeCap) {
                 charge++;
-                GLog.p("充能完成！当前充能：" + charge + "/" + MAX_CHARGE);
+                GLog.p("充能完成！当前充能：" + charge + "/" + chargeCap);
                 updateQuickslot();
             } else {
                 GLog.w("充能已满！");
@@ -121,6 +132,23 @@ public class RefinedCloak extends CloakOfShadows {
             }
             
             updateQuickslot();
+        }
+    }
+
+    @Override
+    protected ArtifactBuff passiveBuff() {
+        return new cloakRecharge();
+    }
+
+    public class cloakRecharge extends ArtifactBuff {
+        @Override
+        public boolean act() {
+            if (charge < chargeCap) {
+                charge++;
+                updateQuickslot();
+            }
+            spend(20*TICK);
+            return true;
         }
     }
 

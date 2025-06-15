@@ -20,13 +20,13 @@ public class RhodesStandardSword extends MeleeWeapon {
     @Override
     public int min(int lvl) {
         return 4 +  // 基础伤害
-                lvl * 3; // 每级提升
+                lvl * 2; // 每级提升
     }
 
     @Override
     public int max(int lvl) {
         return 12 +  // 基础伤害
-                lvl * 5; // 每级提升
+                lvl * 6; // 每级提升
     }
     @Override
     public String name(){
