@@ -1,7 +1,11 @@
 apply plugin: 'java-library'
 
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-sourceCompatibility = targetCompatibility = appJavaCompatibility
+// [compileJava, compileTestJava]*.options*.encoding = 'GBK'
+java{
+    sourceCompatibility = appJavaCompatibility
+    targetCompatibility = appJavaCompatibility
+}
+
 
 dependencies {
     api project(':SPD-classes')

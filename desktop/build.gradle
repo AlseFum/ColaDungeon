@@ -3,9 +3,11 @@ plugins {
 }
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-sourceCompatibility = targetCompatibility = appJavaCompatibility
+java{
+    sourceCompatibility = targetCompatibility = appJavaCompatibility
+}
 
-ext.appMainClass = "com.shatteredpixel.shatteredpixeldungeon.desktop.DesktopLauncher"
+ext.appMainClass = "com.coladungeon.desktop.DesktopLauncher"
 processResources {
     from new File(project(':core').projectDir, "/src/main/assets")
     from new File(project(':desktop').projectDir,"/src/main/assets")
@@ -17,10 +19,10 @@ task debug(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     ignoreExitValue = true
 
-    main = appMainClass
+    mainClass = appMainClass
     systemProperty 'Specification-Title', appName
     systemProperty 'Implementation-Title', appPackageName
-    systemProperty 'Specification-Version', appVersionName + "-INDEV"
+    systemProperty 'Specification-Version', appVersionName + "-cola-INDEV"
     systemProperty 'Implementation-Version', appVersionCode
 
     if (osName.contains('mac')) {

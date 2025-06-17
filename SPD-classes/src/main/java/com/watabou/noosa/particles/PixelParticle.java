@@ -36,7 +36,11 @@ public class PixelParticle extends PseudoPixel {
 		
 		origin.set( +0.5f );
 	}
-	
+	public void reset( float x, float y ) {
+		revive();
+		this.x = x;
+		this.y = y;
+	}
 	public void reset( float x, float y, int color, float size, float lifespan ) {
 		revive();
 		

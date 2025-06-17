@@ -147,5 +147,10 @@ public class RectF {
 	public RectF scale( float d ){
 		return new RectF( left * d, top * d, right * d, bottom * d );
 	}
+
+	@Override
+	public String toString() {
+		return "<RectF: "+left+","+top+","+right+","+bottom+">";
+	}
 	
 }

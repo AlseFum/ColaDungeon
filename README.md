@@ -1,27 +1,18 @@
-# Shattered Pixel Dungeon
+# 可乐地牢
+>但是并不是以可乐为主题
 
-[Shattered Pixel Dungeon](https://shatteredpixel.com/shatteredpd/) is an open-source traditional roguelike dungeon crawler with randomized levels and enemies, and hundreds of items to collect and use. It's based on the [source code of Pixel Dungeon](https://github.com/00-Evan/pixel-dungeon-gradle), by [Watabou](https://www.watabou.ru).
+此改版旨在改变原破碎像素地牢过硬的代码结构，使得更利于添加游戏内容（即mod）
 
-Shattered Pixel Dungeon currently compiles for Android, iOS, and Desktop platforms. You can find official releases of the game on:
+具体做法有
+1. 用类+静态子类的形式替换原有的枚举类，在一些分支判断中加入默认分支以应对意外情况
+2. 引入事件总线系统，方便在少修改原有代码的基础上添加内容
+3. 使用单例来管理额外引入的材质纹理，现阶段主要在ItemSpriteManager这个类中
+4. 使用工厂模式来优化代码阅读体验
+5. 使用注册表的形式，支持在不引入新类的条件下动态添加物品
+6. 将地图生成逻辑从depth硬判定改为五层一个主题包，抽取主题包来生成楼层
+7. 后续将把一些逻辑（例如伤害系统）提取为静态工具类
+8. 未来可能尝试优化UI界面的编写
+9. 其他微小的改动
 
-[![Get it on Google Play](https://shatteredpixel.com/assets/images/badges/gplay.png)](https://play.google.com/store/apps/details?id=com.shatteredpixel.shatteredpixeldungeon)
-[![Download on the App Store](https://shatteredpixel.com/assets/images/badges/appstore.png)](https://apps.apple.com/app/shattered-pixel-dungeon/id1563121109)
-[![Steam](https://shatteredpixel.com/assets/images/badges/steam.png)](https://store.steampowered.com/app/1769170/Shattered_Pixel_Dungeon/)<br>
-[![GOG.com](https://shatteredpixel.com/assets/images/badges/gog.png)](https://www.gog.com/game/shattered_pixel_dungeon)
-[![Itch.io](https://shatteredpixel.com/assets/images/badges/itch.png)](https://shattered-pixel.itch.io/shattered-pixel-dungeon)
-[![Github Releases](https://shatteredpixel.com/assets/images/badges/github.png)](https://github.com/00-Evan/shattered-pixel-dungeon/releases)
-
-If you like this game, please consider [supporting me on Patreon](https://www.patreon.com/ShatteredPixel)!
-
-There is an official blog for this project at [ShatteredPixel.com](https://www.shatteredpixel.com/blog/).
-
-The game also has a translation project hosted on [Transifex](https://www.transifex.com/shattered-pixel/shattered-pixel-dungeon/).
-
-Note that **this repository does not accept pull requests!** The code here is provided in hopes that others may find it useful for their own projects, not to allow community contribution. Issue reports of all kinds (bug reports, feature requests, etc.) are welcome.
-
-If you'd like to work with the code, you can find the following guides in `/docs`:
-- [Compiling for Android.](docs/getting-started-android.md)
-    - **[If you plan to distribute on Google Play please read the end of this guide.](docs/getting-started-android.md#distributing-your-apk)**
-- [Compiling for desktop platforms.](docs/getting-started-desktop.md)
-- [Compiling for iOS.](docs/getting-started-ios.md)
-- [Recommended changes for making your own version.](docs/recommended-changes.md)
+受限于时间精力，这个项目并不能稳定更新，仍欢迎PR和issue，也同样欢迎对此仓库的再次修改分发
+（建discord服务器的话会有人来吗，会吗）

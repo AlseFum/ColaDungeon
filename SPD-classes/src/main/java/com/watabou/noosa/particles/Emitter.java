@@ -30,7 +30,7 @@ import com.watabou.utils.Random;
 
 public class Emitter extends Group {
 
-	protected boolean lightMode = false;
+	public boolean lightMode = false;
 	
 	public float x;
 	public float y;
@@ -179,7 +179,8 @@ public class Emitter extends Group {
 	
 	abstract public static class Factory {
 		
-		abstract public void emit( Emitter emitter, int index, float x, float y );
+		public void emit( Emitter emitter, int index, float x, float y ){
+		}
 		
 		public boolean lightMode() {
 			return false;
