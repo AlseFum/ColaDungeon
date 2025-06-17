@@ -4,11 +4,10 @@ import com.coladungeon.actors.Char;
 import com.coladungeon.mod.ArknightsMod.NPC.Dummy;
 import com.coladungeon.mod.ArknightsMod.Operator;
 import com.coladungeon.mod.ArknightsMod.category.OperatorConst;
-import com.watabou.utils.Random;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.ExecutorWeapon;
 import com.coladungeon.actors.buffs.Paralysis;
 import com.coladungeon.actors.buffs.Buff;
-import com.coladungeon.mod.ArknightsMod.items.build.Specialist.ExecutorWeapon;
-import com.coladungeon.sprites.ItemSpriteManager;
+import com.watabou.utils.Random;
 
 public class ProjektRed extends Operator {
 
@@ -67,9 +66,9 @@ public class ProjektRed extends Operator {
     public static class RedKnife extends ExecutorWeapon {
 
 
-        {
-            image = ItemSpriteManager.registerTexture("cola/redknife.png",32).label("redknife").getByName("redknife");
-        }
+        // {
+        //     image = ItemSpriteManager.registerTexture("cola/redknife.png",32).label("redknife").getByName("redknife");
+        // }
         @Override
         public String name(){
             return "红的小刀";

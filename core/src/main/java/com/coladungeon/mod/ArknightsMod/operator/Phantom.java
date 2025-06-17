@@ -11,7 +11,6 @@ import com.coladungeon.mod.ArknightsMod.Operator;
 import com.coladungeon.mod.ArknightsMod.category.OperatorConst.Branch;
 import com.coladungeon.mod.ArknightsMod.category.OperatorConst.Rarity;
 import com.coladungeon.mod.ArknightsMod.items.build.Specialist.ExecutorWeapon;
-import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.sprites.MobSprite;
 import com.coladungeon.utils.GLog;
 import com.watabou.noosa.TextureFilm;
@@ -79,10 +78,10 @@ public class Phantom extends Operator {
     
     public static class PhantomWeapon extends ExecutorWeapon {
 
-        {
-            image = ItemSpriteManager.registerTexture("cola/phantomknife.png", 32).label("phantomknife").getByName("phantomknife");
-            defaultAction=AC_WAVE;
-        }
+        // {
+        //     image = ItemSpriteManager.registerTexture("cola/phantomknife.png", 32).label("phantomknife").getByName("phantomknife");
+        //     defaultAction=AC_WAVE;
+        // }
 
         public static final String AC_WAVE = "WAVE";
 

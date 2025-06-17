@@ -28,8 +28,12 @@ public class ItemSpriteManager {
     }
 
     public static int ByName(String name) {
-        int res = texture_id_map.get(name);
-        return texture_id_map.get(name);
+        Integer res = texture_id_map.get(name);
+        if(res == null){
+            System.out.println("Invalid texture name: " + name);
+            return ItemSpriteSheet.SOMETHING;
+        }
+        return res;
     }
 
     public static Segment registerTexture(String texture, int size) {
@@ -140,7 +144,7 @@ public class ItemSpriteManager {
                 .label("gun");
         registerTexture("effects/gunfire.png", 16)
                 .label("gunfire");
-        registerTexture("cola/arksupply.png", 64).label("arksupply");
+        //registerTexture("cola/arksupply.png", 64).label("arksupply");
     }
 
     public static class ImageMapping {
