@@ -144,7 +144,13 @@ public class ItemSpriteManager {
                 .label("gun");
         registerTexture("effects/gunfire.png", 16)
                 .label("gunfire");
-        //registerTexture("cola/arksupply.png", 64).label("arksupply");
+        registerTexture("cola/mask16.png", 16)
+                .label("mask16");
+        registerTexture("cola/mask32.png", 32)
+                .label("mask32");
+        registerTexture("cola/mask64.png", 64)
+                .label("mask64");
+        registerTexture("cola/arksupply.png", 64).label("arksupply");
     }
 
     public static class ImageMapping {

@@ -321,7 +321,9 @@ public class InventoryPane extends Component {
 					i--;
 					continue;
 				}
-				bagItems.get(i).item(items.get(j));
+				Item a=items.get(j);
+
+				bagItems.get(i).item(a);
 				j++;
 			} else {
 				bagItems.get(i).item(null);

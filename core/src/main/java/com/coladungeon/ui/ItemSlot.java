@@ -33,6 +33,7 @@ import com.coladungeon.items.weapon.missiles.MissileWeapon;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.PixelScene;
 import com.coladungeon.sprites.ItemSprite;
+import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
@@ -193,6 +194,7 @@ public class ItemSlot extends Button {
 		if (this.item == item) {
 			if (item != null) {
 				sprite.view( item );
+			}else{
 			}
 			updateText();
 			return;

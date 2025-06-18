@@ -28,6 +28,7 @@ import com.coladungeon.items.Gold;
 import com.coladungeon.items.Item;
 import com.coladungeon.items.bags.Bag;
 import com.coladungeon.items.wands.Wand;
+import com.coladungeon.sprites.ItemSpriteManager;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.audio.Sample;

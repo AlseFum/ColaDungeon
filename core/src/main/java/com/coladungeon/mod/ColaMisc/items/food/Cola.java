@@ -12,11 +12,8 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
 public class Cola extends Food {
-    static {
-        ItemSpriteManager.registerTexture("cola/cola.png",64).label("cola");
-    }
     {
-        image = ItemSpriteManager.ByName("cola");
+        image = ItemSpriteManager.ByName("redknife");
         energy = Hunger.HUNGRY/4f;
         defaultAction = AC_ADD;
     }
