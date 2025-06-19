@@ -79,7 +79,8 @@ public class ArknightsWeapon extends MeleeWeapon {
 
     @Override
     public ArrayList<String> actions(Hero hero) {
-        ArrayList<String> actions = new ArrayList<>();
+        ArrayList<String> actions =super.actions(hero);
+        
         // 使用反射获取所有带有@Action注解的方法
         for (java.lang.reflect.Method method : this.getClass().getDeclaredMethods()) {
             Action actionAnnotation = method.getAnnotation(Action.class);

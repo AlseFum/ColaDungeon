@@ -78,9 +78,11 @@ public class Phantom extends Operator {
     }
     
     public static class PhantomWeapon extends ExecutorWeapon {
-
+        static {
+            ItemSpriteManager.registerTexture("cola/phantomknife.png", 32).label("phantomknife");
+        }
         {
-            image = ItemSpriteManager.registerTexture("cola/phantomknife.png", 32).label("phantomknife").getByName("phantomknife");
+            image = ItemSpriteManager.ByName("phantomknife");
             defaultAction=AC_WAVE;
         }
 
@@ -107,7 +109,7 @@ public class Phantom extends Operator {
             if (action.equals(AC_WAVE)) {
                 yemutuxi buff = hero.buff(yemutuxi.class);
                 if (buff != null && buff.stacks > 0) {
-                    int stacks = buff.stacks;
+                    int stacks = Math.min(buff.stacks,20);
                     GLog.i("PhantomWeapon", "吟唱：" + stacks);
                     // 范围随层数增加，每层增加1格，最小2格
                     int range = Math.max(2, 2 + stacks - 1);
@@ -146,8 +148,10 @@ public class Phantom extends Operator {
                         }
                     }
                     // 清空层数
-                    buff.stacks = 0;
-                    buff.detach();
+                    buff.stacks -= stacks;
+                    if(buff.stacks<=0){
+                        buff.detach();
+                    }
                     hero.spendAndNext(1f);
                 } else {
                     GLog.w("没有夜幕突袭层数！");

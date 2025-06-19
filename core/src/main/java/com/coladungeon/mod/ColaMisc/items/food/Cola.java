@@ -12,8 +12,11 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
 public class Cola extends Food {
+    static {
+        ItemSpriteManager.registerTexture("cola/cola.png",64).label("cola");
+    }
     {
-        image = ItemSpriteManager.ByName("redknife");
+        image = ItemSpriteManager.ByName("cola");
         energy = Hunger.HUNGRY/4f;
         defaultAction = AC_ADD;
     }
@@ -21,21 +24,65 @@ public class Cola extends Food {
     private static final String AC_ADD = "ADD";
     private static final String AC_DRINK = "DRINK";
 
-    // 效果类型
+    // 效果类型，包含对Hero的副作用lambda
     public enum EffectType {
-        SPEED_UP("速度提升", 1.5f),
-        ATTACK_UP("攻击力提升", 1.3f),
-        DEFENSE_UP("防御力提升", 1.2f),
-        HEAL("生命恢复", 10f),
-        REGENERATION("生命再生", 5f),
-        STRENGTH("力量提升", 1.4f);
+        // 增加金币
+        GOLD(hero -> {
+            int gold = Random.IntRange(10, 50);
+            com.coladungeon.Dungeon.gold += gold;
+            GLog.p("你突然发现口袋里多了" + gold + "金币！");
+        }),
+        // 立即治疗少量生命
+        HEAL(hero -> {
+            int heal = Random.IntRange(5, 15);
+            hero.HP = Math.min(hero.HT, hero.HP + heal);
+            GLog.p("你感到一阵清凉，恢复了" + heal + "点生命值。");
+        }),
+        // 触发一次爆炸（对周围造成伤害）
+        EXPLODE(hero -> {
+            GLog.p("可乐在你肚子里爆炸了！你受到了一些伤害。");
+            hero.damage(Random.IntRange(5, 20), null);
+        }),
+        // 传送到随机位置
+        TELEPORT(hero -> {
+            GLog.p("你突然出现在了另一个地方！");
+            hero.pos = com.coladungeon.Dungeon.level.randomRespawnCell(hero);
+        }),
+        // 变身为巨人
+        GIANT(hero -> {
+            GLog.p("你突然变得巨大无比，感觉力量充盈！");
+            hero.sprite.scale.set(2f, 2f); // 假设sprite有scale属性
+        }),
+        // 变身为小矮人
+        TINY(hero -> {
+            GLog.p("你突然变得小巧玲珑，行动更加灵活！");
+            hero.sprite.scale.set(0.5f, 0.5f);
+        }),
+        // 全身发光
+        GLOW(hero -> {
+            GLog.p("你的身体开始发出耀眼的光芒，照亮了四周！");
+            hero.sprite.add(com.coladungeon.sprites.CharSprite.State.ILLUMINATED);
+        }),
+        // 变色
+        COLORFUL(hero -> {
+            GLog.p("你的皮肤变成了彩虹色，十分滑稽！");
+            hero.sprite.tint(0xFF00FF);
+        }),
+        // 发出奇怪的声音
+        WEIRD_SOUND(hero -> {
+            GLog.p("你忍不住发出一连串奇怪的叫声，吓到了周围的生物！");
+            com.watabou.noosa.audio.Sample.INSTANCE.play(com.coladungeon.Assets.Sounds.CHARMS); // 假设有CHARMS音效
+        });
 
-        public final String name;
-        public final float value;
-
-        EffectType(String name, float value) {
-            this.name = name;
-            this.value = value;
+        public interface Effect {
+            void apply(Hero hero);
+        }
+        private final Effect effect;
+        EffectType(Effect effect) {
+            this.effect = effect;
+        }
+        public void apply(Hero hero) {
+            effect.apply(hero);
         }
     }
 
@@ -45,28 +92,28 @@ public class Cola extends Food {
 
     @Override
     public String name() {
-        return "魔法可乐";
+        return "可乐";
     }
-
-    @Override
-    public String desc() {
-        return "一罐神奇的可乐，可以通过添加材料来获得不同的效果。\n\n" +
-               "当前效果：\n" +
-               "- 速度提升：提升移动速度\n" +
-               "- 攻击力提升：增加伤害\n" +
-               "- 防御力提升：减少受到的伤害\n" +
-               "- 生命恢复：立即恢复生命值\n" +
-               "- 生命再生：持续恢复生命值\n" +
-               "- 力量提升：增加攻击力\n\n" +
-               "最多可以添加3种效果，饮用后会消耗所有效果。";
-    }
-
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
         actions.add(AC_ADD);
         actions.add(AC_DRINK);
         return actions;
+    }
+    @Override
+    public String desc() {
+        return "一罐神奇的可乐。";
+    }
+
+    @Override
+    public String actionName(String action, Hero hero) {
+        if (action.equals(AC_ADD)) {
+            return "添加材料";
+        } else if (action.equals(AC_DRINK)) {
+            return "喝下";
+        }
+        return super.actionName(action, hero);
     }
 
     @Override
@@ -77,10 +124,10 @@ public class Cola extends Food {
                 // 随机添加一个效果
                 EffectType newEffect = Random.element(EffectType.values());
                 effects.add(newEffect);
-                GLog.p("你向可乐中添加了材料，获得了" + newEffect.name + "效果！");
+                GLog.p("你向可乐中添加了材料");
                 updateQuickslot();
             } else {
-                GLog.w("可乐已经添加了太多材料，无法继续添加！");
+                GLog.w("可乐快要溢出来了");
             }
         } else if (action.equals(AC_DRINK)) {
             // 恢复饥饿值
@@ -88,26 +135,7 @@ public class Cola extends Food {
             
             // 应用所有效果
             for (EffectType effect : effects) {
-                switch (effect) {
-                    case SPEED_UP:
-                        // TODO: 实现速度提升效果
-                        break;
-                    case ATTACK_UP:
-                        // TODO: 实现攻击力提升效果
-                        break;
-                    case DEFENSE_UP:
-                        // TODO: 实现防御力提升效果
-                        break;
-                    case HEAL:
-                        hero.HP = Math.min(hero.HP + (int)effect.value, hero.HT);
-                        break;
-                    case REGENERATION:
-                        // TODO: 实现生命再生效果
-                        break;
-                    case STRENGTH:
-                        // TODO: 实现力量提升效果
-                        break;
-                }
+                effect.apply(hero);
             }
             
             // 清空效果列表
@@ -115,9 +143,6 @@ public class Cola extends Food {
             
             // 播放音效
             Sample.INSTANCE.play(Assets.Sounds.DRINK);
-            
-            // 显示消息
-            GLog.p("你喝下了可乐，感觉精神焕发！");
         }
     }
 } 
