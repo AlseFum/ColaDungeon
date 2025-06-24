@@ -40,8 +40,13 @@ public class RedStone extends Item {
     private Class<? extends Runestone> selectedStone;
     public static final String AC_SELECT = "SELECT";
     public static final String AC_USE = "USE";
+    public static final String AC_THROW = "THROW";
+    public static final String AC_GENERATE = "GENERATE";
+    
     {
+        image = ItemSpriteSheet.STONE_HOLDER;
         defaultAction = AC_SELECT;
+        stackable = true;
     }
 
     @Override
@@ -168,12 +173,59 @@ public class RedStone extends Item {
                 GLog.w("请先选择要使用的符文石！");
             } else {
                 Runestone stone = Reflection.newInstance(selectedStone);
+                stone.curUser = hero;
+                curUser = hero;
+                curItem = stone;
                 if (stone instanceof InventoryStone) {
-                    // 对于背包符文石，直接使用
-                    stone.execute(hero, AC_USE);
+                    // 对于背包符文石，使用directActivate方法
+                    ((InventoryStone)stone).directActivate();
                 } else {
                     // 对于需要选择目标的符文石，显示目标选择界面
-                    GameScene.selectCell(thrower);
+                    GameScene.selectCell(new CellSelector.Listener() {
+                        @Override
+                        public void onSelect(Integer target) {
+                            if (target != null) {
+                                stone.onThrow(target);
+                            }
+                        }
+                        @Override
+                        public String prompt() {
+                            return "选择使用目标位置";
+                        }
+                    });
+                }
+            }
+        } else if (action.equals(AC_THROW)) {
+            if (selectedStone == null) {
+                GLog.w("请先选择要投掷的符文石！");
+            } else {
+                Runestone stone = Reflection.newInstance(selectedStone);
+                stone.curUser = hero;
+                curUser = hero;
+                curItem = this;
+                GameScene.selectCell(new CellSelector.Listener() {
+                    @Override
+                    public void onSelect(Integer target) {
+                        if (target != null) {
+                            stone.cast(hero, target);
+                        }
+                    }
+                    @Override
+                    public String prompt() {
+                        return "选择投掷目标位置";
+                    }
+                });
+            }
+        } else if (action.equals(AC_GENERATE)) {
+            if (selectedStone == null) {
+                GLog.w("请先选择要生成的符文石！");
+            } else {
+                Runestone stone = Reflection.newInstance(selectedStone);
+                stone.identify();
+                if (stone.collect(hero.belongings.backpack)) {
+                    GLog.p("生成了 " + stone.name() + "！");
+                } else {
+                    GLog.w("背包已满，无法生成物品！");
                 }
             }
         }
@@ -184,6 +236,8 @@ public class RedStone extends Item {
         ArrayList<String> actions = super.actions(hero);
         actions.add(AC_SELECT);
         actions.add(AC_USE);
+        actions.add(AC_THROW);
+        actions.add(AC_GENERATE);
         return actions;
     }
 
@@ -193,25 +247,34 @@ public class RedStone extends Item {
             return "选择符文石";
         } else if (action.equals(AC_USE)) {
             return "使用符文石";
+        } else if (action.equals(AC_THROW)) {
+            return "投掷符文石";
+        } else if (action.equals(AC_GENERATE)) {
+            return "生成符文石";
         }
         return super.actionName(action, hero);
     }
 
-    public RedStone() {
-        super();
-        image = ItemSpriteSheet.STONE_HOLDER;
-        stackable = true;
-        defaultAction = AC_SELECT;
-    }
-
     @Override
     public String name() {
-        return "符文石选择器";
+        String name = "符文石选择器";
+        if (selectedStone != null) {
+            name += " (" + Reflection.newInstance(selectedStone).name() + ")";
+        }
+        return name;
     }
 
     @Override
     public String desc() {
-        return "这是一个可以让你选择使用各种符文石的物品。";
+        StringBuilder desc = new StringBuilder();
+        desc.append("这是一个可以让你选择使用各种符文石的物品。");
+        if (selectedStone != null) {
+            desc.append("\n\n当前选择：").append(Reflection.newInstance(selectedStone).name());
+            desc.append("\n").append(Reflection.newInstance(selectedStone).desc());
+        } else {
+            desc.append("\n\n请先选择一个符文石。");
+        }
+        return desc.toString();
     }
 
     @Override
@@ -228,18 +291,4 @@ public class RedStone extends Item {
     public int value() {
         return 1000;
     }
-
-    private CellSelector.Listener thrower = new CellSelector.Listener() {
-        @Override
-        public void onSelect(Integer target) {
-            if (target != null && selectedStone != null) {
-                Runestone stone = Reflection.newInstance(selectedStone);
-                stone.execute(Dungeon.hero, AC_THROW);
-            }
-        }
-        @Override
-        public String prompt() {
-            return "选择目标位置";
-        }
-    };
 }

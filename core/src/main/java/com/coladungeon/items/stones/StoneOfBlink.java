@@ -42,7 +42,7 @@ public class StoneOfBlink extends Runestone {
 	}
 	
 	@Override
-	protected void onThrow(int cell) {
+	public void onThrow(int cell) {
 		if (Actor.findChar(cell) != null && throwPath.dist >= 1){
 			cell = throwPath.path.get(throwPath.dist-1);
 		}

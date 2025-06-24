@@ -46,7 +46,7 @@ public abstract class Runestone extends Item {
 	}
 
 	@Override
-	protected void onThrow(int cell) {
+	public void onThrow(int cell) {
 		///inventory stones are thrown like normal items, other stones don't trigger when thrown into pits
 		if (this instanceof InventoryStone ||
 				Dungeon.hero.buff(MagicImmune.class) != null ||

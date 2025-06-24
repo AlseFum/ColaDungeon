@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.Item;
 import com.coladungeon.scenes.GameScene;
-import com.coladungeon.scenes.PixelScene;
 import com.coladungeon.sprites.ItemSprite;
 import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.ui.Icons;
@@ -65,7 +64,7 @@ public class TabbedIconGridDemoItem extends Item {
         // 创建窗口构建器 - 使用3列便于测试布局
         WndTabbedIconGrid.Builder builder = new WndTabbedIconGrid.Builder()
             .setTitle("装备选择器演示")
-            .setColumns(3); // 改为3列便于测试
+            .setColumns(4); // 改为3列便于测试
         
         // 添加第一个tab - 武器选择（简化内容）
         builder.addTab("武器", Icons.get(Icons.TARGET));
@@ -111,7 +110,7 @@ public class TabbedIconGridDemoItem extends Item {
         builder.addItemToTab(2, new ItemSprite(ItemSpriteSheet.RING_RUBY), "红宝石戒指", () -> {
             GLog.i("选择了红宝石戒指");
         });
-        builder.addItemToTab(2, new ItemSprite(ItemSpriteSheet.RING_TOPAZ), "黄玉戒指", () -> {
+        builder.addItemToTab(2, Icons.get(Icons.BACKPACK_LRG), "黄玉戒指", () -> {
             GLog.i("选择了黄玉戒指");
         });
         
@@ -125,7 +124,6 @@ public class TabbedIconGridDemoItem extends Item {
         });
         
         // 构建并显示窗口
-        WndTabbedIconGrid window = builder.build();
-        GameScene.show(window);
+        GameScene.show(builder.build());
     }
 } 

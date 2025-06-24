@@ -5,12 +5,11 @@ import java.util.List;
 
 import com.coladungeon.Chrome;
 import com.coladungeon.scenes.PixelScene;
+import com.coladungeon.ui.OptionSlider;
 import com.coladungeon.ui.RedButton;
 import com.coladungeon.ui.RenderedTextBlock;
 import com.coladungeon.ui.StyledButton;
 import com.coladungeon.ui.Window;
-import com.coladungeon.ui.OptionSlider;
-import com.coladungeon.ui.Icons;
 import com.watabou.noosa.Image;
 
 public class WndTabbedIconGrid extends Window {
@@ -136,7 +135,7 @@ public class WndTabbedIconGrid extends Window {
         }
     }
     
-    private WndTabbedIconGrid(Builder builder) {
+    public WndTabbedIconGrid(Builder builder) {
         super();
         this.cols = builder.cols;
         this.tabs = builder.tabs;
@@ -208,7 +207,7 @@ public class WndTabbedIconGrid extends Window {
          add(message);
         
         // 添加slider（创建但初始隐藏）
-        slider = new OptionSlider("", "0", "100", 0, 100) {
+        slider = new OptionSlider("", "0", "100", 0, 10) {
             @Override
             protected void onChange() {
                 handleSliderChange();
@@ -222,7 +221,7 @@ public class WndTabbedIconGrid extends Window {
         // 添加确认按钮
         confirmBtn = new RedButton("确定") {
             @Override
-            protected void onClick() {
+            public void onClick() {
                 hide();
             }
         };
@@ -249,9 +248,15 @@ public class WndTabbedIconGrid extends Window {
         for (int i = 0; i < tabButtons.size(); i++) {
             StyledButton btn = tabButtons.get(i);
             if (i == tabIndex) {
-                btn.icon(Icons.get(Icons.CHALLENGE_COLOR));
-            } else {
+                // 选中的标签：保持原图标，使用高亮效果
                 btn.icon(tabs.get(i).icon);
+                btn.alpha(1.0f);
+                btn.textColor(0xFFFFFF);  // 白色文字
+            } else {
+                // 未选中的标签：原图标，半透明效果
+                btn.icon(tabs.get(i).icon);
+                btn.alpha(0.6f);
+                btn.textColor(0x888888);  // 灰色文字
             }
         }
         
