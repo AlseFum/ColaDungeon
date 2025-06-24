@@ -31,26 +31,40 @@ public class OperatorConst {
     }
 
     public static enum Branch {
-        Core(Role.Caster),
-        Splash(Role.Caster),
-        Blast(Role.Caster),
-        Chain(Role.Caster),
-        MechAccord(Role.Caster),
-        Phalanx(Role.Caster),
-        Mystic(Role.Caster),
-        None(Role.None),
-        Pioneer(Role.Vanguard),
-
-        NPC,
-        Geek;
+        // 术师分支
+        Core(Role.Caster, "中坚术师"),
+        Splash(Role.Caster, "扩散术师"),
+        Blast(Role.Caster, "轰击术师"),
+        Chain(Role.Caster, "链术师"),
+        MechAccord(Role.Caster, "驭械术师"),
+        Phalanx(Role.Caster, "阵法术师"),
+        Mystic(Role.Caster, "秘术师"),
+        Primal(Role.Caster, "本源术师"),
+        Splashcaster(Role.Caster, "塑灵术师"),
+        
+        // 先锋分支
+        Pioneer(Role.Vanguard, "尖兵"),
+        
+        // 其他
+        None(Role.None, "无"),
+        NPC(Role.None, "NPC"),
+        Geek(Role.None, "怪杰");
         public final Role r;
+        public final String name;
 
         Branch() {
             this.r = Role.None;
+            this.name = "未知";
         }
 
         Branch(Role r) {
             this.r = r;
+            this.name = "未知";
+        }
+        
+        Branch(Role r, String name) {
+            this.r = r;
+            this.name = name;
         }
     }
 }

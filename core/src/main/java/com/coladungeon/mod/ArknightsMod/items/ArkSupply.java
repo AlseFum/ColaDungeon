@@ -4,6 +4,7 @@ import com.coladungeon.items.supply.Supply;
 import com.coladungeon.mod.ArknightsMod.items.build.RhodesStandardSword;
 import com.coladungeon.mod.ArknightsMod.items.build.Specialist.TrappistWeapon.ExplosiveTrapItem;
 import com.coladungeon.mod.ArknightsMod.items.build.Specialist.TrappistWeapon.TrappistArtifact;
+import com.coladungeon.mod.ArknightsMod.items.build.caster.CasterWeapon;
 import com.coladungeon.mod.ArknightsMod.items.build.caster.MechAccordWeapon;
 import com.coladungeon.mod.ArknightsMod.operator.Phantom.PhantomWeapon;
 import com.coladungeon.mod.ArknightsMod.operator.ProjektRed.RedKnife;
@@ -19,6 +20,7 @@ public class ArkSupply extends Supply {
         this.put_in(CommandTerminal.class)
             .put_in(RefinedCloak.class)
             .put_in(RhodesStandardSword.class)
+            .put_in(CasterWeapon.class)
             .put_in(PhantomWeapon.class)
             .put_in(RedKnife.class)
             .put_in(TexasWeapon.class)
@@ -35,6 +37,7 @@ public class ArkSupply extends Supply {
                 • 命令终端 - 干员部署和指挥系统
                 • 精制斗篷 - 特殊防护装备
                 • 罗德岛标准剑 - 基础近战武器
+                • 便携制式施术单元 - 模块化术师武器系统
                 • 幻影武器 - 幻影干员专用武器
                 • 红刀 - 红干员专用武器
                 • 德克萨斯武器 - 德克萨斯干员专用武器

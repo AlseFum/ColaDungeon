@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.coladungeon.Chrome;
 import com.coladungeon.scenes.PixelScene;
-import com.coladungeon.ui.Icons;
 import com.coladungeon.ui.RedButton;
 import com.coladungeon.ui.RenderedTextBlock;
 import com.coladungeon.ui.StyledButton;
@@ -48,7 +47,7 @@ public class WndIconGrid extends Window {
     }
     
     public static class Builder {
-        private String title = "选择药水";
+        private String title = "选择物品";
         private int cols = 4;
         private List<IconItem> iconItems = new ArrayList<>();
         
@@ -148,8 +147,8 @@ public class WndIconGrid extends Window {
         confirmBtn.setRect(MARGIN, message.bottom() + GAP, width - MARGIN * 2, BUTTON_HEIGHT);
         add(confirmBtn);
         
-        Image icon = Icons.get(Icons.SKULL);
-        add(icon);
+        // Image icon = Icons.get(Icons.SKULL);
+        // add(icon);
 
         // 根据实际内容调整窗口大小
         resize(width, (int)(confirmBtn.bottom() + MARGIN));

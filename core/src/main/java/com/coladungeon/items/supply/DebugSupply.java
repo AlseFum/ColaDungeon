@@ -45,6 +45,7 @@ public class DebugSupply extends Supply {
         put_in(Panacea.class, 1);
         put_in(Codex.class, 1);
         put_in(RedStone.class, 1);
+        put_in(TabbedIconGridDemoItem.class, 1);
         onOpen = () -> {
             Dungeon.energy+=10086;
             return null;
