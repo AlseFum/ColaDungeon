@@ -5,6 +5,7 @@ import com.coladungeon.levels.themes.ThemePack;
 import com.coladungeon.levels.themes.ThemeSheet;
 import com.coladungeon.mod.ArknightsMod.items.ArkSupply;
 import com.coladungeon.mod.Index;
+import com.coladungeon.utils.GLog;
 import com.coladungeon.utils.EventBus;
 
 public class ArknightsMod extends Index.Mod {
@@ -30,6 +31,21 @@ public class ArknightsMod extends Index.Mod {
             new ArkSupply().identify().collect();
             return null;
         });
+        // EventBus.register("Hero:beforeDie", (data) -> {
+        //     if (data instanceof com.coladungeon.utils.EventBus.EventData edata && edata.get("hero") instanceof com.coladungeon.actors.hero.Hero h) {
+        //         h.HP += 1000;
+        //         h.updateHT(true);
+        //         GLog.i("Hero:beforeDie");
+        //     }
+        //     return null;
+        //     return new java.util.function.Function<com.coladungeon.actors.hero.Hero, Object>() {
+        //         @Override
+        //         public Object apply(com.coladungeon.actors.hero.Hero hero) {
+        //             GLog.i("caught");
+        //             return null;
+        //         }
+        //     };
+        // });
 
     }
 }

@@ -152,6 +152,7 @@ import com.coladungeon.windows.WndHero;
 import com.coladungeon.windows.WndResurrect;
 import com.coladungeon.windows.WndTradeItem;
 import com.coladungeon.utils.Augment;
+
 import com.watabou.noosa.Game;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.Delayer;
@@ -165,6 +166,7 @@ import com.watabou.utils.Random;
 import com.coladungeon.utils.EventBus;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
@@ -2287,7 +2289,17 @@ public class Hero extends Char {
                 ankh = i;
             }
         }
-
+        ArrayList<Object> results = EventBus.fire("Hero:beforeDie", "hero", this, "cause", cause);
+        if (!results.isEmpty()) {
+            if (results.get(0) instanceof BiConsumer bc) {
+                bc.accept(this, cause);
+            } else if (results.get(0) instanceof java.util.function.Function fn) {
+                fn.apply(this);
+            } else {
+                GLog.i("Hero:beforeDie: " + results.get(0));
+            }
+            return;
+        }
         if (ankh != null) {
             interrupt();
 

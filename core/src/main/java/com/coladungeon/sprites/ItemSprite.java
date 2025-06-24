@@ -227,7 +227,6 @@ public class ItemSprite extends MovieClip {
 			// image=114;
 			ImageMapping map = ItemSpriteManager.mapImage(image);
 			if (map != null) {
-				System.out.println("ItemSprite::frame(int image>=6000) image= "+image+" map= "+map.toString());
 				texture = map.texture;
 				frame(map.rect);
 				float _height = map.height;
