@@ -5,6 +5,7 @@ import com.coladungeon.mod.ArknightsMod.items.build.sniper.Bow;
 import com.coladungeon.mod.ArknightsMod.items.build.sniper.Crossbow;
 import com.coladungeon.mod.ArknightsMod.items.build.sniper.PumpActionRifle;
 import com.coladungeon.mod.ArknightsMod.items.build.sniper.SniperRifle;
+import com.coladungeon.mod.ArknightsMod.items.build.sniper.SniperWeapon;
 import com.coladungeon.sprites.ItemSpriteManager;
 
 public class SniperSupply extends Supply {
@@ -14,7 +15,8 @@ public class SniperSupply extends Supply {
     
     public SniperSupply() {
         super();
-        this.put_in(Bow.class)
+        this.put_in(SniperWeapon.class)
+            .put_in(Bow.class)
             .put_in(Crossbow.class)
             .put_in(SniperRifle.class)
             .put_in(PumpActionRifle.class)
@@ -23,16 +25,21 @@ public class SniperSupply extends Supply {
                 一个专门装满了狙击职业武器的补给包，包含了各种不同风格的狙击武器。
                 
                 包含的武器类型：
-                • 狙击弓 - 单发快速射击，受附魔效果最强
-                • 狙击弩 - 快速装填，攻击速度最快
-                • 狙击步枪 - 单次装填多次射击，平衡型武器
-                • 泵动式狙击步枪 - 多次装填多次射击，伤害最高
+                • 狙击武器 - 基础狙击武器
+                • 弓箭 - 传统弓箭武器
+                • 弩箭 - 高精度弩箭武器
+                • 狙击步枪 - 现代狙击步枪
+                • 泵动步枪 - 连发狙击步枪
 
-                武器特性对比：
-                • 弓：攻击速度快，附魔加成1.5倍，装填时间1.0秒
-                • 弩：攻击速度最快，命中率最高，装填时间0.8秒
-                • 步枪：射击效率高，每次装填5次射击，装填时间1.5秒
-                • 泵动式：伤害最高，最多3次装填15次射击，装填时间2.0秒
+                每个武器都有其独特的狙击机制和特殊效果，
+                为狙击干员提供多样化的远程攻击选择。
+                
+                武器特点：
+                • 远程攻击：超长攻击距离
+                • 高精度：精准的瞄准系统
+                • 穿透伤害：可以穿透多个敌人
+                • 暴击机制：高暴击率和暴击伤害
+                • 连发系统：快速连续射击
                 """);
     }
 } 

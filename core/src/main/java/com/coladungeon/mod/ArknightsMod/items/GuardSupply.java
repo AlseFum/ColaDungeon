@@ -1,6 +1,7 @@
 package com.coladungeon.mod.ArknightsMod.items;
 
 import com.coladungeon.items.supply.Supply;
+import com.coladungeon.mod.ArknightsMod.items.build.RhodesStandardSword;
 import com.coladungeon.mod.ArknightsMod.items.build.guard.ArtsFighterWeapon;
 import com.coladungeon.mod.ArknightsMod.items.build.guard.CenturionWeapon;
 import com.coladungeon.mod.ArknightsMod.items.build.guard.CrusherWeapon;
@@ -22,7 +23,8 @@ public class GuardSupply extends Supply {
     
     public GuardSupply() {
         super();
-        this.put_in(CenturionWeapon.class)
+        this.put_in(RhodesStandardSword.class)
+            .put_in(CenturionWeapon.class)
             .put_in(DreadnoughtWeapon.class)
             .put_in(ArtsFighterWeapon.class)
             .put_in(CrusherWeapon.class)
@@ -39,6 +41,7 @@ public class GuardSupply extends Supply {
                 一个专门装满了守卫职业武器的补给包，包含了各种不同风格的守卫武器。
                 
                 包含的武器类型：
+                • 罗德岛标准剑 - 基础标准武器，供一般人使用
                 • 百夫长武器 - 平衡型武器
                 • 无畏武器 - 抗性解除武器
                 • 术战武器 - 法术伤害武器
