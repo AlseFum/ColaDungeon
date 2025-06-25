@@ -313,7 +313,7 @@ public class Damage {
             EventBus.fire("PhysicalDamage:afterDefense:earlyKilled", "attacker", attacker, "defender", defender, "finalEffectiveDamage", finalEffectiveDamage);
             return new PhysicalResult(true, finalEffectiveDamage, Interrupt.Else, visibleFight);
         }
-
+        
         defender.damage(finalEffectiveDamage, attacker);
         EventBus.fire("PhysicalDamage:afterDamage", "attacker", attacker, "defender", defender, "effectiveDamage", finalEffectiveDamage);
         if (attacker.buff(FireImbue.class) != null) {

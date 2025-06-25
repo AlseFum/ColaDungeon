@@ -26,7 +26,13 @@ public class EventBus {
 
     // 默认优先级值
     public static final int DEFAULT_PRIORITY = 0;
+    public static void on(String event_id, Function<Object, Object> fn) {
+        register(event_id, fn, DEFAULT_PRIORITY);
+    }
 
+    public static void on(String event_id, Function<Object, Object> fn, int priority) {
+        register(event_id, fn, priority);
+    }   
     // 使用默认优先级注册处理器
     public static void register(String event_id,
             Function<Object, Object> fn) {

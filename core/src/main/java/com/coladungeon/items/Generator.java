@@ -152,6 +152,7 @@ import com.coladungeon.items.weapon.melee.WornShortsword;
 import com.coladungeon.items.weapon.melee.AssassinsBlade;
 import com.coladungeon.items.weapon.melee.Dagger;
 import com.coladungeon.items.weapon.melee.Dirk;
+import com.coladungeon.items.weapon.chakram.Chakram;
 import com.coladungeon.items.weapon.missiles.Bolas;
 import com.coladungeon.items.weapon.missiles.FishingSpear;
 import com.coladungeon.items.weapon.missiles.ForceCube;
@@ -475,6 +476,7 @@ public class Generator {
 		registerTieredItem(Category.MIS_T3, ThrowingSpear.class, 3f);
 		registerTieredItem(Category.MIS_T3, Kunai.class, 3f);
 		registerTieredItem(Category.MIS_T3, Bolas.class, 3f);
+		registerTieredItem(Category.MIS_T3, Chakram.class, 3f);
 		
 		// 初始化T4远程武器
 		registerTieredItem(Category.MIS_T4, Javelin.class, 3f);

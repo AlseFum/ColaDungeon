@@ -17,7 +17,6 @@ public class Augment {
 
     @FunctionalInterface
     public interface Pipe {
-
         float pipe(float value);
     }
 

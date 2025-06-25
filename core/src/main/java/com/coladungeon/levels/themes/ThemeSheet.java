@@ -67,13 +67,12 @@ public class ThemeSheet {
     /**
      * Register built-in default themes
      */
-    private static void registerDefaultThemes() {
+    public static void registerDefaultThemes() {
         registerThemePack("sewer", SewerTheme);
         registerThemePack("prison", PrisonTheme);
         registerThemePack("caves", CavesTheme);
         registerThemePack("city", CityTheme);
         registerThemePack("halls", HallsTheme);
-        
         // // 注册新的特殊主题包
         // registerThemePack("crystal_temple", new ThemePack(CrystalTempleLevel.class, CrystalTempleLevel.class, (depth, branch) -> (branch == 0 && depth >= 1 && depth <= 5) ? (short) 1 : (short) 0));
         // registerThemePack("shadow_forest", new ThemePack(ShadowForestLevel.class, ShadowForestLevel.class));

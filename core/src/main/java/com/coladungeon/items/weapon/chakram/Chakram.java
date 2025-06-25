@@ -23,6 +23,7 @@ import com.coladungeon.utils.GLog;
 import com.watabou.noosa.Gizmo;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
+import com.coladungeon.mechanics.Damage;
 
 public class Chakram extends Weapon {
 
@@ -283,18 +284,25 @@ public class Chakram extends Weapon {
             }
         }
     }
-
+    public static Char ChakramChar=new Char(){
+        @Override
+        public void damage(int dmg, Object src) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'damage'");
+        }
+    };
     // 应用飞镖效果
     private void chakram_proc(Char target, int pos, boolean isPowerThrow) {
         // 特效
 
-        int dmg = damageRoll(Dungeon.hero);
-        if (isPowerThrow) {
-            dmg = Math.round(dmg * 1.5f);
-        }
+        // int dmg = damageRoll(Dungeon.hero);
+        // if (isPowerThrow) {
+        //     dmg = Math.round(dmg * 1.5f);
+        // }
 
-        // 造成伤害
-        target.damage(dmg, this);
+        // // 造成伤害
+        // target.damage(dmg, this);
+        com.coladungeon.mechanics.Damage.physical(ChakramChar, target, 0.0f, isPowerThrow ? 1.5f : 1f,0.0f);
 
         // 如果目标还活着，应用减速效果和视觉特效
         if (target.isAlive()) {

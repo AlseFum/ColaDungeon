@@ -184,9 +184,22 @@ public class Item implements Bundlable {
         }
     }
 
-    //can be overridden if default action is variable
+    
     public String defaultAction() {
-        return defaultAction;
+        // 首先检查是否设置了defaultAction字段
+        if (defaultAction != null) {
+            return defaultAction;
+        }
+        
+        // 如果没有设置defaultAction，查找带有@Action(isDefault = true)注解的方法
+        for (java.lang.reflect.Method method : this.getClass().getDeclaredMethods()) {
+            Action actionAnnotation = method.getAnnotation(Action.class);
+            if (actionAnnotation != null && actionAnnotation.isDefault()) {
+                return actionAnnotation.raw();
+            }
+        }
+        
+        return null;
     }
 
     public void execute(Hero hero) {

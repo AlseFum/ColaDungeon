@@ -13,11 +13,11 @@ import com.coladungeon.mod.ArknightsMod.operator.Phantom;
 import com.coladungeon.mod.ArknightsMod.operator.TexasTheOmertosa;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteManager;
-import com.watabou.utils.DeviceCompat;
 import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.DeviceCompat;
 
 public class CommandTerminal extends Item {
 
@@ -34,14 +34,14 @@ public class CommandTerminal extends Item {
 
     private static final String AC_CHARGE = "CHARGE";
     private static final String AC_DEPLOY = "DEPLOY";
-    private static final String AC_CRAFT  = "CRAFT";
+    private static final String AC_CRAFT = "CRAFT";
     private static final String COST = "cost";
 
     public int cost = 0;
     private static final int MAX_COST = 99;
     private static final int CHARGE_TURNS = 10; // 每10回合回复1点
 
-    public static class TerminalCharger extends Buff {
+    public static class TerminalOnline extends Buff {
 
         public int turns = 0;
 
@@ -61,7 +61,6 @@ public class CommandTerminal extends Item {
                     if (turns >= CHARGE_TURNS) {
                         turns = 0;
                         terminal.cost++;
-                        Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
                         updateQuickslot();
                     }
                 }
@@ -101,10 +100,10 @@ public class CommandTerminal extends Item {
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
-        if(DeviceCompat.isDebug()){
-actions.add(AC_CHARGE);
+        if (DeviceCompat.isDebug()) {
+            actions.add(AC_CHARGE);
         }
-        
+
         actions.add(AC_DEPLOY);
         actions.add(AC_CRAFT);
         return actions;
@@ -124,7 +123,7 @@ actions.add(AC_CHARGE);
     public boolean collect(Bag container) {
         if (super.collect(container)) {
             if (container.owner != null) {
-                Buff.affect(container.owner, TerminalCharger.class);
+                Buff.affect(container.owner, TerminalOnline.class);
             }
             return true;
         } else {
@@ -136,7 +135,7 @@ actions.add(AC_CHARGE);
     public void onDetach() {
         super.onDetach();
         if (Dungeon.hero != null) {
-            Buff.detach(Dungeon.hero, TerminalCharger.class);
+            Buff.detach(Dungeon.hero, TerminalOnline.class);
         }
     }
 

@@ -3,6 +3,7 @@ package com.coladungeon.sprites;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.coladungeon.utils.EventBus;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.TextureFilm;
@@ -151,6 +152,10 @@ public class ItemSpriteManager {
         registerTexture("cola/mask64.png", 64)
                 .label("mask64");
         registerTexture("cola/arksupply.png", 64).label("arksupply");
+        
+        EventBus.fire("ItemSpriteManager:init");
+                
+    
     }
 
     public static class ImageMapping {
