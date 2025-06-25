@@ -16,6 +16,7 @@ import com.coladungeon.items.stones.StoneOfDeath;
 import com.coladungeon.items.stones.StoneOfDummy;
 import com.coladungeon.items.stones.StoneOfDungeonTravel;
 import com.coladungeon.items.stones.StoneOfGeneration;
+import com.coladungeon.mod.ArknightsMod.items.SniperSupply;
 // import com.coladungeon.items.weapon.SummonerStaff;
 
 public class DebugSupply extends Supply {
@@ -46,6 +47,7 @@ public class DebugSupply extends Supply {
         put_in(Codex.class, 1);
         put_in(RedStone.class, 1);
         put_in(TabbedIconGridDemoItem.class, 1);
+        put_in(SniperSupply.class, 1);
         onOpen = () -> {
             Dungeon.energy+=10086;
             return null;

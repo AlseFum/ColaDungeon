@@ -1,14 +1,14 @@
 package com.coladungeon.mod.ArknightsMod.items;
 
 import com.coladungeon.items.supply.Supply;
-import com.coladungeon.mod.ArknightsMod.items.defender.GuardianArmor;
-import com.coladungeon.mod.ArknightsMod.items.defender.IronGuardArmor;
-import com.coladungeon.mod.ArknightsMod.items.defender.MagicGuardArmor;
-import com.coladungeon.mod.ArknightsMod.items.defender.DecisiveArmor;
-import com.coladungeon.mod.ArknightsMod.items.defender.FortressArmor;
-import com.coladungeon.mod.ArknightsMod.items.defender.SentinelArmor;
-import com.coladungeon.mod.ArknightsMod.items.defender.UnbreakableArmor;
-import com.coladungeon.mod.ArknightsMod.items.defender.OriginGuardArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.GuardianArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.IronGuardArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.MagicGuardArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.DecisiveArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.FortressArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.SentinelArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.UnbreakableArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.OriginGuardArmor;
 import com.coladungeon.sprites.ItemSpriteManager;
 
 public class DefenderSupply extends Supply {

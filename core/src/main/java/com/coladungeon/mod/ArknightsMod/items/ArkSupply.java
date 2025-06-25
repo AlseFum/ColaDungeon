@@ -1,51 +1,45 @@
 package com.coladungeon.mod.ArknightsMod.items;
 
 import com.coladungeon.items.supply.Supply;
-import com.coladungeon.mod.ArknightsMod.items.build.RhodesStandardSword;
-import com.coladungeon.mod.ArknightsMod.items.build.Specialist.TrappistWeapon.ExplosiveTrapItem;
-import com.coladungeon.mod.ArknightsMod.items.build.Specialist.TrappistWeapon.TrappistArtifact;
-import com.coladungeon.mod.ArknightsMod.items.build.caster.CasterWeapon;
-import com.coladungeon.mod.ArknightsMod.items.build.caster.MechAccordWeapon;
-import com.coladungeon.mod.ArknightsMod.operator.Phantom.PhantomWeapon;
-import com.coladungeon.mod.ArknightsMod.operator.ProjektRed.RedKnife;
-import com.coladungeon.mod.ArknightsMod.operator.TexasTheOmertosa.TexasWeapon;
 import com.coladungeon.sprites.ItemSpriteManager;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.AlchemistWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.DollkeeperWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.GeekWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.HookWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.MerchantWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.PusherWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.SkyRangerWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.TrappistWeapon;
+import com.coladungeon.mod.ArknightsMod.operator.Phantom.PhantomWeapon;
+import com.coladungeon.mod.ArknightsMod.operator.TexasTheOmertosa.TexasWeapon;
+import com.coladungeon.sprites.ItemSpriteSheet;
 
 public class ArkSupply extends Supply {
-    {
-        image=ItemSpriteManager.ByName("arksupply");
-    }
     public ArkSupply() {
         super();
-        this.put_in(CommandTerminal.class)
-            .put_in(RefinedCloak.class)
-            .put_in(RhodesStandardSword.class)
-            .put_in(CasterWeapon.class)
+        this.put_in(PusherWeapon.class)
+            .put_in(HookWeapon.class)
+            .put_in(TrappistWeapon.TrappistArtifact.class)
+            .put_in(GeekWeapon.class)
+            .put_in(MerchantWeapon.class)
+            .put_in(DollkeeperWeapon.class)
+            .put_in(AlchemistWeapon.class)
+            .put_in(SkyRangerWeapon.class)
             .put_in(PhantomWeapon.class)
-            .put_in(RedKnife.class)
             .put_in(TexasWeapon.class)
-            .put_in(MechAccordWeapon.class)
-            .put_in(GuardSupply.class)
-            .put_in(DefenderSupply.class)
-            .put_in(TrappistArtifact.class)
-            .put_in(ExplosiveTrapItem.class, 3)
             .name("罗德岛补给包")
-            .desc("""
-                一个装满了罗德岛特制装备的补给包，可以从中获取到各种罗德岛特制装备。
-                
-                包含的装备类型：
-                • 命令终端 - 干员部署和指挥系统
-                • 精制斗篷 - 特殊防护装备
-                • 罗德岛标准剑 - 基础近战武器
-                • 便携制式施术单元 - 模块化术师武器系统
-                • 幻影武器 - 幻影干员专用武器
-                • 红刀 - 红干员专用武器
-                • 德克萨斯武器 - 德克萨斯干员专用武器
-                • 机械协奏武器 - 术师干员专用武器
-                • 守卫武器补给包 - 近卫干员武器集合
-                • 重装装甲补给包 - 重装干员装甲集合
-                • 陷阱师工具箱神器 - 制作爆炸陷阱的神器
-                • 爆炸陷阱 x3 - 可投掷的爆炸陷阱
-                """);
+            .desc("包含各种特种职业武器和干员武器的补给包。\n\n" +
+                  "包含以下武器：\n" +
+                  "• 推击手武器 - 可以将敌人推开的特种武器\n" +
+                  "• 钩索师武器 - 可以拉近敌人或自身的特种武器\n" +
+                  "• 陷阱师武器 - 可以制作陷阱的特种武器\n" +
+                  "• 怪杰武器 - 高风险高回报的混沌武器\n" +
+                  "• 行商武器 - 可以进行交易和谈判的特种武器\n" +
+                  "• 人偶师武器 - 可以召唤人偶并与之联动的特种武器\n" +
+                  "• 炼金师武器 - 可以炼制各种炼金物品的特种武器\n" +
+                  "• 巡空者武器 - 可以召唤羽翼并在空中战斗的特种武器\n" +
+                  "• 幻影武器 - 幻影干员的专属武器\n" +
+                  "• 德克萨斯武器 - 德克萨斯干员的专属武器")
+            .image(ItemSpriteManager.ByName("arksupply"));
     }
 }
