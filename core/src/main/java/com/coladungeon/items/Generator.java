@@ -1,24 +1,3 @@
-/*
- * Pixel Dungeon
- * Copyright (C) 2012-2015 Oleg Dolya
- *
- * Shattered Pixel Dungeon
- * Copyright (C) 2014-2024 Evan Debenham
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>
- */
-
 package com.coladungeon.items;
 
 import java.util.ArrayList;
@@ -203,6 +182,14 @@ import com.coladungeon.plants.Starflower;
 import com.coladungeon.plants.Stormvine;
 import com.coladungeon.plants.Sungrass;
 import com.coladungeon.plants.Swiftthistle;
+import com.coladungeon.items.weapon.gun.Gun;
+import com.coladungeon.items.weapon.ammo.Ammo;
+import com.coladungeon.items.weapon.gun.Rifle;
+import com.coladungeon.items.weapon.gun.HandGun;
+import com.coladungeon.items.weapon.gun.Shotgun;
+import com.coladungeon.items.weapon.gun.SniperGun;
+import com.coladungeon.items.weapon.gun.GrenadeLauncher;
+import com.coladungeon.utils.EventBus;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
@@ -245,7 +232,10 @@ public class Generator {
 		// Add missing categories
 		TRINKET ( 1, 1, Trinket.class, null),
 		CUSTOM_ITEM ( 0, 0, Item.class, null),
-		CUSTOM_FOOD ( 0, 0, Food.class, null);
+		CUSTOM_FOOD ( 0, 0, Food.class, null),
+
+		GUN(2,2,Gun.class,null),
+		AMMO(3,3,Ammo.class,null);
 		
 		public Class<?>[] classes;
 
@@ -568,18 +558,25 @@ public class Generator {
 			});
 		}
 		*/
-		
+		registerItem(Category.GUN, Rifle.class, 2f);
+		registerItem(Category.GUN, HandGun.class, 2f);
+		registerItem(Category.GUN, Shotgun.class, 2f);
+		registerItem(Category.GUN, SniperGun.class, 2f);
+		registerItem(Category.GUN, GrenadeLauncher.class, 2f);
+
+		registerItem(Category.AMMO, Ammo.class, 2f);
+
+		EventBus.fire("Generator:InitializeItems");
 		// 更新有两套概率的类别的总概率
 		updateCategoryTotalProbs();
 	}
 	
-	/**
-	 * 更新所有有两套概率的类别的总概率
-	 */
+
 	private static void updateCategoryTotalProbs() {
 			for (Category cat : Category.values()){
 			if (cat.defaultProbs2 != null && cat.defaultProbs != null){
-					cat.defaultProbsTotal = new float[cat.defaultProbs.length];
+					cat.defaultProbsTotal = 
+						new float[cat.defaultProbs.length];
 					for (int i = 0; i < cat.defaultProbs.length; i++){
 						cat.defaultProbsTotal[i] = cat.defaultProbs[i] + cat.defaultProbs2[i];
 					}
@@ -687,6 +684,10 @@ public class Generator {
 				return randomCustomItem();
 			case CUSTOM_FOOD:
 				return randomCustomFood();
+			case GUN:
+				return randomGun();
+			case AMMO:
+				return randomAmmo();
 			case TRINKET:
 				// For now, return a basic item from the trinket category
 				// This will be improved in future updates
@@ -913,7 +914,25 @@ public class Generator {
 		}
 		return false;
 	}
-
+	public static Gun randomGun(){
+		switch(Random.chances(Category.GUN.probs)){
+			case 0:
+				return new Rifle();
+			case 1:
+				return new HandGun();
+			case 2:
+				return new Shotgun();
+			case 3:
+				return new SniperGun();
+			case 4:
+				return new GrenadeLauncher();
+			default:
+				return new Rifle();
+		}
+	}
+	public static Ammo randomAmmo(){
+		return new Ammo();
+	}
 	private static final String FIRST_DECK = "first_deck";
 	private static final String GENERAL_PROBS = "general_probs";
 	private static final String CATEGORY_PROBS = "_probs";
@@ -1139,9 +1158,6 @@ public class Generator {
 		return true;
 	}
 
-	/**
-	 * 使用自定义生成函数注册物品
-	 */
 	public static boolean registerItem(Category category, Class<? extends Item> itemClass, float probability1, float probability2, Supplier<Item> makeFunction) {
 		boolean result = registerItem(category, itemClass, probability1, probability2);
 		if (result) {
@@ -1150,9 +1166,7 @@ public class Generator {
 		return result;
 	}
 
-	/**
-	 * 简化版的注册方法，直接使用生成函数
-	 */
+
 	public static boolean registerItem(Category category, String itemId, Supplier<Item> makeFunction, float probability1, float probability2) {
 		try {
 			// 创建一个虚拟类来保持与现有系统的兼容性

@@ -222,9 +222,7 @@ public class ItemSprite extends MovieClip {
 	}
 
 	public void frame(int image) {
-		// @Alsefum
 		if (image >= 6000) {
-			// image=114;
 			ImageMapping map = ItemSpriteManager.mapImage(image);
 			if (map != null) {
 				texture = map.texture;
@@ -234,8 +232,6 @@ public class ItemSprite extends MovieClip {
 					perspectiveRaise = (5 + 8 - _height) / 16f;
 				}
 				if (map.size != 16) {
-					//attention
-					//if it‘s too small，set it to 20px
 					scale.set(16f / Math.max(map.size, 1));
 					origin.set(width / 2f, height / 2f);
 				}
@@ -246,7 +242,7 @@ public class ItemSprite extends MovieClip {
 		RectF original_map = ItemSpriteSheet.film.get(image);
 		frame(original_map);
 		scale.set(1);
-		origin.set(width / 2f, height / 2f);
+		origin.set(0,0);
 		float _height = ItemSpriteSheet.film.height(image);
 		if (_height < 8f) {
 			perspectiveRaise = (5 + 8 - _height) / 16f;

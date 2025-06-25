@@ -7,9 +7,14 @@ import com.coladungeon.items.Item;
 import com.coladungeon.items.weapon.gun.Gun;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.windows.WndBag;
 
 public class Ammo extends Item {
+    static {
+        ItemSpriteManager.registerTexture("cola/ammo.png", 32).span(3).label("ammo").label("explosive_ammo");
+    }
+
     public static final String AC_RELOAD = "重装子弹";
     public static final int DEFAULT_MAX_STACK = 999;
     public static int max_amount = 6;
@@ -20,7 +25,7 @@ public class Ammo extends Item {
     //if is full_reload, the amount will be set to gun.max_amount
     public Cartridge cartridge;
     {
-        image = ItemSpriteSheet.DARTS;
+        image = ItemSpriteManager.ByName("ammo");
         stackable = true;
         defaultAction = AC_RELOAD;
     }
