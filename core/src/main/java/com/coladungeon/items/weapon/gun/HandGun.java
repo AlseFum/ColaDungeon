@@ -1,5 +1,7 @@
 package com.coladungeon.items.weapon.gun;
 
+import java.util.ArrayList;
+
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.weapon.Weapon;
 import com.coladungeon.items.weapon.ammo.Ammo;
@@ -7,7 +9,6 @@ import com.coladungeon.items.weapon.ammo.Cartridge;
 import com.coladungeon.scenes.CellSelector;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.sprites.ItemSpriteSheet;
-import java.util.ArrayList;
 
 public class HandGun extends Gun {
 
@@ -20,7 +21,6 @@ public class HandGun extends Gun {
         // 设置弹药相关属性
         maxAmmo = 12;
         ammo = maxAmmo;
-        cartridge = new Cartridge(8);
         tier=1;
     }
     @Override

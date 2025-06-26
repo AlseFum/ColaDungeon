@@ -2,6 +2,7 @@ package com.coladungeon.items.weapon.gun;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.coladungeon.Assets;
 import com.coladungeon.Dungeon;
@@ -20,10 +21,8 @@ import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.utils.GLog;
 import com.coladungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
-import java.util.stream.Collectors;
 
 public class Gun extends Weapon {
 
@@ -97,7 +96,9 @@ public class Gun extends Weapon {
             }else{
             }
             // Apply the cartridge's effect
+            if(cartridge.onHit!=null){
             cartridge.onHit.onHit.apply(curUser, hitResult.where(), (int) (cartridge.power * getAmmoPowerMultiplier()), 0);
+            }
         }
         if(shouldSpend){
             curUser.spendAndNext(1f);

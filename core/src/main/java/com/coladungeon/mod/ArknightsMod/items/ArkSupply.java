@@ -1,14 +1,63 @@
 package com.coladungeon.mod.ArknightsMod.items;
 
-import com.coladungeon.items.Item;
 import com.coladungeon.items.supply.Supply;
+import com.coladungeon.items.wands.WandOfBlastWave;
+import com.coladungeon.items.wands.WandOfCorrosion;
+import com.coladungeon.items.wands.WandOfCorruption;
+import com.coladungeon.items.wands.WandOfDisintegration;
+import com.coladungeon.items.wands.WandOfFireblast;
+import com.coladungeon.items.wands.WandOfFrost;
+import com.coladungeon.items.wands.WandOfLightning;
+import com.coladungeon.items.wands.WandOfLivingEarth;
+import com.coladungeon.items.wands.WandOfMagicMissile;
+import com.coladungeon.items.wands.WandOfPrismaticLight;
+import com.coladungeon.items.wands.WandOfRegrowth;
+import com.coladungeon.items.wands.WandOfTransfusion;
+import com.coladungeon.items.wands.WandOfWarding;
+import com.coladungeon.mod.ArknightsMod.category.OperatorConst;
 import com.coladungeon.mod.ArknightsMod.items.build.ArknightsMelee;
-import com.coladungeon.mod.ArknightsMod.items.build.Specialist.*;
-import com.coladungeon.mod.ArknightsMod.items.build.caster.*;
-import com.coladungeon.mod.ArknightsMod.items.build.defender.*;
-import com.coladungeon.mod.ArknightsMod.items.build.guard.*;
-import com.coladungeon.mod.ArknightsMod.items.build.support.*;
-import com.coladungeon.mod.ArknightsMod.items.build.vanguard.*;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.AlchemistWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.DollkeeperWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.GeekWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.HookWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.MerchantWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.PusherWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.SkyRangerWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.Specialist.TrappistWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.caster.CasterWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.caster.MechAccordWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.DecisiveArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.FortressArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.GuardianArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.IronGuardArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.MagicGuardArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.OriginGuardArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.SentinelArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.defender.UnbreakableArmor;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.ArtsFighterWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.CenturionWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.CrusherWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.DreadnoughtWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.EarthshakerWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.FighterWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.InstructorWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.LiberatorWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.LordWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.ReaperWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.SolobladeWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.guard.SwordmasterWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.support.BardArtifact;
+import com.coladungeon.mod.ArknightsMod.items.build.support.CraftsmanWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.support.StagnatorWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.support.SummonerArtifact;
+import com.coladungeon.mod.ArknightsMod.items.build.support.WeakenWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.support.WitchArtifact;
+import com.coladungeon.mod.ArknightsMod.items.build.support.WitchWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.vanguard.AgentWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.vanguard.ChargerWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.vanguard.FlagBearerWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.vanguard.PioneerWeapon;
+import com.coladungeon.mod.ArknightsMod.items.build.vanguard.TacticianWeapon;
 import com.coladungeon.mod.ArknightsMod.operator.Phantom.PhantomWeapon;
 import com.coladungeon.mod.ArknightsMod.operator.TexasTheOmertosa.TexasWeapon;
 import com.coladungeon.sprites.ItemSpriteManager;
@@ -51,8 +100,8 @@ public class ArkSupply extends Supply {
                 .put_in(ReaperWeapon.class)
                 .put_in(SolobladeWeapon.class)
                 .put_in(SwordmasterWeapon.class)
-                .name("守卫武器补给包")
-                .desc("一个专门装满了守卫职业武器的补给包，包含了各种不同风格的守卫武器。");
+                .name("近卫武器补给包")
+                .desc("一个专门装满了近卫职业武器的补给包，包含了各种不同风格的守卫武器。");
         }
     }
 
@@ -100,26 +149,110 @@ public class ArkSupply extends Supply {
         
         public CasterSupply() {
             super();
+            
+            // 术师武器
             this.put_in(CasterWeapon.class)
                 .put_in(MechAccordWeapon.class)
-                .name("术师武器补给包")
+                
+                // 所有法杖
+                .put_in(WandOfMagicMissile.class)
+                .put_in(WandOfFireblast.class)
+                .put_in(WandOfFrost.class)
+                .put_in(WandOfLightning.class)
+                .put_in(WandOfDisintegration.class)
+                .put_in(WandOfCorrosion.class)
+                .put_in(WandOfCorruption.class)
+                .put_in(WandOfBlastWave.class)
+                .put_in(WandOfLivingEarth.class)
+                .put_in(WandOfPrismaticLight.class)
+                .put_in(WandOfRegrowth.class)
+                .put_in(WandOfTransfusion.class)
+                .put_in(WandOfWarding.class)
+                
+                // 术师模块
+                .put_in(CoreCasterModule.class)
+                .put_in(SplashCasterModule.class)
+                .put_in(ChainCasterModule.class)
+                .put_in(MechAccordCasterModule.class)
+                .put_in(BlastCasterModule.class)
+                .put_in(MysticCasterModule.class)
+                
+                .name("术师武器法杖补给包")
                 .desc("""
-                    一个专门装满了术师职业武器的补给包，包含了各种不同风格的术师武器。
+                    一个专门装满了术师职业武器和法杖的补给包，包含了各种不同风格的术师装备。
                     
-                    包含的武器类型：
-                    • 术师武器 - 基础术师武器
+                    包含的装备类型：
+                    
+                    术师武器：
+                    • 便携制式施术单元 - 基础术师武器，可装载法杖和模块
                     • 机械协奏武器 - 机械术师武器
-
-                    每个武器都有其独特的法术机制和特殊效果，
-                    为术师干员提供多样化的法术攻击选择。
                     
-                    武器特点：
-                    • 法术伤害：强大的法术攻击力
-                    • 元素效果：火、冰、雷等元素攻击
-                    • 范围攻击：大范围的法术攻击
-                    • 充能系统：法术充能和释放机制
-                    • 机械联动：与机械单位的协同作战
+                    法杖（共13种）：
+                    • 魔法导弹法杖 - 基础魔法攻击
+                    • 火焰法杖 - 火焰范围攻击
+                    • 冰霜法杖 - 冰冻减速效果
+                    • 闪电法杖 - 链式闪电攻击
+                    • 分解法杖 - 穿透攻击
+                    • 腐蚀法杖 - 毒性伤害
+                    • 腐化法杖 - 敌人转化
+                    • 冲击波法杖 - 击退效果
+                    • 活体大地法杖 - 召唤石像
+                    • 棱镜光法杖 - 眩光攻击
+                    • 再生法杖 - 植物召唤
+                    • 输血法杖 - 生命转移
+                    • 守护法杖 - 守护召唤
+                    
+                    术师模块（6种分支）：
+                    • 核心术师模块 - 增强基础法术伤害
+                    • 扩散术师模块 - 添加范围伤害效果
+                    • 链术师模块 - 法术跳跃传播
+                    • 驭械术师模块 - 施法后获得充能增益
+                    • 轰击术师模块 - 添加直线穿透伤害
+                    • 秘术师模块 - 施法时恢复生命值
+                    
+                    特点：
+                    • 模块化设计：术师武器可装载法杖和多个模块
+                    • 组合效果：不同法杖与模块搭配产生独特效果
+                    • 充能系统：法杖提供充能，武器消耗充能施法
+                    • 多样化攻击：从单体到范围，从直接伤害到特殊效果
                     """);
+        }
+    }
+    
+    // 术师模块类定义
+    public static class CoreCasterModule extends CasterWeapon.CasterModule {
+        public CoreCasterModule() {
+            super(OperatorConst.Branch.Core);
+        }
+    }
+    
+    public static class SplashCasterModule extends CasterWeapon.CasterModule {
+        public SplashCasterModule() {
+            super(OperatorConst.Branch.Splash);
+        }
+    }
+    
+    public static class ChainCasterModule extends CasterWeapon.CasterModule {
+        public ChainCasterModule() {
+            super(OperatorConst.Branch.Chain);
+        }
+    }
+    
+    public static class MechAccordCasterModule extends CasterWeapon.CasterModule {
+        public MechAccordCasterModule() {
+            super(OperatorConst.Branch.MechAccord);
+        }
+    }
+    
+    public static class BlastCasterModule extends CasterWeapon.CasterModule {
+        public BlastCasterModule() {
+            super(OperatorConst.Branch.Blast);
+        }
+    }
+    
+    public static class MysticCasterModule extends CasterWeapon.CasterModule {
+        public MysticCasterModule() {
+            super(OperatorConst.Branch.Mystic);
         }
     }
 
