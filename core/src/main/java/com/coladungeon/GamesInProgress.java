@@ -21,6 +21,7 @@
 
 package com.coladungeon;
 
+import com.badlogic.gdx.Gdx;
 import com.coladungeon.actors.hero.HeroClass;
 import com.coladungeon.actors.hero.HeroSubClass;
 import com.coladungeon.messages.Messages;
@@ -32,6 +33,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Base64;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.util.zip.GZIPInputStream;
 
 public class GamesInProgress {
 	
@@ -166,6 +172,157 @@ public class GamesInProgress {
 	
 	public static void delete( int slot ) {
 		slotStates.put( slot, null );
+	}
+	
+	/**
+	 * 将指定存档复制到剪贴板
+	 * 存档会被压缩并编码为Base64字符串，便于分享和备份
+	 */
+	public static boolean copyToClipboard(int slot) {
+		if (!gameExists(slot)) {
+			return false;
+		}
+
+		try {
+			// 读取主存档文件
+			Bundle gameBundle = FileUtils.bundleFromFile(gameFile(slot));
+			
+			// 创建一个包含所有存档数据的容器Bundle
+			Bundle fullSave = new Bundle();
+			fullSave.put("game", gameBundle);
+			
+			// 读取所有深度文件
+			Bundle depthsBundle = new Bundle();
+			Info info = check(slot);
+			if (info != null && info.maxDepth > 0) {
+				for (int d = 1; d <= info.maxDepth; d++) {
+					// 主分支
+					String depthFile = depthFile(slot, d, 0);
+					if (FileUtils.fileExists(depthFile)) {
+						Bundle depthBundle = FileUtils.bundleFromFile(depthFile);
+						depthsBundle.put("depth_" + d + "_0", depthBundle);
+					}
+					
+					// 其他分支（1-4）
+					for (int b = 1; b <= 4; b++) {
+						String branchFile = depthFile(slot, d, b);
+						if (FileUtils.fileExists(branchFile)) {
+							Bundle branchBundle = FileUtils.bundleFromFile(branchFile);
+							depthsBundle.put("depth_" + d + "_" + b, branchBundle);
+						}
+					}
+				}
+			}
+			fullSave.put("depths", depthsBundle);
+			
+			// 将Bundle转换为压缩的Base64字符串
+			String saveData = bundleToCompressedString(fullSave);
+			
+			// 添加版本和格式标识
+			String clipboardData = "COLADUNGEON_SAVE_V1:" + saveData;
+			
+			// 复制到剪贴板
+			Gdx.app.getClipboard().setContents(clipboardData);
+			
+			return true;
+		} catch (IOException e) {
+			ColaDungeon.reportException(e);
+			return false;
+		}
+	}
+	
+	/**
+	 * 从剪贴板导入存档
+	 * 返回导入到的存档槽位，失败时返回-1
+	 */
+	public static int importFromClipboard() {
+		try {
+			String clipboardData = Gdx.app.getClipboard().getContents();
+			if (clipboardData == null || !clipboardData.startsWith("COLADUNGEON_SAVE_V1:")) {
+				return -1;
+			}
+			
+			// 移除格式标识
+			String saveData = clipboardData.substring("COLADUNGEON_SAVE_V1:".length());
+			
+			// 从压缩字符串恢复Bundle
+			Bundle fullSave = bundleFromCompressedString(saveData);
+			
+			// 找到一个空的存档槽位
+			int newSlot = firstEmpty();
+			if (newSlot == -1) {
+				return -1;
+			}
+			
+			// 恢复主存档文件
+			Bundle gameBundle = fullSave.getBundle("game");
+			FileUtils.bundleToFile(gameFile(newSlot), gameBundle);
+			
+			// 恢复深度文件
+			Bundle depthsBundle = fullSave.getBundle("depths");
+			if (depthsBundle != null) {
+				ArrayList<String> depthKeys = depthsBundle.getKeys();
+				for (String key : depthKeys) {
+					if (key.startsWith("depth_")) {
+						// 解析depth_d_b格式的键
+						String[] parts = key.split("_");
+						if (parts.length == 3) {
+							int depth = Integer.parseInt(parts[1]);
+							int branch = Integer.parseInt(parts[2]);
+							Bundle depthBundle = depthsBundle.getBundle(key);
+							FileUtils.bundleToFile(depthFile(newSlot, depth, branch), depthBundle);
+						}
+					}
+				}
+			}
+			
+			// 刷新存档状态
+			setUnknown(newSlot);
+			
+			return newSlot;
+		} catch (Exception e) {
+			ColaDungeon.reportException(e);
+			return -1;
+		}
+	}
+	
+	/**
+	 * 将Bundle压缩并编码为Base64字符串
+	 */
+	private static String bundleToCompressedString(Bundle bundle) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		GZIPOutputStream gzos = new GZIPOutputStream(baos);
+		
+		String jsonString = bundle.toString();
+		gzos.write(jsonString.getBytes("UTF-8"));
+		gzos.close();
+		
+		byte[] compressed = baos.toByteArray();
+		return Base64.getEncoder().encodeToString(compressed);
+	}
+	
+	/**
+	 * 从压缩的Base64字符串恢复Bundle
+	 */
+	private static Bundle bundleFromCompressedString(String compressedData) throws IOException {
+		byte[] compressed = Base64.getDecoder().decode(compressedData);
+		
+		ByteArrayInputStream bais = new ByteArrayInputStream(compressed);
+		GZIPInputStream gzis = new GZIPInputStream(bais);
+		
+		// 读取解压缩的数据
+		ByteArrayOutputStream decompressed = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024];
+		int len;
+		while ((len = gzis.read(buffer)) != -1) {
+			decompressed.write(buffer, 0, len);
+		}
+		gzis.close();
+		
+		String jsonString = new String(decompressed.toByteArray(), "UTF-8");
+		
+		// 重新构造Bundle
+		return Bundle.read(new ByteArrayInputStream(jsonString.getBytes("UTF-8")));
 	}
 	
 	public static class Info {

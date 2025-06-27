@@ -149,6 +149,19 @@ public class WndGameInProgress extends Window {
 			}
 		};
 		
+		RedButton exportClipboard = new RedButton( Messages.get(this, "export_clipboard")){
+			@Override
+			protected void onClick() {
+				super.onClick();
+				
+				if (GamesInProgress.copyToClipboard(slot)) {
+					ColaDungeon.scene().add(new WndMessage(Messages.get(WndGameInProgress.class, "export_success")));
+				} else {
+					ColaDungeon.scene().add(new WndMessage(Messages.get(WndGameInProgress.class, "export_failed")));
+				}
+			}
+		};
+
 		RedButton erase = new RedButton( Messages.get(this, "erase")){
 			@Override
 			protected void onClick() {
@@ -170,19 +183,27 @@ public class WndGameInProgress extends Window {
 			}
 		};
 
+		// 第一行：继续和删除
 		cont.icon(Icons.get(Icons.ENTER));
-		cont.setRect(0, pos, WIDTH/3 -1, 20);
+		cont.setRect(0, pos, WIDTH/2 -1, 20);
 		add(cont);
 
-		copy.icon(Icons.get(Icons.COPY));
-		copy.setRect(WIDTH/3 + 1, pos, WIDTH/3 - 1, 20);
-		add(copy);
-
 		erase.icon(Icons.get(Icons.CLOSE));
-		erase.setRect(2*WIDTH/3 + 1, pos, WIDTH/3 - 1, 20);
+		erase.setRect(WIDTH/2 + 1, pos, WIDTH/2 - 1, 20);
 		add(erase);
 		
-		resize(WIDTH, (int)cont.bottom()+1);
+		pos += 22; // 移动到下一行
+		
+		// 第二行：复制和导出
+		copy.icon(Icons.get(Icons.COPY));
+		copy.setRect(0, pos, WIDTH/2 - 1, 20);
+		add(copy);
+
+		exportClipboard.icon(Icons.get(Icons.PASTE));
+		exportClipboard.setRect(WIDTH/2 + 1, pos, WIDTH/2 - 1, 20);
+		add(exportClipboard);
+		
+		resize(WIDTH, (int)exportClipboard.bottom()+1);
 	}
 	
 	private void statSlot( String label, String value ) {

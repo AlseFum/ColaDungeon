@@ -155,6 +155,54 @@ public class StartScene extends PixelScene {
 		}
 		if (games.size() >= 2) add(btnSort);
 
+		// 添加从剪贴板导入按钮
+		StyledButton btnImport = new StyledButton(Chrome.Type.TOAST_TR, Messages.get(this, "import_clipboard"), 6){
+			@Override
+			protected void onClick() {
+				super.onClick();
+				
+				int newSlot = GamesInProgress.importFromClipboard();
+				if (newSlot != -1) {
+					Game.scene().add(new Window(){
+						{
+							resize(120, 60);
+							RenderedTextBlock text = PixelScene.renderTextBlock(Messages.get(StartScene.class, "import_success", newSlot), 6);
+							text.maxWidth(width);
+							text.setPos(0, 5);
+							add(text);
+						}
+					});
+					ColaDungeon.seamlessResetScene();
+				} else {
+					Game.scene().add(new Window(){
+						{
+							resize(120, 60);
+							RenderedTextBlock text = PixelScene.renderTextBlock(Messages.get(StartScene.class, "import_failed"), 6);
+							text.maxWidth(width);
+							text.setPos(0, 5);
+							add(text);
+						}
+					});
+				}
+			}
+		};
+		btnImport.textColor(0xCCCCCC);
+		
+		if (games.size() >= 2) {
+			if (yPos + 26 > Camera.main.height) {
+				btnImport.setRect(slotLeft + btnSort.reqWidth() + 8, Camera.main.height - 14, btnImport.reqWidth() + 4, 12);
+			} else {
+				btnImport.setRect(slotLeft + btnSort.reqWidth() + 8, yPos, btnImport.reqWidth() + 4, 12);
+			}
+		} else {
+			if (yPos + 10 > Camera.main.height) {
+				btnImport.setRect(slotLeft - btnImport.reqWidth() - 6, Camera.main.height - 14, btnImport.reqWidth() + 4, 12);
+			} else {
+				btnImport.setRect(slotLeft, yPos, btnImport.reqWidth() + 4, 12);
+			}
+		}
+		add(btnImport);
+
 		fadeIn();
 		
 	}
