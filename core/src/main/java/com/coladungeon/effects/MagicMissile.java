@@ -285,6 +285,32 @@ public class MagicMissile extends Emitter {
 		return missile;
 	}
 
+	//convenience method with custom speed
+	public static MagicMissile boltFromChar(Group group, int type, Visual sprite, int to, float speed, Callback callback){
+		MagicMissile missile = ((MagicMissile)group.recycle( MagicMissile.class ));
+		if (Actor.findChar(to) != null){
+			missile.reset(type, sprite.center(), Actor.findChar(to).sprite.destinationCenter(), callback);
+		} else {
+			missile.reset(type, sprite, to, callback);
+		}
+		missile.setSpeed(speed);
+		return missile;
+	}
+
+	//convenience method for faster missiles
+	public static MagicMissile fastBoltFromChar(Group group, int type, Visual sprite, int to, Callback callback){
+		MagicMissile missile = boltFromChar(group, type, sprite, to, callback);
+		missile.setSpeed(SPEED * 1.5f); // 50%更快
+		return missile;
+	}
+
+	//convenience method for very fast missiles
+	public static MagicMissile instantBoltFromChar(Group group, int type, Visual sprite, int to, Callback callback){
+		MagicMissile missile = boltFromChar(group, type, sprite, to, callback);
+		missile.setSpeed(SPEED * 3f); // 3倍速度
+		return missile;
+	}
+
 	@Override
 	protected boolean isFrozen() {
 		return false; //cannot be frozen

@@ -1,7 +1,7 @@
 package com.coladungeon.mod.ArknightsMod.items;
 
 import com.coladungeon.items.supply.Supply;
-import com.coladungeon.mod.ArknightsMod.items.build.RhodesStandardSword;
+
 import com.coladungeon.mod.ArknightsMod.items.build.guard.ArtsFighterWeapon;
 import com.coladungeon.mod.ArknightsMod.items.build.guard.CenturionWeapon;
 import com.coladungeon.mod.ArknightsMod.items.build.guard.CrusherWeapon;
@@ -23,8 +23,7 @@ public class GuardSupply extends Supply {
     
     public GuardSupply() {
         super();
-        this.put_in(RhodesStandardSword.class)
-            .put_in(CenturionWeapon.class)
+        this.put_in(CenturionWeapon.class)
             .put_in(DreadnoughtWeapon.class)
             .put_in(ArtsFighterWeapon.class)
             .put_in(CrusherWeapon.class)

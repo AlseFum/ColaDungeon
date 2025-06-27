@@ -444,7 +444,7 @@ public abstract class Wand extends Item {
 				callback);
 		Sample.INSTANCE.play( Assets.Sounds.ZAP );
 	}
-
+	//only for mages' weapon.
 	public void staffFx( MagesStaff.StaffParticle particle ){
 		particle.color(0xFFFFFF); particle.am = 0.3f;
 		particle.setLifespan( 1f);

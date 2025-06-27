@@ -21,7 +21,8 @@ public class WndTabbedIconGrid extends Window {
     private static final int BUTTON_HEIGHT = 20;
     private static final int SLIDER_HEIGHT = 20;
     private static final int MESSAGE_HEIGHT = 30;
-    private static final int MIN_WINDOW_WIDTH = 200;
+    private static final int MIN_WINDOW_WIDTH = 120;
+    private static final int MAX_WINDOW_WIDTH = 240;
     
     private RenderedTextBlock title;
     private List<TabData> tabs;
@@ -149,20 +150,24 @@ public class WndTabbedIconGrid extends Window {
             maxRows = Math.max(maxRows, rows);
         }
         
-        // 计算窗口宽度
+        // 计算窗口宽度 - 添加最大宽度限制
         int gridWidth = cols * ICON_SIZE + (cols - 1) * GAP;
-        int width = Math.max(MIN_WINDOW_WIDTH, gridWidth + MARGIN * 2);
+        int calculatedWidth = gridWidth + MARGIN * 2;
+        int width = Math.max(MIN_WINDOW_WIDTH, Math.min(calculatedWidth, MAX_WINDOW_WIDTH));
         
         // 添加标题
         title = PixelScene.renderTextBlock(builder.title, 8);
+        title.maxWidth(width - MARGIN * 2); // 限制标题宽度
         title.setPos((width - title.width()) / 2, MARGIN);
         add(title);
         
-        // 计算tab宽度
-        float tabWidth = (width - MARGIN * 2) / (float)tabs.size();
+        // 计算tab宽度 - 确保tab不会太宽
+        float tabWidth = Math.min((width - MARGIN * 2) / (float)tabs.size(), 60); // 限制单个tab最大宽度为60
+        float totalTabWidth = tabWidth * tabs.size();
+        float tabStartX = (width - totalTabWidth) / 2; // 居中显示tabs
         
         // 添加tab按钮
-        float tabX = MARGIN;
+        float tabX = tabStartX;
         float tabY = title.bottom() + GAP;
         
         for (int i = 0; i < tabs.size(); i++) {
@@ -199,12 +204,12 @@ public class WndTabbedIconGrid extends Window {
             gridButtons.add(btn);
         }
         
-                 // 添加消息文本
-         message = PixelScene.renderTextBlock("请选择一个物品", 6);
-         message.maxWidth(width - MARGIN * 2);
-         float messageY = gridY + maxRows * ICON_SIZE + (maxRows - 1) * GAP + GAP;
-         message.setPos((width - message.width()) / 2, messageY); // 水平居中
-         add(message);
+        // 添加消息文本
+        message = PixelScene.renderTextBlock("请选择一个物品", 6);
+        message.maxWidth(width - MARGIN * 2);
+        float messageY = gridY + maxRows * ICON_SIZE + (maxRows - 1) * GAP + GAP;
+        message.setPos((width - message.width()) / 2, messageY); // 水平居中
+        add(message);
         
         // 添加slider（创建但初始隐藏）
         slider = new OptionSlider("", "0", "100", 0, 10) {
@@ -265,43 +270,45 @@ public class WndTabbedIconGrid extends Window {
             btn.visible = false;
         }
         
-                 // 显示当前tab的网格项，居中显示
-         int itemsCount = tab.iconItems.size();
-         int rows = (int)Math.ceil(itemsCount / (float)cols);
-         int lastRowCols = itemsCount % cols == 0 ? cols : itemsCount % cols;
-         
-         float gridWidth = cols * ICON_SIZE + (cols - 1) * GAP;
-         float startY = tabButtons.get(0).bottom() + GAP;
-         float y = startY;
-         
-         for (int row = 0; row < rows; row++) {
-             // 计算当前行的列数
-             int currentRowCols = (row == rows - 1) ? lastRowCols : cols;
-             
-             // 计算当前行的宽度
-             float rowWidth = currentRowCols * ICON_SIZE + (currentRowCols - 1) * GAP;
-             
-             // 计算水平居中的起始X坐标
-             float startX = (width - rowWidth) / 2;
-             float x = startX;
-             
-             for (int col = 0; col < currentRowCols; col++) {
-                 int i = row * cols + col;
-                 if (i < tab.iconItems.size() && i < gridButtons.size()) {
-                     StyledButton btn = gridButtons.get(i);
-                     IconItem item = tab.iconItems.get(i);
-                     
-                     btn.icon(item.icon);
-                     btn.setPos(x, y);
-                     btn.enable(item.enabled);
-                     btn.visible = true;
-                     
-                     x += ICON_SIZE + GAP;
-                 }
-             }
-             
-             y += ICON_SIZE + GAP;
-         }
+        // 显示当前tab的网格项，居中显示
+        int itemsCount = tab.iconItems.size();
+        int rows = (int)Math.ceil(itemsCount / (float)cols);
+        int lastRowCols = itemsCount % cols == 0 ? cols : itemsCount % cols;
+        
+        // 使用实际可用宽度来计算网格布局
+        float availableWidth = width - MARGIN * 2;
+        float actualGridWidth = Math.min(cols * ICON_SIZE + (cols - 1) * GAP, availableWidth);
+        float startY = tabButtons.get(0).bottom() + GAP;
+        float y = startY;
+        
+        for (int row = 0; row < rows; row++) {
+            // 计算当前行的列数
+            int currentRowCols = (row == rows - 1) ? lastRowCols : cols;
+            
+            // 计算当前行的宽度
+            float rowWidth = currentRowCols * ICON_SIZE + (currentRowCols - 1) * GAP;
+            
+            // 计算水平居中的起始X坐标
+            float startX = (width - rowWidth) / 2;
+            float x = startX;
+            
+            for (int col = 0; col < currentRowCols; col++) {
+                int i = row * cols + col;
+                if (i < tab.iconItems.size() && i < gridButtons.size()) {
+                    StyledButton btn = gridButtons.get(i);
+                    IconItem item = tab.iconItems.get(i);
+                    
+                    btn.icon(item.icon);
+                    btn.setPos(x, y);
+                    btn.enable(item.enabled);
+                    btn.visible = true;
+                    
+                    x += ICON_SIZE + GAP;
+                }
+            }
+            
+            y += ICON_SIZE + GAP;
+        }
         
         // 更新slider显示
         if (tab.hasSlider) {
@@ -311,24 +318,24 @@ public class WndTabbedIconGrid extends Window {
             slider.visible = false;
         }
         
-                 // 重置消息并居中
-         message.text("请选择一个物品");
-         message.setPos((width - message.width()) / 2, message.top());
+        // 重置消息并居中
+        message.text("请选择一个物品");
+        message.setPos((width - message.width()) / 2, message.top());
     }
     
-         private void handleGridClick(int index) {
-         TabData tab = tabs.get(currentTab);
-         if (index >= 0 && index < tab.iconItems.size()) {
-             IconItem item = tab.iconItems.get(index);
-             if (item.enabled) {
-                 message.text(item.message);
-                 message.setPos((width - message.width()) / 2, message.top()); // 更新后重新居中
-                 if (item.onClick != null) {
-                     item.onClick.run();
-                 }
-             }
-         }
-     }
+    private void handleGridClick(int index) {
+        TabData tab = tabs.get(currentTab);
+        if (index >= 0 && index < tab.iconItems.size()) {
+            IconItem item = tab.iconItems.get(index);
+            if (item.enabled) {
+                message.text(item.message);
+                message.setPos((width - message.width()) / 2, message.top()); // 更新后重新居中
+                if (item.onClick != null) {
+                    item.onClick.run();
+                }
+            }
+        }
+    }
     
     private void handleSliderChange() {
         TabData tab = tabs.get(currentTab);

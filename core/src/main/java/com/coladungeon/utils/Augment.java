@@ -51,7 +51,14 @@ public class Augment {
         return augments.stream()
                 .filter(r -> r instanceof Augment)
                 .map(r -> (Augment) r)
-                .sorted((a1, a2) -> Short.compare(a1.priority, a2.priority))
+                .sorted((a1, a2) -> {
+                    int priorityCompare = Short.compare(a1.priority, a2.priority);
+                    if (priorityCompare != 0) {
+                        return priorityCompare;
+                    }
+                    // 如果priority相同，按type排序
+                    return getTypeOrder(a1.type) - getTypeOrder(a2.type);
+                })
                 .reduce(_dmg, (dmg, augment) -> {
                     switch (augment.type) {
                         case add -> {
@@ -68,6 +75,14 @@ public class Augment {
                         }
                     }
                 }, (a, b) -> b);
+    }
+
+    private static int getTypeOrder(Type type) {
+        return switch (type) {
+            case add -> 0;
+            case mul -> 1;
+            case pipe -> 2;
+        };
     }
 
 }
