@@ -476,7 +476,6 @@ public class Generator {
 		registerTieredItem(Category.MIS_T3, ThrowingSpear.class, 3f);
 		registerTieredItem(Category.MIS_T3, Kunai.class, 3f);
 		registerTieredItem(Category.MIS_T3, Bolas.class, 3f);
-		registerTieredItem(Category.MIS_T3, Chakram.class, 3f);
 		
 		// 初始化T4远程武器
 		registerTieredItem(Category.MIS_T4, Javelin.class, 3f);
