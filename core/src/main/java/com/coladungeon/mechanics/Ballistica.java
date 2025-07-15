@@ -169,4 +169,7 @@ public class Ballistica {
 			return new ArrayList<>();
 		}
 	}
+	public static Ballistica of(int from, int to, int params) {
+		return new Ballistica(from, to, params);
+	}
 }

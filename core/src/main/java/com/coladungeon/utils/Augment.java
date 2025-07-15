@@ -47,7 +47,7 @@ public class Augment {
         this.pipe = p;
     }
 
-    public static int process(ArrayList<Object> augments, int _dmg) {
+    public static int process(ArrayList<Object> augments, int _v) {
         return augments.stream()
                 .filter(r -> r instanceof Augment)
                 .map(r -> (Augment) r)
@@ -56,10 +56,9 @@ public class Augment {
                     if (priorityCompare != 0) {
                         return priorityCompare;
                     }
-                    // 如果priority相同，按type排序
                     return getTypeOrder(a1.type) - getTypeOrder(a2.type);
                 })
-                .reduce(_dmg, (dmg, augment) -> {
+                .reduce(_v, (dmg, augment) -> {
                     switch (augment.type) {
                         case add -> {
                             return dmg + (int) augment.value;

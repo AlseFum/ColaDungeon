@@ -292,7 +292,7 @@ public class Mimic extends Mob {
 		return spawnAt(pos, Mimic.class, items);
 	}
 
-	public static Mimic spawnAt( int pos, Class mimicType, Item... items){
+	public static Mimic spawnAt( int pos, Class<?> mimicType, Item... items){
 		return spawnAt(pos, mimicType, true, items);
 	}
 
@@ -300,7 +300,7 @@ public class Mimic extends Mob {
 		return spawnAt(pos, Mimic.class, useDecks, items);
 	}
 
-	public static Mimic spawnAt( int pos, Class mimicType, boolean useDecks, Item... items){
+	public static Mimic spawnAt( int pos, Class<?> mimicType, boolean useDecks, Item... items){
 		Mimic m;
 		if (mimicType == GoldenMimic.class){
 			m = new GoldenMimic();
