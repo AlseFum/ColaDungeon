@@ -1,11 +1,5 @@
 package com.coladungeon.items;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.function.Supplier;
-
 import com.coladungeon.Dungeon;
 import com.coladungeon.items.armor.Armor;
 import com.coladungeon.items.armor.ClericArmor;
@@ -119,9 +113,19 @@ import com.coladungeon.items.wands.WandOfPrismaticLight;
 import com.coladungeon.items.wands.WandOfRegrowth;
 import com.coladungeon.items.wands.WandOfTransfusion;
 import com.coladungeon.items.wands.WandOfWarding;
+import com.coladungeon.items.weapon.ammo.Ammo;
+import com.coladungeon.items.weapon.gun.GrenadeLauncher;
+import com.coladungeon.items.weapon.gun.Gun;
+import com.coladungeon.items.weapon.gun.HandGun;
+import com.coladungeon.items.weapon.gun.Rifle;
+import com.coladungeon.items.weapon.gun.Shotgun;
+import com.coladungeon.items.weapon.gun.SniperGun;
+import com.coladungeon.items.weapon.melee.AssassinsBlade;
 import com.coladungeon.items.weapon.melee.BattleAxe;
 import com.coladungeon.items.weapon.melee.Crossbow;
 import com.coladungeon.items.weapon.melee.Cudgel;
+import com.coladungeon.items.weapon.melee.Dagger;
+import com.coladungeon.items.weapon.melee.Dirk;
 import com.coladungeon.items.weapon.melee.Flail;
 import com.coladungeon.items.weapon.melee.Gauntlet;
 import com.coladungeon.items.weapon.melee.Glaive;
@@ -149,10 +153,6 @@ import com.coladungeon.items.weapon.melee.WarHammer;
 import com.coladungeon.items.weapon.melee.WarScythe;
 import com.coladungeon.items.weapon.melee.Whip;
 import com.coladungeon.items.weapon.melee.WornShortsword;
-import com.coladungeon.items.weapon.melee.AssassinsBlade;
-import com.coladungeon.items.weapon.melee.Dagger;
-import com.coladungeon.items.weapon.melee.Dirk;
-import com.coladungeon.items.weapon.chakram.Chakram;
 import com.coladungeon.items.weapon.missiles.Bolas;
 import com.coladungeon.items.weapon.missiles.FishingSpear;
 import com.coladungeon.items.weapon.missiles.ForceCube;
@@ -183,18 +183,16 @@ import com.coladungeon.plants.Starflower;
 import com.coladungeon.plants.Stormvine;
 import com.coladungeon.plants.Sungrass;
 import com.coladungeon.plants.Swiftthistle;
-import com.coladungeon.items.weapon.gun.Gun;
-import com.coladungeon.items.weapon.ammo.Ammo;
-import com.coladungeon.items.weapon.gun.Rifle;
-import com.coladungeon.items.weapon.gun.HandGun;
-import com.coladungeon.items.weapon.gun.Shotgun;
-import com.coladungeon.items.weapon.gun.SniperGun;
-import com.coladungeon.items.weapon.gun.GrenadeLauncher;
 import com.coladungeon.utils.EventBus;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.function.Supplier;
 
 
 public class Generator {
@@ -267,6 +265,17 @@ public class Generator {
 		public Class<? extends Item> superClass;
 		public Supplier<Item> make; // 新增：物品生成函数
 		
+
+		private Category(float firstProb, float secondProb, Class<? extends Item> superClass) {
+			this.firstProb = firstProb;
+			this.secondProb = secondProb;
+			this.superClass = superClass;
+			this.make = null;
+			// Initialize empty arrays that will be populated by registerItem
+			this.classes = new Class<?>[0];
+			this.probs = new float[0];
+		}
+
 		private Category(float firstProb, float secondProb, Class<? extends Item> superClass, Supplier<Item> make) {
 			this.firstProb = firstProb;
 			this.secondProb = secondProb;

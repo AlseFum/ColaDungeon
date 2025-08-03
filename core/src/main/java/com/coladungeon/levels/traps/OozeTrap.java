@@ -9,6 +9,7 @@ import com.coladungeon.effects.Splash;
 import com.coladungeon.items.food.Food;
 import com.coladungeon.items.food.OozedFood;
 import com.coladungeon.items.Item;
+import com.coladungeon.utils.EventBus;
 import com.watabou.utils.PathFinder;
 
 public class OozeTrap extends Trap {
@@ -29,23 +30,7 @@ public class OozeTrap extends Trap {
 				if (ch != null && !ch.flying){
 					Buff.affect(ch, Ooze.class).set( Ooze.DURATION );
 				}
-
-				// Handle items on the ground
-				if (Dungeon.level.heaps.get(pos + i) != null) {
-					for (Item item : Dungeon.level.heaps.get(pos + i).items.toArray(new Item[0])) {
-						// Check if the item is a food item
-						if (item instanceof Food && !(item instanceof OozedFood)) {
-							// Remove the original food
-							Dungeon.level.heaps.get(pos + i).items.remove(item);
-							
-							// Create an OozedFood version
-							OozedFood oozedFood = new OozedFood(item);
-							
-							// Add the OozedFood back to the heap
-							Dungeon.level.heaps.get(pos + i).items.add(oozedFood);
-						}
-					}
-				}
+				EventBus.fire("ooze","level",Dungeon.level,"pos",pos);
 			}
 		}
 	}

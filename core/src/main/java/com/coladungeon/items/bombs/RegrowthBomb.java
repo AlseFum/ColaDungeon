@@ -48,7 +48,7 @@ public class RegrowthBomb extends Bomb {
 	}
 	
 	@Override
-	public boolean explodesDestructively() {
+	public boolean willExplodesDestructively() {
 		return false;
 	}
 

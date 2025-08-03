@@ -40,7 +40,7 @@ public class ShrapnelBomb extends Bomb {
 	}
 	
 	@Override
-	public boolean explodesDestructively() {
+	public boolean willExplodesDestructively() {
 		return false;
 	}
 

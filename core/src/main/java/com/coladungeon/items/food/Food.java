@@ -21,6 +21,8 @@
 
 package com.coladungeon.items.food;
 
+import java.util.ArrayList;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Badges;
 import com.coladungeon.Challenges;
@@ -40,8 +42,6 @@ import com.coladungeon.sprites.ItemSpriteSheet;
 import com.coladungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 
-import java.util.ArrayList;
-
 public class Food extends Item {
 
 	public static final float TIME_TO_EAT	= 3f;
@@ -49,7 +49,9 @@ public class Food extends Item {
 	public static final String AC_EAT	= "EAT";
 	
 	public float energy = Hunger.HUNGRY;
-	
+	static {
+		OozedFood.a+=1;
+	}
 	{
 		stackable = true;
 		image = ItemSpriteSheet.RATION;

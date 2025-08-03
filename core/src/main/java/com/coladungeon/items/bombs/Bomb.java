@@ -21,10 +21,14 @@
 
 package com.coladungeon.items.bombs;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 import com.coladungeon.Assets;
 import com.coladungeon.Badges;
-import com.coladungeon.Dungeon;
 import com.coladungeon.CDSettings;
+import com.coladungeon.Dungeon;
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
 import com.coladungeon.actors.hero.Hero;
@@ -59,10 +63,6 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 public class Bomb extends Item {
 	
 	{
@@ -86,7 +86,7 @@ public class Bomb extends Item {
 		return super.isSimilar(item) && this.fuse == ((Bomb) item).fuse;
 	}
 	
-	public boolean explodesDestructively(){
+	public boolean willExplodesDestructively(){
 		return true;
 	}
 
@@ -140,7 +140,7 @@ public class Bomb extends Item {
 
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
 
-		if (explodesDestructively()) {
+		if (willExplodesDestructively()) {
 
 			ArrayList<Integer> affectedCells = new ArrayList<>();
 			ArrayList<Char> affectedChars = new ArrayList<>();

@@ -1,10 +1,12 @@
 package com.coladungeon.items.food;
 
+import com.coladungeon.Dungeon;
 import com.coladungeon.actors.buffs.Buff;
 import com.coladungeon.actors.buffs.Ooze;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.Item;
 import com.coladungeon.sprites.ItemSpriteSheet;
+import com.coladungeon.utils.EventBus;
 import com.coladungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 
@@ -13,7 +15,37 @@ public class OozedFood extends Food {
         image = ItemSpriteSheet.RATION; // Placeholder, replace with appropriate sprite
         stackable = false;
     }
+    public static int a=1;
+    static{
+        System.out.println("OozedFood static block");
+        EventBus.register("ooze", (data) -> {
+            if (data instanceof com.coladungeon.utils.EventBus.EventData eventData) {
+                Object posObj = eventData.get("pos");
+                
+                if (posObj instanceof Integer pos) {
+                    // Check the heap at the position
+                    if (Dungeon.level.heaps.get(pos) != null) {
+                        // Create a copy of the items list to avoid concurrent modification
+                        java.util.List<Item> itemsCopy = new java.util.ArrayList<>(Dungeon.level.heaps.get(pos).items);
+                        for (Item item : itemsCopy) {
+                            // Check if the item is a food item
+                            if (item instanceof Food && !(item instanceof OozedFood)) {
+                                // Remove the original food
+                                Dungeon.level.heaps.get(pos).items.remove(item);
 
+                                // Create an OozedFood version
+                                OozedFood oozedFood = new OozedFood(item);
+
+                                // Add the OozedFood back to the heap
+                                Dungeon.level.heaps.get(pos).items.add(oozedFood);
+                            }
+                        }
+                    }
+                }
+            }
+            return null; // EventBus.register expects a return value
+        });
+    }
     // New blessing buff class
     public static class OozedBlessing extends Buff {
         {
@@ -66,9 +98,9 @@ public class OozedFood extends Food {
             Buff.affect(hero, OozedBlessing.class);
 
             // Try to execute the original food's effect
-            if (originalFood instanceof Food) {
+            if (originalFood instanceof Food originalFoodAsFood) {
                 try {
-                    ((Food) originalFood).execute(hero, action);
+                    originalFoodAsFood.execute(hero, action);
                 } catch (Exception e) {
                     // Log or handle any exceptions
                     GLog.w("无法完全应用原食物的效果");
