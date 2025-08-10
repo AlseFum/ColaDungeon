@@ -35,6 +35,7 @@ import com.coladungeon.ui.Icons;
 import com.coladungeon.ui.RedButton;
 import com.coladungeon.ui.Window;
 import com.watabou.noosa.Game;
+import com.watabou.utils.DeviceCompat;
 
 import java.io.IOException;
 
@@ -60,6 +61,18 @@ public class WndGame extends Window {
 			}
 		});
 		curBtn.icon(Icons.get(Icons.PREFS));
+
+		// console (debug only)
+		if (DeviceCompat.isDebug()){
+			addButton( curBtn = new RedButton( "控制台" ) {
+				@Override
+				protected void onClick() {
+					hide();
+					GameScene.show(new WndConsole());
+				}
+			});
+			curBtn.icon(Icons.get(Icons.INFO));
+		}
 
 		// Challenges window
 		if (Dungeon.challenges > 0) {

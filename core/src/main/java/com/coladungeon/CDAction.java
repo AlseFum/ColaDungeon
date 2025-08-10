@@ -21,6 +21,9 @@
 
 package com.coladungeon;
 
+import java.io.IOException;
+import java.util.LinkedHashMap;
+
 import com.badlogic.gdx.Input;
 import com.watabou.input.ControllerHandler;
 import com.watabou.input.GameAction;
@@ -28,9 +31,6 @@ import com.watabou.input.KeyBindings;
 import com.watabou.input.KeyEvent;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.FileUtils;
-
-import java.io.IOException;
-import java.util.LinkedHashMap;
 
 public class CDAction extends GameAction {
 
@@ -90,6 +90,9 @@ public class CDAction extends GameAction {
 	public static final GameAction ZOOM_IN      = new CDAction("zoom_in");
 	public static final GameAction ZOOM_OUT     = new CDAction("zoom_out");
 
+	// custom: open in-game command console
+	public static final GameAction CONSOLE      = new CDAction("console");
+
 	private static final LinkedHashMap<Integer, GameAction> defaultBindings = new LinkedHashMap<>();
 	static {
 		defaultBindings.put( Input.Keys.ESCAPE,         CDAction.BACK );
@@ -147,6 +150,9 @@ public class CDAction extends GameAction {
 		defaultBindings.put( Input.Keys.PLUS,           CDAction.ZOOM_IN );
 		defaultBindings.put( Input.Keys.EQUALS,         CDAction.ZOOM_IN );
 		defaultBindings.put( Input.Keys.MINUS,          CDAction.ZOOM_OUT );
+
+		// default binding for opening the console on desktop keyboards (the ` key)
+		defaultBindings.put( Input.Keys.GRAVE,          CDAction.CONSOLE );
 	}
 
 	public static LinkedHashMap<Integer, GameAction> getDefaults() {

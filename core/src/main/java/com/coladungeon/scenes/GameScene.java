@@ -93,6 +93,7 @@ import com.coladungeon.ui.AttackIndicator;
 import com.coladungeon.ui.Banner;
 import com.coladungeon.ui.BossHealthBar;
 import com.coladungeon.ui.CharHealthIndicator;
+import com.coladungeon.ui.ConsoleButton;
 import com.coladungeon.ui.GameLog;
 import com.coladungeon.ui.Icons;
 import com.coladungeon.ui.InventoryPane;
@@ -117,6 +118,7 @@ import com.coladungeon.windows.WndInfoItem;
 import com.coladungeon.windows.WndInfoMob;
 import com.coladungeon.windows.WndInfoPlant;
 import com.coladungeon.windows.WndInfoTrap;
+import com.coladungeon.windows.WndConsole;
 import com.coladungeon.windows.WndKeyBindings;
 import com.coladungeon.windows.WndMessage;
 import com.coladungeon.windows.WndOptions;
@@ -124,6 +126,7 @@ import com.coladungeon.windows.WndResurrect;
 import com.watabou.glwrap.Blending;
 import com.watabou.input.ControllerHandler;
 import com.watabou.input.KeyBindings;
+import com.watabou.input.KeyEvent;
 import com.watabou.input.PointerEvent;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
@@ -141,6 +144,7 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
 import com.watabou.utils.Point;
+import com.watabou.utils.Signal;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 import com.watabou.utils.RectF;
@@ -203,6 +207,7 @@ public class GameScene extends PixelScene {
 	private LootIndicator loot;
 	private ActionIndicator action;
 	private ResumeIndicator resume;
+    private ConsoleButton consoleBtn;
 
 	{
 		inGameScene = true;
@@ -396,6 +401,13 @@ public class GameScene extends PixelScene {
 		log.camera = uiCamera;
 		log.newLine();
 		add( log );
+
+        // dev console button (toggled via settings)
+        consoleBtn = new ConsoleButton();
+        consoleBtn.camera = uiCamera;
+        consoleBtn.setRect(uiCamera.width-18, 2, 16, 16);
+        consoleBtn.visible = consoleBtn.active = com.coladungeon.CDSettings.devConsole();
+        add(consoleBtn);
 
 		if (uiSize > 0){
 			bringToFront(status);
@@ -622,6 +634,21 @@ public class GameScene extends PixelScene {
 		if (!invVisible) toggleInvPane();
 		fadeIn();
 
+		// key listener for opening console (press `)
+		if (consoleListener == null){
+			consoleListener = new Signal.Listener<KeyEvent>(){
+				@Override
+				public boolean onSignal(KeyEvent keyEvent){
+					if (keyEvent.pressed && KeyBindings.getActionForKey(keyEvent) == CDAction.CONSOLE && !showingWindow()){
+						show(new WndConsole());
+						return true;
+					}
+					return false;
+				}
+			};
+			KeyEvent.addKeyListener(consoleListener);
+		}
+
 		//re-show WndResurrect if needed
 		if (!Dungeon.hero.isAlive()){
 			//check if hero has an unblessed ankh
@@ -654,6 +681,11 @@ public class GameScene extends PixelScene {
 		Badges.saveGlobal();
 		Journal.saveGlobal();
 		
+		// remove console key listener
+		if (consoleListener != null){
+			KeyEvent.removeKeyListener(consoleListener);
+			consoleListener = null;
+		}
 		super.destroy();
 	}
 	
@@ -707,6 +739,7 @@ public class GameScene extends PixelScene {
 	public static boolean updateTags = false;
 
 	private static float waterOfs = 0;
+    private Signal.Listener<KeyEvent> consoleListener;
 	
 	@Override
 	public synchronized void update() {
@@ -726,7 +759,7 @@ public class GameScene extends PixelScene {
 			return;
 		}
 
-		super.update();
+        super.update();
 		
 		if (notifyDelay > 0) notifyDelay -= Game.elapsed;
 
@@ -1185,6 +1218,11 @@ public class GameScene extends PixelScene {
 	
 	public static void updateKeyDisplay(){
 		if (scene != null && scene.menu != null) scene.menu.updateKeys();
+        if (scene != null && scene.consoleBtn != null){
+            scene.consoleBtn.visible = scene.consoleBtn.active = com.coladungeon.CDSettings.devConsole();
+            // keep at top-right
+            scene.consoleBtn.setRect(uiCamera.width-18, 2, 16, 16);
+        }
 	}
 
 	public static void showlevelUpStars(){

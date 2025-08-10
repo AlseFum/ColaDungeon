@@ -418,6 +418,7 @@ public class WndSettings extends WndTabbed {
 		ColorBlock sep2;
 		CheckBox chkFont;
 		CheckBox chkVibrate;
+        CheckBox chkDevConsole;
 
 		@Override
 		protected void createChildren() {
@@ -651,6 +652,19 @@ public class WndSettings extends WndTabbed {
 				chkVibrate.checked(CDSettings.vibration());
 			}
 			add(chkVibrate);
+
+            // developer console toggle (android/mobile)
+            if (!DeviceCompat.isDesktop()){
+                chkDevConsole = new CheckBox("开发者控制台"){
+                    @Override
+                    protected void onClick() {
+                        super.onClick();
+                        CDSettings.devConsole(checked());
+                    }
+                };
+                chkDevConsole.checked(CDSettings.devConsole());
+                add(chkDevConsole);
+            }
 		}
 
 		@Override
@@ -691,12 +705,20 @@ public class WndSettings extends WndTabbed {
 			if (width > 200) {
 				chkFont.setRect(0, sep2.y + 1 + GAP, width/2-1, BTN_HEIGHT);
 				chkVibrate.setRect(chkFont.right()+2, chkFont.top(), width/2-1, BTN_HEIGHT);
-				height = chkVibrate.bottom();
+                height = chkVibrate.bottom();
+                if (chkDevConsole != null){
+                    chkDevConsole.setRect(0, height + GAP, width, BTN_HEIGHT);
+                    height = chkDevConsole.bottom();
+                }
 
 			} else {
 				chkFont.setRect(0, sep2.y + 1 + GAP, width, BTN_HEIGHT);
-				chkVibrate.setRect(0, chkFont.bottom() + GAP, width, BTN_HEIGHT);
-				height = chkVibrate.bottom();
+                chkVibrate.setRect(0, chkFont.bottom() + GAP, width, BTN_HEIGHT);
+                height = chkVibrate.bottom();
+                if (chkDevConsole != null){
+                    chkDevConsole.setRect(0, height + GAP, width, BTN_HEIGHT);
+                    height = chkDevConsole.bottom();
+                }
 			}
 		}
 

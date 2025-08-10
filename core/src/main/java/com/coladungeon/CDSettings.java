@@ -122,8 +122,9 @@ public class CDSettings extends GameSettings {
 	public static final String KEY_FLIPTAGS 	= "flip_tags";
 	public static final String KEY_BARMODE		= "toolbar_mode";
 	public static final String KEY_SLOTWATERSKIN= "quickslot_waterskin";
-	public static final String KEY_SYSTEMFONT	= "system_font";
-	public static final String KEY_VIBRATION    = "vibration";
+    public static final String KEY_SYSTEMFONT	= "system_font";
+    public static final String KEY_VIBRATION    = "vibration";
+    public static final String KEY_DEV_CONSOLE  = "dev_console";
 
 	public static final String KEY_GAMES_SORT    = "games_sort";
 
@@ -201,6 +202,10 @@ public class CDSettings extends GameSettings {
 	public static boolean vibration(){
 		return getBoolean(KEY_VIBRATION, true);
 	}
+
+    public static void devConsole(boolean value){ put(KEY_DEV_CONSOLE, value); }
+
+    public static boolean devConsole(){ return getBoolean(KEY_DEV_CONSOLE, false); }
 
 	public static String gamesInProgressSort(){
 		return getString(KEY_GAMES_SORT, "level");
