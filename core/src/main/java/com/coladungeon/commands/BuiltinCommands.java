@@ -2,7 +2,11 @@ package com.coladungeon.commands;
 
 import com.coladungeon.Dungeon;
 import com.coladungeon.actors.hero.Hero;
+import com.coladungeon.items.Generator;
+import com.coladungeon.items.Item;
+import com.coladungeon.event.misc;
 import com.coladungeon.utils.GLog;
+import com.watabou.utils.Reflection;
 
 public final class BuiltinCommands {
     private static boolean installed = false;
@@ -15,6 +19,60 @@ public final class BuiltinCommands {
         CommandRegistry.register(new Echo());
         CommandRegistry.register(new Heal());
         CommandRegistry.register(new Where());
+        CommandRegistry.register(new Give());
+        CommandRegistry.register(new Explode());
+    }
+
+    private static class Give implements Command {
+        @Override public String name() { return "give"; }
+        @Override public String usage() { return "give <item> [amount]"; }
+        @Override public void execute(String[] args) {
+            if (args.length == 0) {
+                GLog.w("用法：" + usage());
+                return;
+            }
+
+            Hero hero = Dungeon.hero;
+            if (hero == null) {
+                GLog.w("无角色。");
+                return;
+            }
+
+            String itemName = args[0].toLowerCase();
+            int amount = args.length > 1 ? Integer.parseInt(args[1]) : 1;
+
+            Item item = null;
+            
+            // 尝试从生成器中获取物品
+            for (Generator.Category cat : Generator.Category.values()) {
+                if (cat.classes == null) continue;
+                for (Class<?> cls : cat.classes) {
+                    if (cls.getSimpleName().toLowerCase().contains(itemName)) {
+                        item = (Item) Reflection.newInstance(cls);
+                        break;
+                    }
+                }
+                if (item != null) break;
+            }
+
+            // 如果找不到物品
+            if (item == null) {
+                GLog.w("未找到物品：" + itemName);
+                return;
+            }
+
+            // 设置数量（如果物品可堆叠）
+            if (item.stackable) {
+                item.quantity(amount);
+            }
+
+            // 添加到背包
+            if (item.collect(hero.belongings.backpack)) {
+                GLog.i("已添加 " + (item.stackable ? amount + " 个 " : "") + item.name());
+            } else {
+                GLog.w("背包已满。");
+            }
+        }
     }
 
     private static class Help implements Command{
@@ -91,6 +149,22 @@ public final class BuiltinCommands {
                 GLog.i("未在地城中。");
             } else {
                 GLog.i("层数：" + Dungeon.depth + ", 位置：" + Dungeon.hero.pos);
+            }
+        }
+    }
+    public static class Explode implements Command{
+        @Override public String name() { return "explode"; }
+        @Override public String usage() { return "explode <cell>"; }
+        @Override public void execute(String[] args) {
+            if (args.length == 0) {
+                GLog.w("用法：" + usage());
+                return;
+            }
+            try {
+                int cell = Integer.parseInt(args[0]);
+                misc.explode(cell, true, 3, Dungeon.hero);
+            } catch (Exception ex) {
+                GLog.w("参数错误：" + args[0]);
             }
         }
     }
