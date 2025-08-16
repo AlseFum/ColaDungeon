@@ -33,7 +33,6 @@ import com.coladungeon.items.weapon.missiles.MissileWeapon;
 import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.PixelScene;
 import com.coladungeon.sprites.ItemSprite;
-import com.coladungeon.sprites.ItemSpriteManager;
 import com.coladungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
@@ -125,8 +124,8 @@ public class ItemSlot extends Button {
 	protected void layout() {
 		super.layout();
 		
-		sprite.x = x + margin.left + (width - sprite.width - (margin.left + margin.right)) / 2f;
-		sprite.y = y + margin.top + (height - sprite.height - (margin.top + margin.bottom)) / 2f;
+		sprite.x = x + margin.left + (width - sprite.width() - (margin.left + margin.right)) / 2f;
+		sprite.y = y + margin.top + (height - sprite.height() - (margin.top + margin.bottom)) / 2f;
 		PixelScene.align(sprite);
 		
 		if (status != null) {

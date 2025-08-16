@@ -1,5 +1,7 @@
 package com.coladungeon.actors.buffs;
 
+import java.util.HashSet;
+
 import com.coladungeon.actors.Actor;
 import com.coladungeon.actors.Char;
 import com.coladungeon.messages.Messages;
@@ -7,8 +9,6 @@ import com.coladungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Reflection;
-
-import java.util.HashSet;
 
 public class Buff extends Actor {
 	
@@ -66,7 +66,7 @@ public class Buff extends Actor {
 	
 	@Override
 	public boolean act() {
-		diactivate();
+		deactivate();
 		return true;
 	}
 	

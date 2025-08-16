@@ -22,8 +22,8 @@
 package com.coladungeon.actors.buffs;
 
 import com.coladungeon.Badges;
-import com.coladungeon.Dungeon;
 import com.coladungeon.CDSettings;
+import com.coladungeon.Dungeon;
 import com.coladungeon.actors.hero.Hero;
 import com.coladungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.coladungeon.items.trinkets.SaltCube;
@@ -117,7 +117,7 @@ public class Hunger extends Buff implements Hero.Doom {
 
 		} else {
 
-			diactivate();
+			deactivate();
 
 		}
 

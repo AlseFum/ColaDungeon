@@ -72,6 +72,8 @@ import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
 
+import com.coladungeon.utils.EventBus;
+
 public class Talent implements Bundlable {
 	//#region contents
 	private static final HashMap<String, Talent> talentRegistry = new HashMap<>();
@@ -608,9 +610,13 @@ public class Talent implements Bundlable {
 	private static void registerTalent(Talent talent) {
 		talentRegistry.put(talent.name(), talent);
 	}
-
-	public static void onTalentUpgraded( Hero hero, Talent talent ){
-		//for metamorphosis
+	static {
+		EventBus.on("upgrade_talent", (Object args) -> {
+			if (!(args instanceof EventBus.EventData)) return null;
+			EventBus.EventData e = (EventBus.EventData) args;
+			Hero hero = e.get("hero");
+			Talent talent = e.get("talent");
+			//for metamorphosis
 		if (talent == IRON_WILL && hero.heroClass != HeroClassSheet.WARRIOR){
 			Buff.affect(hero, BrokenSeal.WarriorShield.class);
 		}
@@ -691,95 +697,386 @@ public class Talent implements Bundlable {
 		if (talent == SPIRIT_FORM){
 			Dungeon.hero.updateHT(false);
 		}
+		return null;
+		});
+		
+		// 注册食物事件监听器
+		EventBus.on("talent.food.eaten", (Object args) -> {
+			if (!(args instanceof EventBus.EventData)) return null;
+			EventBus.EventData e = (EventBus.EventData) args;
+			Hero hero = e.get("hero");
+			float foodVal = e.get("foodVal");
+			Item foodSource = e.get("foodSource");
+			
+			if (hero.hasTalent(HEARTY_MEAL)){
+				//3/5 HP healed, when hero is below 30% health
+				if (hero.HP/(float)hero.HT <= 0.3f) {
+					int healing = 1 + 2 * hero.pointsInTalent(HEARTY_MEAL);
+					hero.HP = Math.min(hero.HP + healing, hero.HT);
+					hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healing), FloatingText.HEALING);
+				}
+			}
+			if (hero.hasTalent(IRON_STOMACH)){
+				if (hero.cooldown() > 0) {
+					Buff.affect(hero, WarriorFoodImmunity.class, hero.cooldown());
+				}
+			}
+			if (hero.hasTalent(EMPOWERING_MEAL)){
+				//2/3 bonus wand damage for next 3 zaps
+				Buff.affect( hero, WandEmpower.class).set(1 + hero.pointsInTalent(EMPOWERING_MEAL), 3);
+				ScrollOfRecharging.charge( hero );
+			}
+			if (hero.hasTalent(ENERGIZING_MEAL)){
+				//5/8 turns of recharging
+				Buff.prolong( hero, Recharging.class, 2 + 3*(hero.pointsInTalent(ENERGIZING_MEAL)) );
+				ScrollOfRecharging.charge( hero );
+				SpellSprite.show(hero, SpellSprite.CHARGE);
+			}
+			if (hero.hasTalent(MYSTICAL_MEAL)){
+				//3/5 turns of recharging
+				ArtifactRecharge buff = Buff.affect( hero, ArtifactRecharge.class);
+				if (buff.left() < 1 + 2*(hero.pointsInTalent(MYSTICAL_MEAL))){
+					Buff.affect( hero, ArtifactRecharge.class).set(1 + 2*(hero.pointsInTalent(MYSTICAL_MEAL))).ignoreHornOfPlenty = foodSource instanceof HornOfPlenty;
+				}
+				ScrollOfRecharging.charge( hero );
+				SpellSprite.show(hero, SpellSprite.CHARGE, 0, 1, 1);
+			}
+			if (hero.hasTalent(INVIGORATING_MEAL)){
+				//effectively 1/2 turns of haste
+				Buff.prolong( hero, Haste.class, 0.67f+hero.pointsInTalent(INVIGORATING_MEAL));
+			}
+			if (hero.hasTalent(STRENGTHENING_MEAL)){
+				//3 bonus physical damage for next 2/3 attacks
+				Buff.affect( hero, PhysicalEmpower.class).set(3, 1 + hero.pointsInTalent(STRENGTHENING_MEAL));
+			}
+			if (hero.hasTalent(FOCUSED_MEAL)){
+				if (hero.heroClass == HeroClassSheet.DUELIST){
+					//0.67/1 charge for the duelist
+					Buff.affect( hero, MeleeWeapon.Charger.class ).gainCharge((hero.pointsInTalent(FOCUSED_MEAL)+1)/3f);
+					ScrollOfRecharging.charge( hero );
+				} else {
+					// lvl/3 / lvl/2 bonus dmg on next hit for other classes
+					Buff.affect( hero, PhysicalEmpower.class).set(Math.round(hero.lvl / (4f - hero.pointsInTalent(FOCUSED_MEAL))), 1);
+				}
+			}
+			if (hero.hasTalent(SATIATED_SPELLS)){
+				if (hero.heroClass == HeroClassSheet.CLERIC) {
+					Buff.affect(hero, SatiatedSpellsTracker.class);
+				} else {
+					//3/5 shielding, delayed up to 10 turns
+					int amount = 1 + 2*hero.pointsInTalent(SATIATED_SPELLS);
+					Barrier b = Buff.affect(hero, Barrier.class);
+					if (b.shielding() <= amount){
+						b.setShield(amount);
+						b.delay(Math.max(10-b.cooldown(), 0));
+					}
+				}
+			}
+			if (hero.hasTalent(ENLIGHTENING_MEAL)){
+				if (hero.heroClass == HeroClassSheet.CLERIC) {
+					HolyTome tome = hero.belongings.getItem(HolyTome.class);
+					if (tome != null) {
+						tome.directCharge( 0.5f * (1+hero.pointsInTalent(ENLIGHTENING_MEAL)));
+						ScrollOfRecharging.charge(hero);
+					}
+				} else {
+					//2/3 turns of recharging
+					ArtifactRecharge buff = Buff.affect( hero, ArtifactRecharge.class);
+					if (buff.left() < 1 + (hero.pointsInTalent(ENLIGHTENING_MEAL))){
+						Buff.affect( hero, ArtifactRecharge.class).set(1 + (hero.pointsInTalent(ENLIGHTENING_MEAL))).ignoreHornOfPlenty = foodSource instanceof HornOfPlenty;
+					}
+					Buff.prolong( hero, Recharging.class, 1 + (hero.pointsInTalent(ENLIGHTENING_MEAL)) );
+					ScrollOfRecharging.charge( hero );
+					SpellSprite.show(hero, SpellSprite.CHARGE);
+				}
+			}
+			return null;
+		});
+		
+		// 注册药水事件监听器
+		EventBus.on("talent.potion.used", (Object args) -> {
+			if (!(args instanceof EventBus.EventData)) return null;
+			EventBus.EventData e = (EventBus.EventData) args;
+			Hero hero = e.get("hero");
+			int cell = e.get("cell");
+			float factor = e.get("factor");
+			
+			if (hero.hasTalent(LIQUID_WILLPOWER)){
+				if (hero.heroClass == HeroClassSheet.WARRIOR) {
+					BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
+					if (shield != null) {
+						// 50/75% of total shield
+						int shieldToGive = Math.round(factor * shield.maxShield() * 0.25f * (1 + hero.pointsInTalent(LIQUID_WILLPOWER)));
+						hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
+						shield.supercharge(shieldToGive);
+					}
+				} else {
+					// 5/7.5% of max HP
+					int shieldToGive = Math.round( factor * hero.HT * (0.025f * (1+hero.pointsInTalent(LIQUID_WILLPOWER))));
+					hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
+					Buff.affect(hero, Barrier.class).setShield(shieldToGive);
+				}
+			}
+			if (hero.hasTalent(LIQUID_NATURE)){
+				ArrayList<Integer> grassCells = new ArrayList<>();
+				for (int i : PathFinder.NEIGHBOURS9){
+					grassCells.add(cell+i);
+				}
+				Random.shuffle(grassCells);
+				for (int grassCell : grassCells){
+					Char ch = Actor.findChar(grassCell);
+					if (ch != null && ch.alignment == Char.Alignment.ENEMY){
+						//1/2 turns of roots
+						Buff.affect(ch, Roots.class, factor * hero.pointsInTalent(LIQUID_NATURE));
+					}
+					if (Dungeon.level.map[grassCell] == Terrain.EMPTY ||
+							Dungeon.level.map[grassCell] == Terrain.EMBERS ||
+							Dungeon.level.map[grassCell] == Terrain.EMPTY_DECO){
+						Level.set(grassCell, Terrain.GRASS);
+						GameScene.updateMap(grassCell);
+					}
+					CellEmitter.get(grassCell).burst(LeafParticle.LEVEL_SPECIFIC, 4);
+				}
+				// 4/6 cells total
+				int totalGrassCells = (int) (factor * (2 + 2 * hero.pointsInTalent(LIQUID_NATURE)));
+				while (grassCells.size() > totalGrassCells){
+					grassCells.remove(0);
+				}
+				for (int grassCell : grassCells){
+					int t = Dungeon.level.map[grassCell];
+					if ((t == Terrain.EMPTY || t == Terrain.EMPTY_DECO || t == Terrain.EMBERS
+							|| t == Terrain.GRASS || t == Terrain.FURROWED_GRASS)
+							&& Dungeon.level.plants.get(grassCell) == null){
+						Level.set(grassCell, Terrain.HIGH_GRASS);
+						GameScene.updateMap(grassCell);
+					}
+				}
+				Dungeon.observe();
+			}
+			if (hero.hasTalent(LIQUID_AGILITY)){
+				Buff.prolong(hero, LiquidAgilEVATracker.class, hero.cooldown() + Math.max(0, factor-1));
+				if (factor >= 0.5f){
+					Buff.prolong(hero, LiquidAgilACCTracker.class, 5f).uses = Math.round(factor);
+				}
+			}
+			return null;
+		});
+		
+		// 注册卷轴事件监听器
+		EventBus.on("talent.scroll.used", (Object args) -> {
+			if (!(args instanceof EventBus.EventData)) return null;
+			EventBus.EventData e = (EventBus.EventData) args;
+			Hero hero = e.get("hero");
+			int pos = e.get("pos");
+			float factor = e.get("factor");
+			Class<?extends Item> cls = e.get("cls");
+			
+			if (hero.hasTalent(INSCRIBED_POWER)){
+				// 2/3 empowered wand zaps
+				Buff.affect(hero, ScrollEmpower.class).reset((int) (factor * (1 + hero.pointsInTalent(INSCRIBED_POWER))));
+			}
+			if (hero.hasTalent(INSCRIBED_STEALTH)){
+				// 3/5 turns of stealth
+				Buff.affect(hero, Invisibility.class, factor * (1 + 2*hero.pointsInTalent(INSCRIBED_STEALTH)));
+				Sample.INSTANCE.play( Assets.Sounds.MELD );
+			}
+			if (hero.hasTalent(RECALL_INSCRIPTION) && Scroll.class.isAssignableFrom(cls) && cls != ScrollOfUpgrade.class){
+				if (hero.heroClass == HeroClassSheet.CLERIC){
+					Buff.prolong(hero, RecallInscription.UsedItemTracker.class, hero.pointsInTalent(RECALL_INSCRIPTION) == 2 ? 300 : 10).item = cls;
+				} else {
+					// 10/15%
+					if (Random.Int(20) < 1 + hero.pointsInTalent(RECALL_INSCRIPTION)){
+						Reflection.newInstance(cls).collect();
+						GLog.p("refunded!");
+					}
+				}
+			}
+			return null;
+		});
+		
+		// 注册符石事件监听器
+		EventBus.on("talent.runestone.used", (Object args) -> {
+			if (!(args instanceof EventBus.EventData)) return null;
+			EventBus.EventData e = (EventBus.EventData) args;
+			Hero hero = e.get("hero");
+			int pos = e.get("pos");
+			Class<?extends Item> cls = e.get("cls");
+			
+			if (hero.hasTalent(RECALL_INSCRIPTION) && Runestone.class.isAssignableFrom(cls)){
+				if (hero.heroClass == HeroClassSheet.CLERIC){
+					Buff.prolong(hero, RecallInscription.UsedItemTracker.class, hero.pointsInTalent(RECALL_INSCRIPTION) == 2 ? 300 : 10).item = cls;
+				} else {
+					//don't trigger on 1st intuition use
+					if (cls.equals(StoneOfIntuition.class) && hero.buff(StoneOfIntuition.IntuitionUseTracker.class) != null){
+						return null;
+					}
+					// 10/15%
+					if (Random.Int(20) < 1 + hero.pointsInTalent(RECALL_INSCRIPTION)){
+						Reflection.newInstance(cls).collect();
+						GLog.p("refunded!");
+					}
+				}
+			}
+			return null;
+		});
+		
+		// 注册神器事件监听器
+		EventBus.on("talent.artifact.used", (Object args) -> {
+			if (!(args instanceof EventBus.EventData)) return null;
+			EventBus.EventData e = (EventBus.EventData) args;
+			Hero hero = e.get("hero");
+			
+			if (hero.hasTalent(ENHANCED_RINGS)){
+				Buff.prolong(hero, EnhancedRings.class, 3f*hero.pointsInTalent(ENHANCED_RINGS));
+			}
+
+			if (Dungeon.hero.heroClass != HeroClassSheet.CLERIC
+					&& Dungeon.hero.hasTalent(Talent.DIVINE_SENSE)){
+				Buff.prolong(Dungeon.hero, DivineSense.DivineSenseTracker.class, Dungeon.hero.cooldown()+1);
+			}
+
+			// 10/20/30%
+			if (Dungeon.hero.heroClass != HeroClassSheet.CLERIC
+					&& Dungeon.hero.hasTalent(Talent.CLEANSE)
+					&& Random.Int(10) < Dungeon.hero.pointsInTalent(Talent.CLEANSE)){
+				boolean removed = false;
+				for (Buff b : Dungeon.hero.buffs()) {
+					if (b.type == Buff.buffType.NEGATIVE) {
+						b.detach();
+						removed = true;
+					}
+				}
+				if (removed && Dungeon.hero.sprite != null) {
+					new Flare( 6, 32 ).color(0xFF4CD2, true).show( Dungeon.hero.sprite, 2f );
+				}
+			}
+			return null;
+		});
+		
+		// 注册装备事件监听器
+		EventBus.on("talent.item.equipped", (Object args) -> {
+			if (!(args instanceof EventBus.EventData)) return null;
+			EventBus.EventData e = (EventBus.EventData) args;
+			Hero hero = e.get("hero");
+			Item item = e.get("item");
+			
+			boolean identify = false;
+			if (hero.pointsInTalent(VETERANS_INTUITION) == 2 && item instanceof Armor){
+				identify = true;
+			}
+			if (hero.hasTalent(THIEFS_INTUITION) && item instanceof Ring){
+				if (hero.pointsInTalent(THIEFS_INTUITION) == 2){
+					identify = true;
+				}
+				((Ring) item).setKnown();
+			}
+			if (hero.pointsInTalent(ADVENTURERS_INTUITION) == 2 && item instanceof Weapon){
+				identify = true;
+			}
+
+			if (identify && !ShardOfOblivion.passiveIDDisabled()){
+				item.identify();
+			}
+			return null;
+		});
+		
+		// 注册收集事件监听器
+		EventBus.on("talent.item.collected", (Object args) -> {
+			if (!(args instanceof EventBus.EventData)) return null;
+			EventBus.EventData e = (EventBus.EventData) args;
+			Hero hero = e.get("hero");
+			Item item = e.get("item");
+			
+			if (hero.pointsInTalent(THIEFS_INTUITION) == 2){
+				if (item instanceof Ring) ((Ring) item).setKnown();
+			}
+			return null;
+		});
+		
+		// 注册攻击事件监听器
+		EventBus.on("talent.attack.proc", (Object args) -> {
+			if (!(args instanceof EventBus.EventData)) return null;
+			EventBus.EventData e = (EventBus.EventData) args;
+			Hero hero = e.get("hero");
+			Char enemy = e.get("enemy");
+			int dmg = e.get("dmg");
+
+			if (hero.hasTalent(Talent.PROVOKED_ANGER)
+				&& hero.buff(ProvokedAngerTracker.class) != null){
+				dmg += 1 + hero.pointsInTalent(Talent.PROVOKED_ANGER);
+				hero.buff(ProvokedAngerTracker.class).detach();
+			}
+
+			if (hero.hasTalent(Talent.LINGERING_MAGIC)
+					&& hero.buff(LingeringMagicTracker.class) != null){
+				dmg += Random.IntRange(hero.pointsInTalent(Talent.LINGERING_MAGIC) , 2);
+				hero.buff(LingeringMagicTracker.class).detach();
+			}
+
+			if (hero.hasTalent(Talent.SUCKER_PUNCH)
+					&& enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)
+					&& enemy.buff(SuckerPunchTracker.class) == null){
+				dmg += Random.IntRange(hero.pointsInTalent(Talent.SUCKER_PUNCH) , 2);
+				Buff.affect(enemy, SuckerPunchTracker.class);
+			}
+
+			if (hero.hasTalent(Talent.FOLLOWUP_STRIKE) && enemy.isAlive() && enemy.alignment == Char.Alignment.ENEMY) {
+				if (hero.belongings.attackingWeapon() instanceof MissileWeapon) {
+					Buff.prolong(hero, FollowupStrikeTracker.class, 5f).object = enemy.id();
+				} else if (hero.buff(FollowupStrikeTracker.class) != null
+						&& hero.buff(FollowupStrikeTracker.class).object == enemy.id()){
+					dmg += 1 + hero.pointsInTalent(FOLLOWUP_STRIKE);
+					hero.buff(FollowupStrikeTracker.class).detach();
+				}
+			}
+
+			if (hero.buff(Talent.SpiritBladesTracker.class) != null
+					&& Random.Int(10) < 3*hero.pointsInTalent(Talent.SPIRIT_BLADES)){
+				SpiritBow bow = hero.belongings.getItem(SpiritBow.class);
+				if (bow != null) dmg = bow.proc( hero, enemy, dmg );
+				hero.buff(Talent.SpiritBladesTracker.class).detach();
+			}
+
+			if (hero.hasTalent(PATIENT_STRIKE)){
+				if (hero.buff(PatientStrikeTracker.class) != null
+						&& !(hero.belongings.attackingWeapon() instanceof MissileWeapon)){
+					hero.buff(PatientStrikeTracker.class).detach();
+					dmg += Random.IntRange(hero.pointsInTalent(Talent.PATIENT_STRIKE), 2);
+				}
+			}
+
+			if (hero.hasTalent(DEADLY_FOLLOWUP) && enemy.alignment == Char.Alignment.ENEMY) {
+				if (hero.belongings.attackingWeapon() instanceof MissileWeapon) {
+					if (!(hero.belongings.attackingWeapon() instanceof SpiritBow.SpiritArrow)) {
+						Buff.prolong(hero, DeadlyFollowupTracker.class, 5f).object = enemy.id();
+					}
+				} else if (hero.buff(DeadlyFollowupTracker.class) != null
+						&& hero.buff(DeadlyFollowupTracker.class).object == enemy.id()){
+					dmg = Math.round(dmg * (1.0f + .1f*hero.pointsInTalent(DEADLY_FOLLOWUP)));
+				}
+			}
+			
+			// 更新伤害值
+			e.put("dmg", dmg);
+			return null;
+		});
+	}
+	public static void onTalentUpgraded( Hero hero, Talent talent ){
+		EventBus.fire("upgrade_talent", 
+			"hero", hero,
+			"talent", talent
+		);
 	}
 
 	public static class CachedRationsDropped extends CounterBuff{{revivePersists = true;}};
 	public static class NatureBerriesDropped extends CounterBuff{{revivePersists = true;}};
 
 	public static void onFoodEaten( Hero hero, float foodVal, Item foodSource ){
-		if (hero.hasTalent(HEARTY_MEAL)){
-			//3/5 HP healed, when hero is below 30% health
-			if (hero.HP/(float)hero.HT <= 0.3f) {
-				int healing = 1 + 2 * hero.pointsInTalent(HEARTY_MEAL);
-				hero.HP = Math.min(hero.HP + healing, hero.HT);
-				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(healing), FloatingText.HEALING);
-
-			}
-		}
-		if (hero.hasTalent(IRON_STOMACH)){
-			if (hero.cooldown() > 0) {
-				Buff.affect(hero, WarriorFoodImmunity.class, hero.cooldown());
-			}
-		}
-		if (hero.hasTalent(EMPOWERING_MEAL)){
-			//2/3 bonus wand damage for next 3 zaps
-			Buff.affect( hero, WandEmpower.class).set(1 + hero.pointsInTalent(EMPOWERING_MEAL), 3);
-			ScrollOfRecharging.charge( hero );
-		}
-		if (hero.hasTalent(ENERGIZING_MEAL)){
-			//5/8 turns of recharging
-			Buff.prolong( hero, Recharging.class, 2 + 3*(hero.pointsInTalent(ENERGIZING_MEAL)) );
-			ScrollOfRecharging.charge( hero );
-			SpellSprite.show(hero, SpellSprite.CHARGE);
-		}
-		if (hero.hasTalent(MYSTICAL_MEAL)){
-			//3/5 turns of recharging
-			ArtifactRecharge buff = Buff.affect( hero, ArtifactRecharge.class);
-			if (buff.left() < 1 + 2*(hero.pointsInTalent(MYSTICAL_MEAL))){
-				Buff.affect( hero, ArtifactRecharge.class).set(1 + 2*(hero.pointsInTalent(MYSTICAL_MEAL))).ignoreHornOfPlenty = foodSource instanceof HornOfPlenty;
-			}
-			ScrollOfRecharging.charge( hero );
-			SpellSprite.show(hero, SpellSprite.CHARGE, 0, 1, 1);
-		}
-		if (hero.hasTalent(INVIGORATING_MEAL)){
-			//effectively 1/2 turns of haste
-			Buff.prolong( hero, Haste.class, 0.67f+hero.pointsInTalent(INVIGORATING_MEAL));
-		}
-		if (hero.hasTalent(STRENGTHENING_MEAL)){
-			//3 bonus physical damage for next 2/3 attacks
-			Buff.affect( hero, PhysicalEmpower.class).set(3, 1 + hero.pointsInTalent(STRENGTHENING_MEAL));
-		}
-		if (hero.hasTalent(FOCUSED_MEAL)){
-			if (hero.heroClass == HeroClassSheet.DUELIST){
-				//0.67/1 charge for the duelist
-				Buff.affect( hero, MeleeWeapon.Charger.class ).gainCharge((hero.pointsInTalent(FOCUSED_MEAL)+1)/3f);
-				ScrollOfRecharging.charge( hero );
-			} else {
-				// lvl/3 / lvl/2 bonus dmg on next hit for other classes
-				Buff.affect( hero, PhysicalEmpower.class).set(Math.round(hero.lvl / (4f - hero.pointsInTalent(FOCUSED_MEAL))), 1);
-			}
-		}
-		if (hero.hasTalent(SATIATED_SPELLS)){
-			if (hero.heroClass == HeroClassSheet.CLERIC) {
-				Buff.affect(hero, SatiatedSpellsTracker.class);
-			} else {
-				//3/5 shielding, delayed up to 10 turns
-				int amount = 1 + 2*hero.pointsInTalent(SATIATED_SPELLS);
-				Barrier b = Buff.affect(hero, Barrier.class);
-				if (b.shielding() <= amount){
-					b.setShield(amount);
-					b.delay(Math.max(10-b.cooldown(), 0));
-				}
-			}
-		}
-		if (hero.hasTalent(ENLIGHTENING_MEAL)){
-			if (hero.heroClass == HeroClassSheet.CLERIC) {
-				HolyTome tome = hero.belongings.getItem(HolyTome.class);
-				if (tome != null) {
-					tome.directCharge( 0.5f * (1+hero.pointsInTalent(ENLIGHTENING_MEAL)));
-					ScrollOfRecharging.charge(hero);
-				}
-			} else {
-				//2/3 turns of recharging
-				ArtifactRecharge buff = Buff.affect( hero, ArtifactRecharge.class);
-				if (buff.left() < 1 + (hero.pointsInTalent(ENLIGHTENING_MEAL))){
-					Buff.affect( hero, ArtifactRecharge.class).set(1 + (hero.pointsInTalent(ENLIGHTENING_MEAL))).ignoreHornOfPlenty = foodSource instanceof HornOfPlenty;
-				}
-				Buff.prolong( hero, Recharging.class, 1 + (hero.pointsInTalent(ENLIGHTENING_MEAL)) );
-				ScrollOfRecharging.charge( hero );
-				SpellSprite.show(hero, SpellSprite.CHARGE);
-			}
-		}
+		EventBus.fire("talent.food.eaten",
+			"hero", hero,
+			"foodVal", foodVal,
+			"foodSource", foodSource
+		);
 	}
 
 	public static class WarriorFoodImmunity extends FlavourBuff{
@@ -812,219 +1109,61 @@ public class Talent implements Bundlable {
 	}
 
 	public static void onPotionUsed( Hero hero, int cell, float factor ){
-		if (hero.hasTalent(LIQUID_WILLPOWER)){
-			if (hero.heroClass == HeroClassSheet.WARRIOR) {
-				BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
-				if (shield != null) {
-					// 50/75% of total shield
-					int shieldToGive = Math.round(factor * shield.maxShield() * 0.25f * (1 + hero.pointsInTalent(LIQUID_WILLPOWER)));
-					hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
-					shield.supercharge(shieldToGive);
-				}
-			} else {
-				// 5/7.5% of max HP
-				int shieldToGive = Math.round( factor * hero.HT * (0.025f * (1+hero.pointsInTalent(LIQUID_WILLPOWER))));
-				hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shieldToGive), FloatingText.SHIELDING);
-				Buff.affect(hero, Barrier.class).setShield(shieldToGive);
-			}
-		}
-		if (hero.hasTalent(LIQUID_NATURE)){
-			ArrayList<Integer> grassCells = new ArrayList<>();
-			for (int i : PathFinder.NEIGHBOURS9){
-				grassCells.add(cell+i);
-			}
-			Random.shuffle(grassCells);
-			for (int grassCell : grassCells){
-				Char ch = Actor.findChar(grassCell);
-				if (ch != null && ch.alignment == Char.Alignment.ENEMY){
-					//1/2 turns of roots
-					Buff.affect(ch, Roots.class, factor * hero.pointsInTalent(LIQUID_NATURE));
-				}
-				if (Dungeon.level.map[grassCell] == Terrain.EMPTY ||
-						Dungeon.level.map[grassCell] == Terrain.EMBERS ||
-						Dungeon.level.map[grassCell] == Terrain.EMPTY_DECO){
-					Level.set(grassCell, Terrain.GRASS);
-					GameScene.updateMap(grassCell);
-				}
-				CellEmitter.get(grassCell).burst(LeafParticle.LEVEL_SPECIFIC, 4);
-			}
-			// 4/6 cells total
-			int totalGrassCells = (int) (factor * (2 + 2 * hero.pointsInTalent(LIQUID_NATURE)));
-			while (grassCells.size() > totalGrassCells){
-				grassCells.remove(0);
-			}
-			for (int grassCell : grassCells){
-				int t = Dungeon.level.map[grassCell];
-				if ((t == Terrain.EMPTY || t == Terrain.EMPTY_DECO || t == Terrain.EMBERS
-						|| t == Terrain.GRASS || t == Terrain.FURROWED_GRASS)
-						&& Dungeon.level.plants.get(grassCell) == null){
-					Level.set(grassCell, Terrain.HIGH_GRASS);
-					GameScene.updateMap(grassCell);
-				}
-			}
-			Dungeon.observe();
-		}
-		if (hero.hasTalent(LIQUID_AGILITY)){
-			Buff.prolong(hero, LiquidAgilEVATracker.class, hero.cooldown() + Math.max(0, factor-1));
-			if (factor >= 0.5f){
-				Buff.prolong(hero, LiquidAgilACCTracker.class, 5f).uses = Math.round(factor);
-			}
-		}
+		EventBus.fire("talent.potion.used",
+			"hero", hero,
+			"cell", cell,
+			"factor", factor
+		);
 	}
 
 	public static void onScrollUsed( Hero hero, int pos, float factor, Class<?extends Item> cls ){
-		if (hero.hasTalent(INSCRIBED_POWER)){
-			// 2/3 empowered wand zaps
-			Buff.affect(hero, ScrollEmpower.class).reset((int) (factor * (1 + hero.pointsInTalent(INSCRIBED_POWER))));
-		}
-		if (hero.hasTalent(INSCRIBED_STEALTH)){
-			// 3/5 turns of stealth
-			Buff.affect(hero, Invisibility.class, factor * (1 + 2*hero.pointsInTalent(INSCRIBED_STEALTH)));
-			Sample.INSTANCE.play( Assets.Sounds.MELD );
-		}
-		if (hero.hasTalent(RECALL_INSCRIPTION) && Scroll.class.isAssignableFrom(cls) && cls != ScrollOfUpgrade.class){
-			if (hero.heroClass == HeroClassSheet.CLERIC){
-				Buff.prolong(hero, RecallInscription.UsedItemTracker.class, hero.pointsInTalent(RECALL_INSCRIPTION) == 2 ? 300 : 10).item = cls;
-			} else {
-				// 10/15%
-				if (Random.Int(20) < 1 + hero.pointsInTalent(RECALL_INSCRIPTION)){
-					Reflection.newInstance(cls).collect();
-					GLog.p("refunded!");
-				}
-			}
-		}
+		EventBus.fire("talent.scroll.used",
+			"hero", hero,
+			"pos", pos,
+			"factor", factor,
+			"cls", cls
+		);
 	}
 
 	public static void onRunestoneUsed( Hero hero, int pos, Class<?extends Item> cls ){
-		if (hero.hasTalent(RECALL_INSCRIPTION) && Runestone.class.isAssignableFrom(cls)){
-			if (hero.heroClass == HeroClassSheet.CLERIC){
-				Buff.prolong(hero, RecallInscription.UsedItemTracker.class, hero.pointsInTalent(RECALL_INSCRIPTION) == 2 ? 300 : 10).item = cls;
-			} else {
-
-				//don't trigger on 1st intuition use
-				if (cls.equals(StoneOfIntuition.class) && hero.buff(StoneOfIntuition.IntuitionUseTracker.class) != null){
-					return;
-				}
-				// 10/15%
-				if (Random.Int(20) < 1 + hero.pointsInTalent(RECALL_INSCRIPTION)){
-					Reflection.newInstance(cls).collect();
-					GLog.p("refunded!");
-				}
-			}
-		}
+		EventBus.fire("talent.runestone.used",
+			"hero", hero,
+			"pos", pos,
+			"cls", cls
+		);
 	}
 
 	public static void onArtifactUsed( Hero hero ){
-		if (hero.hasTalent(ENHANCED_RINGS)){
-			Buff.prolong(hero, EnhancedRings.class, 3f*hero.pointsInTalent(ENHANCED_RINGS));
-		}
-
-		if (Dungeon.hero.heroClass != HeroClassSheet.CLERIC
-				&& Dungeon.hero.hasTalent(Talent.DIVINE_SENSE)){
-			Buff.prolong(Dungeon.hero, DivineSense.DivineSenseTracker.class, Dungeon.hero.cooldown()+1);
-		}
-
-		// 10/20/30%
-		if (Dungeon.hero.heroClass != HeroClassSheet.CLERIC
-				&& Dungeon.hero.hasTalent(Talent.CLEANSE)
-				&& Random.Int(10) < Dungeon.hero.pointsInTalent(Talent.CLEANSE)){
-			boolean removed = false;
-			for (Buff b : Dungeon.hero.buffs()) {
-				if (b.type == Buff.buffType.NEGATIVE) {
-					b.detach();
-					removed = true;
-				}
-			}
-			if (removed && Dungeon.hero.sprite != null) {
-				new Flare( 6, 32 ).color(0xFF4CD2, true).show( Dungeon.hero.sprite, 2f );
-			}
-		}
+		EventBus.fire("talent.artifact.used",
+			"hero", hero
+		);
 	}
 
 	public static void onItemEquipped( Hero hero, Item item ){
-		boolean identify = false;
-		if (hero.pointsInTalent(VETERANS_INTUITION) == 2 && item instanceof Armor){
-			identify = true;
-		}
-		if (hero.hasTalent(THIEFS_INTUITION) && item instanceof Ring){
-			if (hero.pointsInTalent(THIEFS_INTUITION) == 2){
-				identify = true;
-			}
-			((Ring) item).setKnown();
-		}
-		if (hero.pointsInTalent(ADVENTURERS_INTUITION) == 2 && item instanceof Weapon){
-			identify = true;
-		}
-
-		if (identify && !ShardOfOblivion.passiveIDDisabled()){
-			item.identify();
-		}
+		EventBus.fire("talent.item.equipped",
+			"hero", hero,
+			"item", item
+		);
 	}
 
 	public static void onItemCollected( Hero hero, Item item ){
-		if (hero.pointsInTalent(THIEFS_INTUITION) == 2){
-			if (item instanceof Ring) ((Ring) item).setKnown();
-		}
+		EventBus.fire("talent.item.collected",
+			"hero", hero,
+			"item", item
+		);
 	}
 
 	public static int onAttackProc( Hero hero, Char enemy, int dmg ){
-
-		if (hero.hasTalent(Talent.PROVOKED_ANGER)
-			&& hero.buff(ProvokedAngerTracker.class) != null){
-			dmg += 1 + hero.pointsInTalent(Talent.PROVOKED_ANGER);
-			hero.buff(ProvokedAngerTracker.class).detach();
-		}
-
-		if (hero.hasTalent(Talent.LINGERING_MAGIC)
-				&& hero.buff(LingeringMagicTracker.class) != null){
-			dmg += Random.IntRange(hero.pointsInTalent(Talent.LINGERING_MAGIC) , 2);
-			hero.buff(LingeringMagicTracker.class).detach();
-		}
-
-		if (hero.hasTalent(Talent.SUCKER_PUNCH)
-				&& enemy instanceof Mob && ((Mob) enemy).surprisedBy(hero)
-				&& enemy.buff(SuckerPunchTracker.class) == null){
-			dmg += Random.IntRange(hero.pointsInTalent(Talent.SUCKER_PUNCH) , 2);
-			Buff.affect(enemy, SuckerPunchTracker.class);
-		}
-
-		if (hero.hasTalent(Talent.FOLLOWUP_STRIKE) && enemy.isAlive() && enemy.alignment == Char.Alignment.ENEMY) {
-			if (hero.belongings.attackingWeapon() instanceof MissileWeapon) {
-				Buff.prolong(hero, FollowupStrikeTracker.class, 5f).object = enemy.id();
-			} else if (hero.buff(FollowupStrikeTracker.class) != null
-					&& hero.buff(FollowupStrikeTracker.class).object == enemy.id()){
-				dmg += 1 + hero.pointsInTalent(FOLLOWUP_STRIKE);
-				hero.buff(FollowupStrikeTracker.class).detach();
-			}
-		}
-
-		if (hero.buff(Talent.SpiritBladesTracker.class) != null
-				&& Random.Int(10) < 3*hero.pointsInTalent(Talent.SPIRIT_BLADES)){
-			SpiritBow bow = hero.belongings.getItem(SpiritBow.class);
-			if (bow != null) dmg = bow.proc( hero, enemy, dmg );
-			hero.buff(Talent.SpiritBladesTracker.class).detach();
-		}
-
-		if (hero.hasTalent(PATIENT_STRIKE)){
-			if (hero.buff(PatientStrikeTracker.class) != null
-					&& !(hero.belongings.attackingWeapon() instanceof MissileWeapon)){
-				hero.buff(PatientStrikeTracker.class).detach();
-				dmg += Random.IntRange(hero.pointsInTalent(Talent.PATIENT_STRIKE), 2);
-			}
-		}
-
-		if (hero.hasTalent(DEADLY_FOLLOWUP) && enemy.alignment == Char.Alignment.ENEMY) {
-			if (hero.belongings.attackingWeapon() instanceof MissileWeapon) {
-				if (!(hero.belongings.attackingWeapon() instanceof SpiritBow.SpiritArrow)) {
-					Buff.prolong(hero, DeadlyFollowupTracker.class, 5f).object = enemy.id();
-				}
-			} else if (hero.buff(DeadlyFollowupTracker.class) != null
-					&& hero.buff(DeadlyFollowupTracker.class).object == enemy.id()){
-				dmg = Math.round(dmg * (1.0f + .1f*hero.pointsInTalent(DEADLY_FOLLOWUP)));
-			}
-		}
-
-		return dmg;
+		// 创建一个包装器来处理返回值
+		EventBus.EventData eventData = new EventBus.EventData()
+			.put("hero", hero)
+			.put("enemy", enemy)
+			.put("dmg", dmg);
+		
+		EventBus.fire("talent.attack.proc", eventData);
+		
+		// 返回可能被修改的伤害值
+		return eventData.or("dmg", dmg);
 	}
 
 	public static class ProvokedAngerTracker extends FlavourBuff{
