@@ -42,7 +42,6 @@ import com.coladungeon.utils.DungeonSeed;
 import com.watabou.noosa.Game;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.FileUtils;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -345,7 +344,9 @@ public enum Rankings {
 		bundle.put(DAILY_HISTORY_SCORES, scores);
 
 		try {
-			FileUtils.bundleToFile( RANKINGS_FILE, bundle);
+			Bundle global = SaveManager.loadGlobal();
+			global.put("rankings", bundle);
+			SaveManager.saveGlobal(global);
 		} catch (IOException e) {
 			ColaDungeon.reportException(e);
 		}
@@ -360,46 +361,53 @@ public enum Rankings {
 		
 		records = new ArrayList<>();
 		
-		try {
-			Bundle bundle = FileUtils.bundleFromFile( RANKINGS_FILE );
-			
-			for (Bundlable record : bundle.getCollection( RECORDS )) {
-				records.add( (Record)record );
+		Bundle global = SaveManager.loadGlobal();
+		Bundle bundle = global.getBundle("rankings");
+		if (bundle == null || bundle.isNull()) {
+			bundle = legacyLoad();
+			if (bundle == null) {
+				return;
 			}
-			lastRecord = bundle.getInt( LATEST );
-			
-			totalNumber = bundle.getInt( TOTAL );
-			if (totalNumber == 0) {
-				totalNumber = records.size();
-			}
+			global.put("rankings", bundle);
+			try {
+				SaveManager.saveGlobal(global);
+			} catch (IOException ignored) {}
+		}
 
-			wonNumber = bundle.getInt( WON );
-			if (wonNumber == 0) {
-				for (Record rec : records) {
-					if (rec.win) {
-						wonNumber++;
-					}
+		for (Bundlable record : bundle.getCollection( RECORDS )) {
+			records.add( (Record)record );
+		}
+		lastRecord = bundle.getInt( LATEST );
+
+		totalNumber = bundle.getInt( TOTAL );
+		if (totalNumber == 0) {
+			totalNumber = records.size();
+		}
+
+		wonNumber = bundle.getInt( WON );
+		if (wonNumber == 0) {
+			for (Record rec : records) {
+				if (rec.win) {
+					wonNumber++;
 				}
 			}
+		}
 
-			if (bundle.contains(LATEST_DAILY)){
-				latestDaily = (Record) bundle.get(LATEST_DAILY);
+		if (bundle.contains(LATEST_DAILY)){
+			latestDaily = (Record) bundle.get(LATEST_DAILY);
 
-				dailyScoreHistory.clear();
-				int[] scores = bundle.getIntArray(DAILY_HISTORY_SCORES);
-				int i = 0;
-				long latestDate = 0;
-				for (long date : bundle.getLongArray(DAILY_HISTORY_DATES)){
-					dailyScoreHistory.put(date, scores[i]);
-					if (date > latestDate) latestDate = date;
-					i++;
-				}
-				if (latestDate > CDSettings.lastDaily()){
-					CDSettings.lastDaily(latestDate);
-				}
+			dailyScoreHistory.clear();
+			int[] scores = bundle.getIntArray(DAILY_HISTORY_SCORES);
+			int i = 0;
+			long latestDate = 0;
+			for (long date : bundle.getLongArray(DAILY_HISTORY_DATES)){
+				dailyScoreHistory.put(date, scores[i]);
+				if (date > latestDate) latestDate = date;
+				i++;
 			}
-
-		} catch (IOException e) {
+			if (latestDate > CDSettings.lastDaily()){
+				CDSettings.lastDaily(latestDate);
+			}
 		}
 	}
 	
@@ -541,4 +549,12 @@ public enum Rankings {
 			}
 		}
 	};
+
+	private Bundle legacyLoad() {
+		try {
+			return com.watabou.utils.FileUtils.bundleFromFile( RANKINGS_FILE );
+		} catch (IOException e) {
+			return null;
+		}
+	}
 }

@@ -21,6 +21,7 @@
 
 package com.coladungeon.scenes;
 
+import java.io.IOException;
 import java.util.Collections;
 
 import com.coladungeon.Assets;
@@ -31,6 +32,7 @@ import com.coladungeon.ColaDungeon;
 import com.coladungeon.Dungeon;
 import com.coladungeon.GamesInProgress;
 import com.coladungeon.Rankings;
+import com.coladungeon.SaveManager;
 import com.coladungeon.effects.BannerSprites;
 import com.coladungeon.effects.Fireball;
 import com.coladungeon.journal.Document;
@@ -49,6 +51,7 @@ import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Music;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.FileUtils;
 
 public class WelcomeScene extends PixelScene {
@@ -290,7 +293,11 @@ public class WelcomeScene extends PixelScene {
 				Rankings.INSTANCE.save();
 			} catch (Exception e) {
 				//if we encounter a fatal error, then just clear the rankings
-				FileUtils.deleteFile( Rankings.RANKINGS_FILE );
+				try {
+					Bundle global = SaveManager.loadGlobal();
+					global.put("rankings", new Bundle());
+					SaveManager.saveGlobal(global);
+				} catch (IOException ignored) {}
 				Game.reportException( new RuntimeException("Rankings Updating Failed!",e));
 			}
 			Dungeon.daily = Dungeon.dailyReplay = false;

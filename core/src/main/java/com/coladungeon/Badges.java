@@ -50,7 +50,6 @@ import com.coladungeon.messages.Messages;
 import com.coladungeon.scenes.PixelScene;
 import com.coladungeon.utils.GLog;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.FileUtils;
 
 public class Badges {
 
@@ -307,13 +306,20 @@ public class Badges {
 	
 	public static void loadGlobal() {
 		if (global == null) {
-			try {
-				Bundle bundle = FileUtils.bundleFromFile( BADGES_FILE );
-				global = restore( bundle );
-
-			} catch (IOException e) {
-				global = new HashSet<>();
+			Bundle globalBundle = SaveManager.loadGlobal();
+			Bundle bundle = globalBundle.getBundle("badges");
+			if (bundle == null || bundle.isNull()) {
+				bundle = legacyLoad();
+				if (bundle == null) {
+					bundle = new Bundle();
+				} else {
+					globalBundle.put("badges", bundle);
+					try {
+						SaveManager.saveGlobal(globalBundle);
+					} catch (IOException ignored) {}
+				}
 			}
+			global = restore( bundle );
 		}
 	}
 
@@ -328,11 +334,21 @@ public class Badges {
 			store( bundle, global );
 			
 			try {
-				FileUtils.bundleToFile(BADGES_FILE, bundle);
+				Bundle globalBundle = SaveManager.loadGlobal();
+				globalBundle.put("badges", bundle);
+				SaveManager.saveGlobal(globalBundle);
 				saveNeeded = false;
 			} catch (IOException e) {
 				ColaDungeon.reportException(e);
 			}
+		}
+	}
+
+	private static Bundle legacyLoad() {
+		try {
+			return com.watabou.utils.FileUtils.bundleFromFile(BADGES_FILE);
+		} catch (IOException e) {
+			return null;
 		}
 	}
 

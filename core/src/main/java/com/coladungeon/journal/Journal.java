@@ -22,8 +22,8 @@
 package com.coladungeon.journal;
 
 import com.coladungeon.ColaDungeon;
+import com.coladungeon.SaveManager;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.FileUtils;
 
 import java.io.IOException;
 
@@ -38,17 +38,24 @@ public class Journal {
 			return;
 		}
 		
-		Bundle bundle;
-		try {
-			bundle = FileUtils.bundleFromFile( JOURNAL_FILE );
-			
-		} catch (IOException e){
-			bundle = new Bundle();
+		Bundle global = SaveManager.loadGlobal();
+		Bundle journalBundle = global.getBundle("journal");
+		if (journalBundle == null || journalBundle.isNull()) {
+			// 兼容旧版数据
+			journalBundle = legacyLoad();
+			if (journalBundle == null) {
+				journalBundle = new Bundle();
+			}
+			global.put("journal", journalBundle);
+			try {
+				SaveManager.saveGlobal(global);
+			} catch (IOException ignored) {
+			}
 		}
-		
-		Catalog.restore( bundle );
-		Bestiary.restore( bundle );
-		Document.restore( bundle );
+
+		Catalog.restore( journalBundle );
+		Bestiary.restore( journalBundle );
+		Document.restore( journalBundle );
 		
 		loaded = true;
 	}
@@ -72,12 +79,22 @@ public class Journal {
 		Document.store(bundle);
 		
 		try {
-			FileUtils.bundleToFile( JOURNAL_FILE, bundle );
+			Bundle global = SaveManager.loadGlobal();
+			global.put("journal", bundle);
+			SaveManager.saveGlobal( global );
 			saveNeeded = false;
 		} catch (IOException e) {
 			ColaDungeon.reportException(e);
 		}
 		
+	}
+
+	private static Bundle legacyLoad() {
+		try {
+			return com.watabou.utils.FileUtils.bundleFromFile( JOURNAL_FILE );
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 }

@@ -28,9 +28,7 @@ import android.app.backup.BackupDataOutput;
 import android.app.backup.FullBackupDataOutput;
 import android.os.ParcelFileDescriptor;
 
-import com.coladungeon.Badges;
-import com.coladungeon.Rankings;
-import com.coladungeon.journal.Journal;
+import com.coladungeon.SaveManager;
 
 import java.io.File;
 
@@ -53,17 +51,15 @@ public class AndroidBackupHandler extends BackupAgent {
 		fullBackupFile(new File(getFilesDir().getParent() + "/shared_prefs/ShatteredPixelDungeon.xml"), data);
 		
 		//store game data
-		File file = getFile( getFilesDir(), Rankings.RANKINGS_FILE );
+		File file = getFile( getFilesDir(), "global.json" );
 		if (file != null){
 			fullBackupFile( file , data);
 		}
-		file = getFile( getFilesDir(), Badges.BADGES_FILE );
-		if (file != null){
-			fullBackupFile( file , data);
-		}
-		file = getFile( getFilesDir(), Journal.JOURNAL_FILE );
-		if (file != null){
-			fullBackupFile( file , data);
+		for (int slot = 1; slot <= SaveManager.MAX_SLOTS; slot++) {
+			File saveFile = getFile( getFilesDir(), String.format("save-%03d.json", slot) );
+			if (saveFile != null && saveFile.exists()){
+				fullBackupFile( saveFile , data);
+			}
 		}
 	}
 	

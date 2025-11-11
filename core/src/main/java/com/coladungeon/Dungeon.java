@@ -81,7 +81,6 @@ import com.watabou.noosa.Game;
 import com.watabou.utils.BArray;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.FileUtils;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
 import com.watabou.utils.SparseArray;
@@ -580,6 +579,9 @@ public class Dungeon {
 
             bundle.put(GOLD, gold);
             bundle.put(ENERGY, energy);
+            bundle.put("heroClass", hero.heroClass.name());
+            bundle.put("heroLevel", hero.lvl);
+            bundle.put("playTime", (long) Statistics.duration);
 
             for (int d : droppedItems.keyArray()) {
                 bundle.put(Messages.format(DROPPED, d), droppedItems.get(d));
@@ -628,7 +630,7 @@ public class Dungeon {
             Badges.saveLocal(badges);
             bundle.put(BADGES, badges);
 
-            FileUtils.bundleToFile(GamesInProgress.gameFile(save), bundle);
+            SaveManager.saveGame(save, bundle);
 
         } catch (IOException e) {
             GamesInProgress.setUnknown(save);
@@ -639,8 +641,7 @@ public class Dungeon {
     public static void saveLevel(int save) throws IOException {
         Bundle bundle = new Bundle();
         bundle.put(LEVEL, level);
-
-        FileUtils.bundleToFile(GamesInProgress.depthFile(save, depth, branch), bundle);
+        SaveManager.saveLevel(save, depth, branch, bundle);
     }
 
     public static void saveAll() throws IOException {
@@ -662,7 +663,7 @@ public class Dungeon {
 
     public static void loadGame(int save, boolean fullLoad) throws IOException {
 
-        Bundle bundle = FileUtils.bundleFromFile(GamesInProgress.gameFile(save));
+        Bundle bundle = SaveManager.loadGame(save);
 
         initialVersion = bundle.getInt(INIT_VER);
         version = bundle.getInt(VERSION);
@@ -769,7 +770,7 @@ public class Dungeon {
         Dungeon.level = null;
         Actor.clear();
 
-        Bundle bundle = FileUtils.bundleFromFile(GamesInProgress.depthFile(save, depth, branch));
+        Bundle bundle = SaveManager.loadLevel(save, depth, branch);
 
         Level level = (Level) bundle.get(LEVEL);
 
@@ -782,17 +783,7 @@ public class Dungeon {
 
     public static void deleteGame(int save, boolean deleteLevels) {
 
-        if (deleteLevels) {
-            String folder = GamesInProgress.gameFolder(save);
-            for (String file : FileUtils.filesInDir(folder)) {
-                if (file.contains("depth")) {
-                    FileUtils.deleteFile(folder + "/" + file);
-                }
-            }
-        }
-
-        FileUtils.overwriteFile(GamesInProgress.gameFile(save), 1);
-
+        SaveManager.deleteGame(save);
         GamesInProgress.delete(save);
     }
 
@@ -801,33 +792,11 @@ public class Dungeon {
         if (newSlot == -1) return;
 
         try {
-            // 加载原存档
-            loadGame(save, true);
-            
-            // 保存到新存档
-            saveGame(newSlot);
-            
-            // 复制所有深度的存档
-            for (int d : generatedLevels) {
-                // 复制主分支的存档
-                if (FileUtils.fileExists(GamesInProgress.depthFile(save, d, 0))) {
-                    Bundle bundle = FileUtils.bundleFromFile(GamesInProgress.depthFile(save, d, 0));
-                    FileUtils.bundleToFile(GamesInProgress.depthFile(newSlot, d, 0), bundle);
-                }
-                
-                // 复制其他分支的存档
-                for (int b = 1; b <= 4; b++) {
-                    if (FileUtils.fileExists(GamesInProgress.depthFile(save, d, b))) {
-                        Bundle bundle = FileUtils.bundleFromFile(GamesInProgress.depthFile(save, d, b));
-                        FileUtils.bundleToFile(GamesInProgress.depthFile(newSlot, d, b), bundle);
-                    }
-                }
-            }
-            
-            // 更新新存档的信息
+            if (SaveManager.copySave(save, newSlot)) {
+                // 更新新存档的信息
             GamesInProgress.set(newSlot);
-            
-        } catch (IOException e) {
+            }
+        } catch (Exception e) {
             ColaDungeon.reportException(e);
         }
     }
