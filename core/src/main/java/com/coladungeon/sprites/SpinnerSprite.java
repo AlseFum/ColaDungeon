@@ -37,9 +37,7 @@ public class SpinnerSprite extends MobSprite {
 
 		perspectiveRaise = 0f;
 
-		texture( Assets.Sprites.SPINNER );
-		
-		TextureFilm frames = new TextureFilm( texture, 16, 16 );
+		TextureFilm frames = textureWithFallback("mod:spinner", Assets.Sprites.SPINNER, 16, 16);
 		
 		idle = new Animation( 10, true );
 		idle.frames( frames, 0, 0, 0, 0, 0, 1, 0, 1 );

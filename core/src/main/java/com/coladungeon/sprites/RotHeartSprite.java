@@ -37,9 +37,7 @@ public class RotHeartSprite extends MobSprite {
 
 		perspectiveRaise = 0.2f;
 
-		texture( Assets.Sprites.ROT_HEART );
-
-		TextureFilm frames = new TextureFilm( texture, 16, 16 );
+		TextureFilm frames = textureWithFallback("mod:rot_heart", Assets.Sprites.ROT_HEART, 16, 16);
 
 		idle = new MovieClip.Animation( 1, true );
 		idle.frames( frames, 0);

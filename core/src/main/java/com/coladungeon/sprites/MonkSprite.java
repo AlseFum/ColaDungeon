@@ -32,9 +32,7 @@ public class MonkSprite extends MobSprite {
 	public MonkSprite() {
 		super();
 		
-		texture( Assets.Sprites.MONK );
-		
-		TextureFilm frames = new TextureFilm( texture, 15, 14 );
+		TextureFilm frames = textureWithFallback("mod:monk", Assets.Sprites.MONK, 15, 14);
 		
 		idle = new Animation( 6, true );
 		idle.frames( frames, 1, 0, 1, 2 );

@@ -32,9 +32,7 @@ public class GhostSprite extends MobSprite {
 	public GhostSprite() {
 		super();
 		
-		texture( Assets.Sprites.GHOST );
-		
-		TextureFilm frames = new TextureFilm( texture, 14, 15 );
+		TextureFilm frames = textureWithFallback("mod:ghost", Assets.Sprites.GHOST, 14, 15);
 		
 		idle = new Animation( 5, true );
 		idle.frames( frames, 0, 1 );

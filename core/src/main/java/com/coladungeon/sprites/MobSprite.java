@@ -24,6 +24,7 @@ package com.coladungeon.sprites;
 import com.coladungeon.actors.mobs.Mob;
 import com.coladungeon.tiles.DungeonTilemap;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.tweeners.ScaleTweener;
 import com.watabou.utils.PointF;
@@ -80,5 +81,15 @@ public class MobSprite extends CharSprite {
 				am = 1 - progress;
 			}
 		} );
+	}
+
+	/**
+	 * Helper for dynamic sprites: tries a key from SpriteRegistry, falls back to a static texture object.
+	 * After setting texture, returns a TextureFilm with given frame size.
+	 */
+	protected TextureFilm textureWithFallback(String key, Object fallbackTexture, int frameW, int frameH){
+		Object tex = SpriteRegistry.mobTextureOr(fallbackTexture, key);
+		texture(tex);
+		return new TextureFilm(texture, frameW, frameH);
 	}
 }

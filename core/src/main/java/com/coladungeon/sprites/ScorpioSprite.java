@@ -34,9 +34,7 @@ public class ScorpioSprite extends MobSprite {
 	public ScorpioSprite() {
 		super();
 		
-		texture( Assets.Sprites.SCORPIO );
-		
-		TextureFilm frames = new TextureFilm( texture, 17, 17 );
+		TextureFilm frames = textureWithFallback("mod:scorpio", Assets.Sprites.SCORPIO, 17, 17);
 		
 		idle = new Animation( 12, true );
 		idle.frames( frames, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 2, 1, 2 );

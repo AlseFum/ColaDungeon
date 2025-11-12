@@ -37,9 +37,7 @@ public class FungalSpinnerSprite extends MobSprite {
 
 		perspectiveRaise = 0f;
 
-		texture( Assets.Sprites.FUNGAL_SPINNER );
-
-		TextureFilm frames = new TextureFilm( texture, 16, 16 );
+		TextureFilm frames = textureWithFallback("mod:fungal_spinner", Assets.Sprites.FUNGAL_SPINNER, 16, 16);
 
 		idle = new MovieClip.Animation( 10, true );
 		idle.frames( frames, 0, 0, 0, 0, 0, 1, 0, 1 );

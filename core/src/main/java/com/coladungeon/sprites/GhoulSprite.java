@@ -31,9 +31,7 @@ public class GhoulSprite extends MobSprite {
 	public GhoulSprite() {
 		super();
 		
-		texture( Assets.Sprites.GHOUL );
-		
-		TextureFilm frames = new TextureFilm( texture, 12, 14 );
+		TextureFilm frames = textureWithFallback("mod:ghoul", Assets.Sprites.GHOUL, 12, 14);
 
 		idle = new Animation( 2, true );
 		idle.frames( frames, 0, 0, 0, 1 );

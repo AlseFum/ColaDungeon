@@ -29,9 +29,7 @@ public class RotLasherSprite extends MobSprite {
 	public RotLasherSprite() {
 		super();
 
-		texture( Assets.Sprites.ROT_LASH );
-
-		TextureFilm frames = new TextureFilm( texture, 12, 16 );
+		TextureFilm frames = textureWithFallback("mod:rot_lasher", Assets.Sprites.ROT_LASH, 12, 16);
 
 		idle = new Animation( 0, true );
 		idle.frames( frames, 0);

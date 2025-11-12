@@ -39,9 +39,7 @@ public class PhantomPiranhaSprite extends MobSprite {
 		renderShadow = false;
 		perspectiveRaise = 0.2f;
 
-		texture( Assets.Sprites.PIRANHA );
-
-		TextureFilm frames = new TextureFilm( texture, 12, 16 );
+		TextureFilm frames = textureWithFallback("mod:phantom_piranha", Assets.Sprites.PIRANHA, 12, 16);
 
 		int c = 21;
 

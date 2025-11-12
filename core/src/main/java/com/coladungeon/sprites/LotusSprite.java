@@ -42,9 +42,7 @@ public class LotusSprite extends MobSprite {
 
 		perspectiveRaise = 0f;
 
-		texture( Assets.Sprites.LOTUS );
-
-		TextureFilm frames = new TextureFilm( texture, 19, 16 );
+		TextureFilm frames = textureWithFallback("mod:lotus", Assets.Sprites.LOTUS, 19, 16);
 
 		idle = new MovieClip.Animation( 1, true );
 		idle.frames( frames, 0 );

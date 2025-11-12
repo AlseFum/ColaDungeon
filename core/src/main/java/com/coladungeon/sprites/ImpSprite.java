@@ -32,9 +32,7 @@ public class ImpSprite extends MobSprite {
 	public ImpSprite() {
 		super();
 		
-		texture( Assets.Sprites.IMP );
-		
-		TextureFilm frames = new TextureFilm( texture, 12, 14 );
+		TextureFilm frames = textureWithFallback("mod:imp", Assets.Sprites.IMP, 12, 14);
 		
 		idle = new Animation( 10, true );
 		idle.frames( frames,

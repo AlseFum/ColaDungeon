@@ -29,9 +29,7 @@ public class SwarmSprite extends MobSprite {
 	public SwarmSprite() {
 		super();
 		
-		texture( Assets.Sprites.SWARM );
-		
-		TextureFilm frames = new TextureFilm( texture, 16, 16 );
+		TextureFilm frames = textureWithFallback("mod:swarm", Assets.Sprites.SWARM, 16, 16);
 		
 		idle = new Animation( 15, true );
 		idle.frames( frames, 0, 1, 2, 3, 4, 5 );

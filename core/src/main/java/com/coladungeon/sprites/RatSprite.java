@@ -29,9 +29,7 @@ public class RatSprite extends MobSprite {
 	public RatSprite() {
 		super();
 		
-		texture( Assets.Sprites.RAT );
-		
-		TextureFilm frames = new TextureFilm( texture, 16, 15 );
+		TextureFilm frames = textureWithFallback("mod:rat", Assets.Sprites.RAT, 16, 15);
 		
 		idle = new Animation( 2, true );
 		idle.frames( frames, 0, 0, 0, 1 );

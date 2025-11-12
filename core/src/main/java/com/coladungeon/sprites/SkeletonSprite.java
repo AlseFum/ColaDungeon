@@ -31,9 +31,7 @@ public class SkeletonSprite extends MobSprite {
 	public SkeletonSprite() {
 		super();
 		
-		texture( Assets.Sprites.SKELETON );
-		
-		TextureFilm frames = new TextureFilm( texture, 12, 15 );
+		TextureFilm frames = textureWithFallback("mod:skeleton", Assets.Sprites.SKELETON, 12, 15);
 		
 		idle = new Animation( 12, true );
 		idle.frames( frames, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3 );

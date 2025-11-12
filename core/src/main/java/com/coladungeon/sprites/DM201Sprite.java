@@ -36,9 +36,7 @@ public class DM201Sprite extends MobSprite {
 	public DM201Sprite () {
 		super();
 
-		texture( Assets.Sprites.DM200 );
-
-		TextureFilm frames = new TextureFilm( texture, 21, 18 );
+		TextureFilm frames = textureWithFallback("mod:dm201", Assets.Sprites.DM200, 21, 18);
 
 		int c = 12;
 

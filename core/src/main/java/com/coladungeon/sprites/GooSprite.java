@@ -48,9 +48,7 @@ public class GooSprite extends MobSprite {
 	public GooSprite() {
 		super();
 		
-		texture( Assets.Sprites.GOO );
-		
-		TextureFilm frames = new TextureFilm( texture, 20, 14 );
+		TextureFilm frames = textureWithFallback("mod:goo", Assets.Sprites.GOO, 20, 14);
 		
 		idle = new Animation( 10, true );
 		idle.frames( frames, 2, 1, 0, 0, 1 );

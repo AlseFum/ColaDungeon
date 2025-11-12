@@ -34,9 +34,7 @@ public class FungalSentrySprite extends MobSprite {
 	public FungalSentrySprite(){
 		super();
 
-		texture( Assets.Sprites.FUNGAL_SENTRY );
-
-		TextureFilm frames = new TextureFilm( texture, 18, 18 );
+		TextureFilm frames = textureWithFallback("mod:fungal_sentry", Assets.Sprites.FUNGAL_SENTRY, 18, 18);
 
 		idle = new Animation( 0, true );
 		idle.frames( frames, 0);

@@ -30,9 +30,7 @@ public class StatueSprite extends MobSprite {
 	public StatueSprite() {
 		super();
 		
-		texture( Assets.Sprites.STATUE );
-		
-		TextureFilm frames = new TextureFilm( texture, 12, 15 );
+		TextureFilm frames = textureWithFallback("mod:statue", Assets.Sprites.STATUE, 12, 15);
 		
 		idle = new Animation( 2, true );
 		idle.frames( frames, 0, 0, 0, 0, 0, 1, 1 );

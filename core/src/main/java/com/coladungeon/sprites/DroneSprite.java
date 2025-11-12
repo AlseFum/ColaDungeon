@@ -8,11 +8,8 @@ public class DroneSprite extends MobSprite {
     public DroneSprite() {
         super();
 
-        // 使用Warrior的贴图作为基础
-        texture(Assets.Sprites.WARRIOR);
-
-        // 设置动画帧
-        TextureFilm frames = new TextureFilm(texture, 12, 15);
+        // 使用Warrior的贴图作为基础，支持动态key覆盖
+        TextureFilm frames = textureWithFallback("mod:drone", Assets.Sprites.WARRIOR, 12, 15);
 
         // 设置各种状态的动画
         idle = new Animation(2, true);

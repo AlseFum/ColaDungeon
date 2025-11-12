@@ -37,7 +37,7 @@ public class GnollGeomancerSprite extends MobSprite {
 	public GnollGeomancerSprite() {
 		super();
 
-		texture(Assets.Sprites.GNOLL_GEOMANCER);
+		texture(SpriteRegistry.mobTextureOr(Assets.Sprites.GNOLL_GEOMANCER, "mod:gnoll_geomancer"));
 
 		updateAnims();
 

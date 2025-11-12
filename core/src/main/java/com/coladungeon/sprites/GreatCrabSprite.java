@@ -30,9 +30,7 @@ public class GreatCrabSprite extends MobSprite {
 	public GreatCrabSprite() {
 		super();
 
-		texture( Assets.Sprites.CRAB );
-
-		TextureFilm frames = new TextureFilm( texture, 16, 16 );
+		TextureFilm frames = textureWithFallback("mod:great_crab", Assets.Sprites.CRAB, 16, 16);
 
 		idle = new MovieClip.Animation( 5, true );
 		idle.frames( frames, 16, 17, 16, 18 );

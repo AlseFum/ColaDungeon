@@ -12,7 +12,7 @@ import com.coladungeon.items.Item;
 import com.coladungeon.levels.Terrain;
 import com.coladungeon.scenes.GameScene;
 import com.coladungeon.scenes.PixelScene;
-import com.coladungeon.sprites.ItemSpriteManager.ImageMapping;
+import com.coladungeon.sprites.SpriteRegistry.ImageMapping;
 import com.coladungeon.tiles.DungeonTilemap;
 import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
@@ -223,7 +223,7 @@ public class ItemSprite extends MovieClip {
 
 	public void frame(int image) {
 		if (image >= 6000) {
-			ImageMapping map = ItemSpriteManager.mapImage(image);
+			ImageMapping map = SpriteRegistry.mapItemImage(image);
 			if (map != null) {
 				texture = map.texture;
 				frame(map.rect);

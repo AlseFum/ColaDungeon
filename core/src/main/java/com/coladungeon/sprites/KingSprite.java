@@ -29,9 +29,7 @@ public class KingSprite extends MobSprite {
 	public KingSprite() {
 		super();
 		
-		texture( Assets.Sprites.KING );
-		
-		TextureFilm frames = new TextureFilm( texture, 16, 16 );
+		TextureFilm frames = textureWithFallback("mod:king", Assets.Sprites.KING, 16, 16);
 		
 		idle = new Animation( 12, true );
 		idle.frames( frames, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2 );

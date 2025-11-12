@@ -58,9 +58,7 @@ public class RatKingSprite extends MobSprite {
 			if (parent != null) aura(0xFFFF00);
 		}
 
-		texture( Assets.Sprites.RATKING );
-
-		TextureFilm frames = new TextureFilm( texture, 16, 17 );
+		TextureFilm frames = textureWithFallback("mod:rat_king", Assets.Sprites.RATKING, 16, 17);
 
 		idle = new Animation( 2, true );
 		idle.frames( frames, c+0, c+0, c+0, c+1 );

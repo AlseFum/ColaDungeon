@@ -42,9 +42,7 @@ public class EyeSprite extends MobSprite {
 	public EyeSprite() {
 		super();
 		
-		texture( Assets.Sprites.EYE );
-		
-		TextureFilm frames = new TextureFilm( texture, 16, 18 );
+		TextureFilm frames = textureWithFallback("mod:eye", Assets.Sprites.EYE, 16, 18);
 		
 		idle = new Animation( 8, true );
 		idle.frames( frames, 0, 1, 2 );

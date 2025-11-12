@@ -36,9 +36,7 @@ public class DM200Sprite extends MobSprite {
 	public DM200Sprite () {
 		super();
 
-		texture( Assets.Sprites.DM200 );
-
-		TextureFilm frames = new TextureFilm( texture, 21, 18 );
+		TextureFilm frames = textureWithFallback("mod:dm200", Assets.Sprites.DM200, 21, 18);
 
 		idle = new Animation( 10, true );
 		idle.frames( frames, 0, 1 );

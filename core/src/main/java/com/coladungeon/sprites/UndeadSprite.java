@@ -31,9 +31,7 @@ public class UndeadSprite extends MobSprite {
 	public UndeadSprite() {
 		super();
 		
-		texture( Assets.Sprites.UNDEAD );
-		
-		TextureFilm frames = new TextureFilm( texture, 12, 16 );
+		TextureFilm frames = textureWithFallback("mod:undead", Assets.Sprites.UNDEAD, 12, 16);
 		
 		idle = new Animation( 12, true );
 		idle.frames( frames, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3 );

@@ -32,9 +32,7 @@ public class SeniorSprite extends MobSprite {
 	public SeniorSprite() {
 		super();
 		
-		texture( Assets.Sprites.MONK );
-		
-		TextureFilm frames = new TextureFilm( texture, 15, 14 );
+		TextureFilm frames = textureWithFallback("mod:senior", Assets.Sprites.MONK, 15, 14);
 		
 		idle = new Animation( 6, true );
 		idle.frames( frames, 18, 17, 18, 19 );

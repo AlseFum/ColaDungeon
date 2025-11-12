@@ -35,9 +35,7 @@ public class GnollTricksterSprite extends MobSprite {
 	public GnollTricksterSprite() {
 		super();
 
-		texture( Assets.Sprites.GNOLL );
-
-		TextureFilm frames = new TextureFilm( texture, 12, 15 );
+		TextureFilm frames = textureWithFallback("mod:gnoll_trickster", Assets.Sprites.GNOLL, 12, 15);
 
 		idle = new MovieClip.Animation( 2, true );
 		idle.frames( frames, 21, 21, 21, 22, 21, 21, 22, 22 );

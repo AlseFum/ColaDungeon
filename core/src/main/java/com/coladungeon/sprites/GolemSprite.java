@@ -38,9 +38,7 @@ public class GolemSprite extends MobSprite {
 	public GolemSprite() {
 		super();
 		
-		texture( Assets.Sprites.GOLEM );
-		
-		TextureFilm frames = new TextureFilm( texture, 17, 19 );
+		TextureFilm frames = textureWithFallback("mod:golem", Assets.Sprites.GOLEM, 17, 19);
 		
 		idle = new Animation( 4, true );
 		idle.frames( frames, 0, 1 );

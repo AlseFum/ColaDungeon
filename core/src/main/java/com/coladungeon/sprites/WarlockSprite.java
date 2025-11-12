@@ -33,9 +33,7 @@ public class WarlockSprite extends MobSprite {
 	public WarlockSprite() {
 		super();
 		
-		texture( Assets.Sprites.WARLOCK );
-		
-		TextureFilm frames = new TextureFilm( texture, 12, 15 );
+		TextureFilm frames = textureWithFallback("mod:warlock", Assets.Sprites.WARLOCK, 12, 15);
 		
 		idle = new Animation( 2, true );
 		idle.frames( frames, 0, 0, 0, 1, 0, 0, 1, 1 );

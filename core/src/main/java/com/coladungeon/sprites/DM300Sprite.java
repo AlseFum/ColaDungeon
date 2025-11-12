@@ -44,7 +44,7 @@ public class DM300Sprite extends MobSprite {
 	public DM300Sprite() {
 		super();
 		
-		texture( Assets.Sprites.DM300 );
+		texture(SpriteRegistry.mobTextureOr( Assets.Sprites.DM300, "mod:dm300" ));
 		
 		updateChargeState(false);
 	}

@@ -29,9 +29,7 @@ public class TormentedSpiritSprite extends MobSprite {
 	public TormentedSpiritSprite() {
 		super();
 
-		texture( Assets.Sprites.WRAITH );
-
-		TextureFilm frames = new TextureFilm( texture, 14, 15 );
+		TextureFilm frames = textureWithFallback("mod:tormented_spirit", Assets.Sprites.WRAITH, 14, 15);
 
 		int c = 9;
 

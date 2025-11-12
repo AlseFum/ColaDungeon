@@ -35,9 +35,7 @@ public class GnollGuardSprite extends MobSprite {
 	public GnollGuardSprite() {
 		super();
 
-		texture(Assets.Sprites.GNOLL_GUARD );
-
-		TextureFilm frames = new TextureFilm( texture, 12, 16 );
+		TextureFilm frames = textureWithFallback("mod:gnoll_guard", Assets.Sprites.GNOLL_GUARD, 12, 16);
 
 		idle = new Animation( 2, true );
 		idle.frames( frames, 0, 0, 0, 1, 0, 0, 1, 1 );

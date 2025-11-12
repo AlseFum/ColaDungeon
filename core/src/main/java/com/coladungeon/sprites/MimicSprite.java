@@ -48,9 +48,7 @@ public class MimicSprite extends MobSprite {
 
 		int c = texOffset();
 
-		texture( Assets.Sprites.MIMIC );
-
-		TextureFilm frames = new TextureFilm( texture, 16, 16 );
+		TextureFilm frames = textureWithFallback("mod:mimic", Assets.Sprites.MIMIC, 16, 16);
 
 		advancedHiding = new Animation( 1, true );
 		advancedHiding.frames( frames, 0+c);

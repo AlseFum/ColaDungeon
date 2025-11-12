@@ -38,9 +38,7 @@ public class PylonSprite extends MobSprite {
 		perspectiveRaise = 5/16f; //1 pixel less
 		renderShadow = false;
 
-		texture( Assets.Sprites.PYLON );
-
-		TextureFilm frames = new TextureFilm( texture, 10, 20 );
+		TextureFilm frames = textureWithFallback("mod:pylon", Assets.Sprites.PYLON, 10, 20);
 
 		idle = new Animation( 1, false );
 		idle.frames( frames, 0 );

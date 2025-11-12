@@ -32,11 +32,9 @@ public class NewbornElementalSprite extends MobSprite{
 	public NewbornElementalSprite() {
 		super();
 
-		texture( Assets.Sprites.ELEMENTAL );
+		TextureFilm frames = textureWithFallback("mod:newborn_elemental", Assets.Sprites.ELEMENTAL, 12, 14);
 
 		int ofs = 21;
-
-		TextureFilm frames = new TextureFilm( texture, 12, 14 );
 
 		idle = new MovieClip.Animation( 10, true );
 		idle.frames( frames, ofs+0, ofs+1, ofs+2 );

@@ -29,9 +29,7 @@ public class GnollSapperSprite extends MobSprite {
 	public GnollSapperSprite() {
 		super();
 
-		texture(Assets.Sprites.GNOLL_SAPPER );
-
-		TextureFilm frames = new TextureFilm( texture, 12, 15 );
+		TextureFilm frames = textureWithFallback("mod:gnoll_sapper", Assets.Sprites.GNOLL_SAPPER, 12, 15);
 
 		idle = new Animation( 2, true );
 		idle.frames( frames, 0, 0, 0, 1, 0, 0, 1, 1 );
