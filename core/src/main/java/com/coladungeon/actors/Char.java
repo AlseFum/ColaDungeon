@@ -117,6 +117,9 @@ import com.coladungeon.items.weapon.melee.MeleeWeapon;
 import com.coladungeon.items.weapon.melee.Sickle;
 import com.coladungeon.items.weapon.missiles.MissileWeapon;
 import com.coladungeon.items.weapon.missiles.darts.ShockingDart;
+import com.coladungeon.traits.PropertyTraitBridge;
+import com.coladungeon.traits.TraitInstance;
+import com.coladungeon.traits.TraitRegistry;
 import com.coladungeon.levels.Terrain;
 import com.coladungeon.levels.features.Chasm;
 import com.coladungeon.levels.features.Door;
@@ -311,6 +314,7 @@ public abstract class Char extends Actor {
 	protected static final String TAG_HT    = "HT";
 	protected static final String TAG_SHLD  = "SHLD";
 	protected static final String BUFFS	    = "buffs";
+	protected static final String TRAITS    = "traits";
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
@@ -323,6 +327,7 @@ public abstract class Char extends Actor {
 		bundle.put( TAG_SHLD, cachedShield );
 		
 		bundle.put( BUFFS, buffs );
+		bundle.put( TRAITS, traits );
 	}
 	
 	@Override
@@ -338,6 +343,13 @@ public abstract class Char extends Actor {
 		for (Bundlable b : bundle.getCollection( BUFFS )) {
 			if (b != null) {
 				((Buff)b).attachTo(this);
+			}
+		}
+
+		traits.clear();
+		for (Bundlable b : bundle.getCollection( TRAITS )) {
+			if (b instanceof TraitInstance) {
+				traits.add((TraitInstance) b);
 			}
 		}
 	}
@@ -1004,6 +1016,9 @@ public abstract class Char extends Actor {
 		for (Buff b : buffs()){
 			resists.addAll(b.resistances());
 		}
+		for (TraitInstance t : traits) {
+			resists.addAll(t.resistanceClasses());
+		}
 		
 		float result = 1f;
 		for (Class c : resists){
@@ -1024,6 +1039,9 @@ public abstract class Char extends Actor {
 		for (Buff b : buffs()){
 			immunes.addAll(b.immunities());
 		}
+		for (TraitInstance t : traits) {
+			immunes.addAll(t.immunityClasses());
+		}
 		if (glyphLevel(Brimstone.class) >= 0){
 			immunes.add(Burning.class);
 		}
@@ -1042,6 +1060,44 @@ public abstract class Char extends Actor {
 		return buff(Challenge.SpectatorFreeze.class) != null || buff(Invulnerability.class) != null;
 	}
 
+	// Dynamic trait support
+	protected final LinkedHashSet<TraitInstance> traits = new LinkedHashSet<>();
+
+	public synchronized LinkedHashSet<TraitInstance> traits() {
+		return new LinkedHashSet<>(traits);
+	}
+
+	public synchronized boolean addTrait(TraitInstance trait) {
+		if (trait == null || trait.id() == null) return false;
+		// ensure definition exists for dynamic traits, but don't enforce
+		if (!TraitRegistry.exists(trait.id())) {
+			// allowed: unregistered trait instances
+		}
+		return traits.add(trait);
+	}
+
+	public synchronized boolean removeTrait(String traitId) {
+		if (traitId == null) return false;
+		boolean removed = false;
+		for (TraitInstance t : traits.toArray(new TraitInstance[0])) {
+			if (traitId.equals(t.id())) {
+				traits.remove(t);
+				removed = true;
+			}
+		}
+		return removed;
+	}
+
+	public synchronized boolean hasTrait(String traitId) {
+		if (traitId == null) return false;
+		for (TraitInstance t : traits) {
+			if (traitId.equals(t.id())) return true;
+		}
+		return false;
+	}
+
+	// NOTE: Property 是旧的静态标记系统；Traits 是新的可扩展系统。
+	// 目前处于过渡期，Property 尚未被 Traits 全面替代，二者并行，桥接见 PropertyTraitBridge。
 	protected HashSet<Property> properties = new HashSet<>();
 
 	public HashSet<Property> properties() {
@@ -1049,6 +1105,11 @@ public abstract class Char extends Actor {
 		//TODO any more of these and we should make it a property of the buff, like with resistances/immunities
 		if (buff(ChampionEnemy.Giant.class) != null) {
 			props.add(Property.LARGE);
+		}
+		// include properties implied by traits via the bridge
+		for (TraitInstance t : traits) {
+			Property mapped = PropertyTraitBridge.propertyForTrait(t.id());
+			if (mapped != null) props.add(mapped);
 		}
 		return props;
 	}
